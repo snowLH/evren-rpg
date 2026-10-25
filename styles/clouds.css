@@ -410,22 +410,33 @@
   transform: scale(1.15) rotate(5deg);
 }
 
-/* Placa Descritiva do Grande Marcador */
+/* Placa Descritiva do Grande Marcador - Oculta por padrão para não poluir o mapa, surge no hover */
 .grand-marker-card {
   position: absolute;
-  top: 90px;
+  top: 85px;
   left: 50%;
-  transform: translateX(-50%);
-  width: 250px;
-  background: rgba(3, 11, 22, 0.92);
-  border: 1px solid rgba(0, 229, 255, 0.4);
-  border-radius: 4px;
+  transform: translateX(-50%) translateY(8px);
+  width: 230px;
+  background: rgba(4, 12, 24, 0.96);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  border-radius: 6px;
   padding: 10px 14px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 229, 255, 0.2);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.95), 0 0 18px rgba(0, 229, 255, 0.3);
+  backdrop-filter: blur(10px);
   pointer-events: none;
-  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s ease;
+  z-index: 1000;
+}
+
+.grand-campaign-marker:hover .grand-marker-card,
+.grand-campaign-marker:focus .grand-marker-card,
+.grand-campaign-marker.active .grand-marker-card {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 .marker-triangulo-portal .grand-marker-card {

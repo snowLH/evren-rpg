@@ -136,9 +136,9 @@
         </svg>
         <div class="hud-title-wrap">
           <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">RPG</span></h1>
-          <div class="hud-subline">GUIA & ARQUIVO DO UNIVERSO // MEMORIAL DE HISTÓRIAS & FICHAS CRIS</div>
-          <div id="map-breadcrumb" class="map-breadcrumb" title="Escala Atual do Mapa">
-            <span id="breadcrumb-label" class="breadcrumb-world">🧭 MAPA MÚNDI GLOBAL</span>
+          <div class="hud-subline">Arquivo & Guia do Universo</div>
+          <div id="map-breadcrumb" class="map-breadcrumb" style="display:none;" title="Escala Atual do Mapa">
+            <span id="breadcrumb-label" class="breadcrumb-world">🧭 PLANISFÉRIO</span>
           </div>
         </div>
       </div>
@@ -156,79 +156,102 @@
             <circle cx="11" cy="11" r="8"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input type="text" id="search-input" class="hud-search-input" placeholder="Buscar lore, locais, fichas CRIS... [/]" autocomplete="off">
+          <input type="text" id="search-input" class="hud-search-input" placeholder="Buscar personagens, locais, histórias... [/]" autocomplete="off">
           <div id="search-results-dropdown" class="search-dropdown-menu"></div>
         </div>
       </div>
 
-      <!-- Painel Direito: Ações Principais (Guia de Histórias & Fichas CRIS) -->
+      <!-- Painel Direito: Ações Principais (Clean & Organized) -->
       <div class="hud-panel hud-actions">
-        <button id="btn-open-campaigns-hub" class="btn-hud btn-blood" title="Central de Campanhas & Sagas (Rolando e Concluídas)">
+        <!-- 4 Botões Principais Claros e Diretos -->
+        <button id="btn-open-campaigns-hub" class="btn-hud btn-primary-nav" title="Central de Campanhas & Histórias">
           <span class="btn-icon">📜</span> <span class="btn-text">Campanhas</span>
         </button>
-        <button id="btn-open-lore-graph" class="btn-hud" title="Abrir Teia de Histórias & Conexões de Evren">
-          <span class="btn-icon">🕸️</span> <span class="btn-text">Teia de Lore</span>
-        </button>
-        <button id="btn-open-locations" class="btn-hud" title="Abrir Atlas de Locais das Histórias">
-          <span class="btn-icon">📍</span> <span class="btn-text">Locais</span>
-        </button>
-        <button id="btn-open-characters" class="btn-hud btn-blood" title="Abrir Hall de Personagens (Fichas CRIS)">
+        <button id="btn-open-characters" class="btn-hud btn-primary-nav" title="Fichas dos Personagens (C.R.I.S.)">
           <span class="btn-icon">👤</span> <span class="btn-text">Personagens</span> <span class="btn-kbd">[D]</span>
         </button>
-        <button id="btn-open-cris-importer" class="btn-hud btn-blood" title="Importar Ficha do C.R.I.S. (JSON)">
-          <span class="btn-icon">📥</span> <span class="btn-text">Importar CRIS</span>
+        <button id="btn-open-locations" class="btn-hud btn-primary-nav" title="Atlas de Locais das Histórias">
+          <span class="btn-icon">📍</span> <span class="btn-text">Locais</span>
         </button>
-        <button id="btn-open-memorial" class="btn-hud" title="Abrir Memorial dos Caídos de Evren">
-          <span class="btn-icon">🕯️</span> <span class="btn-text">Memorial</span>
-        </button>
-        <button id="btn-open-cassette" class="btn-hud" title="Abrir Gravador de Fitas Cassete da A.E.G.I.S.">
-          <span class="btn-icon">📼</span> <span class="btn-text">Fitas A.E.G.I.S.</span>
-        </button>
-        <button id="btn-open-chronicles" class="btn-hud" title="Abrir Crônicas e Histórias">
+        <button id="btn-open-chronicles" class="btn-hud btn-primary-nav" title="Crônicas e Histórias das Mesas">
           <span class="btn-icon">📖</span> <span class="btn-text">Crônicas</span>
         </button>
-        <button id="btn-open-timeline" class="btn-hud" title="Abrir Cronologia Histórica de Evren [T]">
-          <span class="btn-icon">⏳</span> <span class="btn-text">Cronologia</span> <span class="btn-kbd">[T]</span>
-        </button>
-        <button id="btn-open-relics" class="btn-hud" title="Abrir Arsenal de Relíquias Ocultas">
-          <span class="btn-icon">🏺</span> <span class="btn-text">Relíquias</span>
-        </button>
-        <button id="btn-open-bestiary" class="btn-hud" title="Abrir Bestiário de Ameaças [B]">
-          <span class="btn-icon">👾</span> <span class="btn-text">Bestiário</span> <span class="btn-kbd">[B]</span>
-        </button>
-        <button id="btn-open-journal" class="btn-hud" title="Diário de Bordo & Notas do Mestre [J]">
-          <span class="btn-icon">📝</span> <span class="btn-text">Diário</span> <span class="btn-kbd">[J]</span>
-        </button>
-        <button id="btn-open-rules" class="btn-hud" title="Abrir Regras do Universo Evren">
-          <span class="btn-icon">📜</span> <span class="btn-text">Regras</span> <span class="btn-kbd">[R]</span>
-        </button>
-        <button id="btn-open-codex" class="btn-hud" title="Abrir Códice Global">
-          <span class="btn-icon">🗂️</span> <span class="btn-text">Códice</span> <span class="btn-kbd">[C]</span>
-        </button>
-        <button id="btn-open-creator" class="btn-hud btn-blood" title="Cadastrar Nova Ficha de Personagem">
-          <span class="btn-icon">➕</span> <span class="btn-text">+ Ficha</span>
-        </button>
-        <button id="btn-open-campaign-creator" class="btn-hud" title="Criar Nova Campanha / Anomalia">
-          <span class="btn-icon">🌐</span> <span class="btn-text">+ Campanha</span>
-        </button>
-        <button id="btn-open-backup" class="btn-hud" title="Backup, Nuvem & Portabilidade">
-          <span class="btn-icon">💾</span> <span class="btn-text">Backup</span>
-        </button>
-        <button id="btn-open-shortcuts" class="btn-hud" title="Guia de Teclas de Atalho [?] [H]">
-          <span class="btn-icon">⌨️</span> <span class="btn-text">Atalhos</span> <span class="btn-kbd">[?]</span>
-        </button>
-        <button id="btn-toggle-sound" class="btn-hud active" title="Alternar Efeitos Sonoros Ocultistas">
-          <span class="btn-icon">🔊</span> <span class="btn-text" id="sound-btn-text">SOM [ON]</span>
-        </button>
-        <button id="btn-toggle-ambient" class="btn-hud" title="Alternar Trilha Sonora Paranormal / Ambiência [A]">
-          <span class="btn-icon">🎵</span> <span class="btn-text" id="ambient-btn-text">AMBIÊNCIA [OFF]</span>
-        </button>
-        <button id="btn-open-mixer" class="btn-hud" title="Mixer de Áudio [S]">
-          <span class="btn-icon">🎛️</span> <span class="btn-text">Mixer</span> <span class="btn-kbd">[S]</span>
-        </button>
-        <button id="btn-pwa-install" class="btn-hud btn-pwa-install" title="Instalar Aplicativo (PWA)" style="display:none;">
-          <span class="btn-icon">📲</span> <span class="btn-text">Instalar App</span>
-        </button>
+
+        <!-- Menu Dropdown: Cadastrar Novo -->
+        <div class="hud-dropdown-wrap">
+          <button id="btn-hud-create" class="btn-hud btn-action-add" title="Cadastrar Nova Ficha ou Campanha">
+            <span class="btn-icon">➕</span> <span class="btn-text">Novo</span> <span class="btn-caret">▾</span>
+          </button>
+          <div class="hud-dropdown-menu">
+            <div class="hud-dropdown-group-title">CADASTRAR NO UNIVERSO</div>
+            <button id="btn-open-creator" class="hud-dropdown-item">
+              <span class="btn-icon">👤</span> <span>Nova Ficha de Agente</span>
+            </button>
+            <button id="btn-open-cris-importer" class="hud-dropdown-item">
+              <span class="btn-icon">📥</span> <span>Importar do C.R.I.S. (JSON)</span>
+            </button>
+            <button id="btn-open-campaign-creator" class="hud-dropdown-item">
+              <span class="btn-icon">🌐</span> <span>Nova Campanha de RPG</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Menu Dropdown: Arquivo & Mais -->
+        <div class="hud-dropdown-wrap">
+          <button id="btn-hud-tools" class="btn-hud btn-more" title="Mais Opções e Ferramentas">
+            <span class="btn-icon">📚</span> <span class="btn-text">Arquivo & Mais</span> <span class="btn-caret">▾</span>
+          </button>
+          <div class="hud-dropdown-menu right-aligned">
+            <div class="hud-dropdown-group-title">LORE & EXPLORAÇÃO</div>
+            <button id="btn-open-timeline" class="hud-dropdown-item">
+              <span class="btn-icon">⏳</span> <span>Cronologia Histórica [T]</span>
+            </button>
+            <button id="btn-open-lore-graph" class="hud-dropdown-item">
+              <span class="btn-icon">🕸️</span> <span>Teia de Conexões de Evren</span>
+            </button>
+            <button id="btn-open-memorial" class="hud-dropdown-item">
+              <span class="btn-icon">🕯️</span> <span>Memorial dos Caídos</span>
+            </button>
+            <button id="btn-open-cassette" class="hud-dropdown-item">
+              <span class="btn-icon">📼</span> <span>Fitas de Áudio da A.E.G.I.S.</span>
+            </button>
+            <button id="btn-open-journal" class="hud-dropdown-item">
+              <span class="btn-icon">📝</span> <span>Diário do Mestre [J]</span>
+            </button>
+            <button id="btn-open-codex" class="hud-dropdown-item">
+              <span class="btn-icon">🗂️</span> <span>Códice da Lore [C]</span>
+            </button>
+            <button id="btn-open-rules" class="hud-dropdown-item">
+              <span class="btn-icon">📜</span> <span>Regras de Evren [R]</span>
+            </button>
+            <button id="btn-open-relics" class="hud-dropdown-item">
+              <span class="btn-icon">🏺</span> <span>Arsenal de Relíquias</span>
+            </button>
+            <button id="btn-open-bestiary" class="hud-dropdown-item">
+              <span class="btn-icon">👾</span> <span>Bestiário de Ameaças [B]</span>
+            </button>
+            <div class="hud-dropdown-divider"></div>
+            <div class="hud-dropdown-group-title">SISTEMA & OPÇÕES</div>
+            <button id="btn-open-backup" class="hud-dropdown-item">
+              <span class="btn-icon">💾</span> <span>Backup & Sincronização</span>
+            </button>
+            <button id="btn-open-shortcuts" class="hud-dropdown-item">
+              <span class="btn-icon">⌨️</span> <span>Guia de Atalhos [?]</span>
+            </button>
+            <button id="btn-toggle-sound" class="hud-dropdown-item active">
+              <span class="btn-icon">🔊</span> <span id="sound-btn-text">Efeitos Sonoros [ON]</span>
+            </button>
+            <button id="btn-toggle-ambient" class="hud-dropdown-item">
+              <span class="btn-icon">🎵</span> <span id="ambient-btn-text">Música de Fundo [OFF]</span>
+            </button>
+            <button id="btn-open-mixer" class="hud-dropdown-item">
+              <span class="btn-icon">🎛️</span> <span>Mesa de Som [S]</span>
+            </button>
+            <button id="btn-pwa-install" class="hud-dropdown-item" style="display:none;">
+              <span class="btn-icon">📲</span> <span class="btn-text">Instalar App</span>
+            </button>
+          </div>
+        </div>
 
         <!-- Elementos táticos de combate mantidos para integridade técnica mas ocultos -->
         <button id="btn-open-combat" style="display:none;"></button>
@@ -373,18 +396,14 @@
     <!-- Widget Holográfico de Radar e Sonar Ocultista AEGIS -->
     <div id="occult-radar-container" class="occult-radar-container"></div>
 
-    <!-- HUD Flutuante Inferior: Informações Táticas de Status -->
+    <!-- HUD Flutuante Inferior: Informações Úteis & Atalhos -->
     <footer id="floating-bottom-hud">
       <div class="hud-status-badge">
         <span class="status-dot"></span>
-        <span>RADAR AEGIS: SINAL ATIVO</span>
-      </div>
-      <div class="hud-status-badge">
-        <span class="status-dot danger"></span>
-        <span>FENDA DIMENSIONAL: ESTABILIDADE 42%</span>
+        <span>EVREN // ARQUIVO DE RPG</span>
       </div>
       <div class="hud-status-badge" style="color: var(--color-text-muted);">
-        <span>ATALHOS: [ESC] Fechar | [/] Busca | [M] Reset Mapa | [R] Regras | [C] Códice | [D] Gaveta</span>
+        <span>💡 DICA: Passe o mouse ou clique nos pontos luminosos do planeta para ver detalhes de cada campanha</span>
       </div>
     </footer>
 

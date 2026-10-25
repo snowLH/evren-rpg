@@ -61,6 +61,7 @@
    2. RADAR OCULTISTA HOLOGRÁFICO AEGIS (CANTO INFERIOR ESQUERDO)
    ========================================================================== */
 .occult-radar-container {
+  display: none !important; /* Desativado para manter o mapa do mundo 100% limpo e visível */
   position: fixed;
   bottom: 44px; /* Logo acima do footer HUD */
   left: 20px;

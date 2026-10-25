@@ -532,6 +532,33 @@ class UIController {
   }
 
   setupEventListeners() {
+    // Dropdowns do HUD Superior (Cadastrar e Arquivo & Mais)
+    ['btn-hud-create', 'btn-hud-tools'].forEach(btnId => {
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const parentWrap = btn.closest('.hud-dropdown-wrap');
+          const wasOpen = parentWrap?.classList.contains('open');
+          document.querySelectorAll('.hud-dropdown-wrap.open').forEach(w => w.classList.remove('open'));
+          if (!wasOpen) parentWrap?.classList.add('open');
+          this.soundFX.playTacticalBeep();
+        });
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.hud-dropdown-wrap')) {
+        document.querySelectorAll('.hud-dropdown-wrap.open').forEach(w => w.classList.remove('open'));
+      }
+    });
+
+    document.querySelectorAll('.hud-dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.hud-dropdown-wrap.open').forEach(w => w.classList.remove('open'));
+      });
+    });
+
     // Botão de fechar gaveta
     document.getElementById('btn-close-drawer')?.addEventListener('click', () => {
       this.closeDrawer();

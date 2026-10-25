@@ -419,8 +419,9 @@
   100% { transform: rotate(-360deg); }
 }
 
-/* 4. Cartouche Ornamental de Título Cartográfico */
+/* 4. Cartouche Ornamental de Título Cartográfico (Oculto no mapa múndi para não poluir a visualização) */
 .fantasy-cartouche-banner {
+  display: none;
   position: fixed;
   top: 74px;
   left: 50%;
