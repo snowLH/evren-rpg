@@ -1,0 +1,208 @@
+/* ==========================================================================
+   GLITCH & PARANORMAL STATIC EFFECTS
+   Universo: Evren - VTT & Wiki
+   ========================================================================== */
+
+/* CRT Scanlines Overlay */
+.crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.35) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  opacity: 0.75;
+}
+
+/* CRT Vignette */
+.crt-vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.85), inset 0 0 40px rgba(10, 42, 74, 0.6);
+}
+
+/* Subtle CRT Flicker */
+@keyframes crt-flicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  52% { opacity: 0.92; }
+  54% { opacity: 0.99; }
+  80% { opacity: 0.96; }
+  100% { opacity: 1; }
+}
+
+body.paranormal-fx .crt-overlay {
+  animation: crt-flicker 0.15s infinite;
+}
+
+/* Text Glitch Effect */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  color: var(--color-cyan, #00e5ff);
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip: rect(0, 0, 0, 0);
+}
+
+.glitch-text::before {
+  left: -2px;
+  text-shadow: 2px 0 var(--color-blood, #e74c3c);
+  animation: glitch-anim-1 3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: 2px;
+  text-shadow: -2px 0 var(--color-cyan, #00e5ff);
+  animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip: rect(12px, 9999px, 44px, 0); transform: skew(0.3deg); }
+  10% { clip: rect(65px, 9999px, 80px, 0); transform: skew(0.8deg); }
+  20% { clip: rect(2px, 9999px, 20px, 0); transform: skew(0.1deg); }
+  30% { clip: rect(50px, 9999px, 75px, 0); transform: skew(0.5deg); }
+  40% { clip: rect(80px, 9999px, 90px, 0); transform: skew(0.2deg); }
+  50% { clip: rect(35px, 9999px, 45px, 0); transform: skew(0.7deg); }
+  60% { clip: rect(10px, 9999px, 30px, 0); transform: skew(0.3deg); }
+  70% { clip: rect(70px, 9999px, 95px, 0); transform: skew(0.9deg); }
+  80% { clip: rect(25px, 9999px, 40px, 0); transform: skew(0.4deg); }
+  90% { clip: rect(5px, 9999px, 25px, 0); transform: skew(0.2deg); }
+  100% { clip: rect(60px, 9999px, 85px, 0); transform: skew(0.6deg); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(40px, 9999px, 60px, 0); transform: skew(-0.4deg); }
+  15% { clip: rect(10px, 9999px, 28px, 0); transform: skew(-0.2deg); }
+  30% { clip: rect(75px, 9999px, 90px, 0); transform: skew(-0.7deg); }
+  45% { clip: rect(20px, 9999px, 35px, 0); transform: skew(-0.3deg); }
+  60% { clip: rect(85px, 9999px, 100px, 0); transform: skew(-0.9deg); }
+  75% { clip: rect(5px, 9999px, 18px, 0); transform: skew(-0.1deg); }
+  90% { clip: rect(55px, 9999px, 70px, 0); transform: skew(-0.5deg); }
+  100% { clip: rect(30px, 9999px, 48px, 0); transform: skew(-0.3deg); }
+}
+
+/* Violent Glitch Burst (triggered by ZZZZT events or PD Overload) */
+@keyframes violent-jitter {
+  0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
+  20% { transform: translate(-4px, 3px) scale(1.01); filter: hue-rotate(90deg) contrast(150%); }
+  40% { transform: translate(4px, -3px) scale(0.99); filter: hue-rotate(180deg) invert(20%); }
+  60% { transform: translate(-3px, -2px) scale(1.02); filter: hue-rotate(270deg); }
+  80% { transform: translate(3px, 2px) scale(1); filter: hue-rotate(45deg); }
+  100% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
+}
+
+.violent-glitch-active {
+  animation: violent-jitter 0.4s ease-in-out;
+}
+
+/* Static Noise Burst */
+.screen-static-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(231, 76, 60, 0.35) 0%, rgba(0, 229, 255, 0.25) 50%, rgba(10, 42, 74, 0.8) 100%);
+  mix-blend-mode: color-dodge;
+  opacity: 0;
+  transition: opacity 0.08s ease;
+}
+
+.screen-static-flash.active {
+  opacity: 1;
+}
+
+/* Tactical Pulse Ring (Radar / Anomaly) */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+    box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.8);
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+    box-shadow: 0 0 25px 15px rgba(0, 229, 255, 0);
+  }
+}
+
+@keyframes bio-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+    box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.8);
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+    box-shadow: 0 0 30px 10px rgba(57, 255, 20, 0);
+  }
+}
+
+@keyframes abyss-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+    box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.8);
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+    box-shadow: 0 0 35px 15px rgba(192, 57, 43, 0);
+  }
+}
+
+/* Glitch Sigil Shimmer */
+@keyframes sigil-glitch {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(231, 76, 60, 0.8));
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    filter: drop-shadow(0 0 12px rgba(255, 0, 100, 1)) hue-rotate(45deg);
+    transform: rotate(1.5deg) scale(1.05);
+  }
+  50% {
+    filter: drop-shadow(-3px 0 0 #00e5ff) drop-shadow(3px 0 0 #e74c3c);
+    transform: rotate(-1deg) scale(0.98);
+  }
+  75% {
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.9));
+    transform: rotate(0.5deg) scale(1.02);
+  }
+}
+
+.glitch-sigil-anim {
+  animation: sigil-glitch 2.8s infinite ease-in-out;
+}

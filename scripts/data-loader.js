@@ -1,0 +1,4365 @@
+/**
+ * DATA LOADER MODULE
+ * Universo: Evren - Mesa Interativa
+ * Carrega e provê acesso estruturado ao world_data.json com tolerância a falhas.
+ */
+
+class DataLoader {
+  constructor() {
+    this.data = null;
+    this.isLoaded = false;
+  }
+
+  /**
+   * Carrega o arquivo world_data.json via fetch
+   * Possui fallback estruturado idêntico em caso de restrição CORS em file:///
+   */
+  async loadData() {
+    try {
+      const response = await fetch('world_data.json', { cache: 'no-cache' });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      this.data = await response.json();
+      this.isLoaded = true;
+      console.log('✓ world_data.json carregado com sucesso via fetch.');
+      return this.data;
+    } catch (err) {
+      console.warn('! Aviso ao carregar world_data.json via fetch (provável protocolo file://). Usando fallback embarcado.', err);
+      this.data = this.getEmbeddedFallbackData();
+      this.isLoaded = true;
+      return this.data;
+    }
+  }
+
+  getRawData() {
+    return this.data;
+  }
+
+  getUniverseRules() {
+    return this.data?.universe_rules || {
+      system: "Evren",
+      universe: "Evren",
+      attributes: ["Força", "Vigor", "Agilidade", "Presença", "Intelecto"],
+      mechanics: ["MDA", "Pontos de Determinação (PD)", "Sacrifício de Armadura", "Desempate Letal"]
+    };
+  }
+
+  getWorldGeoJSON() {
+    if (typeof window !== 'undefined' && window.WORLD_COUNTRIES_GEOJSON) {
+      return window.WORLD_COUNTRIES_GEOJSON;
+    }
+    return null;
+  }
+
+  getMaps() {
+    return this.data?.maps || [];
+  }
+
+  getMapById(id) {
+    return this.data?.maps?.find(m => m.id === id) || null;
+  }
+
+  getCampaigns() {
+    return this.data?.campaigns || [];
+  }
+
+  getCampaignById(id) {
+    return this.data?.campaigns?.find(c => c.id === id) || null;
+  }
+
+  getLocations(campaignFilter = null, mapId = null) {
+    let locs = this.data?.locations || [];
+
+    if (mapId) {
+      locs = locs.filter(loc => loc.map_id === mapId);
+    }
+
+    if (!campaignFilter || campaignFilter === 'all') return locs;
+
+    // Filtra locais associados a crônicas da campanha escolhida
+    const campaignChronicles = this.getChronicles(campaignFilter).map(c => c.id);
+    return locs.filter(loc => {
+      if (loc.campaign_ids && loc.campaign_ids.includes(campaignFilter)) return true;
+      if (loc.chronicles && loc.chronicles.some(cId => campaignChronicles.includes(cId))) {
+        return true;
+      }
+      // Se não tem crônicas associadas explicitamente, mantém se pertencer ao tema
+      if (campaignFilter === 'camp_001' && ((loc.zone && loc.zone.includes('Triângulo')) || loc.map_id === 'map_triangulo')) return true;
+      if (campaignFilter === 'camp_002' && ((loc.zone && loc.zone.includes('Terra')) || loc.map_id === 'map_vilar')) return true;
+      return false;
+    });
+  }
+
+  getAllCharacters() {
+    return this.data?.characters || [];
+  }
+
+  getCharacters(campaignFilter = null) {
+    const chars = this.data?.characters || [];
+    if (!campaignFilter || campaignFilter === 'all') return chars;
+
+    const campaignChronicles = this.getChronicles(campaignFilter);
+    const chronicleTexts = campaignChronicles.map(c => (c.lore + ' ' + c.title).toLowerCase());
+
+    return chars.filter(char => {
+      if (char.campaign_ids && char.campaign_ids.includes(campaignFilter)) return true;
+      if (char.campaign_id === campaignFilter) return true;
+
+      // Checa se o personagem é mencionado nas crônicas desta campanha
+      const firstName = char.name.split(' ')[0].toLowerCase();
+      if (chronicleTexts.some(text => text.includes(firstName) || text.includes(char.name.toLowerCase()))) {
+        return true;
+      }
+
+      // Vínculos canônicos para personagens da Mansão Vilar vs Triângulo
+      if (campaignFilter === 'camp_002' && ['char_lucas', 'char_gabriel', 'char_rafael', 'char_julia'].includes(char.id)) {
+        return true;
+      }
+      if (campaignFilter === 'camp_001' && (char.id === 'char_arquiteto' || (char.status && char.status.includes('Triângulo')))) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  getChronicles(campaignFilter = null) {
+    const chrons = this.data?.chronicles || [];
+    if (!campaignFilter || campaignFilter === 'all') return chrons;
+    return chrons.filter(c => c.campaign_id === campaignFilter);
+  }
+
+  getLocationById(id) {
+    return this.data?.locations?.find(l => l.id === id) || null;
+  }
+
+  getCharacterById(id) {
+    return this.data?.characters?.find(c => c.id === id) || null;
+  }
+
+  getChronicleById(id) {
+    return this.data?.chronicles?.find(c => c.id === id) || null;
+  }
+
+  getBestiary() {
+    return this.data?.bestiary || [];
+  }
+
+  getCreatureById(id) {
+    return this.data?.bestiary?.find(c => c.id === id) || null;
+  }
+
+  getRelics() {
+    return this.data?.relics || [];
+  }
+
+  getRelicById(id) {
+    return this.data?.relics?.find(r => r.id === id) || null;
+  }
+
+  getRelationsGraph() {
+    return this.data?.relations_graph || { nodes: [], links: [] };
+  }
+
+  getTimeline() {
+    return this.data?.timeline || [];
+  }
+
+  getBattlemapTokens(mapId = null) {
+    const tokens = this.data?.battlemap_tokens || [];
+    if (!mapId) return tokens;
+    return tokens.filter(t => t.map_id === mapId);
+  }
+
+  /**
+   * Busca global por termo em locais, personagens, crônicas, criaturas e relíquias
+   */
+  search(query) {
+    if (!query || query.trim() === '') {
+      return { locations: [], characters: [], chronicles: [], creatures: [], relics: [] };
+    }
+    const q = query.toLowerCase().trim();
+
+    const locations = (this.data?.locations || []).filter(l => 
+      l.name.toLowerCase().includes(q) ||
+      l.zone.toLowerCase().includes(q) ||
+      l.description.toLowerCase().includes(q)
+    );
+
+    const characters = (this.data?.characters || []).filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.player.toLowerCase().includes(q) ||
+      c.summary.toLowerCase().includes(q) ||
+      (c.relics && c.relics.some(r => r.toLowerCase().includes(q)))
+    );
+
+    const chronicles = (this.data?.chronicles || []).filter(cr =>
+      cr.title.toLowerCase().includes(q) ||
+      cr.lore.toLowerCase().includes(q)
+    );
+
+    const creatures = (this.data?.bestiary || []).filter(creature =>
+      creature.name.toLowerCase().includes(q) ||
+      creature.zone.toLowerCase().includes(q) ||
+      creature.behavior.toLowerCase().includes(q) ||
+      creature.description.toLowerCase().includes(q)
+    );
+
+    const relics = (this.data?.relics || []).filter(relic =>
+      relic.name.toLowerCase().includes(q) ||
+      relic.ability.toLowerCase().includes(q) ||
+      relic.description.toLowerCase().includes(q)
+    );
+
+    return { locations, characters, chronicles, creatures, relics };
+  }
+
+  /**
+   * Cópia fiel idêntica ao world_data.json para resiliência offline máxima
+   */
+  getEmbeddedFallbackData() {
+    return {
+  "universe_rules": {
+    "system": "Evren",
+    "universe": "Evren",
+    "attributes": [
+      "Força",
+      "Vigor",
+      "Agilidade",
+      "Presença",
+      "Intelecto"
+    ],
+    "mechanics": [
+      "MDA",
+      "Pontos de Determinação (PD)",
+      "Sacrifício de Armadura",
+      "Desempate Letal"
+    ]
+  },
+  "maps": [
+    {
+      "id": "map_world",
+      "name": "Mapa Múndi Real (Todos os Países & Anomalias)",
+      "type": "global",
+      "theme": "Dark Fantasy Cartographic",
+      "center": [
+        22,
+        -50
+      ],
+      "default_zoom": 3,
+      "description": "Visão global com as fronteiras de todos os países do mundo, destacando as anomalias no Triângulo das Bermudas e no México."
+    },
+    {
+      "id": "map_triangulo",
+      "name": "Setor Abissal: O Triângulo das Bermudas",
+      "type": "local",
+      "campaign_id": "camp_001",
+      "center": [
+        25,
+        -71.5
+      ],
+      "default_zoom": 7,
+      "bounds": [
+        [
+          18,
+          -82
+        ],
+        [
+          33,
+          -64
+        ]
+      ],
+      "description": "Carta náutica tática no Oceano Atlântico, no exato Triângulo das Bermudas entre Miami, Bermudas e Porto Rico."
+    },
+    {
+      "id": "map_vilar",
+      "name": "Propriedade Vilar & Minas Subterrâneas (México)",
+      "type": "local",
+      "campaign_id": "camp_002",
+      "center": [
+        21.85,
+        -102.25
+      ],
+      "default_zoom": 11,
+      "bounds": [
+        [
+          21.7,
+          -102.45
+        ],
+        [
+          22,
+          -102.1
+        ]
+      ],
+      "description": "Planta arquitetônica da propriedade isolada na serra mineradora do México e do complexo subterrâneo dos Ecos."
+    },
+    {
+      "id": "map_artico",
+      "name": "Estação Criogênica Zero & Fenda Glacial (Groenlândia)",
+      "type": "local",
+      "campaign_id": "camp_003",
+      "center": [
+        72,
+        -40
+      ],
+      "default_zoom": 9,
+      "bounds": [
+        [
+          71,
+          -42
+        ],
+        [
+          73,
+          -38
+        ]
+      ],
+      "description": "Base científica subterrânea escavada sob 3km de calota de gelo, onde o primeiro espécime com DNA Primordial foi preservado antes do colapso do Triângulo."
+    },
+    {
+      "id": "map_brasil",
+      "name": "Setor Selva: Bacia do Rio Tapajós & Cratera de Quartzo Negro (Brasil)",
+      "type": "local",
+      "campaign_id": "camp_004",
+      "center": [
+        -4.25,
+        -55.98
+      ],
+      "default_zoom": 10,
+      "bounds": [
+        [
+          -5.5,
+          -57.5
+        ],
+        [
+          -3,
+          -54.5
+        ]
+      ],
+      "description": "Setor florestal isolado no Pará, Brasil, onde formações subterrâneas de quartzo negro entraram em ressonância com a mente biológica do Arquiteto do Caos."
+    },
+    {
+      "id": "map_alemanha",
+      "name": "Setor Floresta Negra: Monastério dos Sem-Rosto (Alemanha)",
+      "type": "local",
+      "campaign_id": "camp_005",
+      "center": [
+        48.15,
+        8.2
+      ],
+      "default_zoom": 11,
+      "bounds": [
+        [
+          47.8,
+          7.8
+        ],
+        [
+          48.6,
+          8.6
+        ]
+      ],
+      "description": "Ruínas góticas e criptas subterrâneas do século XIV erguidas em Baden-Württemberg, Alemanha, sobre a Fenda Acústica do LIMIAR."
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "camp_001",
+      "title": "A Incursão: O Purgatório Genético",
+      "status": "Em andamento",
+      "category": "ongoing",
+      "theme": "Survival Horror Biológico",
+      "map_id": "map_triangulo",
+      "world_coordinates": [
+        25.5,
+        -71.5
+      ],
+      "gateway_name": "O Triângulo das Bermudas / A Incursão",
+      "danger_rating": "NÍVEL ÔMEGA // 99% MDA",
+      "country_location": "Oceano Atlântico Norte (Triângulo das Bermudas)",
+      "year": "Ano 2026 // Presente",
+      "description": "No coração do verdadeiro Triângulo das Bermudas, um buraco de minhoca no Atlântico engole navios. Lá, a magia não existe: apenas mutação biológica violenta sob a mente do Arquiteto do Caos.",
+      "synopsis": "Um navio com centenas de sobreviventes foi tragado pelo vórtice dimensional no Atlântico. Ao cruzarem a fenda para Nova Caronte, descobriram que leis biológicas foram distorcidas. O Arquiteto do Caos manipula mentes e corpos enquanto a A.E.G.I.S. tenta conter o colapso.",
+      "participants": [
+        "char_arquiteto"
+      ],
+      "locations_list": [
+        "loc_caronte",
+        "loc_kraken"
+      ]
+    },
+    {
+      "id": "camp_002",
+      "title": "Até o Amanhecer: O Limiar da Mansão Vilar",
+      "status": "Concluída / Histórica",
+      "category": "completed",
+      "theme": "Thriller Psicológico Investigativo",
+      "map_id": "map_vilar",
+      "world_coordinates": [
+        21.85,
+        -102.25
+      ],
+      "gateway_name": "Mansão Vilar: Até o Amanhecer (México)",
+      "danger_rating": "NÍVEL ALFA // ECOS & LIMIAR",
+      "country_location": "México (Serra Mineradora)",
+      "year": "Ano 2024 // Finalizada",
+      "description": "Na região montanhosa e mineradora do México, cinco amigos retornam à isolada Mansão Vilar, onde foram manipulados psicologicamente por uma figura mascarada armada com o LIMIAR.",
+      "synopsis": "Três anos após o desaparecimento trágico de Lucas Vilar nas minas mexicanas, o grupo de amigos reuniu-se na propriedade isolada. Gabriel Vilar assumiu o manto de 'O Mascarado', usando a arma de portais LIMIAR para encenar um jogo de terror psicológico para expor a culpa de cada um. No clímax subterrâneo, o grupo enfrentou os Ecos e explodiu o complexo.",
+      "outcome": "✓ Lucas Vilar foi resgatado com vida (cego e marcado pelas profundezas).\n✓ Gabriel Vilar foi desmascarado e desapareceu através de uma dobra do LIMIAR.\n✓ A Mansão Vilar e as entradas das minas foram detonadas com cargas explosivas para conter os Ecos.",
+      "participants": [
+        "char_lucas",
+        "char_gabriel",
+        "char_rafael",
+        "char_julia"
+      ],
+      "locations_list": [
+        "loc_vilar",
+        "loc_vilar_casarao",
+        "loc_vilar_minas"
+      ]
+    },
+    {
+      "id": "camp_003",
+      "title": "O Túmulo do Leviatã: Estação Criogênica Zero",
+      "status": "Em andamento",
+      "category": "ongoing",
+      "theme": "Terror Sci-Fi & Claustrofobia Polar",
+      "map_id": "map_artico",
+      "world_coordinates": [
+        72,
+        -40
+      ],
+      "gateway_name": "Estação Criogênica Zero (Groenlândia)",
+      "danger_rating": "NÍVEL BETA // CRIOPARASITAS",
+      "country_location": "Groenlândia (Calota Polar Ártica)",
+      "year": "Ano 2026 // Presente",
+      "description": "Nas profundezas do manto de gelo da Groenlândia, a estação de biopesquisa Zero da A.E.G.I.S. cessou transmissões após perfurar uma caverna subglacial contendo o tecido fossilizado de um Leviatã Primordial.",
+      "synopsis": "Uma expedição de biopesquisa da A.E.G.I.S. na Groenlândia extraiu amostras celulares de um monólito de gelo negro ligado à fenda do Triângulo das Bermudas. Quando o espécime rompeu a quarentena, o Comandante Miller e a Dra. Evelyn Shaw entraram em isolamento de emergência.",
+      "participants": [
+        "char_evelyn",
+        "char_miller"
+      ],
+      "locations_list": [
+        "loc_estacao_zero",
+        "loc_monolito_gelo"
+      ]
+    },
+    {
+      "id": "camp_004",
+      "title": "Protocolo Selva: Os Ecos do Ouro Negro",
+      "status": "Concluída / Histórica",
+      "category": "completed",
+      "theme": "Horror Cósmico & Sobrevivência Tática",
+      "map_id": "map_brasil",
+      "world_coordinates": [
+        -4.25,
+        -55.98
+      ],
+      "gateway_name": "Protocolo Selva: Ouro Negro (Brasil)",
+      "danger_rating": "NÍVEL ÔMEGA // ESPOROS BIOELÉTRICOS",
+      "country_location": "Brasil (Amazônia / Rio Tapajós)",
+      "year": "Ano 2025 // Finalizada",
+      "description": "No coração da floresta amazônica brasileira, uma fenda subterrânea de quartzo negro assimilou memórias e corpos de geólogos.",
+      "synopsis": "Uma expedição secreta do esquadrão Curupira penetrou a selva após o sumiço de geólogos. O Capitão Thiago Santos e a Dra. Camila Neves descobriram que as raízes da floresta canalizavam frequências do Arquiteto do Caos. Após uma fuga desesperada, a caverna de quartzo foi detonada para evitar a proliferação dos esporos.",
+      "outcome": "✓ O núcleo de dados da expedição geológica foi recuperado intacto.\n✓ A caverna subterrânea foi implodida com cargas táticas de fósforo branco.\n✓ Capitão Santos e Dra. Neves sobreviveram, embora a bióloga permaneça em observação por alterações sinápticas.",
+      "participants": [
+        "char_thiago",
+        "char_camila"
+      ],
+      "locations_list": [
+        "loc_tapajos",
+        "loc_quartzo"
+      ]
+    },
+    {
+      "id": "camp_005",
+      "title": "O Sussurro da Floresta Negra: O Monastério dos Sem-Rosto",
+      "status": "Concluída / Histórica",
+      "category": "completed",
+      "theme": "Mistério Gótico & Amnésia Psicológica",
+      "map_id": "map_alemanha",
+      "world_coordinates": [
+        48.15,
+        8.2
+      ],
+      "gateway_name": "Monastério dos Sem-Rosto (Alemanha)",
+      "danger_rating": "NÍVEL ALFA // FREQUÊNCIA DE AMNÉSIA",
+      "country_location": "Alemanha (Floresta Negra / Baden-Württemberg)",
+      "year": "Ano 2023 // Finalizada",
+      "description": "Monastério medieval isolado nas brumas da Floresta Negra, onde monges heréticos entalharam sinos que deformavam a mente e roubavam identidades.",
+      "synopsis": "Em 2023, o historiador Hans Richter e a investigadora forense Greta Falk foram contratados para investigar peregrinos que retornavam da floresta sem memória ou fisionomia identificável. No interior da cripta gótica, encontraram o altar do 'Eco Silencioso' ressonando com artefatos do LIMIAR.",
+      "outcome": "✓ Os sinos de bronze da abadia foram quebrados e o complexo selado em concreto hidrofóbico.\n✓ Greta Falk recuperou os arquivos das vítimas, mas perdeu permanentemente a capacidade de fala vocal.\n✓ O arquivo secreto do monastério foi integrado à biblioteca confidencial da A.E.G.I.S.",
+      "participants": [
+        "char_greta",
+        "char_hans"
+      ],
+      "locations_list": [
+        "loc_monasterio",
+        "loc_cripta"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc_caronte",
+      "name": "Nova Caronte",
+      "zone": "O Triângulo das Bermudas (Anomalia Atlântica)",
+      "type": "Cidadela Flutuante",
+      "map_id": "map_triangulo",
+      "scope": "local",
+      "coordinates": [
+        25.5,
+        -73.2
+      ],
+      "description": "Um aglomerado caótico de galeões espanhóis, submarinos soviéticos e navios piratas no epicentro do Triângulo das Bermudas. Cheira a peixe podre e desespero.",
+      "chronicles": [
+        "cron_inc_01"
+      ]
+    },
+    {
+      "id": "loc_kraken",
+      "name": "O Fosso do Kraken",
+      "zone": "Fosso Abissal (Triângulo das Bermudas)",
+      "type": "Covil Abissal",
+      "map_id": "map_triangulo",
+      "scope": "local",
+      "coordinates": [
+        23.8,
+        -69.5
+      ],
+      "description": "Domínio do Soberano Abissal na Fossa de Porto Rico / Triângulo das Bermudas, uma lula colossal fundida com rochas vulcânicas capaz de gerar pulsos eletromagnéticos."
+    },
+    {
+      "id": "loc_vilar",
+      "name": "Mansão Vilar & Minas Antigas",
+      "zone": "México (Serra de Minas / Realidade)",
+      "type": "Mansão Isolada",
+      "map_id": "map_vilar",
+      "scope": "local",
+      "coordinates": [
+        21.85,
+        -102.25
+      ],
+      "description": "Uma mansão cercada por floresta e tempestade nas serras do México. No porão, a entrada para as minas esquecidas assombradas pelos Ecos.",
+      "chronicles": [
+        "cron_vil_01"
+      ]
+    },
+    {
+      "id": "loc_vilar_casarao",
+      "name": "O Casarão & Laboratório do LIMIAR",
+      "zone": "México (Propriedade Vilar)",
+      "type": "Casarão Vitoriano",
+      "map_id": "map_vilar",
+      "scope": "local",
+      "coordinates": [
+        21.88,
+        -102.2
+      ],
+      "description": "O casarão principal no México onde Gabriel Vilar aperfeiçoou a arma de portais LIMIAR e montou os aparatos de confissão.",
+      "chronicles": [
+        "cron_vil_01"
+      ]
+    },
+    {
+      "id": "loc_vilar_minas",
+      "name": "As Minas Antigas dos Ecos",
+      "zone": "México (Subsolo da Serra)",
+      "type": "Túneis Subterrâneos",
+      "map_id": "map_vilar",
+      "scope": "local",
+      "coordinates": [
+        21.82,
+        -102.3
+      ],
+      "description": "Antigas galerias subterrâneas de mineração no México onde Lucas sobreviveu cego por 3 anos, caçado por criaturas que roubam vozes.",
+      "chronicles": [
+        "cron_vil_01"
+      ]
+    },
+    {
+      "id": "loc_estacao_zero",
+      "name": "Laboratório Criogênico Zero",
+      "zone": "Groenlândia (Calota Polar)",
+      "type": "Instalação Científica Subterrânea",
+      "map_id": "map_artico",
+      "scope": "local",
+      "coordinates": [
+        72.15,
+        -40.2
+      ],
+      "description": "Um labirinto hermético de concreto e titânio cercado por gelo a -50°C. Câmaras de quarentena quebradas, sangue negro congelado e alarmes de radiação biológica.",
+      "chronicles": [
+        "cron_arc_01"
+      ]
+    },
+    {
+      "id": "loc_monolito_gelo",
+      "name": "A Fenda do Monólito de Gelo Negro",
+      "zone": "Groenlândia (Calota Polar)",
+      "type": "Fissura Glacial Primordial",
+      "map_id": "map_artico",
+      "scope": "local",
+      "coordinates": [
+        71.85,
+        -39.8
+      ],
+      "description": "Uma garganta sem fundo aberta no permafrost. No centro, uma estrutura orgânica espiralada de gelo negro que pulsa na frequência exata do Triângulo das Bermudas."
+    },
+    {
+      "id": "loc_tapajos",
+      "name": "Acampamento Base Tapajós",
+      "zone": "Brasil (Amazônia / Rio Tapajós)",
+      "type": "Base Tática de Selva",
+      "map_id": "map_brasil",
+      "campaign_id": "camp_004",
+      "scope": "local",
+      "coordinates": [
+        -4.22,
+        -55.95
+      ],
+      "description": "Base avançada camuflada sob a copa densa das árvores no Pará. Contém contêineres de biologia de campo e geradores silenciosos protegidos contra pulsos eletromagnéticos.",
+      "chronicles": [
+        "cron_bra_01"
+      ]
+    },
+    {
+      "id": "loc_quartzo",
+      "name": "A Cratera de Quartzo Negro",
+      "zone": "Brasil (Subsolo da Selva)",
+      "type": "Mina Clandestina & Cavidade Geológica",
+      "map_id": "map_brasil",
+      "campaign_id": "camp_004",
+      "scope": "local",
+      "coordinates": [
+        -4.28,
+        -56.02
+      ],
+      "description": "Uma fratura profunda na rocha basáltica onde veios gigantes de quartzo negro crescem como espinhos orgânicos emitindo um zumbido constante de baixa frequência.",
+      "chronicles": [
+        "cron_bra_01"
+      ]
+    },
+    {
+      "id": "loc_monasterio",
+      "name": "Monastério de Santo Agostinho",
+      "zone": "Alemanha (Floresta Negra)",
+      "type": "Abadia Gótica Medieval",
+      "map_id": "map_alemanha",
+      "campaign_id": "camp_005",
+      "scope": "local",
+      "coordinates": [
+        48.16,
+        8.22
+      ],
+      "description": "Ruínas góticas do século XIV isoladas pelas névoas perpétuas da Floresta Negra. Suas paredes de pedra guardam inscrições herméticas que confundem a percepção espacial de quem as lê.",
+      "chronicles": [
+        "cron_ale_01"
+      ]
+    },
+    {
+      "id": "loc_cripta",
+      "name": "A Cripta do Eco Silencioso",
+      "zone": "Alemanha (Catacumbas da Floresta Negra)",
+      "type": "Cripta Subterrânea Lacrada",
+      "map_id": "map_alemanha",
+      "campaign_id": "camp_005",
+      "scope": "local",
+      "coordinates": [
+        48.14,
+        8.18
+      ],
+      "description": "Catacumbas subterrâneas sob a abadia onde os monges heréticos instalaram sinos de bronze sem badalo, ativados por ressonância paranormal do LIMIAR."
+    }
+  ],
+  "characters": [
+    {
+      "id": "char_lucas",
+      "name": "Lucas Vilar",
+      "codename": "O Sobrevivente Cego",
+      "player": "NPC / Sobrevivente",
+      "origin": "Vítima",
+      "class": "Sobrevivente",
+      "track": "Ecolocalizador",
+      "nex": "45%",
+      "mda": "35%",
+      "status": "Resgatado (Marcado)",
+      "life_status": "alive",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 2,
+        "Intelecto": 3,
+        "Presença": 2,
+        "Vigor": 3
+      },
+      "stats": {
+        "pv_current": 26,
+        "pv_max": 26,
+        "pe_current": 14,
+        "pe_max": 14,
+        "san_current": 18,
+        "san_max": 30,
+        "defesa": 15,
+        "protecao": "Roupas Rasgadas das Minas (RD 1)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 2
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Fortitude": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "VIG",
+          "total": 8
+        },
+        "Furtividade": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 13
+        },
+        "Iniciativa": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Intuição": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 7
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 2
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Percepção": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 17
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Reflexos": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Sobrevivência": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 13
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Vontade": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 12
+        }
+      },
+      "abilities": [
+        "Ouvido Absoluto das Minas: Consegue identificar posições, passos e ameaças com precisão milimétrica mesmo na escuridão absoluta.",
+        "Furtividade em Cavernas: Bônus ao ocultar a respiração e movimentar-se sem eco em ambientes rochosos.",
+        "Cicatrizes da Solidão: Resiste a choques psicológicos primários graças aos 3 anos isolado."
+      ],
+      "inventory": [
+        "Lanterna Quebrada com Vidro Fendido",
+        "Apito de Alta Frequência Metálico",
+        "Fragmento de Quartzo e Minério de Prata",
+        "Bandagens Improvisadas"
+      ],
+      "relics": [],
+      "quote": "Eu não preciso de olhos para saber onde eles estão... o som da respiração deles bate na pedra e me diz exatamente onde vão pisar.",
+      "summary": "Sobreviveu 3 anos escondido nas minas mexicanas, cego e caçado por Ecos. Desenvolveu hipersensibilidade auditiva extrema e foi resgatado no amanhecer após a destruição da Mansão."
+    },
+    {
+      "id": "char_gabriel",
+      "name": "Gabriel Vilar (Davi Reis)",
+      "codename": "O Mascarado do LIMIAR",
+      "player": "Vilão Trágico / NPC",
+      "origin": "Engenheiro Ocultista",
+      "class": "Especialista",
+      "track": "Técnico em Dobras Dimensionais",
+      "nex": "55%",
+      "mda": "15%",
+      "status": "Vivo (Desaparecido no LIMIAR)",
+      "life_status": "missing",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 1,
+        "Intelecto": 5,
+        "Presença": 2,
+        "Vigor": 2
+      },
+      "stats": {
+        "pv_current": 28,
+        "pv_max": 28,
+        "pe_current": 25,
+        "pe_max": 25,
+        "san_current": 22,
+        "san_max": 45,
+        "defesa": 16,
+        "protecao": "Traje Balístico Reforçado (RD 3)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Ciências": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 15
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Enganação": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 7
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 2
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Iniciativa": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Investigação": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 20
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Ocultismo": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 15
+        },
+        "Percepção": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 12
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Tática": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 10
+        },
+        "Tecnologia": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 20
+        },
+        "Vontade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        }
+      },
+      "abilities": [
+        "Dobra Espacial com LIMIAR: Abre micro-fendas para teletransporte tático instantâneo e reposicionamento.",
+        "Arquiteto de Armadilhas: Constrói aparatos eletromecânicos de contenção psicológica.",
+        "Mestre do Blefe: Mantém identidade sob pseudônimos com controle absoluto de telemetria."
+      ],
+      "inventory": [
+        "Arma de Portais: LIMIAR",
+        "Máscara de Porcelana Pintada",
+        "Gravador de Fita Cassete com Confissões",
+        "Painel Portátil de Controle Remoto"
+      ],
+      "relics": [
+        "Arma de Portais: LIMIAR"
+      ],
+      "quote": "Eu nunca quis assassinar ninguém. Eu só precisei que eles sentissem o mesmo pavor que meu irmão sentiu antes de contarem a verdade.",
+      "summary": "Irmão mais velho de Lucas. Passou 3 anos desenvolvendo a arma de portais LIMIAR para encenar um teatro macabro na mansão. Desapareceu em uma fenda no clímax."
+    },
+    {
+      "id": "char_rafael",
+      "name": "Rafael Moreira",
+      "codename": "O Combatente Líder",
+      "player": "Jogador 1",
+      "origin": "Atleta",
+      "class": "Combatente",
+      "track": "Guerreiro",
+      "nex": "30%",
+      "mda": "5%",
+      "status": "Veterano (Vivo)",
+      "life_status": "alive",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 4,
+        "Intelecto": 1,
+        "Presença": 2,
+        "Vigor": 3
+      },
+      "stats": {
+        "pv_current": 38,
+        "pv_max": 38,
+        "pe_current": 12,
+        "pe_max": 12,
+        "san_current": 20,
+        "san_max": 28,
+        "defesa": 17,
+        "protecao": "Colete Tático Reforçado (RD 2)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Atletismo": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "FOR",
+          "total": 14
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Fortitude": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "VIG",
+          "total": 13
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Iniciativa": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Intimidação": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 7
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Luta": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "FOR",
+          "total": 14
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Percepção": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 7
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 1
+        },
+        "Vontade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        }
+      },
+      "abilities": [
+        "Ataque Especial: Concede bônus concentrado em dano físico corpo a corpo.",
+        "Golpe Pesado: Aumenta o impacto de armas cortantes e de impacto.",
+        "Revidar: Quando atacado corpo a corpo, executa contra-ataque defensivo imediato."
+      ],
+      "inventory": [
+        "Espingarda Calibre 12 com Coronha de Madeira",
+        "Faca de Caça Tática de Aço Forjado",
+        "Isqueiro de Metal Gravado",
+        "Mochila Resistente com Rações"
+      ],
+      "relics": [],
+      "quote": "Era pra ser uma brincadeira idiota de faculdade... eu nunca imaginei que aquela noite ia custar três anos de pesadelo e a visão dele.",
+      "summary": "Líder impulsivo do grupo de amigos. Escondeu o remorso por trás de bravura física, liderando a descida às minas para resgatar Lucas e confrontar o Mascarado."
+    },
+    {
+      "id": "char_julia",
+      "name": "Júlia Drummond",
+      "codename": "A Chave da Mansão",
+      "player": "Jogador 6",
+      "origin": "Investigadora",
+      "class": "Especialista",
+      "track": "Infiltradora",
+      "nex": "35%",
+      "mda": "8%",
+      "status": "Veterana (Viva)",
+      "life_status": "alive",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "Agilidade": 4,
+        "Força": 1,
+        "Intelecto": 3,
+        "Presença": 3,
+        "Vigor": 2
+      },
+      "stats": {
+        "pv_current": 26,
+        "pv_max": 26,
+        "pe_current": 20,
+        "pe_max": 20,
+        "san_current": 30,
+        "san_max": 38,
+        "defesa": 18,
+        "protecao": "Jaqueta de Couro Reforçada (RD 1)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Atualidades": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 8
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Diplomacia": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 8
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 2
+        },
+        "Furtividade": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 14
+        },
+        "Iniciativa": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 9
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Intuição": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 13
+        },
+        "Investigação": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 18
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Percepção": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 13
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Pontaria": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 9
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Reflexos": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 9
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Vontade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        }
+      },
+      "abilities": [
+        "Perito em Pistas: Encontra conexões e pistas que outros investigadores deixam passar.",
+        "Gatuno Silencioso: Movimentação sem emissão de ruído auditivo.",
+        "Ataque Furtivo: Dano crítico quando a criatura ou alvo não percebe sua presença."
+      ],
+      "inventory": [
+        "Pistola 9mm com Silenciador",
+        "Kit de Gazua e Chaves Mestras",
+        "Caderno com Notas e Diagramas da Mansão",
+        "Gravador de Voz Digital"
+      ],
+      "relics": [],
+      "quote": "Gabriel calculou a reação de todos os que estavam no lago há 3 anos... mas ele não me conhecia. E essa foi a única falha no plano perfeito dele.",
+      "summary": "A mente analítica da Mansão Vilar. Por não fazer parte do núcleo original do incidente das minas, foi a única imune aos jogos mentais de Gabriel, desvendando os mecanismos da casa."
+    },
+    {
+      "id": "char_arquiteto",
+      "name": "O Arquiteto do Caos (Diabo do Mar)",
+      "codename": "O Primogênito",
+      "player": "Entidade / Ameaça Suprema",
+      "origin": "Cobaia Zero (Experimento Proibido)",
+      "class": "Ocultista Supremo",
+      "track": "Hack da Realidade",
+      "nex": "99%",
+      "mda": "99% Dominador",
+      "status": "Ativo no Triângulo",
+      "life_status": "active",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "attributes": {
+        "Agilidade": 1,
+        "Força": 1,
+        "Intelecto": 5,
+        "Presença": 5,
+        "Vigor": 1
+      },
+      "stats": {
+        "pv_current": 120,
+        "pv_max": 120,
+        "pe_current": 99,
+        "pe_max": 99,
+        "san_current": 0,
+        "san_max": 0,
+        "defesa": 22,
+        "protecao": "Campo de Força Entrópico (RD 15)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Ciências": {
+          "grau": "Veterano",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 20
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Enganação": {
+          "grau": "Veterano",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 20
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 1
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Intimidação": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "PRE",
+          "total": 25
+        },
+        "Intuição": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 15
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Ocultismo": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "INT",
+          "total": 25
+        },
+        "Percepção": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 15
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 1
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Vontade": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "PRE",
+          "total": 25
+        }
+      },
+      "abilities": [
+        "Campo Ilusório de Rosas: Projeta uma ilusão hipnótica que mascara ferimentos mortais e corrompe a visão dos investigadores.",
+        "Aura Criogênica do Caos: Reduz a temperatura ao redor em 40 graus com presença biológica pura.",
+        "Reescrita Celular: Mutação forçada de tecidos vivos tocados pela substância azulada."
+      ],
+      "inventory": [
+        "Núcleo Biológico Primordial",
+        "Espécimes de Tecido Mimetizado"
+      ],
+      "relics": [],
+      "quote": "A carne humana é uma prisão de carbono. No Triângulo, nós ensinamos as células a se libertarem da anatomia.",
+      "summary": "O primeiro humano a hackear as leis da biologia molecular através da anomalia do Atlântico. Seu corpo físico atrofia enquanto sua mente reina soberana sobre Nova Caronte."
+    },
+    {
+      "id": "char_evelyn",
+      "name": "Dra. Evelyn Shaw",
+      "codename": "A Geneticista do Gelo",
+      "player": "NPC / Cientista Líder",
+      "origin": "Cientista Forense",
+      "class": "Especialista",
+      "track": "Médica de Campo & Geneticista",
+      "nex": "40%",
+      "mda": "22%",
+      "status": "Em Quarentena Polar",
+      "life_status": "quarantine",
+      "campaign_ids": [
+        "camp_003"
+      ],
+      "attributes": {
+        "Agilidade": 2,
+        "Força": 1,
+        "Intelecto": 5,
+        "Presença": 3,
+        "Vigor": 2
+      },
+      "stats": {
+        "pv_current": 25,
+        "pv_max": 25,
+        "pe_current": 24,
+        "pe_max": 24,
+        "san_current": 26,
+        "san_max": 42,
+        "defesa": 15,
+        "protecao": "Traje Criogênico Térmico (RD 2)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Ciências": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 20
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 2
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Investigação": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 15
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Medicina": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 20
+        },
+        "Ocultismo": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 15
+        },
+        "Percepção": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 8
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 5
+        },
+        "Tecnologia": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 10
+        },
+        "Vontade": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 8
+        }
+      },
+      "abilities": [
+        "Cirurgia de Emergência: Trata traumas graves em campo com estabilizadores biológicos.",
+        "Sequenciamento Imediato: Identifica anomalias em amostras genéticas sob microscópio de campo.",
+        "Adaptação Criogênica: Resiste a ambientes com temperaturas extremas e ar contaminado."
+      ],
+      "inventory": [
+        "Injetor de Criostase Inversa",
+        "Micrótomo Laser Portátil",
+        "Frascos de Solução Estabilizadora",
+        "Tablet Blindado com Banco de Dados da AEGIS"
+      ],
+      "relics": [
+        "Injetor de Criostase Inversa"
+      ],
+      "quote": "O organismo não estava petrificado... ele estava esperando que alguém gerasse calor suficiente para acordar.",
+      "summary": "Diretora científica da Estação Zero na Groenlândia. Descobriu que o Leviatã congelado possui a mesma sequência telomérica do Arquiteto do Caos."
+    },
+    {
+      "id": "char_miller",
+      "name": "Comandante Marcus Miller",
+      "codename": "Muralha Ártica",
+      "player": "Jogador 7",
+      "origin": "Militar Operacional",
+      "class": "Combatente",
+      "track": "Comandante Tático",
+      "nex": "45%",
+      "mda": "12%",
+      "status": "Ativo na Estação Zero",
+      "life_status": "alive",
+      "campaign_ids": [
+        "camp_003"
+      ],
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 3,
+        "Intelecto": 2,
+        "Presença": 2,
+        "Vigor": 3
+      },
+      "stats": {
+        "pv_current": 42,
+        "pv_max": 42,
+        "pe_current": 16,
+        "pe_max": 16,
+        "san_current": 22,
+        "san_max": 32,
+        "defesa": 19,
+        "protecao": "Exoesqueleto Hidráulico Polar (RD 5)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 3
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Fortitude": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "VIG",
+          "total": 13
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Iniciativa": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Intimidação": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 7
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Luta": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "FOR",
+          "total": 13
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Percepção": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 13
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Sobrevivência": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 7
+        },
+        "Tática": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 12
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Vontade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        }
+      },
+      "abilities": [
+        "Liderança Operacional: Concede bônus táticos aos aliados sob fogo cerrado.",
+        "Blindagem Servo-Assistida: Reduz o impacto de ataques mecânicos e garras alienígenas.",
+        "Tiro Supressivo: Mantém alvos contidos em corredores estreitos."
+      ],
+      "inventory": [
+        "Rifle de Assalto Criogênico A.E.G.I.S.",
+        "Lâmina de Gelo Negro Forjada",
+        "Rádio Transmissor de Longo Alcance",
+        "Sinalizadores de Magnésio Térmico"
+      ],
+      "relics": [
+        "Lâmina de Gelo Negro"
+      ],
+      "quote": "A cinquenta graus abaixo de zero, você não tem tempo pra hesitar. Se a criatura se mover, dispare.",
+      "summary": "Veterano de incursões da A.E.G.I.S. destacou-se ao proteger a área de contenção da Estação Zero após o rompimento da câmara criogênica principal."
+    },
+    {
+      "id": "char_thiago",
+      "name": "Capitão Thiago Santos",
+      "codename": "Guardião da Selva",
+      "player": "Jogador: Bruno",
+      "origin": "Militar Operacional",
+      "class": "Combatente",
+      "track": "Comando de Selva & Sobrevivência",
+      "nex": "50%",
+      "mda": "18%",
+      "status": "Ativo // Veterano",
+      "life_status": "alive",
+      "campaign_id": "camp_004",
+      "attributes": {
+        "agi": 2,
+        "for": 3,
+        "int": 1,
+        "pre": 2,
+        "vig": 3
+      },
+      "stats": {
+        "pv": {
+          "current": 38,
+          "max": 38
+        },
+        "pe": {
+          "current": 12,
+          "max": 12
+        },
+        "san": {
+          "current": 24,
+          "max": 24
+        },
+        "defesa": 17,
+        "bloqueio": 8,
+        "esquiva": 14,
+        "protecao": 5
+      },
+      "skills": [
+        {
+          "name": "Acrobacia",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Adestramento",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Artes",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atletismo",
+          "value": 5,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Treinado"
+        },
+        {
+          "name": "Atualidades",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Ciência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Crime",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Diplomacia",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Enganação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Fortitude",
+          "value": 10,
+          "attr": "VIG",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "Furtividade",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "História",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Iniciativa",
+          "value": 5,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Treinado"
+        },
+        {
+          "name": "Intimidação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intuição",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Investigação",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Luta",
+          "value": 10,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "Medicina",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Ocultismo",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Percepção",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Mente",
+          "training": "Treinado"
+        },
+        {
+          "name": "Pilotagem",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Pontaria",
+          "value": 15,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Expert"
+        },
+        {
+          "name": "Profissão",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Reflexos",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Religião",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Sobrevivência",
+          "value": 15,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Tática",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Vontade",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Tiro de Cobertura",
+          "type": "Tática",
+          "cost": "2 PE",
+          "desc": "Força o alvo a buscar abrigo ou sofrer penalidade em ataques por 1 rodada."
+        },
+        {
+          "name": "Sentido de Selva",
+          "type": "Passiva",
+          "cost": "-",
+          "desc": "Imunidade a terrenos difíceis naturais e bônus passivo para detectar emboscadas biológicas."
+        },
+        {
+          "name": "Ataque Pesado",
+          "type": "Combate",
+          "cost": "2 PE",
+          "desc": "Adiciona dano extra ao atingir alvos orgânicos com armas de fogo ou lâminas."
+        }
+      ],
+      "inventory": [
+        {
+          "name": "Rifle de Assalto Tático A.E.G.I.S.",
+          "space": 2,
+          "desc": "Calibre 5.56mm com mira holográfica e silenciador militar."
+        },
+        {
+          "name": "Colete Balístico Reforçado",
+          "space": 2,
+          "desc": "Proteção balística nível III-A com bolsos modulares."
+        },
+        {
+          "name": "Machete Tático de Aço Carbono",
+          "space": 1,
+          "desc": "Lâmina pesada para abrir trilhas e combate corpo-a-corpo."
+        },
+        {
+          "name": "Kit Médico de Trauma",
+          "space": 1,
+          "desc": "Torniquetes e hemostáticos para estancar hemorragias rápidas."
+        }
+      ],
+      "relics": [],
+      "quote": "A selva não mente: o que quer que estivesse enterrado naquele quartzo negro aprendeu a respirar.",
+      "summary": "Líder militar do destacamento de resgate na Amazônia. Sobreviveu à emboscada das raízes mutantes e coordenou a implosão tática da cratera de quartzo negro."
+    },
+    {
+      "id": "char_camila",
+      "name": "Dra. Camila Neves",
+      "codename": "Bióloga Molecular",
+      "player": "Jogadora: Marina",
+      "origin": "Acadêmica / Pesquisadora",
+      "class": "Especialista",
+      "track": "Médica de Campo & Bioquímica",
+      "nex": "45%",
+      "mda": "28%",
+      "status": "Em Quarentena Psicológica",
+      "life_status": "quarantine",
+      "campaign_id": "camp_004",
+      "attributes": {
+        "agi": 2,
+        "for": 1,
+        "int": 4,
+        "pre": 2,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 24,
+          "max": 24
+        },
+        "pe": {
+          "current": 20,
+          "max": 20
+        },
+        "san": {
+          "current": 18,
+          "max": 35
+        },
+        "defesa": 14,
+        "bloqueio": 4,
+        "esquiva": 12,
+        "protecao": 2
+      },
+      "skills": [
+        {
+          "name": "Acrobacia",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Adestramento",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Artes",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atletismo",
+          "value": 0,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atualidades",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Ciência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Crime",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Diplomacia",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Enganação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Fortitude",
+          "value": 0,
+          "attr": "VIG",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Furtividade",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "História",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Iniciativa",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intimidação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intuição",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Investigação",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Luta",
+          "value": 0,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Medicina",
+          "value": 15,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Ocultismo",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Percepção",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Mente",
+          "training": "Treinado"
+        },
+        {
+          "name": "Pilotagem",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Pontaria",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Profissão",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Reflexos",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Religião",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Sobrevivência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Tática",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Vontade",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Treinado"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Primeiros Socorros Avançados",
+          "type": "Suporte",
+          "cost": "2 PE",
+          "desc": "Estabiliza aliados em estado crítico restaurando PV e removendo sangramento."
+        },
+        {
+          "name": "Análise de Espécimes Vivos",
+          "type": "Investigação",
+          "cost": "1 PE",
+          "desc": "Identifica fraquezas biológicas e imunidades de anomalias mutantes."
+        },
+        {
+          "name": "Diagnóstico Sob Fogo",
+          "type": "Passiva",
+          "cost": "-",
+          "desc": "Pode executar perícias de Medicina mesmo sob ameaça iminente de combate."
+        }
+      ],
+      "inventory": [
+        {
+          "name": "Maleta de Biópsia Hermética",
+          "space": 2,
+          "desc": "Recipientes criogênicos esterilizados para coleta de esporos vivos."
+        },
+        {
+          "name": "Injetores de Adrenalina Sintética",
+          "space": 1,
+          "desc": "Doses de reanimação rápida para combate a choque hipovolêmico."
+        },
+        {
+          "name": "Tablet Tático Criptografado",
+          "space": 1,
+          "desc": "Banco de dados genômico e relatórios confidenciais da A.E.G.I.S."
+        }
+      ],
+      "relics": [
+        "Nódulo de Quartzo Mutagênico"
+      ],
+      "quote": "Não eram fungos nem plantas comuns. As células tinham memória genética de pessoas vivas.",
+      "summary": "Cientista líder da expedição no Tapajós. Coletou fragmentos do quartzo negro e decodificou a ressonância celular antes de entrar em quarentena."
+    },
+    {
+      "id": "char_greta",
+      "name": "Greta Falk",
+      "codename": "O Olho Silencioso",
+      "player": "Jogadora: Helena",
+      "origin": "Policial / Investigadora Criminal",
+      "class": "Especialista",
+      "track": "Detetive Forense",
+      "nex": "40%",
+      "mda": "12%",
+      "status": "Ativa // Marcada pelo Eco",
+      "life_status": "alive",
+      "campaign_id": "camp_005",
+      "attributes": {
+        "agi": 3,
+        "for": 1,
+        "int": 3,
+        "pre": 2,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 26,
+          "max": 26
+        },
+        "pe": {
+          "current": 18,
+          "max": 18
+        },
+        "san": {
+          "current": 22,
+          "max": 32
+        },
+        "defesa": 16,
+        "bloqueio": 4,
+        "esquiva": 16,
+        "protecao": 2
+      },
+      "skills": [
+        {
+          "name": "Acrobacia",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Adestramento",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Artes",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atletismo",
+          "value": 0,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atualidades",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Ciência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Crime",
+          "value": 10,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "Diplomacia",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Enganação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Fortitude",
+          "value": 0,
+          "attr": "VIG",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Furtividade",
+          "value": 10,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "História",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Iniciativa",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intimidação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intuição",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Investigação",
+          "value": 15,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Luta",
+          "value": 0,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Medicina",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Ocultismo",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Percepção",
+          "value": 15,
+          "attr": "PRE",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Pilotagem",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Pontaria",
+          "value": 10,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "Profissão",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Reflexos",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Religião",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Sobrevivência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Tática",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Vontade",
+          "value": 10,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Veterano"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Percepção Forense Aguçada",
+          "type": "Investigação",
+          "cost": "1 PE",
+          "desc": "Localiza pistas microscópicas, marcas ocultas e anomalias de fisionomia."
+        },
+        {
+          "name": "Tiro Preciso",
+          "type": "Combate",
+          "cost": "2 PE",
+          "desc": "Disparo mirado que ignora cobertura parcial do alvo."
+        },
+        {
+          "name": "Silêncio Imutável",
+          "type": "Passiva",
+          "cost": "-",
+          "desc": "Imunidade total a ataques ou truques mentais baseados em voz ou comandos orais."
+        }
+      ],
+      "inventory": [
+        {
+          "name": "Pistola Sig Sauer P226",
+          "space": 1,
+          "desc": "Arma semi-automática calibre 9mm com munição perfurante."
+        },
+        {
+          "name": "Lanterna UV Forense",
+          "space": 1,
+          "desc": "Revela fluidos, fibras e inscrições invisíveis a olho nu."
+        },
+        {
+          "name": "Caderno Moleskine com Anotações",
+          "space": 1,
+          "desc": "Anotações e diagramas da cripta usados para se comunicar sem a voz."
+        }
+      ],
+      "relics": [],
+      "quote": "Quando o sino tocou, minha voz sumiu na pedra. Mas meus olhos registraram cada mentira.",
+      "summary": "Detetive alemã que investigou o desaparecimento de memórias na Floresta Negra. Teve suas cordas vocais paralisadas pelo altar do Eco, mas decifrou a cripta."
+    },
+    {
+      "id": "char_hans",
+      "name": "Hans Richter",
+      "codename": "O Guardião dos Códices",
+      "player": "Jogador: Fernando",
+      "origin": "Ocultista Teórico / Arquivista",
+      "class": "Ocultista",
+      "track": "Graduado em Códices Proibidos",
+      "nex": "55%",
+      "mda": "20%",
+      "status": "Consultor Ativo C.R.I.S.",
+      "life_status": "alive",
+      "campaign_id": "camp_005",
+      "attributes": {
+        "agi": 1,
+        "for": 1,
+        "int": 4,
+        "pre": 3,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 22,
+          "max": 22
+        },
+        "pe": {
+          "current": 24,
+          "max": 24
+        },
+        "san": {
+          "current": 28,
+          "max": 40
+        },
+        "defesa": 13,
+        "bloqueio": 3,
+        "esquiva": 11,
+        "protecao": 0
+      },
+      "skills": [
+        {
+          "name": "Acrobacia",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Adestramento",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Artes",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atletismo",
+          "value": 0,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Atualidades",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Ciência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Crime",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Diplomacia",
+          "value": 10,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Veterano"
+        },
+        {
+          "name": "Enganação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Fortitude",
+          "value": 0,
+          "attr": "VIG",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Furtividade",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "História",
+          "value": 15,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Iniciativa",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intimidação",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Intuição",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Investigação",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Luta",
+          "value": 0,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Medicina",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Ocultismo",
+          "value": 15,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Percepção",
+          "value": 0,
+          "attr": "PRE",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Pilotagem",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Pontaria",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Profissão",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Reflexos",
+          "value": 0,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Religião",
+          "value": 15,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Expert"
+        },
+        {
+          "name": "Sobrevivência",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Tática",
+          "value": 0,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Destreinado"
+        },
+        {
+          "name": "Vontade",
+          "value": 10,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Veterano"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Decodificação Hermética",
+          "type": "Ocultismo",
+          "cost": "2 PE",
+          "desc": "Traduz inscrições pré-diluvianas e desativa selos místicos sem disparar armadilhas."
+        },
+        {
+          "name": "Dissipar Ressonância",
+          "type": "Defesa",
+          "cost": "3 PE",
+          "desc": "Gera um contra-campo acústico que anula frequências paranormais hostis por 1 turno."
+        },
+        {
+          "name": "Memória Eidética",
+          "type": "Passiva",
+          "cost": "-",
+          "desc": "Lembra com perfeição qualquer mapa, fórmula ou testemunho lido no passado."
+        }
+      ],
+      "inventory": [
+        {
+          "name": "Códice de Santo Agostinho (Cópia Fac-símile)",
+          "space": 1,
+          "desc": "Manuscrito em latim com desenhos anatômicos da mente sem-rosto."
+        },
+        {
+          "name": "Diapasão de Prata Sem-Rosto",
+          "space": 1,
+          "desc": "Instrumento afinado na frequência de cancelamento acústico do LIMIAR."
+        },
+        {
+          "name": "Lente de Aumento com Filtro Espectral",
+          "space": 1,
+          "desc": "Lente especial para decifrar filigranas em metais antigos."
+        }
+      ],
+      "relics": [
+        "Diapasão de Prata Sem-Rosto"
+      ],
+      "quote": "Os monges de Friburgo não adoravam santos. Eles construíram um espelho acústico para dialogar com o LIMIAR.",
+      "summary": "Historiador e professor emérito de Friburgo. Catalogou o acervo herético do monastério e serviu como consultor para a contenção definitiva do sítio histórico."
+    }
+  ],
+  "chronicles": [
+    {
+      "id": "cron_vil_01",
+      "campaign_id": "camp_002",
+      "location_id": "loc_vilar",
+      "title": "A Noite da Confissão",
+      "lore": "Cinco amigos retornaram à Mansão Vilar no México três anos após o desaparecimento de Lucas. Lá, foram caçados e manipulados psicologicamente por uma figura mascarada capaz de se teletransportar usando uma arma chamada LIMIAR (criada por Gabriel Vilar). Ao final, enfrentaram os 'Ecos', criaturas cegas que roubam vozes nas minas subterrâneas, explodindo a mansão para conter a ameaça e resgatando Lucas com vida."
+    },
+    {
+      "id": "cron_inc_01",
+      "campaign_id": "camp_001",
+      "location_id": "loc_caronte",
+      "title": "A Incursão do Navio de 5.000 Almas",
+      "lore": "Após o colapso do mundo exterior, um navio foi sugado para o buraco de minhoca no verdadeiro Triângulo das Bermudas. Sobrevivendo à dor lancinante da travessia e às manipulações do Mímico Genético a bordo, a tripulação despertou em Nova Caronte. Lá, a magia não existe: apenas mutação biológica violenta. Os recém-chegados precisam entender as leis da hiper-evolução e sobreviver aos ataques do Diabo do Mar para chamar a atenção da A.E.G.I.S."
+    },
+    {
+      "id": "cron_arc_01",
+      "campaign_id": "camp_003",
+      "location_id": "loc_estacao_zero",
+      "title": "O Descongelamento do Primeiro Espécime",
+      "lore": "Durante uma perfuração a 3.200 metros na calota da Groenlândia, a equipe da Dra. Evelyn Shaw extraiu um cilindro de gelo negro contendo biomassa viva pulsante. Ao romper a câmara criogênica, o organismo se fundiu aos sistemas de ventilação, liberando esporos de hiper-mutação que transformaram o esquadrão de segurança em sentinelas simbióticas cegas."
+    },
+    {
+      "id": "cron_bra_01",
+      "campaign_id": "camp_004",
+      "location_id": "loc_tapajos",
+      "title": "A Invasão das Raízes Mutagênicas",
+      "lore": "Em outubro de 2025, o esquadrão Curupira descobriu que a cratera de quartzo negro no Tapajós não era uma formação mineral, mas um nodo de sinapse geológica conectado à fenda do Atlântico. Ao detonarem as cargas de contenção, o Capitão Santos e a Dra. Camila Neves conseguiram salvar os registros de biometria antes do colapso completo da caverna."
+    },
+    {
+      "id": "cron_ale_01",
+      "campaign_id": "camp_005",
+      "location_id": "loc_monasterio",
+      "title": "O Silêncio dos Monges de Friburgo",
+      "lore": "Nas profundezas da Floresta Negra alemã, as ruínas da abadia guardavam um sino sem badalo forjado com ligas de meteorito. Quando Greta Falk tocou a campana durante a invasão, a frequência mística devorou a voz física de todos os presentes, silenciando o culto dos Sem-Rosto e permitindo que Hans Richter selasse os portões com concreto de chumbo."
+    }
+  ],
+  "bestiary": [
+    {
+      "id": "creature_eco",
+      "name": "Os Ecos Subterrâneos",
+      "zone": "México (As Minas Antigas)",
+      "threat_level": "Ameaça Média (VD 60)",
+      "mda": "45%",
+      "behavior": "Predador Auditivo Furtivo",
+      "attacks": [
+        {
+          "name": "Garras Quéricas",
+          "damage": "2d8+4 Perfuração",
+          "effect": "Causa hemorragia e enfraquecimento muscular"
+        },
+        {
+          "name": "Voz Roubada (Eco Paralisante)",
+          "damage": "1d10 Mental",
+          "effect": "Exige teste de Presença; falha causa Paralisia por Terror de 1 turno"
+        }
+      ],
+      "traits": [
+        "Cegueira Completa: Orienta-se unicamente por ecolocalização",
+        "Mimetismo Vocal: Imita perfeitamente vozes de entes queridos já devorados",
+        "Fraqueza: Frequências ressonantes de alta potência causam atordoamento"
+      ],
+      "description": "Criaturas humanoides deformadas pela permanência prolongada nas minas de prata mexicana. Seus rostos não possuem olhos, apenas orifícios auditivos hipertrofiados e uma mandíbula cartilaginosa que repete sussurros roubados."
+    },
+    {
+      "id": "creature_mimico",
+      "name": "Mímico Genético",
+      "zone": "O Triângulo das Bermudas / Nova Caronte",
+      "threat_level": "Ameaça Alta (VD 120)",
+      "mda": "70%",
+      "behavior": "Infiltrador Celular",
+      "attacks": [
+        {
+          "name": "Chicote de Medula Óssea",
+          "damage": "3d6+6 Cortante",
+          "effect": "Alcance 6 metros; agarra e drena 3 PD do alvo"
+        },
+        {
+          "name": "Asfixia Celular",
+          "damage": "2d12 Químico",
+          "effect": "Corrói armaduras mundanas instantaneamente"
+        }
+      ],
+      "traits": [
+        "Metamorfose Instantânea: Copia altura, voz e impressões digitais após 3 segundos de contato",
+        "Regeneração Biológica: Recupera 5 PD no início de cada rodada enquanto houver umidade",
+        "Fraqueza: Fogo direto e cauterização interrompem a duplicação molecular"
+      ],
+      "description": "Uma massa amórfica de células totipotentes mutantes capaz de absorver tecidos humanos e replicar a fisiologia completa da vítima em segundos. Responsável pelo massacre do convés inferior do navio durante a travessia."
+    },
+    {
+      "id": "creature_kraken",
+      "name": "O Soberano Abissal (Kraken)",
+      "zone": "Fosso Abissal (Triângulo das Bermudas)",
+      "threat_level": "Ameaça Ômega (VD 300+)",
+      "mda": "95%",
+      "behavior": "Colosso Submarino Territorial",
+      "attacks": [
+        {
+          "name": "Constrição de Tentáculo Titânico",
+          "damage": "4d10+12 Esmagamento",
+          "effect": "Quebra cascos navais; exige teste de Força CD 22 para escapar"
+        },
+        {
+          "name": "Pulso Bio-Vulcânico EMP",
+          "damage": "3d8 Elétrico + 2d8 Fogo",
+          "effect": "Desativa relíquias tecnológicas e radar por 3 turnos"
+        }
+      ],
+      "traits": [
+        "Couraça de Basalto Vulcânico: Redução de Dano 15 contra projéteis mundanos",
+        "Vórtice Atrator: Puxa embarcações a até 100m de distância em direção ao abismo",
+        "Fraqueza: O respiradouro termal central vulnerável a cargas explosivas concentradas"
+      ],
+      "description": "Um cefalópode de proporções cósmicas fundido organicamente com rochas magmáticas das profundezas da Fossa de Porto Rico. Seus tentáculos produzem bioeletricidade azulada capaz de apagar redes inteiras de energia."
+    },
+    {
+      "id": "creature_sentinela",
+      "name": "Sentinela Autômato do LIMIAR",
+      "zone": "México (Complexo Vilar)",
+      "threat_level": "Ameaça Tática (VD 80)",
+      "mda": "20% (Bio-mecatrônica)",
+      "behavior": "Patrulha Mecânica Vigilante",
+      "attacks": [
+        {
+          "name": "Descarga de Partículas Fendidas",
+          "damage": "2d10+5 Energia",
+          "effect": "Ignora 50% de resistências físicas"
+        },
+        {
+          "name": "Lâmina Eletrostática",
+          "damage": "2d6+4 Cortante",
+          "effect": "Causa choque de 1d6 contínuo"
+        }
+      ],
+      "traits": [
+        "Micro-Salto Dimensional: Teletransporta-se 6 metros como ação livre 1x por rodada",
+        "Sensor Térmico e Paranormal: Imune a camuflagens ópticas e invisibilidade",
+        "Fraqueza: Vulnerabilidade a pulsos eletromagnéticos e sobrecarga em seus capacitores traseiros"
+      ],
+      "description": "Unidades mecânicas prototípicas projetadas por Gabriel Vilar utilizando peças de antigas locomotivas mineradoras e chips acoplados ao núcleo do LIMIAR para patrulhar a ferrovia e capturar invasores."
+    },
+    {
+      "id": "creature_mao_rosas",
+      "name": "A Mão de Rosas (Manifestação do Arquiteto)",
+      "zone": "O Triângulo das Bermudas",
+      "threat_level": "Ameaça Suprema (VD 250)",
+      "mda": "99% Dominador",
+      "behavior": "Manifestação Psíquica Territorial",
+      "attacks": [
+        {
+          "name": "Espinhos de Gelo Carmesim",
+          "damage": "3d8 Frio + 2d8 Psíquico",
+          "effect": "Gera hipotermia e alucinações visuais"
+        },
+        {
+          "name": "Grito da Realidade Hackeada",
+          "damage": "4d6 Psíquico em cone",
+          "effect": "Causa Overload imediato em alvos com PD abaixo de 10"
+        }
+      ],
+      "traits": [
+        "Corpo Eclético: Ataques físicos atravessam sua forma etérea sem causar impacto pleno",
+        "Campo de Rosas Geladas: A temperatura ambiente despenca para -20°C a 30 metros de distância",
+        "Fraqueza: Golpes carregados com pura Determinação (PD) causam dano real irredutível"
+      ],
+      "description": "Uma projeção ectoplasmática gélida conjurada à distância pela mente do Arquiteto do Caos. Tem o formato de mãos colossais cobertas por roseiras de espinhos carmesins e névoa congelante."
+    },
+    {
+      "id": "creature_leviathan",
+      "name": "Parasita Glacial Primordial",
+      "category": "Aberração Criogênica",
+      "threat": "Ameaça Ômega",
+      "zone": "Estação Criogênica Zero (Groenlândia)",
+      "mda": "88%",
+      "pd": 38,
+      "armor": "Quitina de Gelo Negro (Absorção 4)",
+      "behavior": "Precursor biológico dormente que absorve calor corporal instantaneamente.",
+      "description": "Organismo anterior à história humana, preservado na calota ártica. Quando atinge calor biológico, replica células hospedeiras e as transmuta em condutores de estática paranormal.",
+      "attacks": [
+        "Espinho Criogênico (Dano 2d8 + Congelamento)",
+        "Névoa de Hipotermia Celular (DT 16 Vigor)",
+        "Flagelo de Biomassa Fóssil (Dano 3d6)"
+      ]
+    }
+  ],
+  "relics": [
+    {
+      "id": "relic_limiar",
+      "name": "Arma de Portais: LIMIAR",
+      "owner": "Gabriel Vilar",
+      "type": "Relíquia Tecnológica Oculta",
+      "rarity": "Única / Grau Ômega",
+      "pd_cost": 4,
+      "ability": "Salto de Fenda Dimensional",
+      "effect": "Permite ao portador ou ao alvo escolhido teleportar-se instantaneamente até 15 metros para qualquer ponto visível no battlemap, ignorando obstáculos sólidos e ataques de oportunidade.",
+      "description": "Um aparato portátil com câmara de contenção de plasma de fenda e bobinas de tungstênio. Gabriel gastou três anos nas oficinas das minas para criar o único dispositivo capaz de furar as barreiras do espaço no universo Evren."
+    },
+    {
+      "id": "relic_hallucigenia",
+      "name": "Armadura Hallucigenia",
+      "owner": "Lucas Vilar (Descoberta)",
+      "type": "Bioproteção Fóssil Mutagênica",
+      "rarity": "Relíquia Antiga",
+      "pd_cost": 0,
+      "ability": "Sacrifício de Armadura Supremo",
+      "effect": "Quando o usuário for sofrer um ataque fatal ou Hitkill, a armadura se estilhaça em espinhos calcários, anulando 100% do dano mortal e concedendo +5m de fuga imediata. A peça fica inoperante até restauração biológica.",
+      "description": "Peitoral orgânico petrificado forjado a partir de carapaças fósseis encontradas nas galerias mais profundas das minas mexicanas. Os espinhos dorsais absorvem a força cinética de impactos mortais."
+    },
+    {
+      "id": "relic_patitre",
+      "name": "Lança Patitre",
+      "owner": "Guerreiros de Nova Caronte",
+      "type": "Arma Orgânica Simbiótica",
+      "rarity": "Grau Alfa",
+      "pd_cost": 2,
+      "ability": "Drenagem Medular",
+      "effect": "Causa 3d8+6 de perfuração biológica e rouba 5 PD do alvo atingido, canalizando-os para o portador. Em contrapartida, cada ativação aumenta o MDA do usuário em +3%.",
+      "description": "Lança esculpida com o espigão dorsal de um parasita das fossas oceânicas. A empunhadura tem veias vivas que se conectam aos tendões da mão de quem a empunha."
+    },
+    {
+      "id": "relic_gravador",
+      "name": "Gravador de Fita: Projeto Limiar",
+      "owner": "Gabriel Vilar / Júlia",
+      "type": "Dispositivo Investigativo",
+      "rarity": "Grau Tático",
+      "pd_cost": 1,
+      "ability": "Frequência Anti-Eco",
+      "effect": "Emite ondas ultrassônicas ressonantes em um raio de 12 metros, desorientando criaturas com audição aguçada (como os Ecos) e cancelando ataques furtivos por 2 rodadas.",
+      "description": "Um gravador de bobina analógico modificado com transistores de alta frequência. Contém as gravações das fitas secretas das sessões de interrogatório e o som original do eco que aprisionou Lucas."
+    },
+    {
+      "id": "relic_retrovirus",
+      "name": "Injetor de Retrovírus AEGIS",
+      "owner": "Divisão de Contenção",
+      "type": "Bio-Consumível Médico",
+      "rarity": "Suprimento Raro",
+      "pd_cost": 0,
+      "ability": "Estabilização Celular",
+      "effect": "Restaura imediatamente +15 Pontos de Determinação (PD) e reduz temporariamente o MDA do personagem em -10%, evitando colapsos de Overload.",
+      "description": "Seringa pneumática de titânio contendo um soro sintético azul-cobalto desenvolvido pela agência para reverter os primeiros estágios da anomalia genética."
+    },
+    {
+      "id": "relic_bussola_fenda",
+      "name": "Bússola de Fenda Dimensional",
+      "owner": "Capitães do Triângulo",
+      "type": "Artefato Náutico Cartográfico",
+      "rarity": "Grau Veterano",
+      "pd_cost": 0,
+      "ability": "Navegação Anômala",
+      "effect": "Aponta consistentemente para o epicentro das fendas e vórtices gravitacionais, permitindo navegar em meio a neblinas densas e tempestades sem perder a orientação.",
+      "description": "Uma bússola esférica de latão cujo ponteiro é uma agulha de meteorito negro suspensa em fluido amniótico bioluminescente."
+    },
+    {
+      "id": "relic_criostase",
+      "name": "Injetor de Criostase Inversa",
+      "owner": "Dra. Evelyn Shaw",
+      "type": "Bio-Estabilizador Térmico",
+      "rarity": "Grau Científico AEGIS",
+      "pd_cost": 3,
+      "ability": "Retardamento Metabólico",
+      "effect": "Reduz o MDA em -10% temporariamente e neutraliza condições de queimadura, sangramento ou choque térmico por 3 rodadas.",
+      "description": "Dispositivo cilíndrico de titânio preenchido com nitrogênio líquido ionizado capaz de retardar mutações celulares caóticas."
+    },
+    {
+      "id": "relic_gelo_negro",
+      "name": "Lâmina de Gelo Negro",
+      "owner": "Comandante Miller",
+      "type": "Arma Biomecânica",
+      "rarity": "Grau Primordial",
+      "pd_cost": 4,
+      "ability": "Corte Criogênico",
+      "effect": "Ataques ignoram Sacrifício de Armadura convencional; causa 2d10 de dano frio e reduz a Agilidade do alvo em -2.",
+      "description": "Fragmento cortante do monólito ártico que nunca derrete, emanando uma fumaça gélida que absorve a luz ao redor."
+    },
+    {
+      "id": "relic_quartzo_negro",
+      "name": "Nódulo de Quartzo Mutagênico",
+      "owner": "Dra. Camila Neves",
+      "type": "Relíquia Mineral Biológica",
+      "rarity": "Rara / Grau Alfa",
+      "pd_cost": 3,
+      "ability": "Pulso de Adaptação Celular",
+      "effect": "Cura 2d8 PV de um aliado orgânico instantaneamente ao acelerar o metabolismo, concedendo +2 em testes de Fortitude por 2 rodadas.",
+      "description": "Um fragmento cristalino negro extraído da caverna do Tapajós. Quando exposto a calor corpóreo, emite um brilho verde esmeralda e acelera a regeneração de tecidos vivos."
+    },
+    {
+      "id": "relic_diapasao_eco",
+      "name": "Diapasão de Prata Sem-Rosto",
+      "owner": "Hans Richter",
+      "type": "Relíquia Acústica Oculta",
+      "rarity": "Rara / Grau Alfa",
+      "pd_cost": 2,
+      "ability": "Onda de Silenciamento Dimensional",
+      "effect": "Cria uma zona de 6 metros de silêncio absoluto onde nenhuma habilidade mística oral ou efeito sonoro hostil pode ser executado.",
+      "description": "Um diapasão forjado pelos monges da Floresta Negra com prata esterlina e inscrições heréticas. Vibra em uma frequência inaudível aos ouvidos humanos que desarma vórtices acústicos do LIMIAR."
+    }
+  ],
+  "timeline": [
+    {
+        "id": "time_ale_01",
+        "year": "Ano 2023",
+        "chronological_year": 2023,
+        "era_badge": "Gênese do Oculto (2023)",
+        "title": "O Selamento da Abadia de Friburgo",
+        "location": "Floresta Negra (Alemanha)",
+        "category": "Investigação Ocultista & Selamento",
+        "campaign_id": "camp_005",
+        "threat_level": "Nível 4 - Crítico",
+        "threat_stars": 4,
+        "status": "Concluído (Selado)",
+        "survivors": "Greta Falk (Sem voz), Hans Richter",
+        "casualties": "4 monges da congregação herética",
+        "characters": [
+            "char_greta",
+            "char_hans"
+        ],
+        "description": "Greta Falk e Hans Richter desmantelam o culto dos Sem-Rosto na Floresta Negra e selam a cripta com concreto hidrofóbico após a perda definitiva da voz de Greta diante das presenças dimensionais."
+    },
+    {
+        "id": "time_01",
+        "year": "Ano 2023 (-3)",
+        "chronological_year": 2023.5,
+        "era_badge": "Incidente das Minas (2023)",
+        "title": "O Desaparecimento nas Minas",
+        "location": "Mansão Vilar & Minas (México)",
+        "category": "Incidente Inicial",
+        "campaign_id": "camp_002",
+        "threat_level": "Nível 3 - Severo",
+        "threat_stars": 3,
+        "status": "Investigação Suspensa",
+        "survivors": "Lucas Vilar (Isolado no subterrâneo)",
+        "casualties": "Nenhuma confirmada (Desaparecimento arquivado)",
+        "characters": [
+            "char_lucas",
+            "char_gabriel"
+        ],
+        "description": "Durante uma brincadeira entre seis amigos nas proximidades da Mansão Vilar no México, Lucas Vilar entra nos túneis abandonados da ferrovia e desaparece na escuridão. O caso é arquivado pela polícia como fuga, mas uma culpa profunda consome o grupo."
+    },
+    {
+        "id": "time_02",
+        "year": "Ano 2024 (-2)",
+        "chronological_year": 2024,
+        "era_badge": "Engenharia Dimensional (2024)",
+        "title": "Nascimento do Projeto LIMIAR",
+        "location": "O Casarão Vilar (México)",
+        "category": "Investigação & Engenharia Oculta",
+        "campaign_id": "camp_002",
+        "threat_level": "Nível 3 - Severo",
+        "threat_stars": 3,
+        "status": "Concluído",
+        "survivors": "Gabriel Vilar",
+        "casualties": "Nenhuma direta",
+        "characters": [
+            "char_gabriel"
+        ],
+        "description": "Recusando-se a aceitar a morte do irmão, Gabriel Vilar tranca-se no casarão. Ele descobre fontes de energia anômala nas rochas da serra e inicia a construção da arma de portais dimensionais: o LIMIAR."
+    },
+    {
+        "id": "time_03",
+        "year": "Ano 2025 (-1)",
+        "chronological_year": 2025,
+        "era_badge": "Ruptura Abissal (2025)",
+        "title": "A Ruptura do Triângulo das Bermudas",
+        "location": "Oceano Atlântico Norte",
+        "category": "Cataclismo Anômalo",
+        "campaign_id": "camp_001",
+        "threat_level": "Nível 5 - Cataclísmico",
+        "threat_stars": 5,
+        "status": "Ativo / Expansão Contínua",
+        "survivors": "Arquiteto do Caos (Transcendido 99% MDA)",
+        "casualties": "Flotilha costeira e tripulações civis",
+        "characters": [
+            "char_arquiteto"
+        ],
+        "description": "No Oceano Atlântico, experimentos com bio-ressonância culminam na ascensão do Arquiteto do Caos (99% MDA). Um buraco de minhoca abre-se no mar, engolindo flotilhas, aviões e submarinos, criando a anomalia permanente do Triângulo."
+    },
+    {
+        "id": "time_bra_01",
+        "year": "Ano 2025",
+        "chronological_year": 2025.5,
+        "era_badge": "Contenção Amazônica (2025)",
+        "title": "Incidente da Bacia do Tapajós",
+        "location": "Floresta Amazônica (Brasil)",
+        "category": "Operação Tática de Contenção",
+        "campaign_id": "camp_004",
+        "threat_level": "Nível 4 - Crítico",
+        "threat_stars": 4,
+        "status": "Contido / Quarentena Militar",
+        "survivors": "Capitão Thiago Santos, Dra. Camila Neves",
+        "casualties": "2 soldados da patrulha de reconhecimento",
+        "characters": [
+            "char_thiago",
+            "char_camila"
+        ],
+        "description": "O esquadrão Curupira liderado pelo Capitão Thiago Santos penetra a cratera de quartzo negro no Brasil, enfrentando mutações biológicas vegetais e resgatando a Dra. Camila Neves antes da floração letal."
+    },
+    {
+        "id": "time_04",
+        "year": "Ano 2026 (Ano 0)",
+        "chronological_year": 2026,
+        "era_badge": "Clímax da Mansão Vilar (2026)",
+        "title": "A Noite da Confissão & O Resgate",
+        "location": "Mansão Vilar & Minas (México)",
+        "category": "Clímax de Campanha",
+        "campaign_id": "camp_002",
+        "threat_level": "Nível 4 - Crítico",
+        "threat_stars": 4,
+        "status": "Concluído com Sobreviventes",
+        "survivors": "Lucas Vilar, Gabriel Vilar, Rafael Montes, Júlia Prado",
+        "casualties": "Criaturas das Minas exterminadas",
+        "characters": [
+            "char_lucas",
+            "char_gabriel",
+            "char_rafael",
+            "char_julia"
+        ],
+        "description": "Gabriel atrai os antigos amigos de volta ao México com bilhetes de trem anônimos. Usando a máscara de Davi Reis e o LIMIAR, força as confissões. No subsolo, enfrentam os Ecos e resgatam Lucas com vida após 3 anos de isolamento e sobrevivência."
+    },
+    {
+        "id": "time_05",
+        "year": "Ano 2026 (Presente)",
+        "chronological_year": 2026.3,
+        "era_badge": "Guerra do Triângulo (Presente)",
+        "title": "A Incursão de Nova Caronte",
+        "location": "Cidadela Flutuante (Triângulo das Bermudas)",
+        "category": "Campanha Ativa",
+        "campaign_id": "camp_001",
+        "threat_level": "Nível 5 - Cataclísmico",
+        "threat_stars": 5,
+        "status": "Em Andamento (Conflito Aberto)",
+        "survivors": "Sargento Miller, Dra. Evelyn Reed, civis de Nova Caronte",
+        "casualties": "Baixas contínuas na carcaça do cargueiro",
+        "characters": [
+            "char_miller",
+            "char_evelyn",
+            "char_arquiteto"
+        ],
+        "description": "O navio de 5.000 almas é tragado pela fenda no Atlântico. Os sobreviventes fundam a cidadela caótica de Nova Caronte, onde precisam lidar com mutações forçadas, os ataques do Mímico e as profecias do Arquiteto do Caos."
+    },
+    {
+        "id": "time_06",
+        "year": "Ano 2027 (Horizonte)",
+        "chronological_year": 2027,
+        "era_badge": "Crise Glacial (Horizonte)",
+        "title": "Alerta Vermelho na Estação Zero",
+        "location": "Estação Criogênica Zero (Groenlândia)",
+        "category": "Incursão Polar",
+        "campaign_id": "camp_003",
+        "threat_level": "Nível 5 - Emergência Máxima",
+        "threat_stars": 5,
+        "status": "Alerta Vermelho (Comunicações Silenciadas)",
+        "survivors": "Dra. Evelyn Reed (Equipe de Resgate)",
+        "casualties": "12 cientistas criogênicos desaparecidos no gelo",
+        "characters": [
+            "char_evelyn"
+        ],
+        "description": "A estação de pesquisa cessa todas as transmissões de rádio após relatar a quebra da câmara criogênica primária e manifestações do Polimorfo. Uma equipe tática da A.E.G.I.S. é despachada em meio a uma tempestade ártica nível 5."
+    }
+],
+  "relations_graph": {
+    "nodes": [
+        {
+            "id": "camp_001",
+            "label": "A Incursão (Bermudas)",
+            "type": "campaign",
+            "color": "#00e5ff",
+            "radius": 26
+        },
+        {
+            "id": "camp_002",
+            "label": "Mansão Vilar (México)",
+            "type": "campaign",
+            "color": "#ffd700",
+            "radius": 26
+        },
+        {
+            "id": "camp_003",
+            "label": "Estação Zero (Groenlândia)",
+            "type": "campaign",
+            "color": "#00f0ff",
+            "radius": 26
+        },
+        {
+            "id": "camp_004",
+            "label": "Protocolo Selva (Brasil)",
+            "type": "campaign",
+            "color": "#2ecc71",
+            "radius": 26
+        },
+        {
+            "id": "camp_005",
+            "label": "Floresta Negra (Alemanha)",
+            "type": "campaign",
+            "color": "#9b59b6",
+            "radius": 26
+        },
+        {
+            "id": "char_lucas",
+            "label": "Lucas Vilar",
+            "type": "character",
+            "campaign_id": "camp_002",
+            "color": "#ffd700",
+            "radius": 18
+        },
+        {
+            "id": "char_gabriel",
+            "label": "Gabriel Vilar",
+            "type": "character",
+            "campaign_id": "camp_002",
+            "color": "#ffd700",
+            "radius": 18
+        },
+        {
+            "id": "char_rafael",
+            "label": "Rafael Montes",
+            "type": "character",
+            "campaign_id": "camp_002",
+            "color": "#ffd700",
+            "radius": 16
+        },
+        {
+            "id": "char_julia",
+            "label": "Júlia Prado",
+            "type": "character",
+            "campaign_id": "camp_002",
+            "color": "#ffd700",
+            "radius": 16
+        },
+        {
+            "id": "char_arquiteto",
+            "label": "O Arquiteto",
+            "type": "character",
+            "campaign_id": "camp_001",
+            "color": "#e74c3c",
+            "radius": 20
+        },
+        {
+            "id": "char_miller",
+            "label": "Sgt. Miller",
+            "type": "character",
+            "campaign_id": "camp_001",
+            "color": "#00e5ff",
+            "radius": 18
+        },
+        {
+            "id": "char_evelyn",
+            "label": "Dra. Evelyn",
+            "type": "character",
+            "campaign_id": "camp_001",
+            "color": "#00e5ff",
+            "radius": 18
+        },
+        {
+            "id": "char_thiago",
+            "label": "Cap. Thiago",
+            "type": "character",
+            "campaign_id": "camp_004",
+            "color": "#2ecc71",
+            "radius": 18
+        },
+        {
+            "id": "char_camila",
+            "label": "Dra. Camila",
+            "type": "character",
+            "campaign_id": "camp_004",
+            "color": "#2ecc71",
+            "radius": 18
+        },
+        {
+            "id": "char_greta",
+            "label": "Greta Falk",
+            "type": "character",
+            "campaign_id": "camp_005",
+            "color": "#9b59b6",
+            "radius": 18
+        },
+        {
+            "id": "char_hans",
+            "label": "Hans Richter",
+            "type": "character",
+            "campaign_id": "camp_005",
+            "color": "#9b59b6",
+            "radius": 18
+        },
+        {
+            "id": "rel_limiar",
+            "label": "O LIMIAR",
+            "type": "relic",
+            "color": "#f39c12",
+            "radius": 15
+        },
+        {
+            "id": "rel_nucleo_abismo",
+            "label": "Núcleo do Abismo",
+            "type": "relic",
+            "color": "#e74c3c",
+            "radius": 15
+        },
+        {
+            "id": "rel_esporo_dourado",
+            "label": "Quartzo Negro",
+            "type": "relic",
+            "color": "#27ae60",
+            "radius": 15
+        },
+        {
+            "id": "rel_manuscrito_friburgo",
+            "label": "Códice Sem-Rosto",
+            "type": "relic",
+            "color": "#8e44ad",
+            "radius": 15
+        },
+        {
+            "id": "rel_lanterna_criogenica",
+            "label": "Lanterna de Éter",
+            "type": "relic",
+            "color": "#3498db",
+            "radius": 15
+        },
+        {
+            "id": "cri_ecos",
+            "label": "Ecos das Minas",
+            "type": "threat",
+            "color": "#ff4444",
+            "radius": 15
+        },
+        {
+            "id": "cri_mimico",
+            "label": "O Mímico",
+            "type": "threat",
+            "color": "#ff4444",
+            "radius": 15
+        },
+        {
+            "id": "cri_polimorfo",
+            "label": "Polimorfo Glacial",
+            "type": "threat",
+            "color": "#ff4444",
+            "radius": 15
+        },
+        {
+            "id": "cri_esporos",
+            "label": "Parasita Floral",
+            "type": "threat",
+            "color": "#ff4444",
+            "radius": 15
+        },
+        {
+            "id": "cri_sem_rosto",
+            "label": "Culto Sem-Rosto",
+            "type": "threat",
+            "color": "#ff4444",
+            "radius": 15
+        }
+    ],
+    "links": [
+        {
+            "source": "camp_002",
+            "target": "char_lucas",
+            "label": "Protagonista Sobrevivente"
+        },
+        {
+            "source": "camp_002",
+            "target": "char_gabriel",
+            "label": "Engenheiro Ocultista"
+        },
+        {
+            "source": "camp_002",
+            "target": "char_rafael",
+            "label": "Investigador"
+        },
+        {
+            "source": "camp_002",
+            "target": "char_julia",
+            "label": "Investigadora"
+        },
+        {
+            "source": "char_gabriel",
+            "target": "char_lucas",
+            "label": "Irmãos / Obsessão de Resgate"
+        },
+        {
+            "source": "char_gabriel",
+            "target": "rel_limiar",
+            "label": "Criador & Disparador"
+        },
+        {
+            "source": "char_lucas",
+            "target": "cri_ecos",
+            "label": "Sobreviveu 3 Anos Cego"
+        },
+        {
+            "source": "char_rafael",
+            "target": "char_lucas",
+            "label": "Culpa do Desaparecimento"
+        },
+        {
+            "source": "char_julia",
+            "target": "char_gabriel",
+            "label": "Desmascarou o Justiceiro"
+        },
+        {
+            "source": "camp_001",
+            "target": "char_miller",
+            "label": "Comandante Militar"
+        },
+        {
+            "source": "camp_001",
+            "target": "char_evelyn",
+            "label": "Líder Científica"
+        },
+        {
+            "source": "camp_001",
+            "target": "char_arquiteto",
+            "label": "Entidade Primordial"
+        },
+        {
+            "source": "char_miller",
+            "target": "char_evelyn",
+            "label": "Escolta e Aliança"
+        },
+        {
+            "source": "char_arquiteto",
+            "target": "rel_nucleo_abismo",
+            "label": "Canalizador da Fenda"
+        },
+        {
+            "source": "camp_001",
+            "target": "cri_mimico",
+            "label": "Ameaça Infiltrada"
+        },
+        {
+            "source": "camp_003",
+            "target": "char_evelyn",
+            "label": "Equipe de Investigação"
+        },
+        {
+            "source": "camp_003",
+            "target": "rel_lanterna_criogenica",
+            "label": "Instrumento Polar"
+        },
+        {
+            "source": "camp_003",
+            "target": "cri_polimorfo",
+            "label": "Organismo Crio-mutante"
+        },
+        {
+            "source": "camp_004",
+            "target": "char_thiago",
+            "label": "Líder Esquadrão Curupira"
+        },
+        {
+            "source": "camp_004",
+            "target": "char_camila",
+            "label": "Bioquímica Resgatada"
+        },
+        {
+            "source": "char_thiago",
+            "target": "char_camila",
+            "label": "Proteção & Extração"
+        },
+        {
+            "source": "char_camila",
+            "target": "rel_esporo_dourado",
+            "label": "Pesquisa do Cristal"
+        },
+        {
+            "source": "camp_004",
+            "target": "cri_esporos",
+            "label": "Bio-parasita Vegetal"
+        },
+        {
+            "source": "camp_005",
+            "target": "char_greta",
+            "label": "Ocultista Marcada"
+        },
+        {
+            "source": "camp_005",
+            "target": "char_hans",
+            "label": "Guardião Veterano"
+        },
+        {
+            "source": "char_greta",
+            "target": "char_hans",
+            "label": "Parceiros / Voto de Silêncio"
+        },
+        {
+            "source": "char_hans",
+            "target": "rel_manuscrito_friburgo",
+            "label": "Tradutor das Runas"
+        },
+        {
+            "source": "camp_005",
+            "target": "cri_sem_rosto",
+            "label": "Hereges Criptografados"
+        },
+        {
+            "source": "char_gabriel",
+            "target": "char_evelyn",
+            "label": "Correspondência Teórica (A.E.G.I.S.)"
+        },
+        {
+            "source": "char_thiago",
+            "target": "char_miller",
+            "label": "Ex-companheiros de Operações Especiais"
+        }
+    ]
+},
+  "battlemap_tokens": [
+    {
+      "id": "tok_lucas",
+      "character_id": "char_lucas",
+      "name": "Lucas Vilar",
+      "role": "Sobrevivente Marcado",
+      "map_id": "map_vilar",
+      "initial_coords": [
+        21.84,
+        -102.26
+      ],
+      "svg_x": 720,
+      "svg_y": 510,
+      "color": "#00e5ff",
+      "icon": "👤",
+      "pd": 12,
+      "max_pd": 20,
+      "mda": 25,
+      "has_armor": false,
+      "vision_radius": 60,
+      "conditions": [
+        "Hipersensibilidade Auditiva",
+        "Cego"
+      ]
+    },
+    {
+      "id": "tok_gabriel",
+      "character_id": "char_gabriel",
+      "name": "Gabriel Vilar (Mascarado)",
+      "role": "Especialista Oculto",
+      "map_id": "map_vilar",
+      "initial_coords": [
+        21.88,
+        -102.19
+      ],
+      "svg_x": 1360,
+      "svg_y": 810,
+      "color": "#ffd700",
+      "icon": "🎭",
+      "pd": 24,
+      "max_pd": 24,
+      "mda": 15,
+      "has_armor": true,
+      "vision_radius": 80,
+      "conditions": [
+        "Portador do LIMIAR",
+        "Determinado"
+      ]
+    },
+    {
+      "id": "tok_rafael",
+      "character_id": "char_rafael",
+      "name": "Rafael Moreira",
+      "role": "Combatente Líder",
+      "map_id": "map_vilar",
+      "initial_coords": [
+        21.87,
+        -102.21
+      ],
+      "svg_x": 980,
+      "svg_y": 320,
+      "color": "#e74c3c",
+      "icon": "⚔️",
+      "pd": 28,
+      "max_pd": 30,
+      "mda": 8,
+      "has_armor": true,
+      "vision_radius": 75,
+      "conditions": [
+        "Postura Ofensiva"
+      ]
+    },
+    {
+      "id": "tok_julia",
+      "character_id": "char_julia",
+      "name": "Júlia",
+      "role": "Investigadora Ocultista",
+      "map_id": "map_vilar",
+      "initial_coords": [
+        21.85,
+        -102.24
+      ],
+      "svg_x": 840,
+      "svg_y": 480,
+      "color": "#9c27b0",
+      "icon": "🔮",
+      "pd": 22,
+      "max_pd": 22,
+      "mda": 10,
+      "has_armor": false,
+      "vision_radius": 70,
+      "conditions": [
+        "Variável Imprevista"
+      ]
+    },
+    {
+      "id": "tok_eco",
+      "character_id": "creature_eco",
+      "name": "Eco Alfa",
+      "role": "Criatura das Minas",
+      "map_id": "map_vilar",
+      "initial_coords": [
+        21.82,
+        -102.29
+      ],
+      "svg_x": 220,
+      "svg_y": 720,
+      "color": "#39ff14",
+      "icon": "👾",
+      "pd": 18,
+      "max_pd": 18,
+      "mda": 45,
+      "has_armor": false,
+      "vision_radius": 45,
+      "conditions": [
+        "Ecolocalização Ativa"
+      ]
+    },
+    {
+      "id": "tok_arquiteto",
+      "character_id": "char_arquiteto",
+      "name": "O Arquiteto do Caos",
+      "role": "Primogênito",
+      "map_id": "map_triangulo",
+      "initial_coords": [
+        25.2,
+        -72
+      ],
+      "svg_x": 780,
+      "svg_y": 420,
+      "color": "#00e5ff",
+      "icon": "👁️",
+      "pd": 100,
+      "max_pd": 100,
+      "mda": 99,
+      "has_armor": false,
+      "vision_radius": 120,
+      "conditions": [
+        "Hackeando a Realidade",
+        "Aura Congelante"
+      ]
+    },
+    {
+      "id": "tok_kraken",
+      "character_id": "creature_kraken",
+      "name": "Tentáculo Colossal",
+      "role": "Colosso Abissal",
+      "map_id": "map_triangulo",
+      "initial_coords": [
+        23.8,
+        -69.5
+      ],
+      "svg_x": 1080,
+      "svg_y": 520,
+      "color": "#e91e63",
+      "icon": "🐙",
+      "pd": 80,
+      "max_pd": 80,
+      "mda": 95,
+      "has_armor": true,
+      "vision_radius": 90,
+      "conditions": [
+        "Couraça Basáltica"
+      ]
+    },
+    {
+      "id": "tok_evelyn",
+      "character_id": "char_evelyn",
+      "name": "Dra. Evelyn Shaw",
+      "role": "Especialista em Genética",
+      "map_id": "map_artico",
+      "initial_coords": [
+        72.16,
+        -40.18
+      ],
+      "svg_x": 480,
+      "svg_y": 320,
+      "color": "#00e5ff",
+      "icon": "🧬",
+      "pd": 16,
+      "max_pd": 20,
+      "mda": 22,
+      "has_armor": false,
+      "vision_radius": 60,
+      "conditions": [
+        "Quarentena Nível 4"
+      ]
+    },
+    {
+      "id": "tok_miller",
+      "character_id": "char_miller",
+      "name": "Comandante Miller",
+      "role": "Combatente Tático",
+      "map_id": "map_artico",
+      "initial_coords": [
+        72.14,
+        -40.22
+      ],
+      "svg_x": 620,
+      "svg_y": 420,
+      "color": "#ff2a4b",
+      "icon": "🛡️",
+      "pd": 22,
+      "max_pd": 22,
+      "mda": 12,
+      "has_armor": true,
+      "vision_radius": 75,
+      "conditions": [
+        "Exoesqueleto Ativo"
+      ]
+    },
+    {
+      "id": "tok_parasita",
+      "character_id": "creature_leviathan",
+      "name": "Parasita Glacial Primordial",
+      "role": "Aberração Criogênica",
+      "map_id": "map_artico",
+      "initial_coords": [
+        71.86,
+        -39.82
+      ],
+      "svg_x": 1050,
+      "svg_y": 550,
+      "color": "#b432ff",
+      "icon": "❄️",
+      "pd": 38,
+      "max_pd": 38,
+      "mda": 88,
+      "has_armor": true,
+      "vision_radius": 95,
+      "conditions": [
+        "Criogênico",
+        "Espinhos de Gelo"
+      ]
+    }
+  ]
+};
+  }
+}
+
+// Instância global
+window.DataLoader = DataLoader;

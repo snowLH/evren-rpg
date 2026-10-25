@@ -1,0 +1,21 @@
+# Python / Node
+__pycache__/
+*.pyc
+node_modules/
+
+# Temporary test screenshots
+shot_*.png
+verified_*.png
+
+# Temporary verification scripts
+verify_*.js
+debug_*.js
+check_*.js
+test_*.js
+test_*.py
+sync_*.js
+sync_*.py
+enrich_*.js
+enrich_*.py
+update_world_data.py
+generate_app_icons.py

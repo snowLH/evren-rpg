@@ -1,0 +1,466 @@
+/**
+ * ATMOSPHERIC & ADVANCED VISUAL FX
+ * Universo: Evren — Mesa Interativa
+ * Estilização para o Motor de Partículas Atmosféricas, Radar Holográfico AEGIS,
+ * Tubo de Ensaio Bio-Vial de MDA, Fratura Psíquica de Overload e Rolagem 3D d20.
+ */
+
+/* ==========================================================================
+   1. CANVAS ATMOSFÉRICO & TÚNEL DE NUVENS
+   ========================================================================== */
+.atmospheric-particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 500; /* Acima dos tiles do mapa, abaixo dos botões do HUD */
+}
+
+.cloud-warp-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Itens de telemetria no Mergulho de Nuvens */
+.cloud-telemetry-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+}
+
+.cloud-telemetry-item {
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  padding: 4px 10px;
+  border-radius: 2px;
+  letter-spacing: 1.5px;
+}
+
+.cloud-telemetry-item.alert {
+  color: #ff3366;
+  border-color: rgba(255, 51, 102, 0.4);
+  background: rgba(255, 51, 102, 0.1);
+  animation: telemetry-blink 0.8s infinite alternate;
+}
+
+@keyframes telemetry-blink {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; text-shadow: 0 0 8px #ff3366; }
+}
+
+/* ==========================================================================
+   2. RADAR OCULTISTA HOLOGRÁFICO AEGIS (CANTO INFERIOR ESQUERDO)
+   ========================================================================== */
+.occult-radar-container {
+  position: fixed;
+  bottom: 44px; /* Logo acima do footer HUD */
+  left: 20px;
+  z-index: 1200;
+  pointer-events: auto;
+}
+
+.radar-card {
+  width: 220px;
+  background: rgba(3, 10, 18, 0.92);
+  border: 1px solid rgba(0, 229, 255, 0.45);
+  border-radius: 4px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 229, 255, 0.18), inset 0 0 15px rgba(0, 229, 255, 0.05);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.radar-card.radar-minimized {
+  width: 170px;
+}
+
+.radar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgba(0, 229, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+}
+
+.radar-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.radar-indicator-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #39ff14;
+  box-shadow: 0 0 8px #39ff14;
+  animation: led-pulse 1.2s infinite;
+}
+
+@keyframes led-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+.radar-title {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #00e5ff;
+}
+
+.radar-btn-toggle {
+  background: none;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: #00e5ff;
+  font-family: monospace;
+  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.radar-btn-toggle:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+}
+
+.radar-display-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 10px auto;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 229, 255, 0.4);
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.25), 0 0 10px rgba(0, 229, 255, 0.15);
+  background: radial-gradient(circle at center, rgba(3, 16, 28, 0.9) 0%, rgba(1, 6, 12, 0.98) 100%);
+  overflow: hidden;
+}
+
+#radar-screen-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.radar-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  border-radius: 50%;
+}
+
+.radar-crosshair {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.radar-telemetry-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: monospace;
+  font-size: 8px;
+  color: #39ff14;
+  letter-spacing: 1px;
+  background: rgba(2, 8, 14, 0.85);
+  padding: 1px 6px;
+  border-radius: 2px;
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  pointer-events: none;
+}
+
+.radar-blip-list {
+  padding: 4px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.radar-blip-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: rgba(0, 229, 255, 0.04);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 9px;
+  font-family: monospace;
+}
+
+.radar-blip-item:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: #00e5ff;
+  transform: translateX(2px);
+}
+
+.blip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.blip-name {
+  color: #d8ecf8;
+  font-weight: 600;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.blip-threat {
+  color: #ff3366;
+  font-size: 8px;
+}
+
+/* ==========================================================================
+   3. ANIMAÇÃO DE BIO-VIAL & HELIX PARA O NÍVEL DE MDA (%)
+   ========================================================================== */
+.mda-biovial-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(2, 8, 16, 0.7);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 4px;
+}
+
+.biovial-flask {
+  position: relative;
+  width: 32px;
+  height: 70px;
+  background: rgba(10, 30, 45, 0.6);
+  border: 2px solid rgba(0, 229, 255, 0.45);
+  border-radius: 16px 16px 6px 6px;
+  box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.2), 0 0 10px rgba(0, 229, 255, 0.15);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.biovial-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.biovial-liquid.mda-tier-low {
+  background: linear-gradient(0deg, #007799, #00e5ff);
+  box-shadow: 0 0 12px #00e5ff;
+}
+
+.biovial-liquid.mda-tier-mid {
+  background: linear-gradient(0deg, #1b5e20, #39ff14);
+  box-shadow: 0 0 12px #39ff14;
+}
+
+.biovial-liquid.mda-tier-high {
+  background: linear-gradient(0deg, #4a0e4e, #9b51e0, #ff0055);
+  box-shadow: 0 0 15px #ff0055;
+  animation: boiling-fluid 1s infinite alternate;
+}
+
+@keyframes boiling-fluid {
+  0% { filter: brightness(1) contrast(1.1); }
+  100% { filter: brightness(1.3) contrast(1.4); }
+}
+
+.biovial-bubble {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: bubble-rise 1.4s infinite linear;
+}
+
+@keyframes bubble-rise {
+  0% { transform: translateY(0); opacity: 0.8; }
+  100% { transform: translateY(-50px); opacity: 0; }
+}
+
+.biovial-specular {
+  position: absolute;
+  top: 4px;
+  left: 3px;
+  width: 4px;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.mda-dna-status {
+  flex: 1;
+}
+
+.mda-tier-description {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #a4c4d8;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   4. FRATURA PSÍQUICA DE OVERLOAD (PD 0) — EFEITO DE TELA CHEIA
+   ========================================================================== */
+.overload-fracture-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9500;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  background: 
+    radial-gradient(ellipse at center, transparent 40%, rgba(180, 0, 0, 0.35) 75%, rgba(60, 0, 0, 0.85) 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255, 0, 0, 0.05) 15px, rgba(255, 0, 0, 0.05) 30px);
+  box-shadow: inset 0 0 120px 50px rgba(255, 0, 0, 0.65);
+}
+
+.overload-fracture-vignette.active {
+  opacity: 1;
+  visibility: visible;
+  animation: overload-throb 1.2s infinite alternate;
+}
+
+@keyframes overload-throb {
+  0% {
+    box-shadow: inset 0 0 80px 40px rgba(255, 0, 0, 0.5);
+    filter: contrast(1);
+  }
+  100% {
+    box-shadow: inset 0 0 160px 80px rgba(255, 0, 0, 0.85);
+    filter: contrast(1.3) hue-rotate(-10deg);
+  }
+}
+
+/* ==========================================================================
+   5. ROLADOR DE DADOS 3D CLASH & MODAL DE DESEMPATE LETAL
+   ========================================================================== */
+.modal-dice-backdrop {
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-clash-box {
+  background: rgba(3, 11, 22, 0.96);
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.3), inset 0 0 25px rgba(0, 229, 255, 0.1);
+  border-radius: 6px;
+  padding: 24px 32px;
+  text-align: center;
+  max-width: 460px;
+  width: 90%;
+  animation: dice-box-pop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes dice-box-pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.dice-3d-stage {
+  width: 100px;
+  height: 100px;
+  margin: 16px auto;
+  perspective: 600px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d20-poly-badge {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+  background: radial-gradient(circle, #0a3050 0%, #031020 100%);
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  border: 2px solid #00e5ff;
+  box-shadow: 0 0 20px #00e5ff;
+  transition: all 0.2s;
+}
+
+.d20-poly-badge.rolling {
+  animation: d20-spin 0.12s infinite linear;
+}
+
+.d20-poly-badge.crit-20 {
+  background: radial-gradient(circle, #ffe600 0%, #ff8800 60%, #cc0000 100%);
+  color: #000;
+  box-shadow: 0 0 35px #ffe600;
+  animation: crit-pulse 0.4s infinite alternate;
+}
+
+.d20-poly-badge.fail-1 {
+  background: radial-gradient(circle, #880000 0%, #330000 100%);
+  color: #ff3366;
+  box-shadow: 0 0 35px #ff0000;
+}
+
+@keyframes d20-spin {
+  0% { transform: rotate(0deg) scale(0.95); }
+  50% { transform: rotate(180deg) scale(1.08); }
+  100% { transform: rotate(360deg) scale(0.95); }
+}
+
+@keyframes crit-pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); filter: drop-shadow(0 0 15px #ffe600); }
+}
+
+.dice-clash-header {
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  font-weight: 800;
+  color: #00e5ff;
+  letter-spacing: 2px;
+}
+
+.dice-clash-result {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #e0f2fe;
+}

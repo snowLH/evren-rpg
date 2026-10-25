@@ -1,0 +1,36 @@
+/* ==========================================================================
+   CRIADOR DE CAMPANHAS & ZONAS TÁTICAS
+   Universo: Evren — Mesa Interativa
+   ========================================================================== */
+
+.modal-campaign-container {
+  max-width: 820px !important;
+  max-height: 88vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-color: rgba(0, 229, 255, 0.45) !important;
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.2), 0 20px 60px rgba(0, 0, 0, 0.95) !important;
+}
+
+.coord-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.btn-coord-preset {
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #a4cce6;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-coord-preset:hover {
+  background: #00e5ff;
+  color: #03070d;
+}

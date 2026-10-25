@@ -1,0 +1,356 @@
+/* ==========================================================================
+   SOUNDBOARD & JUKEBOX OCULTISTA
+   Universo Evren — Estética Biopunk & Síntese Web Audio
+   ========================================================================== */
+
+.soundboard-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.soundboard-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: #00e5ff;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.soundboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.btn-sound-trigger {
+  background: rgba(10, 26, 44, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 6px;
+  padding: 10px 8px;
+  color: #e0f4ff;
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-sound-trigger:hover {
+  background: rgba(0, 229, 255, 0.25);
+  border-color: #00e5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+}
+
+.btn-sound-trigger:active {
+  transform: scale(0.95);
+}
+
+.sound-trigger-icon {
+  font-size: 1.2rem;
+}
+
+.soundboard-presets-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-sound-preset {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #c0d4ec;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-sound-preset:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+  color: #fff;
+}
+
+.btn-sound-preset.active {
+  background: #00e5ff;
+  color: #050b14;
+  font-weight: bold;
+  box-shadow: 0 0 10px #00e5ff;
+}
+
+/* ==========================================================================
+   GRAVADOR DE FITAS CASSETE DA A.E.G.I.S. (VINTAGE TAPE DECK)
+   ========================================================================== */
+.cassette-deck-card {
+  background: #08111d;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 8px 32px rgba(0, 0, 0, 0.9);
+}
+
+.cassette-tape-body {
+  background: linear-gradient(180deg, #182230 0%, #0d1520 100%);
+  border: 2px solid #2a3b4e;
+  border-radius: 8px;
+  padding: 14px;
+  position: relative;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+}
+
+.cassette-tape-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+.cassette-label-brand {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  color: #ffd700;
+  letter-spacing: 1px;
+}
+
+.cassette-tape-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cassette-window {
+  height: 80px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  padding: 0 40px;
+}
+
+.cassette-tape-ribbon {
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  right: 30%;
+  height: 6px;
+  background: #2b1b17;
+  transform: translateY(-50%);
+  border-top: 1px solid #4a2f27;
+  border-bottom: 1px solid #140d0b;
+}
+
+.cassette-reel {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #e6e6e6;
+  border: 4px solid #fff;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s linear;
+}
+
+.cassette-reel.spinning {
+  animation: spinReel 1.8s infinite linear;
+}
+
+@keyframes spinReel {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.reel-center {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #08111d;
+  border: 2px solid #555;
+  z-index: 2;
+}
+
+.reel-spoke {
+  position: absolute;
+  width: 4px;
+  height: 48px;
+  background: #aaa;
+  z-index: 1;
+}
+
+.reel-spoke.s1 { transform: rotate(0deg); }
+.reel-spoke.s2 { transform: rotate(60deg); }
+.reel-spoke.s3 { transform: rotate(120deg); }
+
+/* Painel de VU Meters */
+.vu-meters-panel {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.vu-meter-box {
+  flex: 1;
+  height: 44px;
+  background: rgba(255, 170, 0, 0.08);
+  border: 1px solid rgba(255, 170, 0, 0.35);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  padding: 4px 8px;
+}
+
+.vu-meter-scale {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  color: #ffa726;
+}
+
+.vu-needle {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 2px;
+  height: 38px;
+  background: #ff5252;
+  transform-origin: bottom center;
+  transform: rotate(-35deg);
+  transition: transform 0.08s ease-out;
+  box-shadow: 0 0 4px #ff5252;
+}
+
+.vu-needle.active {
+  animation: vuBounce 0.35s infinite alternate ease-in-out;
+}
+
+@keyframes vuBounce {
+  0% { transform: rotate(-30deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(-10deg); }
+}
+
+/* Controles do Gravador */
+.cassette-controls-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.btn-deck-ctrl {
+  background: rgba(10, 26, 44, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: #00e5ff;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-deck-ctrl:hover {
+  background: #00e5ff;
+  color: #040c16;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+}
+
+.btn-deck-ctrl.btn-deck-danger {
+  border-color: #ff5252;
+  color: #ff5252;
+}
+
+.btn-deck-ctrl.btn-deck-danger:hover {
+  background: #ff5252;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255, 82, 82, 0.4);
+}
+
+.btn-deck-ctrl.active {
+  background: #00e5ff;
+  color: #040c16;
+}
+
+/* Transcrição da Fita */
+.cassette-transcript-wrap {
+  margin-top: 14px;
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 3px solid #ffd700;
+  padding: 10px 14px;
+  border-radius: 0 4px 4px 0;
+}
+
+.transcript-header {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  color: #ffd700;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.cassette-transcript-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: #e0f4ff;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Catálogo de Fitas */
+.cassette-tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+}
+
+.cassette-track-item {
+  background: rgba(10, 25, 42, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cassette-track-item:hover, .cassette-track-item.active {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.cassette-track-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  color: #fff;
+  font-weight: 700;
+}
+
+.cassette-track-meta {
+  font-family: 'Courier New', monospace;
+  font-size: 0.68rem;
+  color: #8da4be;
+  margin-top: 2px;
+}
+

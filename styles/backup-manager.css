@@ -1,0 +1,184 @@
+/* ==========================================================================
+   BACKUP & NUVEM — ESTADO DO UNIVERSO EVREN
+   Estética Biopunk / Terminal Ocultista AEGIS
+   ========================================================================== */
+
+.modal-backup-container {
+  max-width: 820px !important;
+  max-height: 88vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-color: rgba(0, 229, 255, 0.45) !important;
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.2), 0 20px 60px rgba(0, 0, 0, 0.95) !important;
+}
+
+.backup-stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: rgba(8, 20, 32, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.backup-stat-chip {
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #c5e4f7;
+}
+
+.backup-stat-chip strong {
+  color: #00e5ff;
+}
+
+.backup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.backup-card {
+  background: rgba(10, 22, 38, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.25s ease;
+}
+
+.backup-card:hover {
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.backup-card.full-width {
+  grid-column: span 2;
+}
+
+.backup-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #00e5ff;
+  letter-spacing: 1.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+  padding-bottom: 6px;
+}
+
+.backup-card-desc {
+  font-size: 0.8rem;
+  color: #8da4be;
+  line-height: 1.4;
+}
+
+.backup-file-drop {
+  border: 2px dashed rgba(0, 229, 255, 0.35);
+  border-radius: 6px;
+  padding: 20px 14px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(4, 10, 18, 0.6);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.backup-file-drop:hover {
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+}
+
+.backup-file-drop input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.backup-textarea {
+  background: rgba(4, 9, 16, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 4px;
+  padding: 10px;
+  color: #b8d5e8;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  resize: vertical;
+  min-height: 90px;
+  outline: none;
+}
+
+.backup-textarea:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.btn-backup-action {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(0, 119, 182, 0.4));
+  border: 1px solid #00e5ff;
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-backup-action:hover {
+  background: #00e5ff;
+  color: #03070d;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-backup-danger {
+  background: rgba(255, 42, 75, 0.12);
+  border-color: rgba(255, 42, 75, 0.4);
+  color: #ff5e78;
+}
+
+.btn-backup-danger:hover {
+  background: #ff2a4b;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255, 42, 75, 0.5);
+}
+
+/* Botão PWA no HUD */
+.btn-pwa-install {
+  background: linear-gradient(135deg, rgba(57, 255, 20, 0.2), rgba(0, 229, 255, 0.25)) !important;
+  border-color: #39ff14 !important;
+  color: #e0ffe0 !important;
+  animation: pwa-pulse 2.5s infinite;
+}
+
+@keyframes pwa-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
+  50% { box-shadow: 0 0 14px rgba(57, 255, 20, 0.7); }
+}
+
+@media (max-width: 768px) {
+  .backup-grid {
+    grid-template-columns: 1fr;
+  }
+  .backup-card.full-width {
+    grid-column: span 1;
+  }
+}

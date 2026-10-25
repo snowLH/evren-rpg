@@ -1,0 +1,169 @@
+/* ==========================================================================
+   ÁRVORE BIOLÓGICA DE MUTAÇÕES CELULARES (MDA EVOLUTION MATRIX)
+   Universo Evren — Estética Biopunk & Horror Genético
+   ========================================================================== */
+
+.modal-mda-tree-container {
+  max-width: 950px !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-color: rgba(57, 255, 20, 0.45) !important;
+  box-shadow: 0 0 40px rgba(57, 255, 20, 0.2), 0 20px 60px rgba(0, 0, 0, 0.95) !important;
+}
+
+.mda-tree-header-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(6, 16, 10, 0.85);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+.mda-tree-char-pick {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mda-tree-char-select {
+  background: rgba(4, 10, 6, 0.95);
+  border: 1px solid #39ff14;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.mda-tree-mda-gauge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #39ff14;
+}
+
+.mda-tiers-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 4px;
+}
+
+.mda-tier-block {
+  background: rgba(8, 18, 28, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 14px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.mda-tier-block.unlocked {
+  border-color: rgba(57, 255, 20, 0.5);
+  background: radial-gradient(circle at 10% 50%, rgba(57, 255, 20, 0.08) 0%, rgba(8, 18, 28, 0.8) 100%);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.15);
+}
+
+.mda-tier-block.locked {
+  opacity: 0.55;
+  filter: grayscale(0.5);
+}
+
+.mda-tier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.mda-tier-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e0f4ff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mda-tier-block.unlocked .mda-tier-name {
+  color: #39ff14;
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+}
+
+.mda-tier-req {
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+}
+
+.mda-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.mda-node-card {
+  background: rgba(4, 9, 16, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.mda-node-card:hover {
+  transform: translateY(-2px);
+  border-color: #00e5ff;
+}
+
+.mda-tier-block.unlocked .mda-node-card {
+  border-color: rgba(57, 255, 20, 0.35);
+}
+
+.mda-tier-block.unlocked .mda-node-card.active-node {
+  border-color: #39ff14;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+}
+
+.mda-node-title {
+  font-size: 0.82rem;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mda-node-desc {
+  font-size: 0.72rem;
+  color: #8da4be;
+  line-height: 1.4;
+}
+
+.mda-node-effect {
+  font-size: 0.7rem;
+  color: #00e5ff;
+  font-weight: 600;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}

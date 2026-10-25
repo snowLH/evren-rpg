@@ -1,0 +1,1034 @@
+/**
+ * CLOUDS & MULTI-SCALE TRANSITION STYLES
+ * Universo: Evren - Mesa Interativa
+ * Efeitos volumétricos de névoa/nuvens, botão de retorno ao mundo e grandes marcadores de RPG.
+ */
+
+/* ==========================================================================
+   1. OVERLAY DE NÉVOAS & TRANSIÇÃO DE MERGULHO NAS NUVENS
+   ========================================================================== */
+#cloud-transition-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s ease;
+  overflow: hidden;
+  background: radial-gradient(circle at center, rgba(3, 11, 22, 0.85) 0%, rgba(2, 6, 12, 0.98) 100%);
+  backdrop-filter: blur(0px);
+  will-change: opacity, transform, backdrop-filter;
+}
+
+#cloud-transition-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  backdrop-filter: blur(14px);
+  pointer-events: auto; /* Bloqueia cliques espúrios durante a transição cinematográfica */
+}
+
+/* Camadas de Nuvens Procedurais (Mist Layers) */
+.cloud-mist-layer {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  background-repeat: repeat;
+}
+
+/* Camada Traseira: Névoa densa e escura */
+.cloud-layer-back {
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(10, 42, 74, 0.75) 0%, transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(139, 37, 0, 0.45) 0%, transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(2, 9, 18, 0.9) 0%, transparent 70%);
+  filter: blur(35px);
+  animation: cloud-drift-back 18s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+
+/* Camada Média: Nuvem turbilhonante ciano e névoa bioluminescente */
+.cloud-layer-mid {
+  background: 
+    radial-gradient(circle at 40% 60%, rgba(0, 229, 255, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 60% 30%, rgba(46, 91, 56, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 180, 216, 0.22) 0%, transparent 45%);
+  filter: blur(24px);
+  animation: cloud-drift-mid 12s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  transform-origin: center center;
+}
+
+/* Camada Frontal: Fumaça rápida em alta velocidade */
+.cloud-layer-fore {
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 35%),
+    radial-gradient(circle at 80% 40%, rgba(0, 229, 255, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(200, 230, 255, 0.1) 0%, transparent 50%);
+  filter: blur(12px);
+  animation: cloud-drift-fore 8s ease-in-out infinite alternate;
+}
+
+/* Vinheta de pulso escuro nas bordas */
+.cloud-vignette-pulse {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 150px 80px rgba(0, 0, 0, 0.95), inset 0 0 80px rgba(0, 229, 255, 0.25);
+  pointer-events: none;
+}
+
+/* Texto tático de telemetria de mergulho */
+.cloud-dive-telemetry {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 24px 36px;
+  background: rgba(3, 11, 22, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.2), inset 0 0 20px rgba(0, 229, 255, 0.08);
+  border-radius: 4px;
+  max-width: 90%;
+  animation: telemetry-pulse 1.2s infinite alternate;
+}
+
+.cloud-dive-title {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+  font-weight: 800;
+  color: #00e5ff;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.7);
+}
+
+.cloud-dive-sub {
+  font-family: monospace;
+  font-size: 12px;
+  color: #a8c0d2;
+  letter-spacing: 2px;
+}
+
+.cloud-dive-progress-bar {
+  width: 280px;
+  height: 4px;
+  background: rgba(0, 229, 255, 0.2);
+  margin: 14px auto 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.cloud-dive-progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #00e5ff, #39ff14, #00e5ff);
+  background-size: 200% 100%;
+  animation: dive-progress-anim 0.8s linear infinite;
+}
+
+/* Animações Keyframes para Névoas e Mergulho */
+@keyframes cloud-drift-back {
+  0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+  100% { transform: scale(1.3) translate(-3%, 4%) rotate(5deg); }
+}
+
+@keyframes cloud-drift-mid {
+  0% { transform: scale(1.1) translate(2%, -3%) rotate(-3deg); }
+  100% { transform: scale(1.4) translate(-4%, 2%) rotate(4deg); }
+}
+
+@keyframes cloud-drift-fore {
+  0% { transform: scale(0.9) translate(-2%, 1%) rotate(0deg); }
+  100% { transform: scale(1.25) translate(3%, -3%) rotate(-4deg); }
+}
+
+@keyframes dive-progress-anim {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes telemetry-pulse {
+  0% { transform: scale(0.98); border-color: rgba(0, 229, 255, 0.4); }
+  100% { transform: scale(1.02); border-color: rgba(0, 229, 255, 0.85); box-shadow: 0 0 45px rgba(0, 229, 255, 0.4); }
+}
+
+/* Modificadores de Estado de Mergulho da Câmera (Ativados via JS) */
+#cloud-transition-overlay.diving-in .cloud-mist-layer {
+  transform: scale(1.6);
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#cloud-transition-overlay.diving-out .cloud-mist-layer {
+  transform: scale(2.5);
+  opacity: 0.1;
+  transition: transform 1.0s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.8s ease;
+}
+
+/* ==========================================================================
+   2. BOTÃO DE RETORNO AO MAPA MÚNDI (VOLTAR AO MUNDO)
+   ========================================================================== */
+#btn-return-world {
+  position: fixed;
+  top: 92px;
+  left: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(3, 11, 22, 0.88);
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  border-radius: 4px;
+  color: #00e5ff;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 229, 255, 0.25);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  pointer-events: none;
+}
+
+#btn-return-world.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#btn-return-world:hover {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: #00e5ff;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.6), 0 4px 25px rgba(0, 0, 0, 0.9);
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+#btn-return-world:active {
+  transform: translateY(1px);
+}
+
+.btn-return-icon {
+  font-size: 18px;
+  animation: compass-spin 6s linear infinite paused;
+}
+
+#btn-return-world:hover .btn-return-icon {
+  animation-play-state: running;
+}
+
+.btn-return-kbd {
+  font-size: 10px;
+  padding: 2px 5px;
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 2px;
+  color: #72a2c0;
+  margin-left: 4px;
+}
+
+@keyframes compass-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   3. BREADCRUMB DE NAVEGAÇÃO MULTI-ESCALA NO HUD
+   ========================================================================== */
+.map-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #728a9c;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  background: rgba(3, 11, 22, 0.6);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 3px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breadcrumb-world {
+  color: #00e5ff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.breadcrumb-world:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.breadcrumb-sep {
+  color: rgba(0, 229, 255, 0.4);
+}
+
+.breadcrumb-sector {
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   4. GRANDES MARCADORES DE CAMPANHA (VISÃO GLOBAL - MAPA MÚNDI)
+   ========================================================================== */
+.grand-campaign-marker {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.grand-campaign-marker:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  z-index: 1000 !important;
+}
+
+.grand-marker-portal-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110px;
+  height: 110px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Anel do Triângulo (Biopunk / Anomalia Ômega) */
+.marker-triangulo-portal .grand-marker-portal-ring {
+  border: 2px dashed rgba(231, 76, 60, 0.7);
+  box-shadow: 0 0 25px rgba(231, 76, 60, 0.4), inset 0 0 15px rgba(231, 76, 60, 0.3);
+  animation: grand-portal-rotate 10s linear infinite;
+}
+
+/* Anel da Mansão Vilar (Gótico / Ecos / Ciano Espectral) */
+.marker-vilar-portal .grand-marker-portal-ring {
+  border: 2px dashed rgba(0, 229, 255, 0.7);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.4), inset 0 0 15px rgba(0, 229, 255, 0.3);
+  animation: grand-portal-rotate-rev 12s linear infinite;
+}
+
+/* Anel da Estação Zero (Gélido / Polar / Neve) */
+.marker-artico-portal .grand-marker-portal-ring {
+  border: 2px dashed rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.6), inset 0 0 15px rgba(180, 50, 255, 0.3);
+  animation: grand-portal-rotate 8s linear infinite;
+}
+
+.grand-marker-core {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+  transition: all 0.3s ease;
+}
+
+.marker-triangulo-portal .grand-marker-core {
+  background: radial-gradient(circle, #2a0404 0%, #03070d 90%);
+  border: 2px solid #e74c3c;
+}
+
+.marker-vilar-portal .grand-marker-core {
+  background: radial-gradient(circle, #052438 0%, #03070d 90%);
+  border: 2px solid #00e5ff;
+}
+
+.marker-artico-portal .grand-marker-core {
+  background: radial-gradient(circle, #08182b 0%, #02070e 90%);
+  border: 2px solid #00e5ff;
+}
+
+.marker-brasil-portal .grand-marker-core {
+  background: radial-gradient(circle, #032e12 0%, #02070e 90%);
+  border: 2px solid #39ff14;
+}
+
+.marker-alemanha-portal .grand-marker-core {
+  background: radial-gradient(circle, #220838 0%, #02070e 90%);
+  border: 2px solid #a855f7;
+}
+
+.grand-marker-icon svg {
+  width: 38px;
+  height: 38px;
+  transition: transform 0.3s ease;
+}
+
+.marker-triangulo-portal .grand-marker-icon svg {
+  stroke: #ff4d4d;
+  filter: drop-shadow(0 0 8px #ff4d4d);
+}
+
+.marker-vilar-portal .grand-marker-icon svg {
+  stroke: #00e5ff;
+  filter: drop-shadow(0 0 8px #00e5ff);
+}
+
+.marker-artico-portal .grand-marker-icon svg {
+  stroke: #00e5ff;
+  filter: drop-shadow(0 0 10px #00e5ff);
+}
+
+.marker-brasil-portal .grand-marker-icon svg {
+  stroke: #39ff14;
+  filter: drop-shadow(0 0 10px #39ff14);
+}
+
+.marker-alemanha-portal .grand-marker-icon svg {
+  stroke: #c084fc;
+  filter: drop-shadow(0 0 10px #c084fc);
+}
+
+.grand-campaign-marker:hover .grand-marker-icon svg {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* Placa Descritiva do Grande Marcador */
+.grand-marker-card {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  background: rgba(3, 11, 22, 0.92);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 4px;
+  padding: 10px 14px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 229, 255, 0.2);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.marker-triangulo-portal .grand-marker-card {
+  border-color: rgba(231, 76, 60, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(231, 76, 60, 0.25);
+}
+
+.marker-artico-portal .grand-marker-card {
+  border-color: rgba(0, 229, 255, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+.grand-marker-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+
+.grand-marker-danger {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: monospace;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.danger-omega {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid rgba(231, 76, 60, 0.6);
+  color: #ff6b6b;
+}
+
+.danger-alfa {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  color: #00e5ff;
+}
+
+.danger-beta {
+  background: rgba(0, 229, 255, 0.18);
+  border: 1px solid #00e5ff;
+  color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.marker-artico {
+  background: #020b16 !important;
+  border-color: #00e5ff !important;
+  color: #00e5ff !important;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.6) !important;
+}
+
+.grand-marker-prompt {
+  margin-top: 8px;
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #39ff14;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  animation: prompt-blink 1.2s infinite alternate;
+}
+
+@keyframes grand-portal-rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes grand-portal-rotate-rev {
+  0% { transform: translate(-50%, -50%) rotate(360deg); }
+  100% { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+@keyframes prompt-blink {
+  0% { opacity: 0.6; transform: scale(0.97); }
+  100% { opacity: 1; transform: scale(1.03); }
+}
+
+/* ==========================================================================
+   5. REENTRADA ATMOSFÉRICA & TRAVESSIA HIPERSÔNICA DE NUVENS
+   ========================================================================== */
+
+/* Fricção Térmica / Plasma de Reentrada nas Bordas */
+.cloud-reentry-plasma {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at center, transparent 45%, rgba(255, 115, 0, 0.28) 75%, rgba(0, 229, 255, 0.5) 100%);
+  box-shadow: inset 0 0 120px 40px rgba(255, 102, 0, 0.45);
+  transition: opacity 0.4s ease;
+  z-index: 5;
+}
+
+#cloud-transition-overlay.diving-in .cloud-reentry-plasma {
+  opacity: 1;
+  animation: plasma-burn-pulse 0.6s infinite alternate;
+}
+
+@keyframes plasma-burn-pulse {
+  0% {
+    box-shadow: inset 0 0 100px 30px rgba(255, 85, 0, 0.4), inset 0 0 60px rgba(0, 229, 255, 0.3);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: inset 0 0 160px 60px rgba(255, 140, 0, 0.7), inset 0 0 90px rgba(0, 229, 255, 0.6);
+    filter: brightness(1.3);
+  }
+}
+
+/* Turbulência da Câmera (Camera Shudder) */
+body.camera-shudder #app-viewport {
+  animation: camera-shake 0.12s infinite;
+}
+
+@keyframes camera-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-3px, 2px) rotate(-0.15deg); }
+  50% { transform: translate(3px, -2px) rotate(0.15deg); }
+  75% { transform: translate(-2px, -3px) rotate(0deg); }
+  100% { transform: translate(2px, 3px) rotate(0.1deg); }
+}
+
+/* Gotículas de Condensação na Lente ao Romper as Nuvens */
+.cloud-lens-condensation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 8;
+  backdrop-filter: blur(0px);
+}
+
+#cloud-transition-overlay.in-cloud-deck .cloud-lens-condensation {
+  opacity: 1;
+}
+
+.condensation-fog-blur {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(230, 245, 255, 0.15) 0%, rgba(180, 220, 255, 0.35) 70%, rgba(150, 200, 240, 0.5) 100%);
+  filter: blur(12px);
+  opacity: 0.85;
+}
+
+.condensation-droplet {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95), rgba(200, 230, 255, 0.35) 60%, rgba(100, 150, 200, 0.5) 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 0 4px rgba(255, 255, 255, 0.8);
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+}
+
+.condensation-droplet.d1 { width: 14px; height: 16px; top: 22%; left: 18%; }
+.condensation-droplet.d2 { width: 22px; height: 26px; top: 38%; right: 24%; }
+.condensation-droplet.d3 { width: 18px; height: 20px; bottom: 30%; left: 32%; }
+.condensation-droplet.d4 { width: 28px; height: 32px; bottom: 25%; right: 28%; }
+.condensation-droplet.d5 { width: 12px; height: 14px; top: 15%; right: 40%; }
+
+.condensation-streak {
+  position: absolute;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(200, 230, 255, 0.2) 80%, transparent 100%);
+  border-radius: 2px;
+  filter: blur(0.5px);
+}
+.condensation-streak.s1 { height: 90px; top: 24%; left: 18.5%; }
+.condensation-streak.s2 { height: 120px; top: 40%; right: 24.5%; }
+
+/* Rompimento Explosivo de Nuvens (Breakout Radial Blast) */
+#cloud-transition-overlay.diving-out .cloud-lens-condensation {
+  opacity: 0;
+  transform: translateY(40px) scale(1.1);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* Mira Holográfica Orbital & Bloqueio de Alvo */
+.cloud-target-reticle {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  pointer-events: none;
+  z-index: 12;
+  opacity: 0;
+  transform: scale(1.5);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#cloud-transition-overlay.active .cloud-target-reticle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reticle-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.reticle-ring.outer-ring {
+  border: 1.5px dashed rgba(0, 229, 255, 0.5);
+  animation: reticle-spin 12s linear infinite;
+}
+
+.reticle-ring.middle-ring {
+  inset: 25px;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-top-color: #39ff14;
+  border-bottom-color: #39ff14;
+  animation: reticle-spin-rev 8s linear infinite;
+}
+
+.reticle-crosshair {
+  position: absolute;
+  inset: 0;
+}
+
+.reticle-crosshair::before,
+.reticle-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 229, 255, 0.7);
+}
+
+.reticle-crosshair::before {
+  top: 50%;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.reticle-crosshair::after {
+  left: 50%;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.reticle-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #00e5ff;
+}
+
+.reticle-corner.c-tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+.reticle-corner.c-tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+.reticle-corner.c-bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+.reticle-corner.c-br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+.reticle-target-label {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: #39ff14;
+  background: rgba(2, 8, 16, 0.9);
+  padding: 3px 10px;
+  border: 1px solid rgba(57, 255, 20, 0.5);
+  border-radius: 2px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.8);
+}
+
+@keyframes reticle-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes reticle-spin-rev {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Header da Telemetria */
+.cloud-telemetry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+  padding-bottom: 6px;
+}
+
+.telemetry-badge {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 800;
+  color: #39ff14;
+  letter-spacing: 1.5px;
+}
+
+.telemetry-layer {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #00e5ff;
+  letter-spacing: 1px;
+}
+
+.cloud-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  margin-top: 14px;
+}
+
+.cloud-telemetry-item {
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a8c0d2;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 5px 10px;
+  border-radius: 2px;
+  border-left: 2px solid #00e5ff;
+  text-align: left;
+}
+
+.cloud-telemetry-item.alert {
+  border-left-color: #ff3366;
+  color: #ff6b8b;
+}
+
+/* ==========================================================================
+   6. BANNER HOLOGRÁFICO DE CHEGADA PLANETÁRIA (#planetary-arrival-card)
+   ========================================================================== */
+.planetary-arrival-card {
+  position: fixed;
+  top: 86px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  z-index: 1002;
+  width: 92%;
+  max-width: 720px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+}
+
+.planetary-arrival-card.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.arrival-card-border-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.8), rgba(57, 255, 20, 0.6), rgba(168, 85, 247, 0.7));
+  filter: blur(6px);
+  opacity: 0.6;
+  z-index: 0;
+  animation: arrival-glow-pulse 3s infinite alternate;
+}
+
+.arrival-card-inner {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(3, 13, 26, 0.96) 0%, rgba(2, 7, 15, 0.98) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 229, 255, 0.2);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+.arrival-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #728a9c;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.arrival-close-btn:hover {
+  color: #00e5ff;
+  transform: scale(1.15);
+}
+
+.arrival-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.arrival-status-badge {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 800;
+  color: #39ff14;
+  background: rgba(57, 255, 20, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.arrival-era-badge {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #a8c0d2;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.arrival-main-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.arrival-icon-wrap {
+  font-size: 32px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 8px;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
+}
+
+.arrival-text-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.arrival-location-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  margin: 0 0 4px 0;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrival-campaign-name {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #00e5ff;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.arrival-meta-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.arrival-meta-item {
+  font-family: monospace;
+  font-size: 11px;
+  color: #728a9c;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.arrival-meta-item.alert {
+  color: #ff9800;
+  font-weight: 700;
+}
+
+.arrival-narrative {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #c5d6e3;
+  margin: 10px 0 16px 0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 14px;
+  border-radius: 4px;
+  border-left: 3px solid #00e5ff;
+}
+
+.arrival-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-arrival-action {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-arrival-action.primary {
+  background: rgba(0, 229, 255, 0.18);
+  border: 1px solid #00e5ff;
+  color: #00e5ff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+}
+
+.btn-arrival-action.primary:hover {
+  background: #00e5ff;
+  color: #020b16;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-arrival-action.secondary {
+  background: rgba(57, 255, 20, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.5);
+  color: #39ff14;
+}
+
+.btn-arrival-action.secondary:hover {
+  background: rgba(57, 255, 20, 0.25);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-arrival-action.dismiss {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #728a9c;
+}
+
+.btn-arrival-action.dismiss:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+@keyframes arrival-glow-pulse {
+  0% { opacity: 0.4; filter: blur(5px); }
+  100% { opacity: 0.8; filter: blur(8px); }
+}
+
+@media (max-width: 680px) {
+  .planetary-arrival-card {
+    top: 72px;
+    width: 95%;
+  }
+  .arrival-card-inner {
+    padding: 14px 16px;
+  }
+  .arrival-main-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .arrival-icon-wrap {
+    width: 42px;
+    height: 42px;
+    font-size: 24px;
+  }
+  .cloud-telemetry-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}

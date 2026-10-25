@@ -1,0 +1,197 @@
+/* ==========================================================================
+   RASTREADOR DE INICIATIVA & GERENCIADOR DE TURNOS TÁTICOS
+   Universo Evren — Estética Biopunk & Dark Fantasy
+   ========================================================================== */
+
+.initiative-tracker-bar {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(6, 14, 24, 0.94);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 229, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  color: #e0f4ff;
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 95vw;
+}
+
+.initiative-tracker-bar.hidden {
+  display: none !important;
+}
+
+.init-round-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 10px;
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid #00e5ff;
+  border-radius: 4px;
+}
+
+.init-round-title {
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: #00e5ff;
+  text-transform: uppercase;
+}
+
+.init-round-num {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  text-shadow: 0 0 8px #00e5ff;
+}
+
+.init-queue-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  max-width: 55vw;
+  padding: 4px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #00e5ff rgba(0, 0, 0, 0.3);
+}
+
+.init-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 26, 42, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.init-card:hover {
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.init-card.active-turn {
+  background: rgba(0, 229, 255, 0.25);
+  border-color: #00e5ff;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.5), inset 0 0 8px rgba(0, 229, 255, 0.3);
+  animation: pulseActiveCard 2s infinite alternate;
+}
+
+@keyframes pulseActiveCard {
+  0% { border-color: #00e5ff; box-shadow: 0 0 12px rgba(0, 229, 255, 0.4); }
+  100% { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+}
+
+.init-card-avatar {
+  font-size: 1.1rem;
+}
+
+.init-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.init-card-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.init-card-stats {
+  font-size: 0.65rem;
+  color: #8da4be;
+  font-family: monospace;
+}
+
+.init-card-score {
+  background: #ff2a4b;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+.init-card.active-turn .init-card-score {
+  background: #ffd700;
+  color: #050b14;
+}
+
+.init-controls-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-left: 1px solid rgba(0, 229, 255, 0.25);
+  padding-left: 10px;
+}
+
+.btn-init-ctrl {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  color: #00e5ff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-init-ctrl:hover {
+  background: rgba(0, 229, 255, 0.3);
+  color: #fff;
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+.btn-init-next {
+  background: linear-gradient(135deg, rgba(255, 42, 75, 0.3), rgba(0, 229, 255, 0.3));
+  border-color: #00e5ff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-init-close {
+  background: rgba(255, 42, 75, 0.15);
+  border-color: rgba(255, 42, 75, 0.4);
+  color: #ff5e78;
+}
+
+.btn-init-close:hover {
+  background: rgba(255, 42, 75, 0.35);
+  color: #fff;
+}
+
+/* Efeito de Spotlight no Token do Mapa */
+.tactical-turn-spotlight {
+  animation: tokenSpotlightGlow 1.5s infinite alternate !important;
+}
+
+@keyframes tokenSpotlightGlow {
+  0% {
+    filter: drop-shadow(0 0 10px #00e5ff) drop-shadow(0 0 20px #00e5ff);
+    transform: scale(1.05);
+  }
+  100% {
+    filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 30px #ffd700);
+    transform: scale(1.15);
+  }
+}

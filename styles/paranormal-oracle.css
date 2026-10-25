@@ -1,0 +1,170 @@
+/* ==========================================================================
+   ORÁCULO DE ANOMALIAS & DISTORÇÕES DA REALIDADE
+   Universo Evren — Estética Biopunk & Horror Cósmico
+   ========================================================================== */
+
+.modal-oracle-container {
+  max-width: 780px !important;
+  border-color: rgba(180, 50, 255, 0.4) !important;
+  box-shadow: 0 0 40px rgba(180, 50, 255, 0.25), 0 20px 60px rgba(0, 0, 0, 0.9) !important;
+}
+
+.oracle-header-glow {
+  color: #d187ff !important;
+  text-shadow: 0 0 10px rgba(180, 50, 255, 0.6);
+}
+
+.oracle-card-display {
+  background: radial-gradient(circle at 50% 0%, rgba(35, 15, 55, 0.6) 0%, rgba(8, 14, 24, 0.95) 100%);
+  border: 1px solid rgba(180, 50, 255, 0.3);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.oracle-card-display::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #b432ff, #00e5ff, transparent);
+  animation: scanOracle 4s infinite linear;
+}
+
+@keyframes scanOracle {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.oracle-anomaly-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.oracle-severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid currentColor;
+}
+
+.sev-baixa { color: #39ff14; background: rgba(57, 255, 20, 0.1); border-color: #39ff14; }
+.sev-moderada { color: #ffd700; background: rgba(255, 215, 0, 0.1); border-color: #ffd700; }
+.sev-critica { color: #ff5e78; background: rgba(255, 42, 75, 0.15); border-color: #ff5e78; }
+.sev-catastrofica { color: #b432ff; background: rgba(180, 50, 255, 0.2); border-color: #b432ff; animation: pulseCatastrofe 1s infinite alternate; }
+
+@keyframes pulseCatastrofe {
+  0% { box-shadow: 0 0 8px rgba(180, 50, 255, 0.4); }
+  100% { box-shadow: 0 0 20px rgba(180, 50, 255, 0.8); }
+}
+
+.oracle-d100-roll {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #8da4be;
+}
+
+.oracle-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 0 8px rgba(180, 50, 255, 0.5);
+}
+
+.oracle-narrative-quote {
+  font-style: italic;
+  color: #c0d4ec;
+  border-left: 3px solid #b432ff;
+  padding-left: 14px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.oracle-mechanics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.oracle-mechanic-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.oracle-mech-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #8da4be;
+  letter-spacing: 1px;
+}
+
+.oracle-mech-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #00e5ff;
+}
+
+.oracle-actions-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.btn-oracle-roll {
+  background: linear-gradient(135deg, #7b1fa2, #b432ff);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(180, 50, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.btn-oracle-roll:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(180, 50, 255, 0.6);
+  filter: brightness(1.15);
+}
+
+.btn-oracle-inject {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid #00e5ff;
+  color: #00e5ff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-oracle-inject:hover {
+  background: rgba(0, 229, 255, 0.3);
+  color: #fff;
+}

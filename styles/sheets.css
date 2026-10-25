@@ -1,0 +1,1231 @@
+/* ==========================================================================
+   ESTILOS DE FICHAS DE PERSONAGEM & MECÂNICAS
+   Universo: Evren (MDA, PD, Atributos, Relíquias)
+   ========================================================================== */
+
+.character-sheet-card {
+  background: rgba(6, 16, 26, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), var(--box-glow-cyan);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header da Ficha */
+.sheet-header {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(8, 24, 40, 0.95) 0%, rgba(4, 14, 24, 0.98) 100%);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sheet-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sheet-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.sheet-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-tag.player {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid var(--color-cyan);
+  color: var(--color-cyan);
+}
+
+.badge-tag.status {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid var(--color-blood);
+  color: var(--color-blood);
+}
+
+.badge-tag.veteran {
+  background: rgba(179, 84, 34, 0.25);
+  border: 1px solid var(--color-rust);
+  color: #f39c12;
+}
+
+.badge-tag.prime {
+  background: rgba(142, 68, 173, 0.3);
+  border: 1px solid #9b59b6;
+  color: #e056fd;
+}
+
+/* Indicador de Classe */
+.sheet-subinfo {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* Medidor de MDA (Bio-Mutação) */
+.mda-container {
+  padding: 14px 20px;
+  background: rgba(4, 12, 20, 0.85);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mda-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.mda-title {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.mda-value-tag {
+  font-weight: 700;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.mda-progress-track {
+  width: 100%;
+  height: 12px;
+  background: rgba(8, 20, 32, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.mda-progress-fill {
+  height: 100%;
+  transition: width 0.4s ease;
+  background-size: 20px 20px;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  animation: mda-stripes 1.5s linear infinite;
+}
+
+@keyframes mda-stripes {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 0; }
+}
+
+/* Cores de MDA */
+.mda-tier-low {
+  background-color: var(--color-moss-dim);
+  color: var(--color-moss);
+}
+.mda-tier-mid {
+  background-color: var(--color-rust);
+  color: #f39c12;
+}
+.mda-tier-high {
+  background-color: var(--color-blood);
+  color: #ff4757;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.8);
+}
+.mda-tier-unknown {
+  background: repeating-linear-gradient(45deg, #2c3e50, #2c3e50 10px, #34495e 10px, #34495e 20px);
+  color: var(--color-cyan);
+}
+
+/* RASTREADOR DE PONTOS DE DETERMINAÇÃO (PD) */
+.pd-tracker-container {
+  padding: 14px 20px;
+  background: rgba(8, 16, 26, 0.7);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pd-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 0.8px;
+}
+
+.pd-counter-badge {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-cyan);
+}
+
+.pd-bar-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(4, 12, 20, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pd-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-cyan-dim), var(--color-cyan));
+  box-shadow: 0 0 8px var(--color-cyan);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+/* Alerta de Sobrecarga / Overload de PD */
+.pd-overload-alert {
+  display: none;
+  background: rgba(139, 30, 30, 0.35);
+  border: 1px solid var(--color-blood);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #ff6b6b;
+  align-items: center;
+  gap: 8px;
+  animation: pulse-overload 1s infinite alternate;
+}
+
+.pd-overload-alert.active {
+  display: flex;
+}
+
+@keyframes pulse-overload {
+  0% { box-shadow: 0 0 5px rgba(231, 76, 60, 0.3); }
+  100% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.9); }
+}
+
+.pd-controls-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.pd-btn {
+  flex: 1;
+  background: rgba(10, 30, 48, 0.7);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pd-btn:hover {
+  background: rgba(0, 229, 255, 0.25);
+  border-color: var(--color-cyan);
+}
+
+.pd-btn.pd-btn-reset {
+  flex: 1.5;
+  background: rgba(139, 30, 30, 0.3);
+  border-color: rgba(231, 76, 60, 0.4);
+  color: #ff9999;
+}
+
+.pd-btn.pd-btn-reset:hover {
+  background: rgba(231, 76, 60, 0.4);
+  border-color: var(--color-blood);
+}
+
+/* GRADE DE ATRIBUTOS */
+.sheet-attributes-section {
+  padding: 16px 20px;
+  background: rgba(4, 14, 24, 0.9);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.attribute-box {
+  background: rgba(8, 22, 36, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 4px;
+  padding: 10px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.attribute-box:hover {
+  border-color: var(--color-cyan);
+  background: rgba(0, 229, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--color-cyan-glow);
+}
+
+.attr-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.attr-val {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.attr-roll-hint {
+  font-size: 9px;
+  color: var(--color-cyan-dim);
+}
+
+/* Feedback de Rolagem de Dados */
+.dice-result-banner {
+  display: none;
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px dashed var(--color-cyan);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #ffffff;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.dice-result-banner.active {
+  display: flex;
+}
+
+/* SEÇÃO DE RELÍQUIAS E EQUIPAMENTO */
+.sheet-relics-section {
+  padding: 16px 20px;
+  background: rgba(8, 16, 26, 0.8);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.relic-card {
+  background: linear-gradient(135deg, rgba(20, 10, 30, 0.8) 0%, rgba(10, 20, 36, 0.8) 100%);
+  border: 1px solid rgba(224, 86, 253, 0.4);
+  border-radius: 4px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(155, 89, 182, 0.2);
+}
+
+.relic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.relic-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #e056fd;
+  letter-spacing: 0.8px;
+}
+
+.relic-body {
+  font-size: 12px;
+  color: var(--color-text-main);
+  line-height: 1.5;
+}
+
+.btn-activate-relic {
+  background: rgba(224, 86, 253, 0.2);
+  border: 1px solid #e056fd;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  align-self: flex-start;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.btn-activate-relic:hover {
+  background: #e056fd;
+  color: #03070d;
+  box-shadow: 0 0 12px rgba(224, 86, 253, 0.8);
+}
+
+/* SEÇÃO DE COMBATE / MECÂNICAS RÁPIDAS */
+.sheet-combat-actions {
+  padding: 16px 20px;
+  background: rgba(6, 14, 22, 0.85);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.combat-buttons-row {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-combat-mechanic {
+  flex: 1;
+  background: rgba(10, 26, 40, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: var(--color-text-main);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-combat-mechanic:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: var(--color-cyan);
+  color: #fff;
+}
+
+.btn-combat-mechanic.btn-blood-mechanic {
+  border-color: rgba(231, 76, 60, 0.4);
+}
+
+.btn-combat-mechanic.btn-blood-mechanic:hover {
+  background: rgba(231, 76, 60, 0.25);
+  border-color: var(--color-blood);
+}
+
+/* BIOGRAFIA / DOSSIÊ */
+.sheet-summary-section {
+  padding: 16px 20px;
+  background: rgba(4, 10, 18, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-content {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-parchment);
+  font-style: italic;
+  border-left: 2px solid var(--color-parchment-dim);
+  padding-left: 12px;
+}
+
+/* ==========================================================================
+   ESTILOS DO TERMINAL DE COMBATE TÁTICO (MODAL)
+   ========================================================================== */
+.modal-combat-container {
+  max-width: 600px;
+  border-color: var(--color-blood);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95), var(--box-glow-blood);
+}
+
+.modal-combat-header {
+  background: linear-gradient(90deg, rgba(30, 8, 8, 0.95) 0%, rgba(8, 16, 26, 0.98) 100%);
+  border-bottom: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.modal-combat-header h2 {
+  color: var(--color-blood);
+}
+
+.modal-combat-footer {
+  padding: 12px 20px;
+  background: rgba(4, 12, 20, 0.95);
+  border-top: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.combat-result-card {
+  padding: 18px 20px;
+  background: rgba(10, 18, 28, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combat-card-sacrifice {
+  border-color: rgba(231, 76, 60, 0.5);
+  background: linear-gradient(135deg, rgba(30, 10, 10, 0.6) 0%, rgba(10, 20, 32, 0.8) 100%);
+}
+
+.combat-card-badge {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.combat-hero-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.combat-lore-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-parchment);
+}
+
+.combat-stat-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 6px 0;
+}
+
+.combat-stat-box {
+  background: rgba(4, 12, 20, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 4px;
+  padding: 10px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.combat-stat-box.green {
+  border-color: var(--color-moss);
+}
+.combat-stat-box.green .stat-val {
+  color: var(--color-moss);
+}
+
+.combat-stat-box.red {
+  border-color: var(--color-blood);
+}
+.combat-stat-box.red .stat-val {
+  color: var(--color-blood);
+}
+
+.stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.combat-alert-box {
+  background: rgba(139, 30, 30, 0.25);
+  border: 1px solid var(--color-blood);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #ff9999;
+  line-height: 1.5;
+}
+
+/* CLASH DISPLAY (Desempate Letal) */
+.combat-clash-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 16px 0;
+  gap: 16px;
+}
+
+.clash-combatant {
+  flex: 1;
+  background: rgba(6, 18, 30, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 6px;
+  padding: 14px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.clash-combatant.enemy {
+  border-color: rgba(231, 76, 60, 0.4);
+}
+
+.clash-name {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.clash-die-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--color-cyan);
+  text-shadow: 0 0 16px var(--color-cyan-glow);
+  line-height: 1;
+}
+
+.clash-combatant.enemy .clash-die-value {
+  color: var(--color-blood);
+  text-shadow: 0 0 16px var(--color-blood-glow);
+}
+
+.clash-die-hint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+}
+
+.clash-vs-badge {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--color-rust);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-rust);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(179, 84, 34, 0.5);
+}
+
+.clash-outcome-banner {
+  padding: 12px 16px;
+  border-radius: 4px;
+  text-align: center;
+  border: 1px solid;
+}
+
+.clash-outcome-banner.victory {
+  background: rgba(57, 255, 20, 0.1);
+  border-color: var(--color-moss);
+}
+.clash-outcome-banner.victory .clash-outcome-title {
+  color: var(--color-moss);
+}
+
+.clash-outcome-banner.defeat {
+  background: rgba(231, 76, 60, 0.15);
+  border-color: var(--color-blood);
+}
+.clash-outcome-banner.defeat .clash-outcome-title {
+  color: var(--color-blood);
+}
+
+.clash-outcome-banner.tie {
+  background: rgba(179, 84, 34, 0.15);
+  border-color: var(--color-rust);
+}
+.clash-outcome-banner.tie .clash-outcome-title {
+  color: #f39c12;
+}
+
+.clash-outcome-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.clash-outcome-desc {
+  font-size: 12px;
+  color: var(--color-text-main);
+  line-height: 1.5;
+}
+
+
+/* ==========================================================================
+   ESTILOS DEDICADOS CRIS (FICHA DE ARQUIVO & MEMORIAL COMPLETO)
+   ========================================================================== */
+
+.cris-header-wrap {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(8, 24, 40, 0.98) 0%, rgba(4, 14, 24, 1) 100%);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cris-identity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cris-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.cris-codename {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #00e5ff;
+  letter-spacing: 1px;
+}
+
+.cris-status-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.cris-status-badge.alive {
+  background: rgba(57, 255, 20, 0.15);
+  border: 1px solid #39ff14;
+  color: #39ff14;
+}
+
+.cris-status-badge.dead {
+  background: rgba(255, 42, 75, 0.2);
+  border: 1px solid #ff2a4b;
+  color: #ff5e78;
+}
+
+.cris-status-badge.missing {
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid #c084fc;
+  color: #c084fc;
+}
+
+.cris-status-badge.quarantine {
+  background: rgba(255, 183, 77, 0.2);
+  border: 1px solid #ffb74d;
+  color: #ffb74d;
+}
+
+.cris-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  background: rgba(3, 9, 16, 0.7);
+  padding: 10px 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.cris-meta-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.cris-meta-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #728a9c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cris-meta-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #d4e5f7;
+}
+
+/* Barras de Estatísticas CRIS */
+.cris-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 90px;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(4, 12, 22, 0.95);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .cris-stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+}
+
+.cris-stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cris-stat-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.cris-stat-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(10, 20, 32, 0.9);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cris-stat-fill-pv {
+  height: 100%;
+  background: linear-gradient(90deg, #ff2a4b, #e74c3c);
+  box-shadow: 0 0 8px rgba(231, 76, 60, 0.6);
+}
+
+.cris-stat-fill-pe {
+  height: 100%;
+  background: linear-gradient(90deg, #ffb74d, #ffa726);
+  box-shadow: 0 0 8px rgba(255, 167, 38, 0.5);
+}
+
+.cris-stat-fill-san {
+  height: 100%;
+  background: linear-gradient(90deg, #0077b6, #00e5ff);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+}
+
+.cris-defense-card {
+  background: rgba(8, 24, 40, 0.8);
+  border: 1px solid #ffd700;
+  border-radius: 4px;
+  padding: 4px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.cris-defense-num {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffd700;
+  line-height: 1.1;
+}
+
+/* 5 Atributos Monumentais */
+.cris-attributes-container {
+  padding: 16px 20px;
+  background: rgba(4, 14, 24, 0.9);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cris-attrs-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.cris-attr-monument {
+  background: linear-gradient(180deg, rgba(12, 28, 44, 0.9) 0%, rgba(6, 16, 26, 0.95) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  border-radius: 6px;
+  padding: 10px 4px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.cris-attr-monument .cris-attr-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: #8da4be;
+  letter-spacing: 1px;
+}
+
+.cris-attr-monument .cris-attr-num {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  color: #00e5ff;
+}
+
+/* Perícias CRIS */
+.cris-skills-section {
+  padding: 16px 20px;
+  background: rgba(3, 10, 18, 0.95);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cris-skills-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cris-skills-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cris-skill-filter-btn {
+  background: rgba(10, 26, 42, 0.6);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #8da4be;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cris-skill-filter-btn.active {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+
+.cris-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 6px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.cris-skill-item {
+  background: rgba(8, 20, 32, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  border-radius: 4px;
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.cris-skill-item:hover {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.4);
+}
+
+.cris-skill-item.trained {
+  border-color: rgba(0, 229, 255, 0.35);
+}
+
+.cris-skill-item.veteran {
+  border-color: rgba(168, 85, 247, 0.45);
+  background: rgba(24, 12, 36, 0.7);
+}
+
+.cris-skill-item.expert {
+  border-color: rgba(255, 215, 0, 0.55);
+  background: rgba(36, 28, 8, 0.7);
+}
+
+.cris-skill-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cris-skill-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #d4e5f7;
+}
+
+.cris-skill-attr {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #728a9c;
+}
+
+.cris-skill-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cris-grau-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.cris-grau-badge.destreinado {
+  background: rgba(255, 255, 255, 0.05);
+  color: #728a9c;
+}
+
+.cris-grau-badge.treinado {
+  background: rgba(0, 229, 255, 0.15);
+  color: #00e5ff;
+}
+
+.cris-grau-badge.veterano {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+.cris-grau-badge.expert {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+}
+
+.cris-skill-total {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 26px;
+  text-align: right;
+}
+
+/* Habilidades & Inventário CRIS */
+.cris-abilities-section, .cris-inventory-section {
+  padding: 14px 20px;
+  background: rgba(4, 12, 22, 0.9);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cris-ability-pill, .cris-item-pill {
+  background: rgba(8, 22, 36, 0.8);
+  border-left: 3px solid #00e5ff;
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+  color: #d4e5f7;
+  line-height: 1.4;
+}
+
+/* Citação Marcante e Memorial */
+.cris-quote-box {
+  padding: 14px 20px;
+  background: rgba(6, 16, 26, 0.95);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.cris-quote-text {
+  font-style: italic;
+  font-size: 12px;
+  color: #ffe680;
+  line-height: 1.5;
+  border-left: 3px solid #ffd700;
+  padding-left: 12px;
+}
+
+/* ==========================================================================
+   AJUSTES EM TEMPO REAL DE STATUS CRIS (PV, PE, SAN, STATUS)
+   ========================================================================== */
+.cris-stat-adjust-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cris-stat-btn {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #d4e5f7;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.cris-stat-btn:hover {
+  background: rgba(0, 229, 255, 0.25);
+  border-color: #00e5ff;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.cris-stat-btn:active {
+  transform: scale(0.95);
+}
+
+.cris-stat-btn.btn-pv:hover {
+  background: rgba(255, 94, 120, 0.35);
+  border-color: #ff5e78;
+  color: #ff8599;
+}
+
+.cris-stat-btn.btn-pe:hover {
+  background: rgba(255, 167, 38, 0.35);
+  border-color: #ffa726;
+  color: #ffb74d;
+}
+
+.cris-stat-btn.btn-san:hover {
+  background: rgba(0, 229, 255, 0.35);
+  border-color: #00e5ff;
+  color: #64ffda;
+}
+
+.cris-status-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.cris-status-select {
+  background: rgba(4, 14, 26, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: #d4e5f7;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.cris-status-select:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+
+/* Bloco de Notas de Campo do Dossiê de Local */
+.location-field-notes-box {
+  padding: 14px 20px;
+  background: rgba(4, 12, 22, 0.92);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.location-field-notes-textarea {
+  width: 100%;
+  background: rgba(2, 8, 16, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 4px;
+  color: #e1f0fc;
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 8px 10px;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.location-field-notes-textarea:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+}

@@ -1,0 +1,72 @@
+{
+  "name": "EVREN — Mesa Interativa de RPG & VTT",
+  "short_name": "Evren RPG",
+  "description": "Plataforma tática e wiki interativa de RPG no Universo EVREN. Mapas 2D/3D interativos, biopunk, combate direto, mutações MDA e fichas táticas.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#03070d",
+  "theme_color": "#03070d",
+  "lang": "pt-BR",
+  "categories": [
+    "entertainment",
+    "games",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Arena de Conflito Direto",
+      "short_name": "Combate",
+      "description": "Abrir simulador e arena de combate direto",
+      "url": "./index.html#combat",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Fichas de Agentes & MDA",
+      "short_name": "Personagens",
+      "description": "Acessar dossiê e fichas de personagens",
+      "url": "./index.html#characters",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Diário de Bordo do Mestre",
+      "short_name": "Diário",
+      "description": "Abrir anotações e registro de eventos",
+      "url": "./index.html#journal",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Oráculo de Anomalias",
+      "short_name": "Oráculo",
+      "description": "Tabela d100 de distorções da realidade",
+      "url": "./index.html#oracle",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
