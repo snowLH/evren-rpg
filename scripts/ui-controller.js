@@ -511,6 +511,7 @@ class UIController {
 
   init() {
     window.uiController = this;
+    window.openCampaignStory = (campaignId) => this.openCampaignStory(campaignId);
     this.loadCustomCrisCharactersFromStorage();
     this.loadCustomChroniclesFromStorage();
     this.loadCharacterStatOverridesFromStorage();
@@ -867,9 +868,8 @@ class UIController {
   }
 
   /* --- GAVETA LATERAL --- */
-  openDrawer(tabKey = 'characters') {
-    // Requisito: O Painel Lateral só deve ser ativado na visão local
-    if (window.app?.mapEngine && window.app.mapEngine.currentScale === 'global') {
+  openDrawer(tabKey = 'characters', forceDive = false) {
+    if (forceDive && window.app?.mapEngine && window.app.mapEngine.currentScale === 'global') {
       const targetCamp = this.currentCampaignFilter !== 'all' ? this.currentCampaignFilter : 'camp_002';
       window.mergulhoNasNuvens(targetCamp).then(() => {
         const drawer = document.getElementById('side-drawer');
@@ -1086,6 +1086,17 @@ class UIController {
               📋 Copiar JSON
             </button>
           </div>
+          
+          ${(() => {
+            const charCampaign = this.dataLoader.getCampaignById(char.campaign_id) || this.dataLoader.getCampaigns().find(c => (c.participants && c.participants.includes(char.id)));
+            return charCampaign ? `
+              <div style="margin-bottom: 8px;">
+                <button class="btn-campaign-pill-link" onclick="window.uiController.closeDrawer('characters'); window.uiController.openCampaignStory('${charCampaign.id}');" title="Ver Dossiê e História de ${this.escapeHtml(charCampaign.title)}">
+                  📜 Campanha: <strong>${this.escapeHtml(charCampaign.title)}</strong> ➔
+                </button>
+              </div>
+            ` : '';
+          })()}
           <div class="cris-identity-row">
             <div>
               <h3 class="cris-name">${this.escapeHtml(char.name)}</h3>
@@ -1614,7 +1625,7 @@ ${char.summary || 'Sem registro adicional.'}
         <div class="campaign-card ${statusClass}">
           <div class="campaign-card-header">
             <div>
-              <h3 class="campaign-card-title">${this.escapeHtml(c.title)}</h3>
+              <h3 class="campaign-card-title clickable" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.uiController.openCampaignStory('${c.id}');" title="Clique para abrir o Dossiê Completo da História">${this.escapeHtml(c.title)}</h3>
               <div class="campaign-meta-row" style="margin-top: 4px;">
                 <span class="campaign-meta-item">📍 ${this.escapeHtml(c.country_location || 'Mundo')}</span>
                 <span class="campaign-meta-item">⏳ ${this.escapeHtml(c.year || 'Era Atual')}</span>
@@ -1643,9 +1654,9 @@ ${char.summary || 'Sem registro adicional.'}
           ` : ''}
 
           <div class="campaign-card-actions">
-            <span style="font-family: monospace; font-size: 0.72rem; color: #8da4be;">
-              ${c.danger_rating || '// REGISTRO CONFIDENCIAL //'}
-            </span>
+            <button class="btn-campaign-story-open" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.uiController.openCampaignStory('${c.id}');">
+              📖 Dossiê & Fichas
+            </button>
             <button class="btn-campaign-dive" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.mergulhoNasNuvens('${c.id}');">
               📍 Mergulhar no Mapa
             </button>
@@ -1658,6 +1669,234 @@ ${char.summary || 'Sem registro adicional.'}
   /* ==========================================================================
      ATLAS DE LOCAIS & MARCOS DAS HISTÓRIAS
      ========================================================================== */
+  
+  /* ==========================================================================
+     DOSSIÊ INTERATIVO DE HISTÓRIA DO RPG (#modal-campaign-story)
+     ========================================================================== */
+  openCampaignStory(campaignId) {
+    let camp = this.dataLoader.getCampaignById(campaignId);
+    if (!camp) {
+      const allCamps = this.dataLoader.getCampaigns();
+      camp = allCamps.find(c => c.id === campaignId || c.title?.toLowerCase().includes(campaignId.toLowerCase()));
+      if (!camp && allCamps.length > 0) camp = allCamps[0];
+    }
+    if (!camp) return;
+
+    // Atualiza título do modal
+    const titleEl = document.getElementById('story-modal-title-text');
+    if (titleEl) {
+      titleEl.textContent = `${camp.title.toUpperCase()} // DOSSIÊ COMPLETO`;
+    }
+
+    const modalBody = document.getElementById('campaign-story-content');
+    if (!modalBody) return;
+
+    const isCompleted = camp.category === 'completed' || camp.status?.toLowerCase().includes('finalizada') || camp.status?.toLowerCase().includes('concluída');
+    const statusBadge = isCompleted ? '📜 CONCLUÍDA / ARQUIVADA' : '🟢 EM ANDAMENTO / ATIVA';
+    const statusClass = isCompleted ? 'completed' : 'ongoing';
+
+    // Personagens vinculados a esta campanha
+    const characters = this.getCampaignCharacters(camp.id);
+    const locations = this.getCampaignLocations(camp.id);
+    const chronicles = this.dataLoader.getChronicles(camp.id);
+
+    // Renderiza personagens em cartões interativos
+    const charactersHtml = characters.length > 0 ? characters.map(ch => {
+      const lifeStatus = ch.life_status || (ch.status?.toLowerCase().includes('resgatado') ? 'alive' : (ch.status?.toLowerCase().includes('ativo') ? 'alive' : 'alive'));
+      let badgeText = '🟢 VIVO';
+      let badgeClass = 'alive';
+      if (lifeStatus === 'dead' || ch.status?.toLowerCase().includes('morto')) {
+        badgeText = '💀 FALECIDO';
+        badgeClass = 'dead';
+      } else if (lifeStatus === 'missing' || ch.status?.toLowerCase().includes('desaparecido')) {
+        badgeText = '🌀 DESAPARECIDO';
+        badgeClass = 'missing';
+      } else if (lifeStatus === 'quarantine' || ch.status?.toLowerCase().includes('quarentena')) {
+        badgeText = '🏥 QUARENTENA';
+        badgeClass = 'quarantine';
+      }
+
+      const attrs = ch.attributes || {};
+      const statsSummary = `FOR ${attrs.Força || attrs.for || 1} • AGI ${attrs.Agilidade || attrs.agi || 1} • INT ${attrs.Intelecto || attrs.int || 1} • PRE ${attrs.Presença || attrs.pre || 1} • VIG ${attrs.Vigor || attrs.vig || 1}`;
+
+      return `
+        <div class="story-character-card">
+          <div class="story-char-header">
+            <div>
+              <div class="story-char-name">${this.escapeHtml(ch.name)}</div>
+              <div class="story-char-player">${this.escapeHtml(ch.player || 'Jogador')} • ${this.escapeHtml(ch.origin || 'Sobrevivente')}</div>
+            </div>
+            <span class="story-char-status ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="story-char-summary">
+            <strong>Classe:</strong> ${this.escapeHtml(ch.class || 'Não informada')} | <strong>NEX:</strong> ${this.escapeHtml(ch.nex || ch.mda || '0%')}<br>
+            <span style="font-size: 0.72rem; color: #8da4be;">${statsSummary}</span>
+          </div>
+          <div class="story-char-actions">
+            <button class="btn-story-char-action" onclick="window.uiController.closeModal('modal-campaign-story'); window.uiController.selectCharacter('${ch.id}'); window.uiController.openDrawer('characters');" title="Abrir Ficha C.R.I.S. com 28 perícias e inventário">
+              👁️ Ver Ficha C.R.I.S.
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('') : '<div style="color: #728a9c; font-size: 0.85rem; padding: 12px; grid-column: 1/-1;">Nenhum personagem registrado diretamente nesta história.</div>';
+
+    // Renderiza locais da campanha
+    const locationsHtml = locations.length > 0 ? locations.map(loc => {
+      return `
+        <div class="story-location-card">
+          <div class="story-loc-header">
+            <div class="story-loc-name">📍 ${this.escapeHtml(loc.name)}</div>
+            <span class="story-loc-badge">${this.escapeHtml(loc.type || 'Setor')}</span>
+          </div>
+          <div class="story-loc-desc">${this.escapeHtml(loc.description || 'Ponto tático chave da narrativa.')}</div>
+          <div class="story-loc-actions">
+            <button class="btn-story-loc-action" onclick="window.uiController.closeModal('modal-campaign-story'); window.uiController.openLocationDossier('${loc.id}'); if(window.app?.mapEngine) window.app.mapEngine.flyToLocation('${loc.id}');" title="Ver Dossiê e Focar no Mapa">
+              🎯 Focar & Ver Dossiê
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('') : '<div style="color: #728a9c; font-size: 0.85rem; padding: 12px; grid-column: 1/-1;">Nenhum marco geográfico específico arquivado.</div>';
+
+    // Renderiza crônicas / episódios
+    const chroniclesHtml = chronicles.length > 0 ? chronicles.map((cr, idx) => {
+      return `
+        <div class="story-chronicle-item">
+          <div class="story-chron-header">
+            <h4 style="margin: 0; color: #ffd700; font-size: 0.95rem;">
+              📖 Sessão ${idx + 1}: ${this.escapeHtml(cr.title)}
+            </h4>
+            <span style="font-family: monospace; font-size: 0.72rem; color: #8da4be;">
+              ${this.escapeHtml(cr.date || camp.year || '')}
+            </span>
+          </div>
+          <div class="story-chron-lore" style="margin-top: 6px;">
+            ${this.escapeHtml(cr.lore || cr.summary || '')}
+          </div>
+          ${cr.quote ? `
+            <div class="story-chron-quote">"${this.escapeHtml(cr.quote)}"</div>
+          ` : ''}
+        </div>
+      `;
+    }).join('') : '<div style="color: #728a9c; font-size: 0.85rem; padding: 12px;">Nenhuma crônica registrada para esta campanha ainda.</div>';
+
+    // Monta o template completo
+    modalBody.innerHTML = `
+      <div class="story-dossier-wrapper">
+        <!-- Banner e Metadados Principais -->
+        <div class="story-hero-banner">
+          <div>
+            <h1 class="story-hero-title">${this.escapeHtml(camp.title)}</h1>
+            <div class="story-hero-meta">
+              <span class="story-meta-pill">📍 ${this.escapeHtml(camp.country_location || 'Planeta Terra')}</span>
+              <span class="story-meta-pill">⏳ ${this.escapeHtml(camp.year || 'Era Atual')}</span>
+              <span class="story-meta-pill">🎭 ${this.escapeHtml(camp.theme || 'Sobrevivência')}</span>
+              <span class="story-meta-pill" style="border-color: #ffd700; color: #ffe680;">⚠️ ${this.escapeHtml(camp.danger_rating || 'NÍVEL REGISTRADO')}</span>
+            </div>
+          </div>
+          <span class="story-status-pill ${statusClass}">${statusBadge}</span>
+        </div>
+
+        <!-- Sinopse da Campanha -->
+        <div class="story-section-card">
+          <div class="story-section-heading">📜 SINOPSE DA NARRATIVA</div>
+          <div class="story-narrative-box">
+            ${this.escapeHtml(camp.synopsis || camp.description || 'Sem sinopse cadastrada.')}
+          </div>
+        </div>
+
+        <!-- Desfecho Histórico se concluída -->
+        ${camp.outcome ? `
+          <div class="story-outcome-card">
+            <div class="story-section-heading" style="color: #ffd700;">🏆 DESFECHO HISTÓRICO & CONSEQUÊNCIAS</div>
+            <div class="story-outcome-text">
+              ${this.escapeHtml(camp.outcome).replace(/\n/g, '<br>')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Seção de Personagens Interativos -->
+        <div class="story-section-card">
+          <div class="story-section-heading" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>👤 PERSONAGENS & PROTAGONISTAS (${characters.length})</span>
+            <span style="font-size: 0.72rem; color: #8da4be; font-weight: normal;">Clique em qualquer ficha para ver as 28 perícias C.R.I.S.</span>
+          </div>
+          <div class="story-characters-grid">
+            ${charactersHtml}
+          </div>
+        </div>
+
+        <!-- Seção de Locais e Marcos Geográficos -->
+        <div class="story-section-card">
+          <div class="story-section-heading" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>📍 LOCAIS & MARCOS TÁTICOS (${locations.length})</span>
+            <span style="font-size: 0.72rem; color: #8da4be; font-weight: normal;">Clique para focar o mapa ou ver notas</span>
+          </div>
+          <div class="story-locations-grid">
+            ${locationsHtml}
+          </div>
+        </div>
+
+        <!-- Seção de Crônicas / Sessões -->
+        <div class="story-section-card">
+          <div class="story-section-heading" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>📖 CRÔNICAS & SESSÕES JOGADAS (${chronicles.length})</span>
+            <button class="btn-secondary" style="font-size: 0.72rem; padding: 3px 8px; border-color: #00e5ff; color: #00e5ff;" onclick="window.uiController.closeModal('modal-campaign-story'); window.uiController.openModal('modal-session-creator');">
+              ➕ Nova Sessão
+            </button>
+          </div>
+          <div class="story-chronicles-list">
+            ${chroniclesHtml}
+          </div>
+        </div>
+
+        <!-- Barra de Ações Rápidas -->
+        <div class="story-actions-footer">
+          <button class="btn-dive-primary" onclick="window.uiController.closeModal('modal-campaign-story'); window.mergulhoNasNuvens('${camp.id}');" title="Executar animação de mergulho nas nuvens até o mapa tático">
+            🚀 Mergulhar no Local da Ação
+          </button>
+          <button class="btn-secondary" onclick="window.uiController.closeModal('modal-campaign-story'); window.uiController.renderCampaignsHub(); window.uiController.openModal('modal-campaigns-hub');">
+            📋 Voltar ao Hub de Campanhas
+          </button>
+        </div>
+      </div>
+    `;
+
+    this.openModal('modal-campaign-story');
+    if (this.soundFX) this.soundFX.playTacticalBeep();
+  }
+
+  getCampaignCharacters(campaignId) {
+    const camp = this.dataLoader.getCampaignById(campaignId);
+    const allChars = this.dataLoader.getAllCharacters();
+    const direct = this.dataLoader.getCharacters(campaignId);
+    const participantIds = camp?.participants || [];
+    const combined = [...direct];
+    participantIds.forEach(pId => {
+      const ch = allChars.find(c => c.id === pId);
+      if (ch && !combined.some(c => c.id === ch.id)) {
+        combined.push(ch);
+      }
+    });
+    return combined;
+  }
+
+  getCampaignLocations(campaignId) {
+    const camp = this.dataLoader.getCampaignById(campaignId);
+    const allLocs = this.dataLoader.getLocations();
+    const direct = this.dataLoader.getLocations(campaignId);
+    const locIds = camp?.locations_list || [];
+    const combined = [...direct];
+    locIds.forEach(lId => {
+      const loc = allLocs.find(l => l.id === lId);
+      if (loc && !combined.some(l => l.id === loc.id)) {
+        combined.push(loc);
+      }
+    });
+    return combined;
+  }
+
   renderLocationsAtlas(zoneFilter = 'all') {
     const grid = document.getElementById('locations-atlas-grid');
     if (!grid) return;
@@ -3852,4 +4091,5 @@ ${char.summary || 'Sem registro adicional.'}
   }
 }
 
+window.openCampaignStory = (id) => window.uiController?.openCampaignStory(id);
 window.UIController = UIController;

@@ -254,15 +254,26 @@ class MapEngine {
       style: (feature) => this.getCountryFantasyStyle(feature),
       onEachFeature: (feature, layer) => {
         const countryName = feature.properties?.name || '';
-        const isMexico = countryName === 'Mexico';
+        const campaigns = window.app?.dataLoader?.getCampaigns() || [];
+        const relatedCampaign = campaigns.find(c => {
+          const locStr = (c.country_location || '').toLowerCase();
+          const cName = countryName.toLowerCase();
+          if (cName === 'mexico' && (locStr.includes('méxico') || locStr.includes('mexico'))) return true;
+          if (cName === 'greenland' && (locStr.includes('groenlândia') || locStr.includes('greenland') || locStr.includes('ártica'))) return true;
+          if (cName === 'brazil' && (locStr.includes('brasil') || locStr.includes('brazil') || locStr.includes('amazônia'))) return true;
+          if (cName === 'germany' && (locStr.includes('alemanha') || locStr.includes('germany') || locStr.includes('floresta negra'))) return true;
+          if (cName.length > 3 && locStr.includes(cName)) return true;
+          return false;
+        });
 
-        const tooltipContent = isMexico 
-          ? `🇲🇽 <strong>MÉXICO // EPICENTRO ANÔMALO</strong><br><span style="color:#ffd700; font-size:10px;">PROPRIEDADE DA MANSÃO VILAR // CLASSIFICADO</span>`
-          : `<strong>${countryName.toUpperCase()}</strong><br><span style="color:#a8d5e8; font-size:9px;">TERRITÓRIO MUNDIAL // ESTABILIDADE 98%</span>`;
+        const hasStory = !!relatedCampaign;
+        const tooltipContent = hasStory 
+          ? `🌍 <strong>${countryName.toUpperCase()} // HISTÓRIA ARQUIVADA</strong><br><span style="color:#00e5ff; font-weight:700; font-size:11px;">📖 ${relatedCampaign.title}</span><br><span style="color:#ffd700; font-size:9px;">▶ Clique para abrir o Dossiê & Fichas C.R.I.S.</span>`
+          : `🌍 <strong>${countryName.toUpperCase()}</strong><br><span style="color:#a8d5e8; font-size:9px;">Território Neutro em Evren</span><br><span style="color:#728a9c; font-size:9px;">▶ Clique para registrar um novo RPG aqui</span>`;
 
         layer.bindTooltip(tooltipContent, {
           sticky: true,
-          className: isMexico ? 'country-tactical-tooltip mexico-tactical-tooltip' : 'country-tactical-tooltip'
+          className: hasStory ? 'country-tactical-tooltip active-story-tooltip' : 'country-tactical-tooltip'
         });
 
         layer.on({
@@ -270,10 +281,10 @@ class MapEngine {
             if (this.currentScale !== 'global') return;
             const target = e.target;
             target.setStyle({
-              fillColor: isMexico ? '#278b4d' : '#4d7540',
-              fillOpacity: 1,
-              color: isMexico ? '#ffd700' : '#ffd700',
-              weight: isMexico ? 3.5 : 2.2,
+              fillColor: hasStory ? '#278b4d' : '#3d6342',
+              fillOpacity: 0.95,
+              color: hasStory ? '#00e5ff' : '#ffd700',
+              weight: hasStory ? 3.0 : 1.8,
               opacity: 1
             });
             target.bringToFront();
@@ -283,8 +294,18 @@ class MapEngine {
             this.countriesGeoJsonLayer.resetStyle(e.target);
           },
           click: () => {
-            if (isMexico && this.currentScale === 'global') {
-              this.mergulhoNasNuvens('camp_002');
+            if (this.currentScale !== 'global') return;
+            if (window.soundFX) window.soundFX.playTacticalBeep();
+            if (hasStory) {
+              if (window.uiController && typeof window.uiController.openCampaignStory === 'function') {
+                window.uiController.openCampaignStory(relatedCampaign.id);
+              } else {
+                this.mergulhoNasNuvens(relatedCampaign.id);
+              }
+            } else {
+              const countryInput = document.getElementById('camp-country');
+              if (countryInput) countryInput.value = countryName;
+              if (window.uiController) window.uiController.openModal('modal-campaign-creator');
             }
           }
         });
@@ -363,7 +384,12 @@ class MapEngine {
 
     trianglePoly.on('click', () => {
       if (this.currentScale === 'global') {
-        this.mergulhoNasNuvens('camp_001');
+        if (window.soundFX) window.soundFX.playRadarPing();
+        if (window.uiController && typeof window.uiController.openCampaignStory === 'function') {
+          window.uiController.openCampaignStory('camp_001');
+        } else {
+          this.mergulhoNasNuvens('camp_001');
+        }
       }
     });
 
@@ -525,7 +551,7 @@ class MapEngine {
             <div class="grand-marker-title">${camp.gateway_name || camp.title}</div>
             <div class="grand-marker-danger ${dangerClass}">${camp.danger_rating || 'ÁREA CLASSIFICADA'}</div>
             <div class="grand-marker-prompt">
-              <span>▶ CLIQUE PARA MERGULHAR</span>
+              <span>📖 CLIQUE PARA VER A HISTÓRIA ➔</span>
             </div>
           </div>
         `
@@ -535,7 +561,11 @@ class MapEngine {
 
       marker.on('click', () => {
         if (window.soundFX) window.soundFX.playRadarPing();
-        this.mergulhoNasNuvens(camp.id);
+        if (window.uiController && typeof window.uiController.openCampaignStory === 'function') {
+          window.uiController.openCampaignStory(camp.id);
+        } else {
+          this.mergulhoNasNuvens(camp.id);
+        }
       });
 
       this.globalMarkersGroup.addLayer(marker);
