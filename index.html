@@ -44,6 +44,7 @@
   <link rel="stylesheet" href="styles/backup-manager.css">
   <link rel="stylesheet" href="styles/campaign-creator.css">
   <link rel="stylesheet" href="styles/campaigns-hub.css">
+  <link rel="stylesheet" href="styles/museum.css">
 </head>
 <body class="paranormal-fx">
 
@@ -124,6 +125,9 @@
   </div>
 
   <div id="app-viewport">
+    <!-- PLANETA 3D DO UNIVERSO EVREN (CENTRO DA APLICAÇÃO) -->
+    <div id="planet-3d-container"></div>
+
     <!-- HUD Flutuante Superior -->
     <header id="floating-hud">
       <!-- Painel Esquerdo: Identidade do Sistema -->
@@ -135,8 +139,8 @@
           <circle cx="12" cy="12" r="3" fill="#00e5ff" fill-opacity="0.3"/>
         </svg>
         <div class="hud-title-wrap">
-          <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">RPG</span></h1>
-          <div class="hud-subline">Arquivo & Guia do Universo</div>
+          <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">MUSEU HISTÓRICO 3D</span></h1>
+          <div class="hud-subline">Arquivo & Atlas Planetário Interativo</div>
           <div id="map-breadcrumb" class="map-breadcrumb" style="display:none;" title="Escala Atual do Mapa">
             <span id="breadcrumb-label" class="breadcrumb-world">🧭 PLANISFÉRIO</span>
           </div>
@@ -163,7 +167,23 @@
 
       <!-- Painel Direito: Ações Principais (Clean & Organized) -->
       <div class="hud-panel hud-actions">
-        <!-- 4 Botões Principais Claros e Diretos -->
+                <!-- Botões de Navegação do Museu Histórico 3D -->
+        <button id="btn-nav-planet" type="button" class="btn-hud btn-primary-nav museum-nav-btn--active" title="Planeta 3D (Globo Físico)">
+          <span class="btn-icon">🪐</span> <span class="btn-text">Planeta 3D</span>
+        </button>
+        <button id="btn-nav-archive" type="button" class="btn-hud btn-primary-nav" title="Arquivo Histórico Global (Consultas Relacionais)">
+          <span class="btn-icon">📜</span> <span class="btn-text">Arquivo Global</span>
+        </button>
+        <button id="btn-nav-exhibitions" type="button" class="btn-hud btn-primary-nav" title="Exposições das Campanhas">
+          <span class="btn-icon">🏛️</span> <span class="btn-text">Exposições</span>
+        </button>
+        <button id="btn-nav-characters" type="button" class="btn-hud btn-primary-nav" title="Galeria de Figuras Históricas">
+          <span class="btn-icon">👤</span> <span class="btn-text">Personagens</span>
+        </button>
+        <button id="btn-nav-admin" type="button" class="btn-hud btn-primary-nav museum-nav-btn--admin" title="Administração & Curadoria do Museu">
+          <span class="btn-icon">⚙️</span> <span class="btn-text">Curadoria</span>
+        </button>
+        <!-- 4 Botões Principais Claros e Diretos (Compatibilidade) -->
         <button id="btn-open-campaigns-hub" class="btn-hud btn-primary-nav" title="Central de Campanhas & Histórias">
           <span class="btn-icon">📜</span> <span class="btn-text">Campanhas</span>
         </button>
@@ -391,7 +411,29 @@
     </div>
 
     <!-- Mapa Tático Leaflet -->
-    <main id="map" role="region" aria-label="Mapa Tático da Realidade e do Triângulo"></main>
+    <main id="map" role="region" aria-label="Mapa Tático da Realidade e do Triângulo" style="display:none;"></main>
+    <!-- HUD INFERIOR DO MUSEU: BREADCRUMBS & SELETOR DE ESCALA PROGRESSIVA -->
+    <div class="museum-hud-bottom">
+      <nav id="museum-breadcrumb-bar" class="museum-breadcrumb" aria-label="Hierarquia Geográfica do Planeta"></nav>
+      <div class="museum-scale-selector">
+        <button type="button" class="museum-scale-btn museum-scale-btn--active" data-scale="global">Visão Global</button>
+        <button type="button" class="museum-scale-btn" data-scale="continental">Visão Continental</button>
+        <button type="button" class="museum-scale-btn" data-scale="regional">Visão Regional</button>
+        <button type="button" class="museum-scale-btn" data-scale="local">Visão Local</button>
+      </div>
+    </div>
+
+    <!-- GAVETA DE CONTEXTO GEOGRÁFICO & FEITORIAS REGIONAIS -->
+    <div id="museum-context-panel" class="museum-context-panel is-hidden">
+      <span id="context-panel-tag" class="museum-context-panel__tag">Região Geográfica</span>
+      <h3 id="context-panel-title" class="museum-context-panel__title">Título da Região</h3>
+      <p id="context-panel-desc" class="museum-context-panel__desc">Descrição cartográfica</p>
+      <button id="context-panel-btn" type="button" class="museum-context-panel__btn">Ver Acontecimentos</button>
+    </div>
+
+    <!-- BOTÃO PARA ALTERNAR ENTRE GLOBO 3D E MAPA TOPOGRÁFICO LOCAL 2D -->
+    <button id="btn-museum-toggle-2d" type="button" class="museum-view-toggle-btn">🗺️ Mapa Topográfico Local</button>
+
 
     <!-- Widget Holográfico de Radar e Sonar Ocultista AEGIS -->
     <div id="occult-radar-container" class="occult-radar-container"></div>
@@ -1760,6 +1802,309 @@
     </div>
   </div>
 
+  <!-- ==========================================================================
+       MODAIS DO MUSEU HISTÓRICO INTERATIVO DE EVREN
+       ========================================================================== -->
+
+  <!-- MODAL: EXPOSIÇÃO HISTÓRICA DA CAMPANHA (SEÇÃO 4) -->
+  <div id="museum-exhibition-modal" class="museum-exhibition-modal" role="dialog" aria-modal="true" aria-labelledby="exhibition-modal-title">
+    <div class="museum-exhibition-dialog">
+      <header class="museum-exhibition-header">
+        <div class="museum-exhibition-header__meta">
+          <span id="exhibition-modal-badge" class="museum-exhibition-badge">EXPOSIÇÃO HISTÓRICA // STATUS</span>
+          <h2 id="exhibition-modal-title" class="museum-exhibition-title">Título da Campanha</h2>
+        </div>
+        <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Exposição (ESC)">✕</button>
+      </header>
+      <nav class="museum-exhibition-nav" aria-label="Abas da Exposição">
+        <button type="button" class="museum-tab-btn museum-tab-btn--active" data-tab="identificacao">Identificação & Contexto</button>
+        <button type="button" class="museum-tab-btn" data-tab="narrativa">História da Campanha</button>
+        <button type="button" class="museum-tab-btn" data-tab="linha-do-tempo">Linha do Tempo</button>
+        <button type="button" class="museum-tab-btn" data-tab="personagens">Personagens Históricos</button>
+        <button type="button" class="museum-tab-btn" data-tab="locais">Locais Históricos</button>
+        <button type="button" class="museum-tab-btn" data-tab="acervo">Acervo & Sessões</button>
+      </nav>
+      <div class="museum-exhibition-body">
+        <section id="exhibition-sec-identificacao" class="exhibition-section is-active"></section>
+        <section id="exhibition-sec-narrativa" class="exhibition-section"></section>
+        <section id="exhibition-sec-linha-do-tempo" class="exhibition-section"></section>
+        <section id="exhibition-sec-personagens" class="exhibition-section"></section>
+        <section id="exhibition-sec-locais" class="exhibition-section"></section>
+        <section id="exhibition-sec-acervo" class="exhibition-section"></section>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BIOGRAFIA & TRAJETÓRIA DO PERSONAGEM HISTÓRICO (SEÇÃO 5) -->
+  <div id="museum-biography-modal" class="museum-biography-modal" role="dialog" aria-modal="true" aria-labelledby="bio-name">
+    <div class="museum-biography-dialog">
+      <header class="museum-biography-header">
+        <div class="museum-biography-profile">
+          <img id="bio-portrait" src="assets/icon-192.png" alt="Retrato Histórico" class="museum-biography-portrait">
+          <div>
+            <h2 id="bio-name" class="museum-biography-name">Nome do Personagem</h2>
+            <p id="bio-title" style="color: var(--museum-text-muted); font-size: 13px; margin: 2px 0 0 0;">Título Histórico</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span id="bio-status" class="character-status-pill status-vivo">VIVO</span>
+          <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Biografia (ESC)">✕</button>
+        </div>
+      </header>
+      <div id="bio-modal-body" class="museum-biography-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: DOSSIÊ HISTÓRICO DE LOCAL (SEÇÃO 4.E) -->
+  <div id="museum-location-modal" class="museum-location-modal museum-biography-modal" role="dialog" aria-modal="true" aria-labelledby="loc-modal-title">
+    <div class="museum-biography-dialog">
+      <header class="museum-biography-header">
+        <div>
+          <span id="loc-modal-geo" class="museum-exhibition-badge">Planeta Evren › Continente › País</span>
+          <h2 id="loc-modal-title" class="museum-biography-name">Nome do Local</h2>
+        </div>
+        <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Dossiê (ESC)">✕</button>
+      </header>
+      <div class="museum-biography-body">
+        <div class="biography-grid">
+          <div>
+            <img id="loc-modal-thumb" src="assets/ref_interior_tavern.jpg" alt="Ilustração do Local" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; border: 1px solid var(--museum-gold-border); margin-bottom: 14px;">
+            <div class="exhibition-card">
+              <h4 class="exhibition-card__label">Descrição Cartográfica & Arquitetônica</h4>
+              <p id="loc-modal-desc" class="exhibition-card__text"></p>
+            </div>
+            <div class="exhibition-card" style="margin-top: 14px;">
+              <h4 class="exhibition-card__label">Importância Histórica & Geopolítica</h4>
+              <p id="loc-modal-importance" class="exhibition-card__text"></p>
+            </div>
+            <div style="margin-top: 14px;">
+              <h4 class="exhibition-card__label">Épocas de Atividade</h4>
+              <div id="loc-modal-epochs" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;"></div>
+            </div>
+            <button id="btn-loc-inspect-globe" type="button" class="admin-submit-btn" style="margin-top: 18px; width: 100%; text-align: center;">🌐 Inspecionar Coordenadas no Globo 3D</button>
+          </div>
+          <div>
+            <div class="exhibition-card">
+              <h4 class="exhibition-card__label">Campanhas que Ocorreram Neste Local</h4>
+              <div id="loc-modal-campaigns" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;"></div>
+            </div>
+            <div class="exhibition-card" style="margin-top: 14px;">
+              <h4 class="exhibition-card__label">Personagens Históricos que Passaram por Aqui</h4>
+              <div id="loc-modal-visitors" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ARQUIVO HISTÓRICO GLOBAL (SEÇÃO 7) -->
+  <div id="museum-archive-modal" class="museum-archive-modal" role="dialog" aria-modal="true" aria-labelledby="archive-modal-title">
+    <div class="museum-archive-dialog">
+      <header class="museum-exhibition-header">
+        <div>
+          <span class="museum-exhibition-badge">ACERVO HISTÓRICO PLANETÁRIO</span>
+          <h2 id="archive-modal-title" class="museum-exhibition-title">Arquivo Histórico Global & Busca Relacional</h2>
+        </div>
+        <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Arquivo (ESC)">✕</button>
+      </header>
+      <div class="museum-archive-filter-bar">
+        <div class="filter-row">
+          <input id="archive-search-input" type="search" class="filter-input" placeholder="Buscar por termo, nome, sinopse, local ou personagem...">
+          <select id="archive-filter-type" class="filter-select">
+            <option value="all">Todas as Entidades</option>
+            <option value="campaigns">Campanhas Históricas</option>
+            <option value="characters">Personagens & Biografias</option>
+            <option value="locations">Locais & Cidades</option>
+            <option value="events">Acontecimentos Históricos</option>
+            <option value="bestiary">Espécimes & Bestiário</option>
+          </select>
+          <select id="archive-filter-continent" class="filter-select">
+            <option value="">Todos os Continentes</option>
+          </select>
+          <select id="archive-filter-country" class="filter-select">
+            <option value="">Todos os Países</option>
+          </select>
+          <select id="archive-filter-status" class="filter-select">
+            <option value="">Todos os Status</option>
+            <option value="concluída">Campanhas Concluídas</option>
+            <option value="em andamento">Campanhas em Andamento</option>
+            <option value="vivo">Personagens Vivos</option>
+            <option value="morto">Personagens Mortos</option>
+            <option value="desaparecido">Personagens Desaparecidos</option>
+          </select>
+        </div>
+        <div class="filter-preset-chips">
+          <span style="font-size: 11px; color: var(--museum-text-muted); font-weight: 600;">Consultas Rápidas:</span>
+          <button type="button" class="filter-chip archive-preset-btn" data-preset="all">Tudo</button>
+          <button type="button" class="filter-chip archive-preset-btn" data-preset="completed">Campanhas Concluídas</button>
+          <button type="button" class="filter-chip archive-preset-btn" data-preset="missing">Personagens Desaparecidos</button>
+          <button type="button" class="filter-chip archive-preset-btn" data-preset="brazil">Campanhas no Brasil</button>
+          <button type="button" class="filter-chip archive-preset-btn" data-preset="relics">Relíquias & Artefatos</button>
+        </div>
+      </div>
+      <div class="museum-archive-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <span id="archive-results-counter" style="font-size: 12px; color: var(--museum-gold-bright); font-weight: 600;">Carregando acervo...</span>
+        </div>
+        <div id="archive-results-container" class="archive-results-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMINISTRAÇÃO & CURADORIA DO MUSEU (SEÇÃO 8) -->
+  <div id="museum-admin-modal" class="museum-admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+    <div class="museum-admin-dialog">
+      <header class="museum-exhibition-header" style="border-bottom-color: rgba(230, 126, 34, 0.4);">
+        <div>
+          <span class="museum-exhibition-badge" style="color: #f39c12;">GESTÃO DE CONTEÚDO HISTÓRICO</span>
+          <h2 id="admin-modal-title" class="museum-exhibition-title">Administração & Curadoria do Universo</h2>
+        </div>
+        <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Administração (ESC)">✕</button>
+      </header>
+      <div class="museum-exhibition-body" style="overflow-y: auto; padding: 24px;">
+        <!-- Seção de Backup & Migração -->
+        <div style="background: rgba(230, 126, 34, 0.08); border: 1px solid rgba(230, 126, 34, 0.3); border-radius: 8px; padding: 18px; margin-bottom: 24px;">
+          <h3 style="color: #f39c12; font-size: 15px; margin: 0 0 8px 0; font-family: 'Cinzel', serif;">Exportação & Importação de Acervo</h3>
+          <p style="font-size: 12px; color: var(--museum-text-muted); margin: 0 0 16px 0;">Exporte backups JSON canônicos (v3.0.0-museum) do planeta completo ou pacotes independentes por campanha para compartilhamento.</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+            <button id="btn-admin-export-universe" type="button" class="admin-submit-btn">📥 Exportar Universo Completo (JSON)</button>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <select id="admin-export-camp-select" class="admin-select"></select>
+              <button id="btn-admin-export-campaign" type="button" class="admin-submit-btn" style="background: rgba(212, 175, 55, 0.2); border-color: var(--museum-gold); color: var(--museum-gold-bright);">📦 Exportar Pacote de Campanha</button>
+            </div>
+            <label class="admin-submit-btn" style="cursor: pointer; background: rgba(52, 152, 219, 0.25); border-color: #3498db; color: #5dade2;">
+              📤 Importar Backup JSON
+              <input id="admin-import-file-input" type="file" accept=".json" style="display: none;">
+            </label>
+          </div>
+          <div style="margin-top: 14px;">
+            <span style="font-size: 11px; color: var(--museum-text-muted); font-weight: 700; text-transform: uppercase;">Snapshots Locais Automáticos:</span>
+            <div id="admin-snapshots-list" style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;"></div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          <!-- Cadastro de Campanha -->
+          <form id="admin-form-new-campaign" class="exhibition-card" style="padding: 16px;">
+            <h4 class="exhibition-card__label">🏛️ Registrar Nova Campanha</h4>
+            <div class="admin-form-group">
+              <label>Título da Campanha</label>
+              <input id="new-camp-title" type="text" class="admin-input" required placeholder="Ex: Operação Sol Poente">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="admin-form-group">
+                <label>Ano Exibição</label>
+                <input id="new-camp-year" type="text" class="admin-input" required placeholder="Ex: 2026">
+              </div>
+              <div class="admin-form-group">
+                <label>Ano Numérico</label>
+                <input id="new-camp-year-num" type="number" class="admin-input" value="2026">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="admin-form-group">
+                <label>Continente</label>
+                <select id="admin-camp-continent" class="admin-select"></select>
+              </div>
+              <div class="admin-form-group">
+                <label>País</label>
+                <select id="admin-camp-country" class="admin-select"></select>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="admin-form-group">
+                <label>Latitude</label>
+                <input id="new-camp-lat" type="number" step="any" class="admin-input" placeholder="-14.23">
+              </div>
+              <div class="admin-form-group">
+                <label>Longitude</label>
+                <input id="new-camp-lng" type="number" step="any" class="admin-input" placeholder="-51.92">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label>Status Histórico</label>
+              <select id="new-camp-status" class="admin-select">
+                <option value="em andamento">Em Andamento</option>
+                <option value="concluída">Concluída</option>
+                <option value="interrompida">Interrompida</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label>Gênero / Temática</label>
+              <input id="new-camp-theme" type="text" class="admin-input" placeholder="Ex: Horror Investigativo">
+            </div>
+            <div class="admin-form-group">
+              <label>Sinopse Histórica</label>
+              <textarea id="new-camp-synopsis" class="admin-textarea" placeholder="Resumo histórico dos eventos..."></textarea>
+            </div>
+            <button type="submit" class="admin-submit-btn" style="width: 100%;">Salvar Campanha no Acervo</button>
+          </form>
+
+          <!-- Cadastro de Personagem -->
+          <form id="admin-form-new-char" class="exhibition-card" style="padding: 16px;">
+            <h4 class="exhibition-card__label">👤 Registrar Personagem Histórico</h4>
+            <div class="admin-form-group">
+              <label>Nome do Personagem</label>
+              <input id="new-char-name" type="text" class="admin-input" required placeholder="Ex: Inspetor Carlos Mendes">
+            </div>
+            <div class="admin-form-group">
+              <label>Título Histórico / Ocupação</label>
+              <input id="new-char-title" type="text" class="admin-input" placeholder="Ex: Investigador Chefe do Triângulo">
+            </div>
+            <div class="admin-form-group">
+              <label>Status Físico Conhecido</label>
+              <select id="new-char-status" class="admin-select">
+                <option value="vivo">Vivo</option>
+                <option value="morto">Morto</option>
+                <option value="desaparecido">Desaparecido</option>
+                <option value="em quarentena">Em Quarentena</option>
+                <option value="desconhecido">Desconhecido</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label>Biografia / Trajetória</label>
+              <textarea id="new-char-bio" class="admin-textarea" placeholder="Biografia histórica do indivíduo..."></textarea>
+            </div>
+            <div class="admin-form-group">
+              <label>Destino Conhecido</label>
+              <textarea id="new-char-fate" class="admin-textarea" placeholder="Último paradeiro ou circunstância de morte/desaparecimento..."></textarea>
+            </div>
+            <button type="submit" class="admin-submit-btn" style="width: 100%;">Salvar Personagem no Acervo</button>
+          </form>
+
+          <!-- Cadastro de Evento Histórico -->
+          <form id="admin-form-new-event" class="exhibition-card" style="padding: 16px;">
+            <h4 class="exhibition-card__label">📜 Registrar Acontecimento Histórico</h4>
+            <div class="admin-form-group">
+              <label>Título do Acontecimento</label>
+              <input id="new-event-title" type="text" class="admin-input" required placeholder="Ex: O Rompimento do Selo de Tapajós">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="admin-form-group">
+                <label>Data Registrada</label>
+                <input id="new-event-date" type="text" class="admin-input" required placeholder="Ex: 14 de Julho de 2026">
+              </div>
+              <div class="admin-form-group">
+                <label>Ano Numérico</label>
+                <input id="new-event-year" type="number" class="admin-input" value="2026">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label>Descrição Detalhada</label>
+              <textarea id="new-event-desc" class="admin-textarea" placeholder="O que ocorreu exatamente neste marco..."></textarea>
+            </div>
+            <div class="admin-form-group">
+              <label>Consequências Históricas</label>
+              <textarea id="new-event-consequences" class="admin-textarea" placeholder="Impactos políticos, sociais ou sobrenaturais..."></textarea>
+            </div>
+            <button type="submit" class="admin-submit-btn" style="width: 100%;">Salvar Acontecimento no Acervo</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts: Leaflet (Local com Fallback CDN) -->
   <script src="scripts/leaflet.js" onerror="this.onerror=null;this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';"></script>
 
@@ -1767,7 +2112,11 @@
   <script src="assets/world_countries.js"></script>
 
   <!-- Módulos da Aplicação & Motores Visuais -->
+  <script src="scripts/three.min.js"></script>
   <script src="scripts/data-loader.js"></script>
+  <script src="scripts/museum-storage.js"></script>
+  <script src="scripts/planet-3d-engine.js"></script>
+  <script src="scripts/museum-controller.js"></script>
   <script src="scripts/particles.js"></script>
   <script src="scripts/cloud-warp.js"></script>
   <script src="scripts/battlemap-tokens.js"></script>

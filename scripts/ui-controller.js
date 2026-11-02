@@ -1682,6 +1682,11 @@ ${char.summary || 'Sem registro adicional.'}
     }
     if (!camp) return;
 
+    if (window.museumController) {
+      window.museumController.openExhibitionModal(camp.id);
+      return;
+    }
+
     // Atualiza título do modal
     const titleEl = document.getElementById('story-modal-title-text');
     if (titleEl) {

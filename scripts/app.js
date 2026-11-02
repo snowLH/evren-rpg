@@ -19,6 +19,36 @@ class InteractiveTabletopApp {
       await this.dataLoader.loadData();
       window.dataLoader = this.dataLoader;
 
+      // 1.1 Inicializa Gerenciador de Armazenamento e Persistência do Museu (IndexedDB)
+      if (window.MuseumStorageManager) {
+        this.storageManager = new MuseumStorageManager(this.dataLoader);
+        await this.storageManager.init();
+        window.storageManager = this.storageManager;
+      }
+
+      // 1.2 Inicializa Motor Geográfico 3D do Planeta Evren (Three.js)
+      if (window.Planet3DEngine) {
+        this.planetEngine = new Planet3DEngine('planet-3d-container', this.dataLoader, (kind, data, context) => {
+          if (this.museumController) {
+            this.museumController.handlePlanetSelection(kind, data, context);
+          }
+        });
+        this.planetEngine.init();
+        window.planetEngine = this.planetEngine;
+      }
+
+      // 1.3 Inicializa Controlador do Museu Histórico (Exposições, Linha do Tempo, Arquivo, Admin)
+      if (window.MuseumController) {
+        this.museumController = new MuseumController(this.dataLoader, this.storageManager, this.planetEngine);
+        this.museumController.init();
+        window.museumController = this.museumController;
+        if (this.planetEngine) {
+          this.planetEngine.onSelectionCallback = (kind, data, context) => {
+            this.museumController.handlePlanetSelection(kind, data, context);
+          };
+        }
+      }
+
       // 2. Inicializa UI
       this.uiController.init();
 
@@ -155,6 +185,11 @@ class InteractiveTabletopApp {
         case 'Escape':
           if (this.mapEngine) {
             this.mapEngine.dismissPlanetaryArrivalCard();
+          }
+          const openMuseumModals = document.querySelectorAll('.museum-exhibition-modal.is-open, .museum-biography-modal.is-open, .museum-archive-modal.is-open, .museum-admin-modal.is-open');
+          if (openMuseumModals.length > 0) {
+            openMuseumModals.forEach(m => m.classList.remove('is-open'));
+            break;
           }
           const activeModals = document.querySelectorAll('.modal-backdrop.open, .modal-backdrop.active');
           if (activeModals.length > 0) {

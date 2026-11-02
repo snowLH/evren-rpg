@@ -1,0 +1,1354 @@
+/* ==========================================================================
+   MUSEU HISTÓRICO INTERATIVO 3D DO UNIVERSO EVREN
+   Identidade Visual: Museu Futurista / Atlas Cartográfico Histórico
+   ========================================================================== */
+
+:root {
+  --museum-gold: #d4af37;
+  --museum-gold-bright: #ffd700;
+  --museum-gold-dim: #997d26;
+  --museum-gold-glow: rgba(212, 175, 55, 0.35);
+  --museum-gold-soft: rgba(212, 175, 55, 0.12);
+  --museum-gold-border: rgba(212, 175, 55, 0.32);
+
+  --museum-obsidian: #04080e;
+  --museum-slate: #0a111a;
+  --museum-panel-bg: rgba(9, 16, 26, 0.88);
+  --museum-panel-bg-heavy: rgba(6, 12, 20, 0.96);
+  --museum-card-bg: rgba(14, 24, 38, 0.85);
+
+  --museum-parchment: #f4eee2;
+  --museum-parchment-dim: #c5ba9f;
+  --museum-text-main: #e6eef7;
+  --museum-text-muted: #889eb2;
+
+  --museum-status-alive: #2ecc71;
+  --museum-status-dead: #e74c3c;
+  --museum-status-missing: #e67e22;
+  --museum-status-quarantine: #9b59b6;
+  --museum-status-unknown: #7f8c8d;
+}
+
+/* ==========================================================================
+   VIEWPORT DO PLANETA 3D
+   ========================================================================== */
+#planet-3d-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 50%, #081524 0%, #03070d 85%, #010306 100%);
+  display: block;
+}
+
+.planet-3d-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  cursor: grab;
+}
+
+.planet-3d-viewport:active {
+  cursor: grabbing;
+}
+
+.planet-3d-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.planet-3d-canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.planet-3d-markers-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   MARCADORES CARTOGRÁFICOS DO GLOBO 3D
+   ========================================================================== */
+.planet-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transform-origin: center center;
+  transition: transform 0.16s ease, filter 0.2s ease;
+  white-space: nowrap;
+}
+
+.planet-marker:hover {
+  transform: translate3d(var(--x, 0), var(--y, 0), 0) translate(-50%, -50%) scale(1.08) !important;
+  z-index: 45 !important;
+}
+
+.planet-marker__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 5px 10px;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 16, 26, 0.88);
+}
+
+.planet-marker__title {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--museum-text-main);
+}
+
+.planet-marker__sub {
+  font-size: 9.5px;
+  color: var(--museum-text-muted);
+  letter-spacing: 0.3px;
+}
+
+.planet-marker__status {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+/* Marcador de Campanha (Exposição) */
+.planet-marker--campaign .planet-marker__card {
+  border-color: var(--museum-gold-border);
+  background: rgba(14, 22, 34, 0.94);
+  box-shadow: 0 0 14px var(--museum-gold-glow);
+}
+
+.planet-marker--campaign .planet-marker__title {
+  color: var(--museum-gold-bright);
+}
+
+.planet-marker--campaign.is-completed .planet-marker__status {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.planet-marker--campaign.is-ongoing .planet-marker__status {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--museum-gold-bright);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.planet-marker__beacon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--museum-gold);
+  position: relative;
+  box-shadow: 0 0 10px var(--museum-gold);
+}
+
+.planet-marker__beacon::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--museum-gold);
+  animation: pulseBeacon 2s infinite ease-out;
+}
+
+@keyframes pulseBeacon {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Marcador de Local Histórico */
+.planet-marker--location .planet-marker__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5fa8d3;
+  box-shadow: 0 0 8px #5fa8d3;
+}
+
+.planet-marker--city .planet-marker__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e67e22;
+  box-shadow: 0 0 6px #e67e22;
+}
+
+.planet-marker--continent .planet-marker__dot,
+.planet-marker--country .planet-marker__dot,
+.planet-marker--region .planet-marker__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--museum-gold);
+  box-shadow: 0 0 6px var(--museum-gold);
+}
+
+.planet-marker--feature_mountain .planet-marker__dot,
+.planet-marker--feature_forest .planet-marker__dot,
+.planet-marker--feature_river .planet-marker__dot,
+.planet-marker--feature_desert .planet-marker__dot,
+.planet-marker--feature_unknown .planet-marker__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #95a5a6;
+  border: 1px solid #bdc3c7;
+}
+
+/* ==========================================================================
+   BARRA SUPERIOR DO MUSEU HISTÓRICO
+   ========================================================================== */
+.museum-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 62px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: linear-gradient(180deg, rgba(4, 8, 14, 0.95) 0%, rgba(6, 12, 20, 0.82) 80%, transparent 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.museum-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.museum-header__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--museum-gold);
+  padding: 3px;
+  box-shadow: 0 0 10px var(--museum-gold-glow);
+}
+
+.museum-header__titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.museum-header__title {
+  font-family: 'Cinzel', 'Times New Roman', serif, var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+}
+
+.museum-header__subtitle {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--museum-text-muted);
+  text-transform: uppercase;
+}
+
+.museum-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.museum-nav-btn {
+  background: rgba(14, 24, 38, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: var(--museum-text-main);
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+}
+
+.museum-nav-btn:hover {
+  background: rgba(212, 175, 55, 0.16);
+  border-color: var(--museum-gold);
+  color: var(--museum-gold-bright);
+  box-shadow: 0 0 10px var(--museum-gold-soft);
+}
+
+.museum-nav-btn--active {
+  background: rgba(212, 175, 55, 0.22);
+  border-color: var(--museum-gold);
+  color: var(--museum-gold-bright);
+}
+
+.museum-nav-btn--admin {
+  border-color: rgba(230, 126, 34, 0.4);
+}
+
+.museum-nav-btn--admin:hover {
+  background: rgba(230, 126, 34, 0.2);
+  border-color: #e67e22;
+  color: #f39c12;
+}
+
+/* ==========================================================================
+   TRILHA HIERÁRQUICA GEOGRÁFICA (BREADCRUMB) & SELETOR DE ESCALA (HUD)
+   ========================================================================== */
+.museum-hud-bottom {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  max-width: 95vw;
+}
+
+.museum-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(6, 12, 20, 0.88);
+  border: 1px solid var(--museum-gold-border);
+  border-radius: 24px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: auto;
+  overflow-x: auto;
+  max-width: 90vw;
+}
+
+.museum-breadcrumb__item {
+  background: transparent;
+  border: none;
+  color: var(--museum-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.museum-breadcrumb__item:hover {
+  color: var(--museum-gold-bright);
+  background: var(--museum-gold-soft);
+}
+
+.museum-breadcrumb__item--active {
+  color: var(--museum-gold);
+  font-weight: 700;
+  border-bottom: 2px solid var(--museum-gold);
+}
+
+.museum-breadcrumb__sep {
+  color: rgba(212, 175, 55, 0.4);
+  font-size: 10px;
+}
+
+.museum-scale-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(8, 14, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.museum-scale-btn {
+  background: transparent;
+  border: none;
+  color: var(--museum-text-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 5px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.museum-scale-btn:hover {
+  color: var(--museum-text-main);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.museum-scale-btn--active {
+  background: var(--museum-gold-soft);
+  color: var(--museum-gold);
+  border: 1px solid var(--museum-gold-border);
+}
+
+/* Painel de Contexto / Inspeção Local (Canto Inferior Esquerdo) */
+.museum-context-panel {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 90;
+  width: 320px;
+  max-height: 420px;
+  background: var(--museum-panel-bg);
+  border: 1px solid var(--museum-gold-border);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow-y: auto;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.museum-context-panel.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+.museum-context-panel__tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.museum-context-panel__title {
+  font-family: 'Cinzel', serif, var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--museum-text-main);
+  margin-bottom: 6px;
+}
+
+.museum-context-panel__desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--museum-text-muted);
+  margin-bottom: 12px;
+}
+
+.museum-context-panel__btn {
+  width: 100%;
+  background: var(--museum-gold-soft);
+  border: 1px solid var(--museum-gold);
+  color: var(--museum-gold-bright);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.museum-context-panel__btn:hover {
+  background: var(--museum-gold);
+  color: #04080e;
+}
+
+/* Alternância para Mapa Topográfico 2D (Leaflet) */
+.museum-view-toggle-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  background: rgba(9, 16, 26, 0.92);
+  border: 1px solid var(--museum-gold);
+  color: var(--museum-gold-bright);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.museum-view-toggle-btn:hover {
+  background: var(--museum-gold);
+  color: #04080e;
+  box-shadow: 0 0 16px var(--museum-gold-glow);
+}
+
+/* ==========================================================================
+   MODAL DE EXPOSIÇÃO HISTÓRICA DA CAMPANHA
+   ========================================================================== */
+.museum-exhibition-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(3, 7, 12, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.museum-exhibition-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.museum-exhibition-dialog {
+  width: 95vw;
+  max-width: 1140px;
+  height: 90vh;
+  max-height: 860px;
+  background: var(--museum-panel-bg-heavy);
+  border: 1px solid var(--museum-gold-border);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 24px var(--museum-gold-soft);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.museum-exhibition-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, transparent 100%);
+}
+
+.museum-exhibition-header__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.museum-exhibition-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+}
+
+.museum-exhibition-title {
+  font-family: 'Cinzel', serif, var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--museum-text-main);
+  letter-spacing: 0.5px;
+}
+
+.museum-exhibition-close {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--museum-text-muted);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.museum-exhibition-close:hover {
+  border-color: var(--museum-gold);
+  color: var(--museum-gold);
+  background: var(--museum-gold-soft);
+}
+
+.museum-exhibition-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 24px;
+  background: rgba(10, 18, 28, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+
+.museum-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--museum-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.museum-tab-btn:hover {
+  color: var(--museum-text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.museum-tab-btn--active {
+  color: var(--museum-gold-bright);
+  background: var(--museum-gold-soft);
+  border-bottom: 2px solid var(--museum-gold);
+}
+
+.museum-exhibition-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Seções de Conteúdo da Exposição */
+.exhibition-section {
+  display: none;
+}
+
+.exhibition-section.is-active {
+  display: block;
+}
+
+/* Aba 1: Identificação & Contexto */
+.exhibition-id-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.exhibition-card {
+  background: var(--museum-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.exhibition-card__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.exhibition-card__text {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--museum-text-main);
+}
+
+.exhibition-stat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exhibition-stat-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 6px;
+  font-size: 12.5px;
+}
+
+.exhibition-stat-item strong {
+  color: var(--museum-text-muted);
+  font-weight: 500;
+}
+
+/* Aba 2: Narrativa em 8 Capítulos */
+.exhibition-narrative-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.narrative-chapter {
+  background: var(--museum-card-bg);
+  border-left: 3px solid var(--museum-gold);
+  border-radius: 0 6px 6px 0;
+  padding: 16px 20px;
+}
+
+.narrative-chapter__num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.narrative-chapter__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--museum-text-main);
+  margin-bottom: 8px;
+}
+
+.narrative-chapter__p {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--museum-text-muted);
+}
+
+/* Aba 3: Linha do Tempo da Campanha */
+.exhibition-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  padding-left: 24px;
+}
+
+.exhibition-timeline-list::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 2px;
+  background: rgba(212, 175, 55, 0.3);
+}
+
+.timeline-event-card {
+  background: var(--museum-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 14px 18px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timeline-event-card::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: -24px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--museum-gold);
+  box-shadow: 0 0 8px var(--museum-gold);
+}
+
+.timeline-event-card:hover {
+  border-color: var(--museum-gold);
+  transform: translateX(4px);
+}
+
+.timeline-event-card__header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.timeline-event-card__date {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--museum-gold);
+  letter-spacing: 0.5px;
+}
+
+.timeline-event-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--museum-text-main);
+}
+
+.timeline-event-card__desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--museum-text-muted);
+  margin-bottom: 8px;
+}
+
+.timeline-event-card__consequences {
+  font-size: 11.5px;
+  color: var(--museum-parchment-dim);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border-left: 2px solid var(--museum-gold);
+}
+
+/* Aba 4: Galeria de Personagens Históricos */
+.exhibition-character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.character-history-card {
+  background: var(--museum-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.character-history-card:hover {
+  border-color: var(--museum-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.character-history-card__portrait {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--museum-gold-border);
+  flex-shrink: 0;
+}
+
+.character-history-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.character-history-card__name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--museum-text-main);
+}
+
+.character-history-card__title {
+  font-size: 11px;
+  color: var(--museum-text-muted);
+}
+
+.character-status-pill {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 3px;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.character-status-pill--vivo {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.character-status-pill--morto {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+.character-status-pill--desaparecido {
+  background: rgba(230, 126, 34, 0.2);
+  color: #e67e22;
+}
+
+.character-status-pill--em-quarentena,
+.character-status-pill--quarentena {
+  background: rgba(155, 89, 182, 0.2);
+  color: #9b59b6;
+}
+
+.character-status-pill--desconhecido {
+  background: rgba(127, 140, 141, 0.2);
+  color: #bdc3c7;
+}
+
+/* Aba 5: Locais Históricos */
+.exhibition-location-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.location-history-card {
+  background: var(--museum-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.location-history-card:hover {
+  border-color: var(--museum-gold);
+  transform: translateY(-2px);
+}
+
+.location-history-card__thumb {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.location-history-card__body {
+  padding: 14px;
+}
+
+.location-history-card__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--museum-text-main);
+  margin-bottom: 4px;
+}
+
+.location-history-card__geo {
+  font-size: 11px;
+  color: var(--museum-gold);
+  margin-bottom: 6px;
+}
+
+.location-history-card__desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--museum-text-muted);
+}
+
+/* ==========================================================================
+   MODAL DE BIOGRAFIA E TRAJETÓRIA HISTÓRICA DO PERSONAGEM
+   ========================================================================== */
+.museum-biography-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(3, 7, 12, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.museum-biography-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.museum-biography-dialog {
+  width: 95vw;
+  max-width: 980px;
+  height: 88vh;
+  max-height: 820px;
+  background: var(--museum-panel-bg-heavy);
+  border: 1px solid var(--museum-gold-border);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.museum-biography-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.museum-biography-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.museum-biography-portrait {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1.5px solid var(--museum-gold);
+}
+
+.museum-biography-name {
+  font-family: 'Cinzel', serif, var(--font-body);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--museum-text-main);
+}
+
+.museum-biography-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.biography-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.biography-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.biography-text {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--museum-text-main);
+  margin-bottom: 18px;
+}
+
+.biography-fate-box {
+  background: rgba(212, 175, 55, 0.08);
+  border-left: 3px solid var(--museum-gold);
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--museum-parchment);
+  margin-bottom: 20px;
+}
+
+.biography-trajectory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.trajectory-item {
+  background: var(--museum-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+}
+
+.trajectory-item strong {
+  color: var(--museum-gold-bright);
+}
+
+.biography-relations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.relation-item {
+  background: var(--museum-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.relation-item:hover {
+  border-color: var(--museum-gold);
+  background: var(--museum-gold-soft);
+}
+
+/* Ficha Técnica Original Arquivada (C.R.I.S.) */
+.archival-sheet-details {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 14px;
+  margin-top: 18px;
+}
+
+.archival-sheet-details summary {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   MODAL DE ARQUIVO HISTÓRICO GLOBAL (CONSULTA RELACIONAL)
+   ========================================================================== */
+.museum-archive-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(3, 7, 12, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.museum-archive-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.museum-archive-dialog {
+  width: 96vw;
+  max-width: 1200px;
+  height: 90vh;
+  max-height: 880px;
+  background: var(--museum-panel-bg-heavy);
+  border: 1px solid var(--museum-gold-border);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.museum-archive-filter-bar {
+  padding: 16px 24px;
+  background: rgba(10, 18, 28, 0.98);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-input {
+  background: rgba(6, 12, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--museum-text-main);
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  min-width: 220px;
+  flex: 1;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: var(--museum-gold);
+  box-shadow: 0 0 10px var(--museum-gold-soft);
+}
+
+.filter-select {
+  background: rgba(6, 12, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--museum-text-main);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.filter-preset-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  background: rgba(14, 24, 38, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: var(--museum-text-muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  background: var(--museum-gold-soft);
+  color: var(--museum-gold-bright);
+  border-color: var(--museum-gold);
+}
+
+.museum-archive-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ==========================================================================
+   MODAL DE ADMINISTRAÇÃO E CURADORIA DO MUSEU
+   ========================================================================== */
+.museum-admin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(3, 7, 12, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.museum-admin-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.museum-admin-dialog {
+  width: 95vw;
+  max-width: 1040px;
+  height: 88vh;
+  max-height: 840px;
+  background: var(--museum-panel-bg-heavy);
+  border: 1px solid rgba(230, 126, 34, 0.45);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.admin-form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--museum-gold);
+  text-transform: uppercase;
+}
+
+.admin-input, .admin-textarea, .admin-select {
+  background: rgba(6, 12, 20, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--museum-text-main);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.admin-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.admin-submit-btn {
+  background: rgba(230, 126, 34, 0.25);
+  border: 1px solid #e67e22;
+  color: #f39c12;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.admin-submit-btn:hover {
+  background: #e67e22;
+  color: #04080e;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .museum-header {
+    height: auto;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .museum-header__nav {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .exhibition-id-grid, .biography-grid {
+    grid-template-columns: 1fr;
+  }
+  .museum-context-panel {
+    display: none;
+  }
+}
