@@ -1,23 +1,25 @@
 @echo off
-chcp 65001 >nul
-title Mesa Interativa de RPG - Universo Evren
+setlocal
+title Universo Evren - Museu Historico e Mesa de RPG
 
 cd /d "%~dp0"
 
 echo ===================================================================
-echo   INICIANDO MESA INTERATIVA — UNIVERSO EVREN
-echo   VTT ^& Wiki Ttica de Lore
+echo   UNIVERSO EVREN - MUSEU HISTORICO E VTT INTERATIVO
+echo   Inicializador Local Seguro
 echo ===================================================================
 echo.
 
-where python >nul 2>nul
-if %errorlevel% equ 0 (
-    echo [i] Python detectado. Iniciando servidor local em http://localhost:8000...
+python --version >nul 2>&1
+if %ERRORLEVEL% equ 0 (
+    echo [OK] Python detectado no sistema.
+    echo [i] Iniciando servidor local seguro em 127.0.0.1:8000...
     python server.py
 ) else (
-    echo [!] Python no encontrado no PATH do sistema.
-    echo [i] Abrindo diretamente no navegador padro (modo offline)...
-    start "" index.html
+    echo [i] Python nao encontrado no PATH do sistema.
+    echo [i] Abrindo aplicacao diretamente no navegador padrao (modo offline)...
+    start "" "index.html"
 )
 
+endlocal
 pause

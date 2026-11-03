@@ -206,12 +206,24 @@ Gabriel Vilar desenvolveu o protótipo LIMIAR. Cuidado com estática nas frequê
     this.logs.forEach(l => {
       const entry = document.createElement('div');
       entry.className = 'journal-log-entry';
-      entry.innerHTML = `
-        <span class="journal-log-time">[${l.time}]</span>
-        <span class="journal-log-text">${l.text}</span>
-      `;
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'journal-log-time';
+      timeSpan.textContent = `[${l.time || ''}]`;
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'journal-log-text';
+      textSpan.textContent = l.text || '';
+
+      entry.appendChild(timeSpan);
+      entry.appendChild(document.createTextNode(' '));
+      entry.appendChild(textSpan);
       this.logStreamEl.appendChild(entry);
     });
+  }
+
+  renderLogsStream() {
+    this.renderLogs();
   }
 }
 

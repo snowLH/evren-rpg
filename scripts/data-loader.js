@@ -5,6 +5,65 @@
  * PLANETA -> CONTINENTE -> PAÍS -> REGIÃO -> CIDADE/LOCAL -> CAMPANHA -> HISTÓRIA
  */
 
+/**
+ * Módulo de Segurança e Sanitização Defensiva do Universo Evren
+ * Previne injeção de script (XSS), valida URLs de mídia e sanitiza entradas.
+ */
+const EvrenSecurity = {
+  escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  },
+
+  safeUrl(url, fallback = 'assets/icon-192.png') {
+    if (!url || typeof url !== 'string') return fallback;
+    const trimmed = url.trim();
+    const lower = trimmed.toLowerCase();
+    if (
+      lower.startsWith('javascript:') ||
+      lower.startsWith('vbscript:') ||
+      lower.startsWith('data:text/') ||
+      lower.startsWith('data:application/')
+    ) {
+      return fallback;
+    }
+    if (
+      trimmed.startsWith('assets/') ||
+      trimmed.startsWith('./') ||
+      trimmed.startsWith('/') ||
+      lower.startsWith('http://') ||
+      lower.startsWith('https://') ||
+      lower.startsWith('data:image/')
+    ) {
+      return this.escapeHtml(trimmed);
+    }
+    return fallback;
+  },
+
+  sanitizeText(str) {
+    if (typeof str !== 'string') return str;
+    return str
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
+      .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '');
+  }
+};
+
+if (typeof window !== 'undefined') {
+  window.EvrenSecurity = EvrenSecurity;
+  window.escapeHtml = EvrenSecurity.escapeHtml.bind(EvrenSecurity);
+  window.safeUrl = EvrenSecurity.safeUrl.bind(EvrenSecurity);
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports.EvrenSecurity = EvrenSecurity;
+}
+
 class DataLoader {
   constructor() {
     this.data = null;

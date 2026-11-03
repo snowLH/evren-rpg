@@ -3,7 +3,7 @@
  * Habilita funcionamento 100% offline, caching inteligente e instalação como aplicativo nativo.
  */
 
-const CACHE_NAME = 'evren-vtt-v2.0.0';
+const CACHE_NAME = 'evren-museum-v3.0.0';
 
 const PRECACHE_ASSETS = [
   './',
@@ -37,8 +37,13 @@ const PRECACHE_ASSETS = [
   './styles/backup-manager.css',
   './styles/campaign-creator.css',
   './styles/campaigns-hub.css',
+  './styles/museum.css',
   './scripts/leaflet.js',
+  './scripts/three.min.js',
   './scripts/data-loader.js',
+  './scripts/museum-storage.js',
+  './scripts/planet-3d-engine.js',
+  './scripts/museum-controller.js',
   './scripts/particles.js',
   './scripts/cloud-warp.js',
   './scripts/battlemap-tokens.js',

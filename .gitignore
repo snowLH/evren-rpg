@@ -1,13 +1,37 @@
-# Python / Node
+# Dependências e caches locais
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 node_modules/
 
-# Temporary test screenshots
-shot_*.png
-verified_*.png
+# Ambientes, Segredos e Chaves Privadas
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
 
-# Temporary verification scripts
+# Logs e arquivos temporários de sistema
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e configurações pessoais de ambiente
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Scripts temporários de teste, enriquecimento e depuração local
 verify_*.js
 debug_*.js
 check_*.js
@@ -19,3 +43,7 @@ enrich_*.js
 enrich_*.py
 update_world_data.py
 generate_app_icons.py
+
+# Screenshots temporárias geradas durante testes automatizados
+shot_*.png
+verified_*.png

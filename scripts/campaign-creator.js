@@ -49,13 +49,19 @@ class CampaignCreator {
   }
 
   submitForm() {
-    const title = document.getElementById('camp-title')?.value.trim() || 'Nova Campanha';
-    const theme = document.getElementById('camp-theme')?.value.trim() || 'Sobrevivência Anômala';
-    const country = document.getElementById('camp-country')?.value.trim() || 'Setor Neutro';
-    const status = document.getElementById('camp-status')?.value || 'Em andamento';
+    const cleanStr = (s) => {
+      if (!s) return '';
+      if (window.EvrenSecurity) return window.EvrenSecurity.sanitizeText(s).trim();
+      return String(s).replace(/<[^>]*>/g, '').trim();
+    };
+
+    const title = cleanStr(document.getElementById('camp-title')?.value) || 'Nova Campanha';
+    const theme = cleanStr(document.getElementById('camp-theme')?.value) || 'Sobrevivência Anômala';
+    const country = cleanStr(document.getElementById('camp-country')?.value) || 'Setor Neutro';
+    const status = cleanStr(document.getElementById('camp-status')?.value) || 'Em andamento';
     const lat = parseFloat(document.getElementById('camp-lat')?.value) || 0.0;
     const lng = parseFloat(document.getElementById('camp-lng')?.value) || 0.0;
-    const desc = document.getElementById('camp-desc')?.value.trim() || 'Dossiê confidencial da nova anomalia.';
+    const desc = cleanStr(document.getElementById('camp-desc')?.value) || 'Dossiê confidencial da nova anomalia.';
 
     const campId = `camp_${Date.now()}`;
     const newCamp = {

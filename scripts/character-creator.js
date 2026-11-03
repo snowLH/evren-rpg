@@ -156,15 +156,21 @@ class CharacterCreator {
     const relicInput = document.getElementById('creator-relic');
     const loreInput = document.getElementById('creator-lore');
 
-    const name = nameInput?.value.trim() || 'Agente Sem Nome';
-    const codename = codenameInput?.value.trim();
+    const cleanStr = (s) => {
+      if (!s) return '';
+      if (window.EvrenSecurity) return window.EvrenSecurity.sanitizeText(s).trim();
+      return String(s).replace(/<[^>]*>/g, '').trim();
+    };
+
+    const name = cleanStr(nameInput?.value) || 'Agente Sem Nome';
+    const codename = cleanStr(codenameInput?.value);
     const fullName = codename ? `${name} (${codename})` : name;
     const charId = `char_custom_${Date.now()}`;
-    const mdaVal = parseInt(mdaSlider?.value) || 15;
-    const charClass = classInput?.value || 'Especialista';
-    const campId = campInput?.value || 'camp_001';
-    const relic = relicInput?.value.trim() || 'Nenhuma Relíquia Registrada';
-    const summary = loreInput?.value.trim() || 'Agente de campo treinado para contenção de anomalias.';
+    const mdaVal = Math.max(0, Math.min(100, parseInt(mdaSlider?.value) || 15));
+    const charClass = cleanStr(classInput?.value) || 'Especialista';
+    const campId = cleanStr(campInput?.value) || 'camp_001';
+    const relic = cleanStr(relicInput?.value) || 'Nenhuma Relíquia Registrada';
+    const summary = cleanStr(loreInput?.value) || 'Agente de campo treinado para contenção de anomalias.';
 
     // Gera conjunto canônico de perícias CRIS com base na classe e atributos
     const allSkillsList = [

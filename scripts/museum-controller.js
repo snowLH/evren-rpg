@@ -39,6 +39,27 @@ class MuseumController {
     };
   }
 
+  escapeHtml(str) {
+    if (window.EvrenSecurity) return window.EvrenSecurity.escapeHtml(str);
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  safeUrl(url, fallback = 'assets/icon-192.png') {
+    if (window.EvrenSecurity) return window.EvrenSecurity.safeUrl(url, fallback);
+    if (!url || typeof url !== 'string') return fallback;
+    const lower = url.trim().toLowerCase();
+    if (lower.startsWith('javascript:') || lower.startsWith('vbscript:') || lower.startsWith('data:text/')) {
+      return fallback;
+    }
+    return this.escapeHtml(url.trim());
+  }
+
   /**
    * Inicializa o controlador do museu e vincula os eventos da interface
    */
@@ -356,7 +377,7 @@ class MuseumController {
         <div style="background: rgba(230, 126, 34, 0.12); border-left: 3px solid #e67e22; padding: 12px; margin-top: 14px; border-radius: 0 4px 4px 0;">
           <strong style="color: #f39c12; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">Aviso de Curadoria // Dados Pendentes:</strong>
           <ul style="margin: 6px 0 0 16px; font-size: 12px; color: var(--museum-text-muted);">
-            ${camp.pending_documentation.map((p) => `<li>${p}</li>`).join('')}
+            ${camp.pending_documentation.map((p) => `<li>${this.escapeHtml(p)}</li>`).join('')}
           </ul>
         </div>
       `
@@ -367,11 +388,11 @@ class MuseumController {
         <div>
           <div class="exhibition-card">
             <h4 class="exhibition-card__label">Sinopse Histórica Oficial</h4>
-            <p class="exhibition-card__text">${hi.synopsis || camp.synopsis || camp.description}</p>
+            <p class="exhibition-card__text">${this.escapeHtml(hi.synopsis || camp.synopsis || camp.description || '')}</p>
           </div>
           <div class="exhibition-card">
             <h4 class="exhibition-card__label">Contexto Histórico & Geopolítico Anterior</h4>
-            <p class="exhibition-card__text">${hi.historical_context || camp.historical_context || camp.exhibition_narrative?.prior_context || 'Registro em fase de documentação.'}</p>
+            <p class="exhibition-card__text">${this.escapeHtml(hi.historical_context || camp.historical_context || camp.exhibition_narrative?.prior_context || 'Registro em fase de documentação.')}</p>
           </div>
           ${pendingHtml}
         </div>
@@ -379,15 +400,15 @@ class MuseumController {
           <div class="exhibition-card">
             <h4 class="exhibition-card__label">Ficha Cartográfica do Acervo</h4>
             <ul class="exhibition-stat-list">
-              <li class="exhibition-stat-item"><strong>Período Histórico:</strong> <span>${hi.year || camp.year}</span></li>
-              <li class="exhibition-stat-item"><strong>Status no Planeta:</strong> <span style="color: ${statusText.toLowerCase().includes('concl') ? '#2ecc71' : 'var(--museum-gold-bright)'}; font-weight: 600;">${statusText}</span></li>
-              <li class="exhibition-stat-item"><strong>Gênero & Temática:</strong> <span>${hi.genre_theme || camp.theme}</span></li>
-              <li class="exhibition-stat-item"><strong>Localização Planetária:</strong> <span>${geoPlace}</span></li>
-              <li class="exhibition-stat-item"><strong>Continente:</strong> <span>${hierarchy?.continent?.name || 'Setor Oceânico'}</span></li>
-              <li class="exhibition-stat-item"><strong>País / Território:</strong> <span>${hierarchy?.country?.name || 'Águas Internacionais'}</span></li>
-              <li class="exhibition-stat-item"><strong>Região:</strong> <span>${hierarchy?.region?.name || 'Não classificada'}</span></li>
-              <li class="exhibition-stat-item"><strong>Cidade / Distrito:</strong> <span>${hierarchy?.city?.name || 'Não classificado'}</span></li>
-              <li class="exhibition-stat-item"><strong>Classificação de Ameaça:</strong> <span>${camp.danger_rating || 'Nível Padrão'}</span></li>
+              <li class="exhibition-stat-item"><strong>Período Histórico:</strong> <span>${this.escapeHtml(hi.year || camp.year || '')}</span></li>
+              <li class="exhibition-stat-item"><strong>Status no Planeta:</strong> <span style="color: ${statusText.toLowerCase().includes('concl') ? '#2ecc71' : 'var(--museum-gold-bright)'}; font-weight: 600;">${this.escapeHtml(statusText)}</span></li>
+              <li class="exhibition-stat-item"><strong>Gênero & Temática:</strong> <span>${this.escapeHtml(hi.genre_theme || camp.theme || '')}</span></li>
+              <li class="exhibition-stat-item"><strong>Localização Planetária:</strong> <span>${this.escapeHtml(geoPlace)}</span></li>
+              <li class="exhibition-stat-item"><strong>Continente:</strong> <span>${this.escapeHtml(hierarchy?.continent?.name || 'Setor Oceânico')}</span></li>
+              <li class="exhibition-stat-item"><strong>País / Território:</strong> <span>${this.escapeHtml(hierarchy?.country?.name || 'Águas Internacionais')}</span></li>
+              <li class="exhibition-stat-item"><strong>Região:</strong> <span>${this.escapeHtml(hierarchy?.region?.name || 'Não classificada')}</span></li>
+              <li class="exhibition-stat-item"><strong>Cidade / Distrito:</strong> <span>${this.escapeHtml(hierarchy?.city?.name || 'Não classificado')}</span></li>
+              <li class="exhibition-stat-item"><strong>Classificação de Ameaça:</strong> <span>${this.escapeHtml(camp.danger_rating || 'Nível Padrão')}</span></li>
             </ul>
           </div>
         </div>
@@ -416,8 +437,8 @@ class MuseumController {
         ${chapters.map((ch) => `
           <div class="narrative-chapter">
             <span class="narrative-chapter__num">${ch.num}</span>
-            <h4 class="narrative-chapter__title">${ch.title}</h4>
-            <p class="narrative-chapter__p">${nar[ch.key] || 'Conteúdo em catalogação pela curadoria.'}</p>
+            <h4 class="narrative-chapter__title">${this.escapeHtml(ch.title)}</h4>
+            <p class="narrative-chapter__p">${this.escapeHtml(nar[ch.key] || 'Conteúdo em catalogação pela curadoria.')}</p>
           </div>
         `).join('')}
       </div>
@@ -437,14 +458,14 @@ class MuseumController {
     container.innerHTML = `
       <div class="exhibition-timeline-list">
         ${events.map((evt) => `
-          <div class="timeline-event-card" data-event-id="${evt.id}">
+          <div class="timeline-event-card" data-event-id="${this.escapeHtml(evt.id)}">
             <div class="timeline-event-card__header">
-              <span class="timeline-event-card__date">${evt.date}</span>
-              ${evt.era_badge ? `<span style="font-size: 10px; color: var(--museum-text-muted);">${evt.era_badge}</span>` : ''}
+              <span class="timeline-event-card__date">${this.escapeHtml(evt.date || '')}</span>
+              ${evt.era_badge ? `<span style="font-size: 10px; color: var(--museum-text-muted);">${this.escapeHtml(evt.era_badge)}</span>` : ''}
             </div>
-            <h4 class="timeline-event-card__title">${evt.title}</h4>
-            <p class="timeline-event-card__desc">${evt.description}</p>
-            ${evt.consequences ? `<div class="timeline-event-card__consequences"><strong>Consequências:</strong> ${evt.consequences}</div>` : ''}
+            <h4 class="timeline-event-card__title">${this.escapeHtml(evt.title || '')}</h4>
+            <p class="timeline-event-card__desc">${this.escapeHtml(evt.description || '')}</p>
+            ${evt.consequences ? `<div class="timeline-event-card__consequences"><strong>Consequências:</strong> ${this.escapeHtml(evt.consequences)}</div>` : ''}
           </div>
         `).join('')}
       </div>
@@ -467,12 +488,12 @@ class MuseumController {
           const st = this.dataLoader.getCharacterHistoricalStatus(ch);
           const stClass = `character-status-pill--${st.replace(/\s+/g, '-')}`;
           return `
-            <div class="character-history-card" data-character-id="${ch.id}">
-              <img src="${ch.portrait || 'assets/icon-192.png'}" alt="${ch.name}" class="character-history-card__portrait" onerror="this.src='assets/icon-192.png'">
+            <div class="character-history-card" data-character-id="${this.escapeHtml(ch.id)}">
+              <img src="${this.safeUrl(ch.portrait, 'assets/icon-192.png')}" alt="${this.escapeHtml(ch.name)}" class="character-history-card__portrait" onerror="this.src='assets/icon-192.png'">
               <div class="character-history-card__info">
-                <h4 class="character-history-card__name">${ch.name}</h4>
-                <span class="character-history-card__title">${ch.historical_title || ch.codename || ch.class || 'Figura Histórica'}</span>
-                <span class="character-status-pill ${stClass}">${st.toUpperCase()}</span>
+                <h4 class="character-history-card__name">${this.escapeHtml(ch.name)}</h4>
+                <span class="character-history-card__title">${this.escapeHtml(ch.historical_title || ch.codename || ch.class || 'Figura Histórica')}</span>
+                <span class="character-status-pill ${stClass}">${this.escapeHtml(st.toUpperCase())}</span>
               </div>
             </div>
           `;
@@ -500,12 +521,12 @@ class MuseumController {
     container.innerHTML = `
       <div class="exhibition-location-grid">
         ${locs.map((loc) => `
-          <div class="location-history-card" data-location-id="${loc.id}">
-            <img src="${loc.illustration || 'assets/ref_interior_tavern.jpg'}" alt="${loc.name}" class="location-history-card__thumb" onerror="this.src='assets/ref_interior_tavern.jpg'">
+          <div class="location-history-card" data-location-id="${this.escapeHtml(loc.id)}">
+            <img src="${this.safeUrl(loc.illustration, 'assets/ref_interior_tavern.jpg')}" alt="${this.escapeHtml(loc.name)}" class="location-history-card__thumb" onerror="this.src='assets/ref_interior_tavern.jpg'">
             <div class="location-history-card__body">
-              <h4 class="location-history-card__name">${loc.name}</h4>
-              <span class="location-history-card__geo">${loc.zone || 'Localização Registrada'}</span>
-              <p class="location-history-card__desc">${loc.description || loc.historical_importance || ''}</p>
+              <h4 class="location-history-card__name">${this.escapeHtml(loc.name)}</h4>
+              <span class="location-history-card__geo">${this.escapeHtml(loc.zone || 'Localização Registrada')}</span>
+              <p class="location-history-card__desc">${this.escapeHtml(loc.description || loc.historical_importance || '')}</p>
             </div>
           </div>
         `).join('')}
@@ -535,9 +556,9 @@ class MuseumController {
           <h4 class="exhibition-card__label">Relíquias & Objetos Históricos Vinculados</h4>
           ${relics.length ? relics.map((r) => `
             <div class="exhibition-card" style="margin-bottom: 12px;">
-              <strong style="color: var(--museum-gold-bright); font-size: 13.5px;">${r.name}</strong>
-              <div style="font-size: 11px; color: var(--museum-text-muted); margin: 3px 0 6px;">Portador: ${r.owner || 'Não documentado'} • Raridade: ${r.rarity || 'Desconhecida'}</div>
-              <p style="font-size: 12px; color: var(--museum-text-muted);">${r.description || r.effect || ''}</p>
+              <strong style="color: var(--museum-gold-bright); font-size: 13.5px;">${this.escapeHtml(r.name)}</strong>
+              <div style="font-size: 11px; color: var(--museum-text-muted); margin: 3px 0 6px;">Portador: ${this.escapeHtml(r.owner || 'Não documentado')} • Raridade: ${this.escapeHtml(r.rarity || 'Desconhecida')}</div>
+              <p style="font-size: 12px; color: var(--museum-text-muted);">${this.escapeHtml(r.description || r.effect || '')}</p>
             </div>
           `).join('') : '<p style="color: var(--museum-text-muted); font-size: 12px;">Nenhuma relíquia associada catalogada.</p>'}
         </div>
@@ -545,9 +566,9 @@ class MuseumController {
           <h4 class="exhibition-card__label">Gravações & Crônicas de Sessões Históricas</h4>
           ${chronicles.length ? chronicles.map((cr) => `
             <div class="exhibition-card" style="margin-bottom: 12px;">
-              <strong style="color: var(--museum-text-main); font-size: 13.5px;">📻 ${cr.title}</strong>
-              <div style="font-size: 11px; color: var(--museum-gold); margin: 3px 0 6px;">Sessão: ${cr.session || 'Arquivo Histórico'}</div>
-              <p style="font-size: 12px; color: var(--museum-text-muted); line-height: 1.5;">${cr.lore || cr.summary || ''}</p>
+              <strong style="color: var(--museum-text-main); font-size: 13.5px;">📻 ${this.escapeHtml(cr.title)}</strong>
+              <div style="font-size: 11px; color: var(--museum-gold); margin: 3px 0 6px;">Sessão: ${this.escapeHtml(cr.session || 'Arquivo Histórico')}</div>
+              <p style="font-size: 12px; color: var(--museum-text-muted); line-height: 1.5;">${this.escapeHtml(cr.lore || cr.summary || '')}</p>
             </div>
           `).join('') : '<p style="color: var(--museum-text-muted); font-size: 12px;">Nenhum registro de sessão catalogado.</p>'}
         </div>
@@ -569,7 +590,7 @@ class MuseumController {
     const st = this.dataLoader.getCharacterHistoricalStatus(ch);
     const stClass = `character-status-pill--${st.replace(/\s+/g, '-')}`;
 
-    document.getElementById('bio-portrait').src = ch.portrait || 'assets/icon-192.png';
+    document.getElementById('bio-portrait').src = this.safeUrl(ch.portrait, 'assets/icon-192.png');
     document.getElementById('bio-name').textContent = ch.name;
     document.getElementById('bio-title').textContent = ch.historical_title || ch.codename || ch.class || 'Figura Histórica';
     document.getElementById('bio-status').textContent = st.toUpperCase();
@@ -581,12 +602,12 @@ class MuseumController {
         <div class="biography-grid">
           <div>
             <h4 class="biography-section-title">História Pessoal & Origens</h4>
-            <p class="biography-text">${ch.personal_history || ch.biography_summary || ch.summary || 'Registro biográfico em catalogação.'}</p>
+            <p class="biography-text">${this.escapeHtml(ch.personal_history || ch.biography_summary || ch.summary || 'Registro biográfico em catalogação.')}</p>
 
             ${ch.known_fate ? `
               <h4 class="biography-section-title">Destino Conhecido</h4>
               <div class="biography-fate-box">
-                ${ch.known_fate}
+                ${this.escapeHtml(ch.known_fate)}
               </div>
             ` : ''}
 
@@ -595,13 +616,13 @@ class MuseumController {
               ${(ch.campaign_participations && ch.campaign_participations.length > 0)
                 ? ch.campaign_participations.map((cp) => `
                   <div class="trajectory-item">
-                    <strong>${cp.campaign_title || cp.campaign_id}</strong> (${cp.period || 'Período Registrado'})<br>
-                    <span style="color: var(--museum-text-muted); font-size: 11.5px;">Papel: ${cp.role || 'Participante'} • ${cp.summary || ''}</span>
+                    <strong>${this.escapeHtml(cp.campaign_title || cp.campaign_id)}</strong> (${this.escapeHtml(cp.period || 'Período Registrado')})<br>
+                    <span style="color: var(--museum-text-muted); font-size: 11.5px;">Papel: ${this.escapeHtml(cp.role || 'Participante')} • ${this.escapeHtml(cp.summary || '')}</span>
                   </div>
                 `).join('')
                 : trajectory.campaigns.map((c) => `
                   <div class="trajectory-item">
-                    <strong>${c.title || c.name}</strong> (${c.year})<br>
+                    <strong>${this.escapeHtml(c.title || c.name)}</strong> (${this.escapeHtml(c.year)})<br>
                     <span style="color: var(--museum-text-muted); font-size: 11.5px;">Participação registrada na expedição.</span>
                   </div>
                 `).join('')
@@ -611,9 +632,9 @@ class MuseumController {
             <details class="archival-sheet-details">
               <summary>Ficha Arquivística Original (C.R.I.S. / Tática)</summary>
               <div style="margin-top: 10px; font-size: 12px; color: var(--museum-text-muted);">
-                Origem: ${ch.origin || 'Civil'} • Classe: ${ch.class || 'Especialista'} • NEX: ${ch.nex || '0%'} • MDA: ${ch.mda || '0%'}<br>
+                Origem: ${this.escapeHtml(ch.origin || 'Civil')} • Classe: ${this.escapeHtml(ch.class || 'Especialista')} • NEX: ${this.escapeHtml(ch.nex || '0%')} • MDA: ${this.escapeHtml(ch.mda || '0%')}<br>
                 Força: ${ch.attributes?.Força ?? 1} | Vigor: ${ch.attributes?.Vigor ?? 1} | Agilidade: ${ch.attributes?.Agilidade ?? 1} | Presença: ${ch.attributes?.Presença ?? 1} | Intelecto: ${ch.attributes?.Intelecto ?? 1}<br>
-                Citação: "${ch.quote || ''}"
+                Citação: "${this.escapeHtml(ch.quote || '')}"
               </div>
             </details>
           </div>
@@ -623,9 +644,9 @@ class MuseumController {
             <div class="biography-relations-list">
               ${(trajectory.relationships && trajectory.relationships.length > 0)
                 ? trajectory.relationships.map((rel) => `
-                  <div class="relation-item" data-target-char-id="${rel.character_id}">
-                    <strong style="color: var(--museum-gold-bright);">${rel.character_name}</strong> (${rel.relation_type})<br>
-                    <span style="color: var(--museum-text-muted); font-size: 11px;">${rel.description || ''}</span>
+                  <div class="relation-item" data-target-char-id="${this.escapeHtml(rel.character_id)}">
+                    <strong style="color: var(--museum-gold-bright);">${this.escapeHtml(rel.character_name)}</strong> (${this.escapeHtml(rel.relation_type)})<br>
+                    <span style="color: var(--museum-text-muted); font-size: 11px;">${this.escapeHtml(rel.description || '')}</span>
                   </div>
                 `).join('')
                 : '<p style="color: var(--museum-text-muted); font-size: 12px;">Nenhum vínculo histórico registrado.</p>'
@@ -636,9 +657,9 @@ class MuseumController {
             <div class="biography-relations-list">
               ${(trajectory.locations && trajectory.locations.length > 0)
                 ? trajectory.locations.map((loc) => `
-                  <div class="relation-item" data-target-loc-id="${loc.id}">
-                    <strong style="color: #5fa8d3;">${loc.name}</strong><br>
-                    <span style="color: var(--museum-text-muted); font-size: 11px;">${loc.zone || ''}</span>
+                  <div class="relation-item" data-target-loc-id="${this.escapeHtml(loc.id)}">
+                    <strong style="color: #5fa8d3;">${this.escapeHtml(loc.name)}</strong><br>
+                    <span style="color: var(--museum-text-muted); font-size: 11px;">${this.escapeHtml(loc.zone || '')}</span>
                   </div>
                 `).join('')
                 : '<p style="color: var(--museum-text-muted); font-size: 12px;">Nenhum local específico catalogado.</p>'
@@ -684,21 +705,21 @@ class MuseumController {
 
     document.getElementById('loc-modal-title').textContent = loc.name;
     document.getElementById('loc-modal-geo').textContent = `${hierarchy.planet?.name || 'Planeta Evren'} › ${hierarchy.continent?.name || ''} › ${hierarchy.country?.name || ''} › ${hierarchy.region?.name || ''} › ${hierarchy.city?.name || ''}`;
-    document.getElementById('loc-modal-thumb').src = loc.illustration || 'assets/ref_interior_tavern.jpg';
+    document.getElementById('loc-modal-thumb').src = this.safeUrl(loc.illustration, 'assets/ref_interior_tavern.jpg');
     document.getElementById('loc-modal-desc').textContent = loc.description || '';
     document.getElementById('loc-modal-importance').textContent = loc.historical_importance || 'Marco geográfico histórico registrado no acervo.';
 
     const epochsEl = document.getElementById('loc-modal-epochs');
     if (epochsEl) {
-      epochsEl.innerHTML = (loc.epochs_active || ['Época Moderna']).map((ep) => `<span class="filter-chip">${ep}</span>`).join(' ');
+      epochsEl.innerHTML = (loc.epochs_active || ['Época Moderna']).map((ep) => `<span class="filter-chip">${this.escapeHtml(ep)}</span>`).join(' ');
     }
 
     const campsEl = document.getElementById('loc-modal-campaigns');
     if (campsEl) {
       campsEl.innerHTML = (hierarchy.campaigns || []).map((c) => `
-        <div class="trajectory-item" style="cursor: pointer;" data-campaign-id="${c.id}">
-          <strong style="color: var(--museum-gold-bright);">${c.title || c.name}</strong> (${c.year})<br>
-          <span style="font-size: 11px; color: var(--museum-text-muted);">${c.theme}</span>
+        <div class="trajectory-item" style="cursor: pointer;" data-campaign-id="${this.escapeHtml(c.id)}">
+          <strong style="color: var(--museum-gold-bright);">${this.escapeHtml(c.title || c.name)}</strong> (${this.escapeHtml(c.year)})<br>
+          <span style="font-size: 11px; color: var(--museum-text-muted);">${this.escapeHtml(c.theme)}</span>
         </div>
       `).join('') || '<p style="color: var(--museum-text-muted); font-size: 12px;">Nenhuma campanha vinculada.</p>';
 
@@ -884,10 +905,10 @@ class MuseumController {
         <h4 class="exhibition-card__label" style="margin-top: 10px;">Exposições de Campanhas (${results.campaigns.length})</h4>
         <div class="exhibition-character-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin-bottom: 20px;">
           ${results.campaigns.map((c) => `
-            <div class="exhibition-card" style="cursor: pointer;" data-open-campaign-id="${c.id}">
-              <strong style="color: var(--museum-gold-bright); font-size: 14px;">${c.title || c.name}</strong><br>
-              <span style="font-size: 11px; color: var(--museum-text-muted);">${c.year} • ${c.country_location || ''}</span>
-              <p style="font-size: 12px; color: var(--museum-text-muted); margin-top: 6px;">${(c.synopsis || c.description || '').slice(0, 140)}...</p>
+            <div class="exhibition-card" style="cursor: pointer;" data-open-campaign-id="${this.escapeHtml(c.id)}">
+              <strong style="color: var(--museum-gold-bright); font-size: 14px;">${this.escapeHtml(c.title || c.name)}</strong><br>
+              <span style="font-size: 11px; color: var(--museum-text-muted);">${this.escapeHtml(c.year)} • ${this.escapeHtml(c.country_location || '')}</span>
+              <p style="font-size: 12px; color: var(--museum-text-muted); margin-top: 6px;">${this.escapeHtml((c.synopsis || c.description || '').slice(0, 140))}...</p>
             </div>
           `).join('')}
         </div>
@@ -902,12 +923,12 @@ class MuseumController {
           ${results.characters.map((ch) => {
             const st = this.dataLoader.getCharacterHistoricalStatus(ch);
             return `
-              <div class="character-history-card" data-open-char-id="${ch.id}">
-                <img src="${ch.portrait || 'assets/icon-192.png'}" alt="${ch.name}" class="character-history-card__portrait" onerror="this.src='assets/icon-192.png'">
+              <div class="character-history-card" data-open-char-id="${this.escapeHtml(ch.id)}">
+                <img src="${this.safeUrl(ch.portrait, 'assets/icon-192.png')}" alt="${this.escapeHtml(ch.name)}" class="character-history-card__portrait" onerror="this.src='assets/icon-192.png'">
                 <div class="character-history-card__info">
-                  <h4 class="character-history-card__name">${ch.name}</h4>
-                  <span class="character-history-card__title">${ch.historical_title || ch.codename || 'Figura Histórica'}</span>
-                  <span class="character-status-pill character-status-pill--${st.replace(/\s+/g, '-')}">${st.toUpperCase()}</span>
+                  <h4 class="character-history-card__name">${this.escapeHtml(ch.name)}</h4>
+                  <span class="character-history-card__title">${this.escapeHtml(ch.historical_title || ch.codename || 'Figura Histórica')}</span>
+                  <span class="character-status-pill character-status-pill--${st.replace(/\s+/g, '-')}">${this.escapeHtml(st.toUpperCase())}</span>
                 </div>
               </div>
             `;
@@ -922,11 +943,11 @@ class MuseumController {
         <h4 class="exhibition-card__label">Locais Históricos (${results.locations.length})</h4>
         <div class="exhibition-location-grid" style="margin-bottom: 20px;">
           ${results.locations.map((loc) => `
-            <div class="location-history-card" data-open-loc-id="${loc.id}">
-              <img src="${loc.illustration || 'assets/ref_interior_tavern.jpg'}" alt="${loc.name}" class="location-history-card__thumb" onerror="this.src='assets/ref_interior_tavern.jpg'">
+            <div class="location-history-card" data-open-loc-id="${this.escapeHtml(loc.id)}">
+              <img src="${this.safeUrl(loc.illustration, 'assets/ref_interior_tavern.jpg')}" alt="${this.escapeHtml(loc.name)}" class="location-history-card__thumb" onerror="this.src='assets/ref_interior_tavern.jpg'">
               <div class="location-history-card__body">
-                <h4 class="location-history-card__name">${loc.name}</h4>
-                <span class="location-history-card__geo">${loc.zone || ''}</span>
+                <h4 class="location-history-card__name">${this.escapeHtml(loc.name)}</h4>
+                <span class="location-history-card__geo">${this.escapeHtml(loc.zone || '')}</span>
               </div>
             </div>
           `).join('')}
@@ -941,9 +962,9 @@ class MuseumController {
         <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
           ${results.events.map((evt) => `
             <div class="exhibition-card">
-              <span style="font-size: 11px; font-weight: 700; color: var(--museum-gold);">${evt.date}</span>
-              <strong style="color: var(--museum-text-main); font-size: 13.5px; display: block; margin: 2px 0 4px;">${evt.title}</strong>
-              <p style="font-size: 12px; color: var(--museum-text-muted);">${evt.description}</p>
+              <span style="font-size: 11px; font-weight: 700; color: var(--museum-gold);">${this.escapeHtml(evt.date)}</span>
+              <strong style="color: var(--museum-text-main); font-size: 13.5px; display: block; margin: 2px 0 4px;">${this.escapeHtml(evt.title)}</strong>
+              <p style="font-size: 12px; color: var(--museum-text-muted);">${this.escapeHtml(evt.description)}</p>
             </div>
           `).join('')}
         </div>
@@ -1055,8 +1076,8 @@ class MuseumController {
 
     container.innerHTML = list.map((s) => `
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px;">
-        <span><strong>${s.label}</strong> <small style="color: var(--museum-text-muted);">(${new Date(s.created_at).toLocaleString('pt-BR')})</small></span>
-        <button type="button" class="admin-submit-btn" style="padding: 3px 8px; font-size: 10px;" data-restore-snap-id="${s.id}">Restaurar</button>
+        <span><strong>${this.escapeHtml(s.label)}</strong> <small style="color: var(--museum-text-muted);">(${new Date(s.created_at).toLocaleString('pt-BR')})</small></span>
+        <button type="button" class="admin-submit-btn" style="padding: 3px 8px; font-size: 10px;" data-restore-snap-id="${this.escapeHtml(s.id)}">Restaurar</button>
       </div>
     `).join('');
 
@@ -1105,10 +1126,21 @@ class MuseumController {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Validação de limite de tamanho: 25 MB
+        const MAX_SIZE = 25 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+          alert('O arquivo selecionado excede o limite máximo de segurança de 25 MB.');
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = async (evt) => {
           try {
-            const json = JSON.parse(evt.target.result);
+            const rawText = evt.target.result;
+            if (rawText.length > MAX_SIZE) {
+              throw new Error('Conteúdo textual excede o limite permitido.');
+            }
+            const json = JSON.parse(rawText);
             const res = await this.storageManager.importMuseumPackage(json);
             alert(`✓ Pacote histórico importado com sucesso!\nModo: ${res.mode}\nPersonagens: ${res.importedCharacters}\nLocais: ${res.importedLocations}\nAcontecimentos: ${res.importedEvents}`);
             if (this.planetEngine) this.planetEngine.buildAllGeographicMarkers();
@@ -1121,21 +1153,27 @@ class MuseumController {
       });
     }
 
+    const cleanInput = (val) => {
+      if (!val) return '';
+      if (window.EvrenSecurity) return window.EvrenSecurity.sanitizeText(val).trim();
+      return String(val).replace(/<[^>]*>/g, '').trim();
+    };
+
     // 4. Salvar Nova Campanha (Exposição)
     const formCamp = document.getElementById('admin-form-new-campaign');
     if (formCamp) {
       formCamp.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const title = document.getElementById('new-camp-title')?.value.trim();
-        const year = document.getElementById('new-camp-year')?.value.trim();
+        const title = cleanInput(document.getElementById('new-camp-title')?.value);
+        const year = cleanInput(document.getElementById('new-camp-year')?.value);
         const periodNum = parseInt(document.getElementById('new-camp-year-num')?.value) || 2026;
-        const status = document.getElementById('new-camp-status')?.value || 'em andamento';
-        const continentId = document.getElementById('admin-camp-continent')?.value || 'cont_america_sul';
-        const countryId = document.getElementById('admin-camp-country')?.value || 'country_brasil';
+        const status = cleanInput(document.getElementById('new-camp-status')?.value) || 'em andamento';
+        const continentId = cleanInput(document.getElementById('admin-camp-continent')?.value) || 'cont_america_sul';
+        const countryId = cleanInput(document.getElementById('admin-camp-country')?.value) || 'country_brasil';
         const lat = parseFloat(document.getElementById('new-camp-lat')?.value) || 0;
         const lng = parseFloat(document.getElementById('new-camp-lng')?.value) || 0;
-        const theme = document.getElementById('new-camp-theme')?.value.trim();
-        const synopsis = document.getElementById('new-camp-synopsis')?.value.trim();
+        const theme = cleanInput(document.getElementById('new-camp-theme')?.value);
+        const synopsis = cleanInput(document.getElementById('new-camp-synopsis')?.value);
 
         if (!title) return;
 
@@ -1194,11 +1232,11 @@ class MuseumController {
     if (formChar) {
       formChar.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const name = document.getElementById('new-char-name')?.value.trim();
-        const title = document.getElementById('new-char-title')?.value.trim();
-        const status = document.getElementById('new-char-status')?.value || 'vivo';
-        const bio = document.getElementById('new-char-bio')?.value.trim();
-        const fate = document.getElementById('new-char-fate')?.value.trim();
+        const name = cleanInput(document.getElementById('new-char-name')?.value);
+        const title = cleanInput(document.getElementById('new-char-title')?.value);
+        const status = cleanInput(document.getElementById('new-char-status')?.value) || 'vivo';
+        const bio = cleanInput(document.getElementById('new-char-bio')?.value);
+        const fate = cleanInput(document.getElementById('new-char-fate')?.value);
 
         if (!name) return;
 
@@ -1227,11 +1265,11 @@ class MuseumController {
     if (formEvent) {
       formEvent.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const title = document.getElementById('new-event-title')?.value.trim();
-        const date = document.getElementById('new-event-date')?.value.trim();
+        const title = cleanInput(document.getElementById('new-event-title')?.value);
+        const date = cleanInput(document.getElementById('new-event-date')?.value);
         const year = parseInt(document.getElementById('new-event-year')?.value) || 2026;
-        const desc = document.getElementById('new-event-desc')?.value.trim();
-        const consequences = document.getElementById('new-event-consequences')?.value.trim();
+        const desc = cleanInput(document.getElementById('new-event-desc')?.value);
+        const consequences = cleanInput(document.getElementById('new-event-consequences')?.value);
 
         if (!title) return;
 

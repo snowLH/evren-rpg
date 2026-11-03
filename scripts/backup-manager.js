@@ -143,10 +143,23 @@ class BackupManager {
   }
 
   importFromFile(file) {
+    if (!file) return;
+
+    // Limite máximo de segurança: 25 MB
+    const MAX_SIZE = 25 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      alert('Arquivo de backup excede o tamanho máximo de segurança permitido (25 MB).');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const data = JSON.parse(e.target.result);
+        const text = e.target.result;
+        if (text.length > MAX_SIZE) {
+          throw new Error('Conteúdo textual excede o limite de segurança.');
+        }
+        const data = JSON.parse(text);
         this.applyImportedState(data);
       } catch (err) {
         alert('Erro ao ler arquivo JSON de backup: ' + err.message);
@@ -161,6 +174,13 @@ class BackupManager {
       alert('Por favor, cole o conteúdo JSON do backup no campo de texto.');
       return;
     }
+
+    const MAX_SIZE = 25 * 1024 * 1024;
+    if (textarea.value.length > MAX_SIZE) {
+      alert('O texto colado excede o limite de segurança de 25 MB.');
+      return;
+    }
+
     try {
       const data = JSON.parse(textarea.value.trim());
       this.applyImportedState(data);
@@ -170,9 +190,33 @@ class BackupManager {
     }
   }
 
+  sanitizeString(val) {
+    if (typeof val !== 'string') return '';
+    return val
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/javascript:/gi, '')
+      .trim();
+  }
+
+  sanitizeMediaUrl(url, fallback = 'assets/icon-192.png') {
+    if (window.safeUrl) return window.safeUrl(url, fallback);
+    if (!url || typeof url !== 'string') return fallback;
+    const lower = url.trim().toLowerCase();
+    if (lower.startsWith('javascript:') || lower.startsWith('vbscript:') || lower.startsWith('data:text/')) {
+      return fallback;
+    }
+    return url.trim();
+  }
+
   applyImportedState(state) {
-    if (!state || (!state.characters && !state.journal)) {
+    if (!state || typeof state !== 'object' || Array.isArray(state)) {
       alert('Arquivo de backup inválido ou incompatível.');
+      return;
+    }
+
+    if (!state.characters && !state.journal && !state.campaigns && !state.locations) {
+      alert('Arquivo de backup não contém coleções do Universo Evren.');
       return;
     }
 
@@ -180,24 +224,46 @@ class BackupManager {
     if (!confirmRestore) return;
 
     try {
-      // 1. Restaura Personagens Customizados & Fichas CRIS
-      if (state.characters?.custom) {
-        localStorage.setItem('evren_custom_characters_v1', JSON.stringify(state.characters.custom));
+      // 1. Restaura Personagens Customizados & Fichas CRIS com sanitização
+      if (Array.isArray(state.characters?.custom)) {
+        const safeCustom = state.characters.custom.slice(0, 500).map((c) => ({
+          ...c,
+          name: this.sanitizeString(c.name || 'Agente'),
+          codename: this.sanitizeString(c.codename || ''),
+          origin: this.sanitizeString(c.origin || ''),
+          class: this.sanitizeString(c.class || ''),
+          summary: this.sanitizeString(c.summary || ''),
+          quote: this.sanitizeString(c.quote || ''),
+          portrait: this.sanitizeMediaUrl(c.portrait, 'assets/icon-192.png')
+        }));
+        localStorage.setItem('evren_custom_characters_v1', JSON.stringify(safeCustom));
         if (window.characterCreator) {
           window.characterCreator.loadCustomCharactersFromStorage();
         }
       }
-      if (state.characters?.cris) {
-        localStorage.setItem('evren_custom_characters', JSON.stringify(state.characters.cris));
-        state.characters.cris.forEach(item => {
+
+      if (Array.isArray(state.characters?.cris)) {
+        const safeCris = state.characters.cris.slice(0, 500).map((item) => {
           const charObj = item.char || item;
-          if (charObj && charObj.id && !this.dataLoader.data.characters.some(c => c.id === charObj.id)) {
+          if (charObj && typeof charObj === 'object') {
+            return {
+              ...charObj,
+              name: this.sanitizeString(charObj.name || 'Agente CRIS'),
+              portrait: this.sanitizeMediaUrl(charObj.portrait, 'assets/icon-192.png'),
+              summary: this.sanitizeString(charObj.summary || '')
+            };
+          }
+          return item;
+        });
+        localStorage.setItem('evren_custom_characters', JSON.stringify(safeCris));
+        safeCris.forEach((charObj) => {
+          if (charObj && charObj.id && !this.dataLoader.data.characters.some((c) => c.id === charObj.id)) {
             this.dataLoader.data.characters.push(charObj);
           }
         });
       }
 
-      if (state.characters?.statOverrides) {
+      if (state.characters?.statOverrides && typeof state.characters.statOverrides === 'object') {
         localStorage.setItem('evren_character_stat_overrides', JSON.stringify(state.characters.statOverrides));
         if (this.uiController?.loadCharacterStatOverridesFromStorage) {
           this.uiController.loadCharacterStatOverridesFromStorage();
@@ -206,10 +272,18 @@ class BackupManager {
 
       // Restaura Crônicas e Sessões
       if (Array.isArray(state.chronicles)) {
-        localStorage.setItem('evren_custom_chronicles', JSON.stringify(state.chronicles));
+        const safeChronicles = state.chronicles.slice(0, 500).map((cr) => ({
+          ...cr,
+          title: this.sanitizeString(cr.title || 'Crônica'),
+          author: this.sanitizeString(cr.author || ''),
+          lore: this.sanitizeString(cr.lore || cr.summary || ''),
+          summary: this.sanitizeString(cr.summary || ''),
+          quote: this.sanitizeString(cr.quote || '')
+        }));
+        localStorage.setItem('evren_custom_chronicles', JSON.stringify(safeChronicles));
         if (!this.dataLoader.data.chronicles) this.dataLoader.data.chronicles = [];
-        state.chronicles.forEach(cr => {
-          if (!this.dataLoader.data.chronicles.some(c => c.id === cr.id)) {
+        safeChronicles.forEach((cr) => {
+          if (!this.dataLoader.data.chronicles.some((c) => c.id === cr.id)) {
             this.dataLoader.data.chronicles.unshift(cr);
           }
         });
@@ -218,65 +292,85 @@ class BackupManager {
 
       // Restaura Campanhas e Locais Customizados
       if (Array.isArray(state.campaigns)) {
-        localStorage.setItem('evren_custom_campaigns', JSON.stringify(state.campaigns));
-        state.campaigns.forEach(camp => {
-          if (!this.dataLoader.data.campaigns.some(c => c.id === camp.id)) {
+        const safeCampaigns = state.campaigns.slice(0, 200).map((camp) => ({
+          ...camp,
+          title: this.sanitizeString(camp.title || camp.name || 'Campanha'),
+          synopsis: this.sanitizeString(camp.synopsis || camp.description || ''),
+          theme: this.sanitizeString(camp.theme || '')
+        }));
+        localStorage.setItem('evren_custom_campaigns', JSON.stringify(safeCampaigns));
+        safeCampaigns.forEach((camp) => {
+          if (!this.dataLoader.data.campaigns.some((c) => c.id === camp.id)) {
             this.dataLoader.data.campaigns.push(camp);
           }
         });
       }
+
       if (Array.isArray(state.locations)) {
-        localStorage.setItem('evren_custom_locations', JSON.stringify(state.locations));
-        state.locations.forEach(loc => {
-          if (!this.dataLoader.data.locations.some(l => l.id === loc.id)) {
+        const safeLocations = state.locations.slice(0, 500).map((loc) => ({
+          ...loc,
+          name: this.sanitizeString(loc.name || 'Local'),
+          description: this.sanitizeString(loc.description || ''),
+          historical_importance: this.sanitizeString(loc.historical_importance || ''),
+          illustration: this.sanitizeMediaUrl(loc.illustration, 'assets/ref_interior_tavern.jpg')
+        }));
+        localStorage.setItem('evren_custom_locations', JSON.stringify(safeLocations));
+        safeLocations.forEach((loc) => {
+          if (!this.dataLoader.data.locations.some((l) => l.id === loc.id)) {
             this.dataLoader.data.locations.push(loc);
           }
         });
       }
+
       if (Array.isArray(state.memorialFlames)) {
-        localStorage.setItem('evren_memorial_flames', JSON.stringify(state.memorialFlames));
+        localStorage.setItem('evren_memorial_flames', JSON.stringify(state.memorialFlames.slice(0, 200)));
         if (this.uiController) this.uiController.renderMemorial();
       }
 
       // 2. Restaura Estados de PD e MDA
       if (this.uiController) {
-        if (state.characters?.pdStates) {
+        if (state.characters?.pdStates && typeof state.characters.pdStates === 'object') {
           Object.assign(this.uiController.pdState, state.characters.pdStates);
         }
-        if (state.characters?.mdaStates) {
+        if (state.characters?.mdaStates && typeof state.characters.mdaStates === 'object') {
           Object.assign(this.uiController.mdaState, state.characters.mdaStates);
         }
-        if (state.characters?.attributes) {
+        if (state.characters?.attributes && typeof state.characters.attributes === 'object') {
           Object.assign(this.uiController.charAttributes, state.characters.attributes);
         }
         this.uiController.renderActiveCharacterSheet();
         this.uiController.renderCharactersList();
       }
 
-      // 3. Restaura Diário e Logs
-      if (state.journal) {
+      // 3. Restaura Diário e Logs com sanitização
+      if (state.journal && typeof state.journal === 'object') {
         if (typeof state.journal.notes === 'string') {
-          localStorage.setItem('evren_investigator_notes', state.journal.notes);
+          const safeNotes = this.sanitizeString(state.journal.notes);
+          localStorage.setItem('evren_investigator_notes', safeNotes);
           const ta = document.getElementById('journal-textarea');
-          if (ta) ta.value = state.journal.notes;
+          if (ta) ta.value = safeNotes;
         }
         if (Array.isArray(state.journal.logs)) {
-          localStorage.setItem('evren_session_logs', JSON.stringify(state.journal.logs));
+          const safeLogs = state.journal.logs.slice(0, 1000).map((l) => ({
+            time: this.sanitizeString(l.time || ''),
+            text: this.sanitizeString(l.text || '')
+          }));
+          localStorage.setItem('evren_session_logs', JSON.stringify(safeLogs));
           if (window.sessionJournal) {
-            window.sessionJournal.logs = state.journal.logs;
+            window.sessionJournal.logs = safeLogs;
             window.sessionJournal.renderLogsStream();
           }
         }
       }
 
       // 4. Restaura Névoa de Guerra
-      if (state.fogOfWar?.revealed && window.fogOfWar) {
-        window.fogOfWar.revealedCells = new Set(state.fogOfWar.revealed);
+      if (Array.isArray(state.fogOfWar?.revealed) && window.fogOfWar) {
+        window.fogOfWar.revealedCells = new Set(state.fogOfWar.revealed.slice(0, 2000));
         window.fogOfWar.redrawFog();
       }
 
       // 5. Restaura Tokens
-      if (state.tokens && window.battlemapTokens) {
+      if (state.tokens && typeof state.tokens === 'object' && window.battlemapTokens) {
         window.battlemapTokens.importState(state.tokens);
       }
 

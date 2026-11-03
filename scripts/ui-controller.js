@@ -1050,8 +1050,14 @@ class UIController {
     // Habilidades
     const abilitiesHtml = (char.abilities && char.abilities.length > 0)
       ? char.abilities.map(ab => {
-          const abText = typeof ab === 'object' ? `<strong>${ab.name}</strong> (${ab.type || 'Habilidade'})${ab.cost ? ` [${ab.cost}]` : ''}: ${ab.desc || ''}` : ab;
-          return `<div class="cris-ability-pill">⚡ ${abText}</div>`;
+          if (typeof ab === 'object' && ab) {
+            const abName = this.escapeHtml(ab.name || 'Habilidade');
+            const abType = this.escapeHtml(ab.type || 'Habilidade');
+            const abCost = ab.cost ? ` [${this.escapeHtml(ab.cost)}]` : '';
+            const abDesc = ab.desc ? `: ${this.escapeHtml(ab.desc)}` : '';
+            return `<div class="cris-ability-pill">⚡ <strong>${abName}</strong> (${abType})${abCost}${abDesc}</div>`;
+          }
+          return `<div class="cris-ability-pill">⚡ ${this.escapeHtml(ab)}</div>`;
         }).join('')
       : '<div style="font-size: 0.75rem; color: #728a9c;">Nenhuma habilidade adicional registrada.</div>';
 
@@ -3830,7 +3836,7 @@ ${char.summary || 'Sem registro adicional.'}
     container.innerHTML = `
       <div class="memorial-grid">
         ${allFallen.map(f => `
-          <div class="memorial-card ${f.flame_lit ? 'candle-lit' : ''}" id="card-${f.id}">
+          <div class="memorial-card ${f.flame_lit ? 'candle-lit' : ''}" id="card-${this.escapeHtml(f.id)}">
             <div class="memorial-header">
               <span class="memorial-badge-fallen">💀 TOMBOU EM COMBATE</span>
               <span class="badge-tag location" style="font-size: 0.68rem;">${this.escapeHtml(f.campaign_title)}</span>
@@ -3849,7 +3855,7 @@ ${char.summary || 'Sem registro adicional.'}
 
             <div class="memorial-actions">
               <span style="font-family: monospace; font-size: 0.68rem; color: #8da4be;">🗓️ ${this.escapeHtml(f.date_of_death)}</span>
-              <button class="btn-memorial-flame" onclick="window.uiController.toggleMemorialFlame('${f.id}')">
+              <button class="btn-memorial-flame" onclick="window.uiController.toggleMemorialFlame('${this.escapeHtml(f.id)}')">
                 <span class="${f.flame_lit ? 'memorial-candle-flicker' : ''}">🕯️</span>
                 <span>${f.flame_lit ? 'Chama Acesa' : 'Acender Chama'}</span>
               </button>

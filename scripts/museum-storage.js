@@ -265,17 +265,47 @@ class MuseumStorageManager {
     });
   }
 
+  sanitizeRecord(record) {
+    if (!record || typeof record !== 'object') return record;
+    const clean = Array.isArray(record) ? [...record] : { ...record };
+    for (const key of Object.keys(clean)) {
+      if (typeof clean[key] === 'string') {
+        const lowerKey = key.toLowerCase();
+        if (lowerKey.includes('portrait') || lowerKey.includes('thumb') || lowerKey.includes('illustration') || lowerKey.includes('image')) {
+          if (typeof window !== 'undefined' && window.safeUrl) {
+            clean[key] = window.safeUrl(clean[key]);
+          } else {
+            const l = clean[key].toLowerCase().trim();
+            if (l.startsWith('javascript:') || l.startsWith('vbscript:') || l.startsWith('data:text/')) {
+              clean[key] = 'assets/icon-192.png';
+            }
+          }
+        } else {
+          if (typeof window !== 'undefined' && window.EvrenSecurity) {
+            clean[key] = window.EvrenSecurity.sanitizeText(clean[key]);
+          } else {
+            clean[key] = clean[key].replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+          }
+        }
+      } else if (clean[key] && typeof clean[key] === 'object') {
+        clean[key] = this.sanitizeRecord(clean[key]);
+      }
+    }
+    return clean;
+  }
+
   /**
    * Salva ou atualiza uma Campanha Histórica (Exposição)
    */
   async saveCampaign(campaignData) {
     if (!campaignData || !campaignData.id) return null;
+    const safeData = this.sanitizeRecord(campaignData);
     const d = this.dataLoader.data;
-    this.upsertInArray(d.campaigns, campaignData);
-    await this.putInStore('campaigns', campaignData);
-    this.mirrorToLocalStorage('evren_custom_campaigns', campaignData);
+    this.upsertInArray(d.campaigns, safeData);
+    await this.putInStore('campaigns', safeData);
+    this.mirrorToLocalStorage('evren_custom_campaigns', safeData);
     await this.persistActiveUniverse();
-    return campaignData;
+    return safeData;
   }
 
   /**
@@ -283,12 +313,13 @@ class MuseumStorageManager {
    */
   async saveCharacter(characterData) {
     if (!characterData || !characterData.id) return null;
+    const safeData = this.sanitizeRecord(characterData);
     const d = this.dataLoader.data;
-    this.upsertInArray(d.characters, characterData);
-    await this.putInStore('characters', characterData);
-    this.mirrorToLocalStorage('evren_custom_characters_v1', characterData);
+    this.upsertInArray(d.characters, safeData);
+    await this.putInStore('characters', safeData);
+    this.mirrorToLocalStorage('evren_custom_characters_v1', safeData);
     await this.persistActiveUniverse();
-    return characterData;
+    return safeData;
   }
 
   /**
@@ -296,12 +327,13 @@ class MuseumStorageManager {
    */
   async saveLocation(locationData) {
     if (!locationData || !locationData.id) return null;
+    const safeData = this.sanitizeRecord(locationData);
     const d = this.dataLoader.data;
-    this.upsertInArray(d.locations, locationData);
-    await this.putInStore('locations', locationData);
-    this.mirrorToLocalStorage('evren_custom_locations_v1', locationData);
+    this.upsertInArray(d.locations, safeData);
+    await this.putInStore('locations', safeData);
+    this.mirrorToLocalStorage('evren_custom_locations_v1', safeData);
     await this.persistActiveUniverse();
-    return locationData;
+    return safeData;
   }
 
   /**
@@ -309,31 +341,32 @@ class MuseumStorageManager {
    */
   async saveHistoricalEvent(eventData) {
     if (!eventData || !eventData.id) return null;
+    const safeData = this.sanitizeRecord(eventData);
     const d = this.dataLoader.data;
     if (!d.historical_events) d.historical_events = [];
-    this.upsertInArray(d.historical_events, eventData);
+    this.upsertInArray(d.historical_events, safeData);
 
     // Sincroniza também na timeline e nas crônicas se apropriado
-    if (eventData.type === 'session_chronicle') {
+    if (safeData.type === 'session_chronicle') {
       this.upsertInArray(d.chronicles, {
-        id: eventData.id,
-        title: eventData.title,
-        campaign_id: eventData.campaign_id,
-        location_id: eventData.location_id,
-        session: eventData.date || 'Registro Histórico',
-        author: eventData.author || 'Curadoria do Museu',
-        participants: eventData.participants || [],
-        summary: eventData.description,
-        consequences: eventData.consequences,
-        audio_duration: eventData.audio_duration || '05:00'
+        id: safeData.id,
+        title: safeData.title,
+        campaign_id: safeData.campaign_id,
+        location_id: safeData.location_id,
+        session: safeData.date || 'Registro Histórico',
+        author: safeData.author || 'Curadoria do Museu',
+        participants: safeData.participants || [],
+        summary: safeData.description,
+        consequences: safeData.consequences,
+        audio_duration: safeData.audio_duration || '05:00'
       });
-      this.mirrorToLocalStorage('evren_custom_chronicles', eventData);
+      this.mirrorToLocalStorage('evren_custom_chronicles', safeData);
     }
 
-    await this.putInStore('historical_events', eventData);
-    this.mirrorToLocalStorage('evren_custom_historical_events', eventData);
+    await this.putInStore('historical_events', safeData);
+    this.mirrorToLocalStorage('evren_custom_historical_events', safeData);
     await this.persistActiveUniverse();
-    return eventData;
+    return safeData;
   }
 
   mirrorToLocalStorage(key, record) {
@@ -478,10 +511,11 @@ class MuseumStorageManager {
 
     arrayCollections.forEach((col) => {
       if (Array.isArray(sourceData[col])) {
+        const safeItems = sourceData[col].slice(0, 1000).map((item) => this.sanitizeRecord(item));
         if (!Array.isArray(current[col]) || !options.merge) {
-          current[col] = [...sourceData[col]];
+          current[col] = safeItems;
         } else {
-          sourceData[col].forEach((item) => this.upsertInArray(current[col], item));
+          safeItems.forEach((item) => this.upsertInArray(current[col], item));
         }
       }
     });
