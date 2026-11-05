@@ -643,6 +643,22 @@ class DataLoader {
     if (campaignId !== 'all') organizations = organizations.filter(o => (o.related_campaigns || []).includes(campaignId));
     if (q) organizations = organizations.filter(o => txt(o.name).includes(q) || txt(o.description).includes(q));
 
+    // 7. Bestiário Canônico (10 Espécimes)
+    let bestiary = this.getBestiary();
+    if (q) bestiary = bestiary.filter(b => txt(b.name).includes(q) || txt(b.scientific_name).includes(q) || txt(b.behavior).includes(q) || txt(b.threat_level).includes(q) || txt(b.ecological_role).includes(q));
+
+    // 8. Ledger Canônico (Gestão de Cânone & Hipóteses)
+    let ledger = this.getCanonLedger();
+    if (q) ledger = ledger.filter(item => txt(item.topic).includes(q) || txt(item.claim).includes(q) || txt(item.curator_notes).includes(q) || (item.sources || []).some(s => txt(s).includes(q)));
+
+    // 9. Expressões Anímicas
+    let powers = this.getPowers();
+    if (q) powers = powers.filter(p => txt(p.name).includes(q) || txt(p.observable_effect).includes(q) || txt(p.belief_conflict).includes(q) || txt(p.category).includes(q));
+
+    // 10. Casos de Folclore e Tradição Oral
+    let folklore = this.getFolkloreCases();
+    if (q) folklore = folklore.filter(f => txt(f.name).includes(q) || txt(f.real_location).includes(q) || txt(f.folklore_variations).includes(q) || txt(f.aegis_interpretation).includes(q));
+
     const want = (t) => entityType === 'all' || entityType === t;
     return {
       campaigns: want('campaigns') ? campaigns : [],
@@ -651,7 +667,11 @@ class DataLoader {
       events: want('events') ? events : [],
       sessions: want('sessions') ? sessions : [],
       artifacts: want('artifacts') ? artifacts : [],
-      organizations: want('organizations') ? organizations : []
+      organizations: want('organizations') ? organizations : [],
+      bestiary: want('bestiary') ? bestiary : [],
+      ledger: want('ledger') ? ledger : [],
+      powers: want('powers') ? powers : [],
+      folklore: want('folklore') ? folklore : []
     };
   }
 
@@ -755,24 +775,586 @@ class DataLoader {
   /**
    * Cópia fiel idêntica ao world_data.json para resiliência offline máxima
    */
+    /* ==========================================================================
+     MÉTODOS CANÔNICOS: LEDGER, PODERES, FOLCLORE, GLOSSÁRIO E REGRAS UNIFICADAS
+     ========================================================================== */
+
+  getCanonLedger(statusOrCategory = null) {
+    const list = this.data?.canon_ledger || [];
+    if (!statusOrCategory || statusOrCategory === 'all') return list;
+    return list.filter(item => item.status === statusOrCategory || item.category === statusOrCategory);
+  }
+
+  getCanonLedgerItem(id) {
+    return (this.data?.canon_ledger || []).find(item => item.id === id) || null;
+  }
+
+  getPowers() {
+    return this.data?.powers || [];
+  }
+
+  getPowerById(id) {
+    return (this.data?.powers || []).find(p => p.id === id) || null;
+  }
+
+  getFolkloreCases() {
+    return this.data?.folklore_cases || [];
+  }
+
+  getFolkloreCaseById(id) {
+    return (this.data?.folklore_cases || []).find(f => f.id === id) || null;
+  }
+
+  getGlossary() {
+    return this.data?.glossary || [];
+  }
+
+  getGlossaryTerm(term) {
+    if (!term) return null;
+    const q = term.toLowerCase().trim();
+    return (this.data?.glossary || []).find(g => g.term.toLowerCase().trim() === q) || null;
+  }
+
+  getCanonicalSkills() {
+    return this.data?.universe_rules?.canonical_skills || [];
+  }
+
+  /**
+   * Serviço unificado de resolução de testes (Proposta Canônica Evren)
+   * Atributo = pool de d20 (manter maior) + modificador de treinamento
+   */
+  resolveCheck(attributeScore = 1, trainingTier = 'Destreinado', difficulty = 14) {
+    const tierBonuses = { 'Destreinado': 0, 'Treinado': 1, 'Veterano': 2, 'Expert': 3 };
+    const bonus = typeof trainingTier === 'number' ? trainingTier : (tierBonuses[trainingTier] ?? 0);
+    const pool = Math.max(1, Math.min(5, Math.floor(attributeScore)));
+    const rolls = [];
+    for (let i = 0; i < pool; i++) {
+      rolls.push(Math.floor(Math.random() * 20) + 1);
+    }
+    const highest = Math.max(...rolls);
+    const total = highest + bonus;
+    const success = total >= difficulty;
+    const margin = total - difficulty;
+    return {
+      pool,
+      rolls,
+      highest,
+      bonus,
+      total,
+      difficulty,
+      success,
+      margin,
+      isNatural20: highest === 20
+    };
+  }
+
+    /* ==========================================================================
+     MÉTODOS CANÔNICOS: LEDGER, PODERES, FOLCLORE, GLOSSÁRIO E REGRAS UNIFICADAS
+     ========================================================================== */
+
+  getCanonLedger(statusOrCategory = null) {
+    const list = this.data?.canon_ledger || [];
+    if (!statusOrCategory || statusOrCategory === 'all') return list;
+    return list.filter(item => item.status === statusOrCategory || item.category === statusOrCategory);
+  }
+
+  getCanonLedgerItem(id) {
+    return (this.data?.canon_ledger || []).find(item => item.id === id) || null;
+  }
+
+  getPowers() {
+    return this.data?.powers || [];
+  }
+
+  getPowerById(id) {
+    return (this.data?.powers || []).find(p => p.id === id) || null;
+  }
+
+  getFolkloreCases() {
+    return this.data?.folklore_cases || [];
+  }
+
+  getFolkloreCaseById(id) {
+    return (this.data?.folklore_cases || []).find(f => f.id === id) || null;
+  }
+
+  getGlossary() {
+    return this.data?.glossary || [];
+  }
+
+  getGlossaryTerm(term) {
+    if (!term) return null;
+    const q = term.toLowerCase().trim();
+    return (this.data?.glossary || []).find(g => g.term.toLowerCase().trim() === q) || null;
+  }
+
+  getCanonicalSkills() {
+    return this.data?.universe_rules?.canonical_skills || [];
+  }
+
+  /**
+   * Serviço unificado de resolução de testes (Proposta Canônica Evren)
+   * Atributo = pool de d20 (manter maior) + modificador de treinamento
+   */
+  resolveCheck(attributeScore = 1, trainingTier = 'Destreinado', difficulty = 14) {
+    const tierBonuses = { 'Destreinado': 0, 'Treinado': 1, 'Veterano': 2, 'Expert': 3 };
+    const bonus = typeof trainingTier === 'number' ? trainingTier : (tierBonuses[trainingTier] ?? 0);
+    const pool = Math.max(1, Math.min(5, Math.floor(attributeScore)));
+    const rolls = [];
+    for (let i = 0; i < pool; i++) {
+      rolls.push(Math.floor(Math.random() * 20) + 1);
+    }
+    const highest = Math.max(...rolls);
+    const total = highest + bonus;
+    const success = total >= difficulty;
+    const margin = total - difficulty;
+    return {
+      pool,
+      rolls,
+      highest,
+      bonus,
+      total,
+      difficulty,
+      success,
+      margin,
+      isNatural20: highest === 20
+    };
+  }
+
   getEmbeddedFallbackData() {
     return {
   "universe_rules": {
     "system": "Evren",
     "universe": "Evren",
+    "edition": "Evren Core Rules (3.5 Canonical Playtest Proposal)",
     "attributes": [
-      "Força",
-      "Vigor",
-      "Agilidade",
-      "Presença",
-      "Intelecto"
+      {
+        "name": "Força",
+        "abbr": "FOR",
+        "min": 1,
+        "max": 5,
+        "desc": "Potência muscular, atletismo, capacidade de carga e impacto corpo a corpo."
+      },
+      {
+        "name": "Vigor",
+        "abbr": "VIG",
+        "min": 1,
+        "max": 5,
+        "desc": "Constituição física, resistência a toxinas, absorção de trauma e estabilidade fisiológica."
+      },
+      {
+        "name": "Agilidade",
+        "abbr": "AGI",
+        "min": 1,
+        "max": 5,
+        "desc": "Coordenação motora, velocidade de reação, reflexos, destreza e furtividade."
+      },
+      {
+        "name": "Presença",
+        "abbr": "PRE",
+        "min": 1,
+        "max": 5,
+        "desc": "Força de personalidade, empatia, influência social, coragem e percepção intuitiva."
+      },
+      {
+        "name": "Intelecto",
+        "abbr": "INT",
+        "min": 1,
+        "max": 5,
+        "desc": "Capacidade analítica, erudição, raciocínio lógico, investigação e conhecimentos técnicos."
+      }
     ],
-    "mechanics": [
-      "MDA",
-      "Pontos de Determinação (PD)",
-      "Sacrifício de Armadura",
-      "Desempate Letal"
-    ]
+    "resolution_mechanics": {
+      "rule": "Pool de d20 por Atributo (manter maior resultado) + Grau de Treinamento",
+      "training_tiers": [
+        {
+          "tier": "Destreinado",
+          "bonus": 0,
+          "legacy_bonus": 0,
+          "desc": "Uso intuitivo sem formação prévia."
+        },
+        {
+          "tier": "Treinado",
+          "bonus": 1,
+          "legacy_bonus": 5,
+          "desc": "Instrução formal ou prática recorrente."
+        },
+        {
+          "tier": "Veterano",
+          "bonus": 2,
+          "legacy_bonus": 10,
+          "desc": "Anos de experiência sob estresse operacional."
+        },
+        {
+          "tier": "Expert",
+          "bonus": 3,
+          "legacy_bonus": 15,
+          "desc": "Autoridade técnica ou mestre de campo no assunto."
+        }
+      ],
+      "difficulties": [
+        {
+          "dt": 10,
+          "label": "Simples",
+          "context": "Tarefa rotineira realizada sob leve pressão de tempo."
+        },
+        {
+          "dt": 14,
+          "label": "Arriscada",
+          "context": "Situação perigosa, ambiente hostil ou oposição moderada."
+        },
+        {
+          "dt": 18,
+          "label": "Difícil",
+          "context": "Desafio extremo, anomalia ativa ou recursos escassos."
+        },
+        {
+          "dt": 22,
+          "label": "Extrema",
+          "context": "Proeza limítrofe entre sobrevivência e colapso anômalo."
+        }
+      ],
+      "conflict_resolution": "Conflito Direto Resistido: maior total vence. Em caso de empate exato, o empate favorece quem já defendia a posição."
+    },
+    "canonical_skills": [
+      {
+        "name": "Acrobacia",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Acrobacias"
+        ]
+      },
+      {
+        "name": "Adestramento",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Trato de Animais"
+        ]
+      },
+      {
+        "name": "Artes",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Expressão Artística"
+        ]
+      },
+      {
+        "name": "Atletismo",
+        "attr": "FOR",
+        "category": "Físicas",
+        "aliases": [
+          "Condicionamento Físico"
+        ]
+      },
+      {
+        "name": "Atualidades",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Geopolítica",
+          "Notícias"
+        ]
+      },
+      {
+        "name": "Ciências",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Ciência",
+          "Química",
+          "Biologia"
+        ]
+      },
+      {
+        "name": "Crime",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Ladinagem",
+          "Gazuas"
+        ]
+      },
+      {
+        "name": "Diplomacia",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Negociação",
+          "Persuasão"
+        ]
+      },
+      {
+        "name": "Enganação",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Blefe",
+          "Disfarce"
+        ]
+      },
+      {
+        "name": "Fortitude",
+        "attr": "VIG",
+        "category": "Físicas",
+        "aliases": [
+          "Resistência Física"
+        ]
+      },
+      {
+        "name": "Furtividade",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Infiltração",
+          "Silêncio"
+        ]
+      },
+      {
+        "name": "Iniciativa",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Prontidão"
+        ]
+      },
+      {
+        "name": "Intimidação",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Coerção",
+          "Pressão Moral"
+        ]
+      },
+      {
+        "name": "Intuição",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Sentido de Perigo"
+        ]
+      },
+      {
+        "name": "Investigação",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Perícia de Campo",
+          "Forense"
+        ]
+      },
+      {
+        "name": "Luta",
+        "attr": "FOR",
+        "category": "Físicas",
+        "aliases": [
+          "Combate Desarmado",
+          "Armas Brancas"
+        ]
+      },
+      {
+        "name": "Medicina",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Primeiros Socorros",
+          "Cirurgia"
+        ]
+      },
+      {
+        "name": "Ocultismo",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Misticismo",
+          "Fenomenologia"
+        ]
+      },
+      {
+        "name": "Percepção",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Vigilância",
+          "Atenção"
+        ]
+      },
+      {
+        "name": "Pilotagem",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Condução",
+          "Navegação Aérea/Marítima"
+        ]
+      },
+      {
+        "name": "Pontaria",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Disparo",
+          "Armas de Fogo"
+        ]
+      },
+      {
+        "name": "Profissão",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Ofício",
+          "Conhecimento Prático"
+        ]
+      },
+      {
+        "name": "Reflexos",
+        "attr": "AGI",
+        "category": "Físicas",
+        "aliases": [
+          "Evasão Rápida"
+        ]
+      },
+      {
+        "name": "Religião",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Teologia",
+          "Ritos"
+        ]
+      },
+      {
+        "name": "Sobrevivência",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Rastreamento",
+          "Orientação Selvagem"
+        ]
+      },
+      {
+        "name": "Tática",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Estratégia Militar",
+          "Posicionamento"
+        ]
+      },
+      {
+        "name": "Tecnologia",
+        "attr": "INT",
+        "category": "Mente",
+        "aliases": [
+          "Computação",
+          "Hardware"
+        ]
+      },
+      {
+        "name": "Vontade",
+        "attr": "PRE",
+        "category": "Sociais",
+        "aliases": [
+          "Resistência Psíquica",
+          "Foco Moral"
+        ]
+      }
+    ],
+    "metrics_separation": {
+      "pv": "Pontos de Vida: Integridade física e biológica. Dano sofrido reduz PV. Em 0 PV, ocorre colapso físico imediato / protocolo de óbito.",
+      "pd": "Pontos de Determinação: Esforço, foco e determinação tática. Gasto para manobras especiais, foco anímico e poderes. Em 0 PD, ocorre exaustão mental e sobrecarga psíquica, sem dano corporal direto.",
+      "san": "Sanidade: Estabilidade subjetiva diante do horror paranormal e alienígena. Tratada como recurso dramático com segurança de mesa, sem estigmatização clínica e sem perda permanente irrevogável de personagem.",
+      "mda": "Mutagênese Dimensional Anômala: Escala de exposição celular e reescrita biológica (0% a 99%)."
+    },
+    "mda_progression_thresholds": [
+      {
+        "percent": 5,
+        "label": "Exposição Latente",
+        "effect": "Sensibilidade periférica aumentada; estática leve na audição."
+      },
+      {
+        "percent": 10,
+        "label": "Ressonância Folicular",
+        "effect": "Alteração de pigmentação e reflexo ocular anômalo sob luz violeta."
+      },
+      {
+        "percent": 20,
+        "label": "Hipertrofia Adaptativa",
+        "effect": "Resistência aumentada a dor; temperatura corporal oscilante."
+      },
+      {
+        "percent": 40,
+        "label": "Divergência Celular",
+        "effect": "Aceleração regenerativa; rejeição a medicamentos convencionais."
+      },
+      {
+        "percent": 60,
+        "label": "Biomorfose Parcial",
+        "effect": "Tecido epidérmico rígido ou condutor; consumo dobrado de calorias."
+      },
+      {
+        "percent": 80,
+        "label": "Instabilidade Morfogenética",
+        "effect": "Emissão de pulso biótico espontâneo; risco de transição involuntária."
+      },
+      {
+        "percent": 99,
+        "label": "Transcendência Limítrofe",
+        "effect": "Fusão irreversível com as leis físicas locais da anomalia."
+      }
+    ],
+    "animic_expression_framework": {
+      "definition": "Expressão Anímica: Capacidade singular da alma, memória ou convicção de um indivíduo manifestar efeitos delimitados no ambiente. Rejeita fórmulas mágicas genéricas ou arquétipos de sistemas externos.",
+      "required_fields": [
+        "belief_conflict",
+        "observable_effect",
+        "trigger",
+        "range_duration_targets",
+        "cost_pd",
+        "risk_mda",
+        "sensory_sign",
+        "limits",
+        "counterplay",
+        "consequences"
+      ]
+    },
+    "investigation_principles": [
+      "Regra dos 3 Caminhos: Nenhuma pista essencial para a sobrevivência ou desvendamento de um arco depende de uma única rolagem de dados.",
+      "Falha com Custo Narrativo: Falhar em um teste de investigação nunca paralisa a história; gera custo em tempo, barulho, exposição a anomalias ou perda de recursos.",
+      "Separação Epistêmica: O que o pesquisador sabe, o que a A.E.G.I.S. arquiva e a realidade objetiva são camadas independentes."
+    ],
+    "kinetic_combat_rules": {
+      "stances": [
+        {
+          "id": "esquiva",
+          "name": "Esquiva Cinética",
+          "roll": "Agilidade + Reflexos",
+          "on_win": "Evita todo o dano do ataque e ganha Vantagem Tática."
+        },
+        {
+          "id": "bloqueio",
+          "name": "Bloqueio de Ferro",
+          "roll": "Vigor + Fortitude ou Força + Luta",
+          "on_win": "Reduz dano pela armadura/absorção."
+        },
+        {
+          "id": "contra_ataque",
+          "name": "Contra-Ataque Desesperado",
+          "roll": "Ataque Simultâneo",
+          "on_win": "Ambos os combatentes rolam dano."
+        },
+        {
+          "id": "foco_animico",
+          "name": "Foco Anímico",
+          "roll": "Presença + Vontade",
+          "on_win": "Resiste a agressões dimensionais, mentais e gravitacionais."
+        }
+      ],
+      "armor_sacrifice": "Sacrifício Único de Armadura: Em golpes letais (hitkill), o defensor pode estilhaçar completamente sua couraça para anular o dano mortal."
+    }
   },
   "maps": [
     {
@@ -961,6 +1543,23 @@ class DataLoader {
         "genre_theme": "Survival Horror Biológico",
         "synopsis": "Um navio com centenas de sobreviventes foi tragado pelo vórtice dimensional no Atlântico. Ao cruzarem a fenda para Nova Caronte, descobriram que leis biológicas foram distorcidas. O Arquiteto do Caos manipula mentes e corpos enquanto a A.E.G.I.S. tenta conter o colapso.",
         "historical_context": "Em 2025, distúrbios magnéticos e biológicos severos começaram a ser registrados no corredor marítimo entre Miami, Bermudas e Porto Rico. O desaparecimento de uma embarcação de grande porte com milhares de passageiros deu início à formação do reduto isolado de Nova Caronte."
+      },
+      "canon_status": "in_world_report",
+      "sources": [
+        "Manuscrito da Incursão (Autor)",
+        "Arquivo Marítimo Nova Caronte",
+        "Dossiê A.E.G.I.S. Atlântico Norte"
+      ],
+      "curator_notes": "Registra a incursão massiva no Triângulo das Bermudas. Contém variantes de 5.000 passageiros no navio tragado, a hierarquia de classes ecológicas e a presença dos Soberanos territoriais.",
+      "variants": {
+        "ship_passengers": "5.000 pessoas (manuscrito principal) vs. 'centenas' (resumos de campo)",
+        "anomaly_origin": "Prisão natural milenar em colapso vs. Fissura acelerada por experimentos modernos",
+        "classes": [
+          "Classe Baixa (recém-chegados, comunidades frágeis)",
+          "Classe Média (rotas de troca)",
+          "Classe Alta (Cidadela de Nácar)",
+          "Soberanos (Kraken, Leviatã Branco, Povo Sauriano, Arquiteto)"
+        ]
       }
     },
     {
@@ -1029,6 +1628,30 @@ class DataLoader {
         "genre_theme": "Thriller Psicológico Investigativo",
         "synopsis": "Três anos após o desaparecimento trágico de Lucas Vilar nas minas mexicanas, o grupo de amigos reuniu-se na propriedade isolada. Gabriel Vilar assumiu o manto de 'O Mascarado', usando a arma de portais LIMIAR para encenar um jogo de terror psicológico para expor a culpa de cada um. No clímax subterrâneo, o grupo enfrentou os Ecos e explodiu o complexo.",
         "historical_context": "Situada nas serras históricas de mineração de prata do México em 2024, esta campanha documenta o retorno de um grupo de amigos à isolada Mansão Vilar, exatamente três anos após o trágico desaparecimento de Lucas Vilar nas galerias subterrâneas da propriedade."
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro de Até o Amanhecer (Autor)",
+        "Dossiê San Lorenzo A.E.G.I.S.",
+        "Depoimentos de Gabriel e Lucas Vilar"
+      ],
+      "curator_notes": "Relato da tragédia e resgate na Mansão Vilar. O elenco completo de sobreviventes adolescentes é composto por Rafael, Helena, Diego, Bia e Arthur, com Gabriel disfarçado de Davi Reis. Júlia Drummond é mantida como investigadora legada de arquivo.",
+      "variants": {
+        "dates": "Desaparecimento em 2021 e Clímax em 2024 (relatório principal) vs. 2023 (-3) e 2026 (cronologia estendida)",
+        "cast_protagonists": [
+          "Rafael",
+          "Helena",
+          "Diego",
+          "Bia",
+          "Arthur"
+        ],
+        "cast_npcs": [
+          "Gabriel Vilar (Davi Reis)",
+          "Camila Torres",
+          "Mauro Azevedo",
+          "Elias Rocha",
+          "Júlia Drummond (Arquivo)"
+        ]
       }
     },
     {
@@ -1220,6 +1843,58 @@ class DataLoader {
         "synopsis": "Em 2023, o historiador Hans Richter e a investigadora forense Greta Falk foram contratados para investigar peregrinos que retornavam da floresta sem memória ou fisionomia identificável. No interior da cripta gótica, encontraram o altar do 'Eco Silencioso' ressonando com artefatos do LIMIAR.",
         "historical_context": "Registrada em 2023 nas montanhas da Floresta Negra (Baden-Württemberg, Alemanha), esta é a exposição cronologicamente mais antiga das cinco grandes campanhas modernas do acervo, documentando o caso do Monastério de Santo Agostinho."
       }
+    },
+    {
+      "id": "camp_filantropo_oeht",
+      "title": "A Gala da Meia-Noite: A Falsa Filantropia de Oeht",
+      "status": "Em investigação / Quarentena",
+      "category": "incursion",
+      "theme": "Horror Institucional & Conspiração Corporativa",
+      "map_id": "map_belvedere",
+      "world_coordinates": [
+        46.2044,
+        6.1432
+      ],
+      "gateway_name": "Mansão Belvedere: Gala Oculta de Oeht",
+      "danger_rating": "NÍVEL ÉPSILON // RELÍQUIA PARASITA & RELÂMPAGOS VIOLETAS",
+      "country_location": "Europa Central (Mansão Belvedere / Zona Tática A.E.G.I.S.)",
+      "year": "Data Reservada // Análise A.E.G.I.S.",
+      "description": "Oeht, aclamado publicamente como magnata filantropo e mecenas das artes, reuniu a elite global na suntuosa Mansão Belvedere para uma gala de aniversário secreta. Sob o pretexto de celebrar sua data natalícia, prepara o anúncio de uma megacorporação privada rival destinada a mercantilizar o paranormal e quebrar o monopólio de contenção da A.E.G.I.S. Porém, um lodo roxo escorre do cofre de seu gabinete privado e relâmpagos violetas silenciosos cortam o céu: a relíquia protegida por uma redoma blindada não é uma máquina de controle, mas um parasita extradimensional prestes a devorar todos à meia-noite.",
+      "synopsis": "Infiltração de agentes da A.E.G.I.S. sob comando do Diretor Kaelen. O relógio de dobra temporal de 6 segundos, o discurso arrogante das 23h, a desconfiança da elite em testes de DT 15 e o dilema de desativar a redoma antes que o colossal bolo de aniversário se converta em uma monstruosidade canibal.",
+      "outcome": "Desfecho com quarentena em vigor. A transcrição de campo foi corrompida no início da Zona B (Mesa de Poker VIP).",
+      "participants": [
+        "char_oeht",
+        "char_kaelen"
+      ],
+      "locations_list": [
+        "loc_mansao_belvedere",
+        "loc_aegis_genebra"
+      ],
+      "continent_id": "cont_europa",
+      "country_id": "country_suica",
+      "region_id": "reg_alpes_centrais",
+      "city_id": "city_genebra_distrito",
+      "period_numeric": 2026,
+      "status_museum": "in_investigation",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Transcrição Recuperada de Operação de Infiltração A.E.G.I.S.",
+        "Briefing de Missão do Diretor Kaelen"
+      ],
+      "curator_notes": "Aviso de Curadoria: O registro desta campanha provém de uma fonte conversacional desclassificada parcialmente. As cenas a partir do início da Zona B (A Mesa de Poker VIP: O Jogo de Memórias) permanecem truncadas e aguardam documentação adicional sem preenchimento artificial. A Mansão Belvedere não deve ser confundida com a Mansão Vilar.",
+      "historical_context": "A disputa geopolítica e financeira entre a A.E.G.I.S. e bilionários do setor privado que tentam transformar o Outro Lado em produto de consumo de luxo.",
+      "exhibition_narrative": {
+        "prior_context": "Oeht, figura pública ovacionada por doações filantrópicas astronômicas, descobriu a existência secreta da A.E.G.I.S. e da fenda do Outro Lado. Movido por vaidade desmedida e sede de poder absoluto, adquiriu no mercado clandestino uma caixa anômala ancestral e arquitetou a criação de uma corporação privada que comercializaria o paranormal para magnatas descontentes com a fiscalização estatal.",
+        "campaign_beginning": "A operação de campo é autorizada em uma sala de comando subterrânea da A.E.G.I.S. O Diretor Kaelen informa que sensores de baixa frequência captaram tempestade eletromagnética silenciosa sobre a Mansão Belvedere, com raios roxos intermitentes. A janela de intervenção se encerra às 23h59. Um dos agentes infiltrados recebe um relógio mecânico capaz de curvar o fluxo temporal ao redor de si por 6 segundos.",
+        "main_events": "Os agentes cruzam os salões de mármore e ouro da gala fingindo serem investidores internacionais. Convidados influentes colocam os novatos à prova com perguntas capciosas sobre quem representam (DT 15 Enganação/Diplomacia). Às 23h, Oeht sobe ao palanque central e profere um discurso inflamatório, denunciando a A.E.G.I.S. como 'Agência de Segurança Metafísica' e carcereira do progresso, prometendo que à meia-noite a caixa na redoma reescreverá a realidade nacional.",
+        "turning_points": "No escritório privativo do anfitrião, os agentes descobrem um rastro viscoso de lodo roxo escorrendo pelas fendas do cofre reforçado. Kaelen confirma via rádio que o artefato é um parasita com fome celular galopante; a promessa de 'controle' não passa de indução hipnótica do parasita sobre a mente de Oeht.",
+        "conflicts": "Dilema tático crucial: alertar Oeht sobre a armadilha ou tentar invasão armada direta. Caso convencido com evidências do lodo, Oeht entra em pânico ao perceber o engano e cede sua chave de acesso pessoal para abortar a tranca. Se os agentes falharem ou optarem pelo confronto, o bolo de aniversário monumental se transmuta em uma criatura horripilante armada de velas violetas e talheres flutuantes que explode violentamente.",
+        "revelations": "O Outro Lado não respeita contratos de confidencialidade nem investimentos de risco; o artefato manipulou o bilionário para reunir dezenas de alvos de alto valor em um único cômodo isolado.",
+        "consequences": "A Mansão Belvedere entrou em estado de isolamento tático sob cerco da A.E.G.I.S. O destino da fortuna de Oeht e das testemunhas de elite foi colocado sob sigilo federal nível 5.",
+        "outcome": "[CONTEÚDO TRUNCADO NA FONTE] A transmissão do registro de campo é interrompida no início da 'Zona B: A Mesa de Poker VIP (O Jogo de Memórias)'. Cenas posteriores permanecem sob sigilo documental até novas ordens do curador."
+      },
+      "pending_documentation": "Desfecho da Mesa de Poker VIP, identidade dos demais patrocinadores no cofre e confirmação de sobrevivência de Oeht.",
+      "historical_identification": "Operação Belvedere // A.E.G.I.S. Protocolo Filantropia Clandestina"
     }
   ],
   "locations": [
@@ -1638,6 +2313,163 @@ class DataLoader {
       "epochs_active": [
         "1348",
         "2023"
+      ]
+    },
+    {
+      "id": "loc_mansao_belvedere",
+      "name": "Mansão Belvedere & Salão dos Espelhos",
+      "type": "Palacete Aristocrático / Zona Sob Cerco",
+      "zone": "Europa Central / Distrito Reservado",
+      "danger": "MÉDIO-ALTO // LODO ROXO & RELÂMPAGOS VIOLETAS",
+      "coordinates": [
+        46.2044,
+        6.1432
+      ],
+      "continent_id": "cont_europa",
+      "country_id": "country_suica",
+      "region_id": "reg_alpes_centrais",
+      "city_id": "city_genebra_distrito",
+      "campaign_id": "camp_filantropo_oeht",
+      "related_campaigns": [
+        "camp_filantropo_oeht"
+      ],
+      "illustration": "assets/ref_interior_tavern.jpg",
+      "description": "Mansão de veraneio e mecenato de Oeht. Possui salas de recepção suntuosas, cofre reforçado no escritório do piso superior e uma redoma de policarbonato e chumbo no salão principal, onde a relíquia parasita estava exposta.",
+      "features": [
+        "Salão Nobre da Gala com candelabros de cristal e convidados da alta finança.",
+        "Escritório de Oeht com cofre reforçado vazando secreção viscosa violeta.",
+        "Palanque Central onde o bolo colossal de aniversário foi posicionado.",
+        "Porão e dutos de ventilação por onde os agentes infiltraram equipamentos."
+      ],
+      "canon_status": "in_world_report",
+      "sources": [
+        "Transcrição da Gala de Infiltração A.E.G.I.S."
+      ]
+    },
+    {
+      "id": "loc_ilha_sauriana",
+      "name": "Ilha dos Répteis Primordiais (Arquipélago dos Ossos)",
+      "type": "Ilha Isolada no Triângulo / Território Soberano",
+      "zone": "Oceano Atlântico Norte / Interior da Anomalia",
+      "danger": "EXTREMO // CANIBALISMO SAURIANO & EMBOSCADAS",
+      "coordinates": [
+        24.8,
+        -72.2
+      ],
+      "continent_id": "cont_america_norte",
+      "country_id": "country_bahamas",
+      "region_id": "reg_triangulo_profundo",
+      "city_id": "city_nova_caronte",
+      "campaign_id": "camp_001",
+      "related_campaigns": [
+        "camp_001"
+      ],
+      "illustration": "assets/ref_rainforest_canopy.jpg",
+      "description": "Ilha densa dominada por uma sociedade de répteis humanoides e dinossauros hiper-evoluídos. Segundo crônicas antigas, um náufrago humano chegou à ilha há cerca de 400 anos e introduziu a prática ritual de canibalismo. Não se trata de monstros irracionais, mas de uma sociedade guerreira com língua própria, tabus e templos de basalto.",
+      "features": [
+        "Monólitos de osso e basalto talhados com ferramentas pré-históricas.",
+        "Redes de armadilhas camufladas nas copas das árvores.",
+        "Altares circulares de oferendas e negociação de fronteiras."
+      ],
+      "canon_status": "in_world_report",
+      "sources": [
+        "Diários de Navegadores do Século XVI",
+        "Manuscrito da Incursão"
+      ]
+    },
+    {
+      "id": "loc_cidadela_nacar",
+      "name": "Cidadela de Nácar (Bastião da Alta Classe)",
+      "type": "Fortaleza Flutuante de Luxo",
+      "zone": "Oceano Atlântico Norte / Triângulo das Bermudas",
+      "danger": "MÉDIO-ALTO // ELITE ANÔMALA & LEILÃO DE RECURSOS",
+      "coordinates": [
+        25.9,
+        -70.8
+      ],
+      "continent_id": "cont_america_norte",
+      "country_id": "country_bahamas",
+      "region_id": "reg_triangulo_profundo",
+      "city_id": "city_nova_caronte",
+      "campaign_id": "camp_001",
+      "related_campaigns": [
+        "camp_001"
+      ],
+      "illustration": "assets/ref_interior_tavern.jpg",
+      "description": "Setor fortificado de embarcações de grande porte soldadas entre si, revestidas por madrepérola e placas poliméricas. Abriga os clãs mais influentes da Classe Alta do Triângulo, que leiloam mantimentos, água potável e os próprios náufragos recém-chegados.",
+      "features": [
+        "Palco do Leilão Central com grades de quarentena de recém-chegados.",
+        "Casarões flutuantes com geradores solares e destiladores de água salgada.",
+        "Doca blindada com lanchas de patrulha armadas com arpões elétricos."
+      ],
+      "canon_status": "in_world_report",
+      "sources": [
+        "Registros Comerciais de Nova Caronte",
+        "Manuscrito da Incursão"
+      ]
+    },
+    {
+      "id": "loc_campo_rosas",
+      "name": "O Campo de Rosas (Mar das Pétalas Negras)",
+      "type": "Fenômeno Marítimo de Distorção / Cemitério Náutico",
+      "zone": "Oceano Atlântico Norte / Entrada do Vórtice",
+      "danger": "MÉDIO-ALTO // NÉVOA NARCÓTICA & TORPOR MENTAL",
+      "coordinates": [
+        26.2,
+        -73
+      ],
+      "continent_id": "cont_america_norte",
+      "country_id": "country_bahamas",
+      "region_id": "reg_triangulo_profundo",
+      "city_id": "city_nova_caronte",
+      "campaign_id": "camp_001",
+      "related_campaigns": [
+        "camp_001"
+      ],
+      "illustration": "assets/ref_rainforest_canopy.jpg",
+      "description": "Trecho do mar onde a água se torna densa e azul-marinho escura, salpicada por filamentos cristalinos que flutuam assemelhando-se a botões de rosas. Foi neste local que o guia inicial da primeira expedição perdeu a vida em circunstâncias propositadamente ambíguas.",
+      "features": [
+        "Água imóvel sem ondulação natural, emanando cheiro adocicado de decomposição fria.",
+        "Névoa rasa que absorve frequências de rádio e distorce a bússola náutica.",
+        "Restos do bote do guia com marcas de geada azul e unhas cravadas no leme."
+      ],
+      "canon_status": "confirmed",
+      "sources": [
+        "Sessão 1 da Incursão",
+        "Depoimentos de Marinheiros Náufragos"
+      ]
+    },
+    {
+      "id": "loc_aegis_genebra",
+      "name": "Complexo Subterrâneo A.E.G.I.S. (Bunker Genebra)",
+      "type": "Quartel-General Global de Inteligência",
+      "zone": "Distrito Internacional de Genebra, Suíça",
+      "danger": "SEGURO // NÍVEL DE CONTENÇÃO MÁXIMO",
+      "coordinates": [
+        46.2237,
+        6.1389
+      ],
+      "continent_id": "cont_europa",
+      "country_id": "country_suica",
+      "region_id": "reg_alpes_centrais",
+      "city_id": "city_genebra_distrito",
+      "campaign_id": "camp_filantropo_oeht",
+      "related_campaigns": [
+        "camp_filantropo_oeht",
+        "camp_003",
+        "camp_004"
+      ],
+      "illustration": "assets/ref_interior_tavern.jpg",
+      "description": "Sede central de comando, arquivos históricos de anomalias e gabinetes dos diretores de contenção da Fundação A.E.G.I.S. Construído a 40 metros de profundidade sob rocha granítica dos Alpes.",
+      "features": [
+        "Sala Tática com painéis holográficos de satélite e sismógrafos anômalos.",
+        "Arquivo Físico C.R.I.S. com relatórios em microfilme desde 1968.",
+        "Câmaras criogênicas herméticas para espécimes sob quarentena absoluta."
+      ],
+      "canon_status": "confirmed",
+      "sources": [
+        "Registro Notarial de Genebra 1968",
+        "Arquivos de Comando Kaelen"
       ]
     }
   ],
@@ -7261,6 +8093,625 @@ class DataLoader {
           "Diapasão de Prata Sem-Rosto"
         ]
       }
+    },
+    {
+      "id": "char_helena",
+      "name": "Helena Castro",
+      "codename": "A Investigadora Racional",
+      "player": "Jogadora: Fernanda",
+      "origin": "Estudante Universitária de Ciências Sociais",
+      "class": "Especialista",
+      "track": "Dedução Forense",
+      "nex": "25%",
+      "mda": "8%",
+      "status": "Sobrevivente Traumatizada",
+      "life_status": "alive",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 2,
+        "for": 1,
+        "int": 4,
+        "pre": 3,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 22,
+          "max": 22
+        },
+        "pe": {
+          "current": 18,
+          "max": 18
+        },
+        "san": {
+          "current": 20,
+          "max": 35
+        },
+        "defesa": 12,
+        "bloqueio": 2,
+        "esquiva": 12,
+        "protecao": 1
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer",
+        "Depoimentos de Sobreviventes de San Lorenzo"
+      ],
+      "historical_title": "Sobrevivente da Mansão Vilar",
+      "portrait": "assets/icon-192.png",
+      "relics": [
+        "Gravador de Áudio Analógico de Campo"
+      ],
+      "skills": [
+        {
+          "name": "Investigação",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Percepção",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Mente",
+          "training": "Treinado"
+        },
+        {
+          "name": "Intuição",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Treinado"
+        },
+        {
+          "name": "Vontade",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Treinado"
+        }
+      ]
+    },
+    {
+      "id": "char_diego",
+      "name": "Diego Ramos",
+      "codename": "O Atleta Protetor",
+      "player": "Jogador: Bruno",
+      "origin": "Atleta e Praticante de Trilha",
+      "class": "Combatente",
+      "track": "Guarda-Costas de Campo",
+      "nex": "25%",
+      "mda": "12%",
+      "status": "Sobrevivente com Fratura",
+      "life_status": "alive",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 3,
+        "for": 4,
+        "int": 1,
+        "pre": 2,
+        "vig": 3
+      },
+      "stats": {
+        "pv": {
+          "current": 28,
+          "max": 28
+        },
+        "pe": {
+          "current": 12,
+          "max": 12
+        },
+        "san": {
+          "current": 18,
+          "max": 30
+        },
+        "defesa": 15,
+        "bloqueio": 4,
+        "esquiva": 13,
+        "protecao": 2
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer"
+      ],
+      "historical_title": "Sobrevivente da Mansão Vilar",
+      "portrait": "assets/icon-192.png",
+      "relics": [],
+      "skills": [
+        {
+          "name": "Atletismo",
+          "value": 10,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "Luta",
+          "value": 5,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Treinado"
+        },
+        {
+          "name": "Fortitude",
+          "value": 5,
+          "attr": "VIG",
+          "category": "Físicas",
+          "training": "Treinado"
+        }
+      ]
+    },
+    {
+      "id": "char_bia",
+      "name": "Beatriz 'Bia' Albuquerque",
+      "codename": "A Diplomata Ágil",
+      "player": "Jogadora: Larissa",
+      "origin": "Estudante de Comunicação e Multimídia",
+      "class": "Suporte",
+      "track": "Negociação Sob Tensão",
+      "nex": "20%",
+      "mda": "6%",
+      "status": "Sobrevivente em Recuperação",
+      "life_status": "alive",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 3,
+        "for": 1,
+        "int": 2,
+        "pre": 4,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 20,
+          "max": 20
+        },
+        "pe": {
+          "current": 16,
+          "max": 16
+        },
+        "san": {
+          "current": 22,
+          "max": 35
+        },
+        "defesa": 13,
+        "bloqueio": 2,
+        "esquiva": 13,
+        "protecao": 1
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer"
+      ],
+      "historical_title": "Sobrevivente da Mansão Vilar",
+      "portrait": "assets/icon-192.png",
+      "relics": [],
+      "skills": [
+        {
+          "name": "Diplomacia",
+          "value": 10,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Veterano"
+        },
+        {
+          "name": "Enganação",
+          "value": 5,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Treinado"
+        },
+        {
+          "name": "Reflexos",
+          "value": 5,
+          "attr": "AGI",
+          "category": "Físicas",
+          "training": "Treinado"
+        }
+      ]
+    },
+    {
+      "id": "char_arthur",
+      "name": "Arthur Valente",
+      "codename": "O Técnico Nervoso",
+      "player": "Jogador: Felipe",
+      "origin": "Técnico em Eletromecânica e Rádio amador",
+      "class": "Especialista",
+      "track": "Engenharia de Sobrevivência",
+      "nex": "25%",
+      "mda": "10%",
+      "status": "Sobrevivente com Trauma Acústico",
+      "life_status": "alive",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 2,
+        "for": 2,
+        "int": 4,
+        "pre": 2,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 22,
+          "max": 22
+        },
+        "pe": {
+          "current": 15,
+          "max": 15
+        },
+        "san": {
+          "current": 16,
+          "max": 30
+        },
+        "defesa": 12,
+        "bloqueio": 2,
+        "esquiva": 12,
+        "protecao": 1
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer"
+      ],
+      "historical_title": "Sobrevivente da Mansão Vilar",
+      "portrait": "assets/icon-192.png",
+      "relics": [
+        "Transmissor de Ondas Curtas Modificado"
+      ],
+      "skills": [
+        {
+          "name": "Tecnologia",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Ciências",
+          "value": 5,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Treinado"
+        },
+        {
+          "name": "Profissão",
+          "value": 5,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Treinado"
+        }
+      ]
+    },
+    {
+      "id": "char_camila_torres",
+      "name": "Camila Torres",
+      "codename": "A Testemunha Oculta",
+      "player": "NPC de Roteiro",
+      "origin": "Moradora da Serra Mineradora de San Lorenzo",
+      "class": "Civil / Informante",
+      "track": "Conhecimento Local",
+      "nex": "10%",
+      "mda": "4%",
+      "status": "Viva / Sob Proteção",
+      "life_status": "alive",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 2,
+        "for": 1,
+        "int": 3,
+        "pre": 3,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 18,
+          "max": 18
+        },
+        "pe": {
+          "current": 10,
+          "max": 10
+        },
+        "san": {
+          "current": 20,
+          "max": 30
+        },
+        "defesa": 12,
+        "bloqueio": 1,
+        "esquiva": 12,
+        "protecao": 0
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer (NPC)"
+      ],
+      "historical_title": "Testemunha da Tragédia Vilar",
+      "portrait": "assets/icon-192.png",
+      "relics": []
+    },
+    {
+      "id": "char_mauro_azevedo",
+      "name": "Mauro Azevedo",
+      "codename": "O Vigia da Mineradora",
+      "player": "NPC de Roteiro",
+      "origin": "Ex-Supervisor de Poço das Minas Vilar",
+      "class": "Civil / Guia",
+      "track": "Segurança Industrial",
+      "nex": "15%",
+      "mda": "7%",
+      "status": "Falecido em Confronto",
+      "life_status": "dead",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 2,
+        "for": 3,
+        "int": 2,
+        "pre": 2,
+        "vig": 3
+      },
+      "stats": {
+        "pv": {
+          "current": 0,
+          "max": 24
+        },
+        "pe": {
+          "current": 0,
+          "max": 10
+        },
+        "san": {
+          "current": 0,
+          "max": 25
+        },
+        "defesa": 13,
+        "bloqueio": 3,
+        "esquiva": 12,
+        "protecao": 1
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer (NPC)"
+      ],
+      "historical_title": "Vigia das Galerias Vilar",
+      "portrait": "assets/icon-192.png",
+      "relics": []
+    },
+    {
+      "id": "char_elias_rocha",
+      "name": "Elias Rocha",
+      "codename": "O Historiador da Serra",
+      "player": "NPC de Roteiro",
+      "origin": "Arquivista do Cartório Histórico de San Lorenzo",
+      "class": "Erudito",
+      "track": "Pesquisa Histórica",
+      "nex": "15%",
+      "mda": "5%",
+      "status": "Vivo / Sob Custódia A.E.G.I.S.",
+      "life_status": "alive",
+      "campaign_id": "camp_002",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "attributes": {
+        "agi": 1,
+        "for": 1,
+        "int": 5,
+        "pre": 3,
+        "vig": 2
+      },
+      "stats": {
+        "pv": {
+          "current": 16,
+          "max": 16
+        },
+        "pe": {
+          "current": 14,
+          "max": 14
+        },
+        "san": {
+          "current": 22,
+          "max": 35
+        },
+        "defesa": 11,
+        "bloqueio": 1,
+        "esquiva": 11,
+        "protecao": 0
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro Canônico de Até o Amanhecer (NPC)"
+      ],
+      "historical_title": "Arquivista Municipal de San Lorenzo",
+      "portrait": "assets/icon-192.png",
+      "relics": [
+        "Chave Antiga da Galeria 4 das Minas"
+      ]
+    },
+    {
+      "id": "char_oeht",
+      "name": "Theo 'Oeht' Vanderberg",
+      "codename": "O Falso Benfeitor / Magnata Oculto",
+      "player": "Antagonista de Incursão (NPC)",
+      "origin": "Herdeiro de Conglomerado Financeiro & Mecenas",
+      "class": "Líder Corporativo Antagônico",
+      "track": "Comercialização do Paranormal",
+      "nex": "65%",
+      "mda": "24%",
+      "status": "Sob Quarentena Tática // Status Incerto",
+      "life_status": "quarantine",
+      "campaign_id": "camp_filantropo_oeht",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "attributes": {
+        "agi": 2,
+        "for": 2,
+        "int": 5,
+        "pre": 5,
+        "vig": 3
+      },
+      "stats": {
+        "pv": {
+          "current": 35,
+          "max": 35
+        },
+        "pe": {
+          "current": 30,
+          "max": 30
+        },
+        "san": {
+          "current": 15,
+          "max": 40
+        },
+        "defesa": 15,
+        "bloqueio": 3,
+        "esquiva": 12,
+        "protecao": 2
+      },
+      "canon_status": "in_world_report",
+      "sources": [
+        "Dossiê A.E.G.I.S. Operação Belvedere",
+        "Transcrição de Infiltração da Gala de Meia-Noite"
+      ],
+      "historical_title": "Bilionário e Mecenas da Falsa Filantropia",
+      "portrait": "assets/icon-192.png",
+      "relics": [
+        "A Chave Mestra do Cofre Belvedere",
+        "Anel de Selo em Platina e Quartzo Negro"
+      ],
+      "skills": [
+        {
+          "name": "Enganação",
+          "value": 15,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Expert"
+        },
+        {
+          "name": "Diplomacia",
+          "value": 15,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Expert"
+        },
+        {
+          "name": "Atualidades",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Intimidação",
+          "value": 10,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Veterano"
+        }
+      ],
+      "curator_notes": "Arrogante, persuasivo e convencido de sua superioridade intelectual. Acreditava piamente ser capaz de controlar a caixa parasita comprada no mercado oculto."
+    },
+    {
+      "id": "char_kaelen",
+      "name": "Diretor Kaelen Vance",
+      "codename": "Sentinela de Genebra // Diretor de Contenção",
+      "player": "Oficial Superior A.E.G.I.S. (NPC)",
+      "origin": "Veterano de Operações de Contenção Metafísica",
+      "class": "Comandante Estrategista",
+      "track": "Operações Especiais de Quarentena",
+      "nex": "70%",
+      "mda": "15%",
+      "status": "Ativo // Comando Central Genebra",
+      "life_status": "alive",
+      "campaign_id": "camp_filantropo_oeht",
+      "campaign_ids": [
+        "camp_filantropo_oeht",
+        "camp_003",
+        "camp_001"
+      ],
+      "attributes": {
+        "agi": 3,
+        "for": 3,
+        "int": 5,
+        "pre": 4,
+        "vig": 4
+      },
+      "stats": {
+        "pv": {
+          "current": 40,
+          "max": 40
+        },
+        "pe": {
+          "current": 35,
+          "max": 35
+        },
+        "san": {
+          "current": 30,
+          "max": 45
+        },
+        "defesa": 17,
+        "bloqueio": 5,
+        "esquiva": 14,
+        "protecao": 4
+      },
+      "canon_status": "confirmed",
+      "sources": [
+        "Arquivo Central A.E.G.I.S. Genebra",
+        "Briefing Operacional Belvedere"
+      ],
+      "historical_title": "Diretor Tático da A.E.G.I.S.",
+      "portrait": "assets/icon-192.png",
+      "relics": [
+        "Comunicador Tático Criptografado de Subfrequência",
+        "Injetor Quádruplo A.E.G.I.S."
+      ],
+      "skills": [
+        {
+          "name": "Tática",
+          "value": 15,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Expert"
+        },
+        {
+          "name": "Investigação",
+          "value": 10,
+          "attr": "INT",
+          "category": "Mente",
+          "training": "Veterano"
+        },
+        {
+          "name": "Luta",
+          "value": 10,
+          "attr": "FOR",
+          "category": "Físicas",
+          "training": "Veterano"
+        },
+        {
+          "name": "Vontade",
+          "value": 15,
+          "attr": "PRE",
+          "category": "Sociais",
+          "training": "Expert"
+        }
+      ],
+      "curator_notes": "Voz firme, pragmática e inflexível. Coordena equipes de contenção através de canais criptografados."
     }
   ],
   "chronicles": [
@@ -7303,149 +8754,432 @@ class DataLoader {
   "bestiary": [
     {
       "id": "creature_eco",
-      "name": "Os Ecos Subterrâneos",
-      "zone": "México (As Minas Antigas)",
-      "threat_level": "Ameaça Média (VD 60)",
-      "mda": "45%",
-      "behavior": "Predador Auditivo Furtivo",
-      "attacks": [
-        {
-          "name": "Garras Quéricas",
-          "damage": "2d8+4 Perfuração",
-          "effect": "Causa hemorragia e enfraquecimento muscular"
-        },
-        {
-          "name": "Voz Roubada (Eco Paralisante)",
-          "damage": "1d10 Mental",
-          "effect": "Exige teste de Presença; falha causa Paralisia por Terror de 1 turno"
-        }
+      "name": "Ecos Subterrâneos",
+      "scientific_name": "Homo Cavernicola Mimeticus",
+      "canon_status": "confirmed",
+      "sources": [
+        "Autópsia de Campo A.E.G.I.S. San Lorenzo",
+        "Diários de Sobrevivência de Lucas Vilar",
+        "Crônicas da Abadia de Santo Agostinho (1348)"
       ],
-      "traits": [
-        "Cegueira Completa: Orienta-se unicamente por ecolocalização",
-        "Mimetismo Vocal: Imita perfeitamente vozes de entes queridos já devorados",
-        "Fraqueza: Frequências ressonantes de alta potência causam atordoamento"
+      "origin_hypotheses": [
+        "Humanoides adaptados às profundezas de minas cársticas que sofreram mutagênese por veios de quartzo negro e dobras do LIMIAR.",
+        "Sobreviventes medievais selados em criptas durante a Peste Negra que degeneraram em predadores acústicos."
       ],
-      "description": "Criaturas humanoides deformadas pela permanência prolongada nas minas de prata mexicana. Seus rostos não possuem olhos, apenas orifícios auditivos hipertrofiados e uma mandíbula cartilaginosa que repete sussurros roubados."
+      "habitats": [
+        "Minas Antigas de San Lorenzo",
+        "Criptas e Galerias da Floresta Negra",
+        "Túneis Subterrâneos Úmidos"
+      ],
+      "threat_level": "NÍVEL BETA // PREDADOR DE TÚNEL",
+      "behavior": "Caça furtiva em matilhas de 2 a 4 indivíduos; permanece imóvel no teto das cavernas, ouvindo conversas por horas antes de atacar.",
+      "senses": "Audição ultra-apurada e ecolocalização de alta frequência; cegueira biológica completa.",
+      "warning_signs": "Vozes de pessoas conhecidas chamando por socorro em túneis lacrados; respiração sibilante vinda do teto; ausência súbita de eco natural.",
+      "abilities": [
+        "Mimetismo Acústico Perfeito: Reproduz vozes roubadas com entonação idêntica à da vítima antes da morte.",
+        "Garras de Perfuração Mineral: Escala rocha pura e causa dano de perfuração letal.",
+        "Ataque em Emboscada Vertical: Salta de tetos sobre alvos desatentos."
+      ],
+      "limits": "Completamente ineficaz em campo aberto exposto a ventos fortes; desorienta-se com frequências harmônicas acima de 400 Hz.",
+      "weaknesses": [
+        "Frequências harmônicas puras (diapasão de 432 Hz) atordoam o sistema neural.",
+        "Superfícies acolchoadas ou amortecedoras que eliminam a reflexão do som.",
+        "Regra de Ouro: 'Não responda à voz'."
+      ],
+      "ecological_role": "Predador de topo de ecossistemas subterrâneos e galerias de mineração.",
+      "combat_profile": "Ataca pela surpresa com bônus de +4 em iniciativa em ambientes escuros; recua se ferido gravemente.",
+      "non_combat_solution": "Caminhar sob silêncio absoluto, emitir frequências sônicas contínuas ou usar gravadores com ruído branco para mascarar o rastro auditivo.",
+      "clues": [
+        "Marcas de unhas no teto a 3 metros de altura",
+        "Eco de uma frase que um aliado falou há 10 minutos em outra galeria"
+      ],
+      "hooks": "Um Eco vocaliza uma frase secreta que somente o irmão desaparecido sabia.",
+      "relationships": [
+        "Inimigo natural de expedicionários",
+        "Manipulado indiretamente pelas dobras do LIMIAR"
+      ]
     },
     {
       "id": "creature_mimico",
       "name": "Mímico Genético",
-      "zone": "O Triângulo das Bermudas / Nova Caronte",
-      "threat_level": "Ameaça Alta (VD 120)",
-      "mda": "70%",
-      "behavior": "Infiltrador Celular",
-      "attacks": [
-        {
-          "name": "Chicote de Medula Óssea",
-          "damage": "3d6+6 Cortante",
-          "effect": "Alcance 6 metros; agarra e drena 3 PD do alvo"
-        },
-        {
-          "name": "Asfixia Celular",
-          "damage": "2d12 Químico",
-          "effect": "Corrói armaduras mundanas instantaneamente"
-        }
+      "scientific_name": "Morpheus Cellularis Anomala",
+      "canon_status": "confirmed",
+      "sources": [
+        "Dossiê de Necrópsia Nova Caronte",
+        "Arquivo Biológico A.E.G.I.S. MDA-04"
       ],
-      "traits": [
-        "Metamorfose Instantânea: Copia altura, voz e impressões digitais após 3 segundos de contato",
-        "Regeneração Biológica: Recupera 5 PD no início de cada rodada enquanto houver umidade",
-        "Fraqueza: Fogo direto e cauterização interrompem a duplicação molecular"
+      "origin_hypotheses": [
+        "Colônia de células estaminais hiper-mutáveis que assimila o código genético de organismos mortos na anomalia marítima.",
+        "Subproduto de bio-engenharia de quarentena do Primogênito."
       ],
-      "description": "Uma massa amórfica de células totipotentes mutantes capaz de absorver tecidos humanos e replicar a fisiologia completa da vítima em segundos. Responsável pelo massacre do convés inferior do navio durante a travessia."
+      "habitats": [
+        "Porões de navios de Nova Caronte",
+        "Áreas inundadas",
+        "Zonas de descarte biológico"
+      ],
+      "threat_level": "NÍVEL GAMA // INFILTRADOR",
+      "behavior": "Infiltra-se em grupos de sobreviventes assumindo a aparência de marinheiros caídos; age passivamente até isolar um membro.",
+      "senses": "Recepção térmica e quimiotaxia avançada; detecta batimentos cardíacos a 5 metros.",
+      "warning_signs": "Discrepância na temperatura da pele (gelada ao toque); hesitação ao recordar nomes íntimos; excesso de umidade no chão ao redor.",
+      "abilities": [
+        "Morfogênese Rápida: Copia feições, cicatrizes e tom de voz de tecido humano absorvido.",
+        "Regeneração Celular em Umidade: Recupera 5 PV por rodada se em contato com água salgada.",
+        "Tentáculos Citoplasmáticos: Desdobra apêndices perfurantes do próprio torso."
+      ],
+      "limits": "Não consegue duplicar memórias profundas de infância nem manter a forma em ambiente com umidade relativa inferior a 15%.",
+      "weaknesses": [
+        "Fogo e cauterização interrompem a proliferação celular.",
+        "Substâncias desidratantes (cal virgem, sal concentrado).",
+        "Perguntas de checagem de identidade pessoal e memórias afetivas."
+      ],
+      "ecological_role": "Decompositor e assimilador de matéria orgânica no Triângulo das Bermudas.",
+      "combat_profile": "Engana para desferir golpe surpresa com dano de constrição; se descoberto, tenta fugir para a água.",
+      "non_combat_solution": "Interrogatório cruzado com fatos que apenas o indivíduo original saberia; aplicação de teste de cauterização de sangue.",
+      "clues": [
+        "Ficha médica com tipo sanguíneo incompatível com o tecido recolhido",
+        "Pessoa que não pisca durante 10 minutos de conversa"
+      ],
+      "hooks": "Um tripulante recém-resgatado jura ser o médico do navio, mas não sabe o nome de sua própria filha.",
+      "relationships": [
+        "Vetor de terror psicológico em Nova Caronte"
+      ]
     },
     {
       "id": "creature_kraken",
-      "name": "O Soberano Abissal (Kraken)",
-      "zone": "Fosso Abissal (Triângulo das Bermudas)",
-      "threat_level": "Ameaça Ômega (VD 300+)",
-      "mda": "95%",
-      "behavior": "Colosso Submarino Territorial",
-      "attacks": [
-        {
-          "name": "Constrição de Tentáculo Titânico",
-          "damage": "4d10+12 Esmagamento",
-          "effect": "Quebra cascos navais; exige teste de Força CD 22 para escapar"
-        },
-        {
-          "name": "Pulso Bio-Vulcânico EMP",
-          "damage": "3d8 Elétrico + 2d8 Fogo",
-          "effect": "Desativa relíquias tecnológicas e radar por 3 turnos"
-        }
+      "name": "Soberano Abissal (O Kraken do Fosso)",
+      "scientific_name": "Architeuthis Titanus Basalticus",
+      "canon_status": "confirmed",
+      "sources": [
+        "Sonar Tático A.E.G.I.S. Submarino",
+        "Cartas de Navegação de Nova Caronte"
       ],
-      "traits": [
-        "Couraça de Basalto Vulcânico: Redução de Dano 15 contra projéteis mundanos",
-        "Vórtice Atrator: Puxa embarcações a até 100m de distância em direção ao abismo",
-        "Fraqueza: O respiradouro termal central vulnerável a cargas explosivas concentradas"
+      "origin_hypotheses": [
+        "Cefalópode primordial colossal fundido à crosta vulcânica submarina após milênios de exposição ao núcleo da fenda.",
+        "Guardião territorial biológico instalado no Fosso das Bermudas."
       ],
-      "description": "Um cefalópode de proporções cósmicas fundido organicamente com rochas magmáticas das profundezas da Fossa de Porto Rico. Seus tentáculos produzem bioeletricidade azulada capaz de apagar redes inteiras de energia."
+      "habitats": [
+        "Fosso do Kraken (Fossa Submarina a 4.000m)",
+        "Vórtice Central do Atlântico Norte"
+      ],
+      "threat_level": "NÍVEL ÔMEGA // SOBERANO TERRITORIAL",
+      "behavior": "Territorial e ciclópico; repousa em sono geotérmico e desperta com vibrações de sonares ou motores pesados.",
+      "senses": "Linha lateral sensível a microcorrentes elétricas; visão adaptada à bioluminescência abissal.",
+      "warning_signs": "Bússolas girando descontroladamente; vibração profunda no casco de navios; mar espumando com bolhas sulfurosas.",
+      "abilities": [
+        "Bioeletricidade & Pulso EMP Subaquático: Apaga sistemas elétricos em raio de 1.500m.",
+        "Couraça de Basalto Vulcânico: Armadura natural pesada (absorve 8 de dano por impacto).",
+        "Vórtice Sugador: Cria redemoinho capaz de tragar fragatas inteiras."
+      ],
+      "limits": "Incapaz de perseguir embarcações em águas rasas (menos de 30 metros de profundidade).",
+      "weaknesses": [
+        "Respiradouros biológicos centrais vulneráveis a cargas explosivas concentradas durante a exalação de gases.",
+        "Intervalo de recarga de 3 minutos após cada pulso bioelétrico."
+      ],
+      "ecological_role": "Soberano do ápice marítimo no ecossistema abissal do Triângulo.",
+      "combat_profile": "Combate colossal de escala de navio; requer manobras de evasão naval ou armamento pesado.",
+      "non_combat_solution": "Navegação silenciosa sem motores a combustão durante a janela de dormência; desvio de rota para recifes de coral.",
+      "clues": [
+        "Madeira de caravelas antigas incrustada com ventosas de 2 metros de diâmetro",
+        "Pulso de sonar que retorna como estática viva"
+      ],
+      "hooks": "A única rota de saída de Nova Caronte cruza o território de alimentação do Kraken.",
+      "relationships": [
+        "Soberano territorial em conflito com o Leviatã Branco"
+      ]
     },
     {
       "id": "creature_sentinela",
-      "name": "Sentinela Autômato do LIMIAR",
-      "zone": "México (Complexo Vilar)",
-      "threat_level": "Ameaça Tática (VD 80)",
-      "mda": "20% (Bio-mecatrônica)",
-      "behavior": "Patrulha Mecânica Vigilante",
-      "attacks": [
-        {
-          "name": "Descarga de Partículas Fendidas",
-          "damage": "2d10+5 Energia",
-          "effect": "Ignora 50% de resistências físicas"
-        },
-        {
-          "name": "Lâmina Eletrostática",
-          "damage": "2d6+4 Cortante",
-          "effect": "Causa choque de 1d6 contínuo"
-        }
+      "name": "Sentinela do LIMIAR",
+      "scientific_name": "Mechanismus Custos Dimensionalis",
+      "canon_status": "confirmed",
+      "sources": [
+        "Esquemas Técnicos Gabriel Vilar",
+        "Relatório de Desativação Tática A.E.G.I.S."
       ],
-      "traits": [
-        "Micro-Salto Dimensional: Teletransporta-se 6 metros como ação livre 1x por rodada",
-        "Sensor Térmico e Paranormal: Imune a camuflagens ópticas e invisibilidade",
-        "Fraqueza: Vulnerabilidade a pulsos eletromagnéticos e sobrecarga em seus capacitores traseiros"
+      "origin_hypotheses": [
+        "Autômato de segurança construído por Gabriel Vilar utilizando sucatas industriais e o núcleo estabilizador de um portal LIMIAR danificado."
       ],
-      "description": "Unidades mecânicas prototípicas projetadas por Gabriel Vilar utilizando peças de antigas locomotivas mineradoras e chips acoplados ao núcleo do LIMIAR para patrulhar a ferrovia e capturar invasores."
+      "habitats": [
+        "Gabinete Secreto da Mansão Vilar",
+        "Galeria 7 das Minas de Prata"
+      ],
+      "threat_level": "NÍVEL BETA // GUARDIÃO MECÂNICO",
+      "behavior": "Guarda estática de perímetro; ataca qualquer entidade que se aproxime do cofre de projetos sem o código de rádio correto.",
+      "senses": "Sensor térmico infravermelho e leitor de densidade quântica de espaço-tempo.",
+      "warning_signs": "Cheiro forte de ozônio; zumbido de capacitor carregando; laser de mira azul varrendo o piso.",
+      "abilities": [
+        "Micro-Salto Dimensional: Teleporta-se até 6 metros em linha reta reescrevendo sua posição física.",
+        "Descarga de Arco Elétrico: Dispara feixe de plasma concentrado causando dano térmico severo.",
+        "Blindagem de Aço Cementado: Imunidade a ataques perfurantes leves."
+      ],
+      "limits": "Bateria drena rapidamente se forçada a múltiplos micro-saltos consecutivos.",
+      "weaknesses": [
+        "Capacitor traseiro de alta voltagem exposto durante o resfriamento pós-disparo.",
+        "Pulsos eletromagnéticos e jatos de água condutora provocam curto-circuito interno."
+      ],
+      "ecological_role": "Guardião artificial projetado para proteger a pesquisa de portais de Gabriel Vilar.",
+      "combat_profile": "Ataca à distância com disparos de plasma, alternando posições por micro-saltos.",
+      "non_combat_solution": "Digitação do código de rádio de Gabriel ou desarme do gerador de alimentação antes de entrar no sensor.",
+      "clues": [
+        "Cabos de alta tensão cortados com precisão cirúrgica",
+        "Fita adesiva com anotações de calibração na lateral do chassi"
+      ],
+      "hooks": "A memória da máquina contém as últimas coordenadas digitadas por Gabriel antes de desaparecer.",
+      "relationships": [
+        "Criado por Gabriel Vilar para deter invasores da A.E.G.I.S. e Ecos"
+      ]
     },
     {
       "id": "creature_mao_rosas",
-      "name": "A Mão de Rosas (Manifestação do Arquiteto)",
-      "zone": "O Triângulo das Bermudas",
-      "threat_level": "Ameaça Suprema (VD 250)",
-      "mda": "99% Dominador",
-      "behavior": "Manifestação Psíquica Territorial",
-      "attacks": [
-        {
-          "name": "Espinhos de Gelo Carmesim",
-          "damage": "3d8 Frio + 2d8 Psíquico",
-          "effect": "Gera hipotermia e alucinações visuais"
-        },
-        {
-          "name": "Grito da Realidade Hackeada",
-          "damage": "4d6 Psíquico em cone",
-          "effect": "Causa Overload imediato em alvos com PD abaixo de 10"
-        }
+      "name": "Mão de Rosas (Manifestação do Campo de Rosas)",
+      "scientific_name": "Emanatio Glacialis Caerulea",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Sessão 1 da Incursão (Manuscrito)",
+        "Depoimentos de Sobreviventes do Navio"
       ],
-      "traits": [
-        "Corpo Eclético: Ataques físicos atravessam sua forma etérea sem causar impacto pleno",
-        "Campo de Rosas Geladas: A temperatura ambiente despenca para -20°C a 30 metros de distância",
-        "Fraqueza: Golpes carregados com pura Determinação (PD) causam dano real irredutível"
+      "origin_hypotheses": [
+        "Projeção anímica de terror e vontade biológica atribuída diretamente ao Arquiteto do Caos / Diabo do Mar.",
+        "Emanação botânico-cristalina de MDA gerada pelo congelamento quântico da água do mar."
       ],
-      "description": "Uma projeção ectoplasmática gélida conjurada à distância pela mente do Arquiteto do Caos. Tem o formato de mãos colossais cobertas por roseiras de espinhos carmesins e névoa congelante."
+      "habitats": [
+        "O Campo de Rosas",
+        "Mar das Bermudas"
+      ],
+      "threat_level": "NÍVEL ALFA // DISTORÇÃO AMBIENTAL",
+      "behavior": "Manifesta-se como botões de rosas flutuantes no mar gelado que coalescem em mãos translúcidas puxando embarcações.",
+      "senses": "Sente o desespero e a perda de convicção dos navegadores.",
+      "warning_signs": "Queda súbita de 15°C na temperatura ambiente; perfume penetrante de rosas congeladas; água do mar assumindo cor anil escuro.",
+      "abilities": [
+        "Torpor Eufórico: Induz apatia e sono calmo nas tripulações, anulando instintos de fuga.",
+        "Garras de Gelo Cristalino: Rompe cascos de madeira e fibra de vidro puxando as vítimas para o fundo.",
+        "Distorção Visual da Linha do Horizonte: O céu e o mar fundem-se em uma única abóbada azul."
+      ],
+      "limits": "Dissipa-se sob calor intenso e chamas abertas.",
+      "weaknesses": [
+        "Determinação moral inabalável e apego a vínculos afetivos quebrem o torpor hipnótico.",
+        "Fogo e motores com queima de óleo que alterem a temperatura da água circundante."
+      ],
+      "ecological_role": "Armadilha de caça do ecossistema anômalo da entrada do Triângulo.",
+      "combat_profile": "Dano psíquico na Sanidade e constrição nos cascos.",
+      "non_combat_solution": "Acender tochas náuticas, queimar querosene no convés e manter os tripulantes cantando ou recitando suas identidades em voz alta.",
+      "clues": [
+        "Botão de rosa negra colhido que não murcha e queima a pele pelo frio extremo",
+        "Bote à deriva com o marinheiro dormindo em sorriso sereno"
+      ],
+      "hooks": "O guia da expedição desapareceu no Campo de Rosas; o relato de sua morte é deliberadamente ambíguo.",
+      "relationships": [
+        "Atribuída ao Arquiteto do Caos / Diabo do Mar"
+      ]
     },
     {
       "id": "creature_leviathan",
       "name": "Parasita Glacial Primordial",
-      "category": "Aberração Criogênica",
-      "threat": "Ameaça Ômega",
-      "zone": "Estação Criogênica Zero (Groenlândia)",
-      "mda": "88%",
-      "pd": 38,
-      "armor": "Quitina de Gelo Negro (Absorção 4)",
-      "behavior": "Precursor biológico dormente que absorve calor corporal instantaneamente.",
-      "description": "Organismo anterior à história humana, preservado na calota ártica. Quando atinge calor biológico, replica células hospedeiras e as transmuta em condutores de estática paranormal.",
-      "attacks": [
-        "Espinho Criogênico (Dano 2d8 + Congelamento)",
-        "Névoa de Hipotermia Celular (DT 16 Vigor)",
-        "Flagelo de Biomassa Fóssil (Dano 3d6)"
+      "scientific_name": "Crio-Parasitus Antarticus",
+      "canon_status": "confirmed",
+      "sources": [
+        "Relatório de Quarentena Estação Criogênica Zero",
+        "Biópsia de Núcleo de Gelo A.E.G.I.S."
+      ],
+      "origin_hypotheses": [
+        "Organismo primordial preservado no gelo antártico por 400.000 anos, reativado pela perfuração científica da Estação Zero.",
+        "Vetor biológico dormente vinculado à mesma linhagem das anomalias do Triângulo."
+      ],
+      "habitats": [
+        "Estação Criogênica Zero (Polo Sul)",
+        "Monólito de Gelo Negro"
+      ],
+      "threat_level": "NÍVEL ÔMEGA // VETOR DE EXTINÇÃO POLAR",
+      "behavior": "Parasitismo celular agressivo; consome calor ambiente e calorias de seres vivos para produzir filamentos cristalinos condutores.",
+      "senses": "Termossensibilidade apurada em escala de miligraus centígrados.",
+      "warning_signs": "Gelo negro crescendo no sentido inverso ao fluxo térmico; estática em cabos elétricos; respiração congelando instantaneamente no peito.",
+      "abilities": [
+        "Drenagem Térmica Acelerada: Absorve todo o calor corporal de alvos tocados, congelando tecidos vitais em segundos.",
+        "Replicação de Espinhos Criogênicos: Projeta fragmentos de gelo negro perfurantes a 12 metros.",
+        "Névoa de Zero Absoluto: Reduz a visibilidade e extingue chamas abertas."
+      ],
+      "limits": "Diminui atividade metabólica em temperaturas acima de 45°C.",
+      "weaknesses": [
+        "Fraqueza biológica definitiva ainda NÃO INFORMADA pela pesquisa da A.E.G.I.S. (investigação ativa)."
+      ],
+      "ecological_role": "Organismo predador de eras glaciais primitivas.",
+      "combat_profile": "Dano de frio paralisante e redução imediata de PV; imune a armas convencionais que dependam de sangramento.",
+      "non_combat_solution": "Manutenção de barreira térmica de ar forçado a 60°C e selamento hermético dos módulos afetados.",
+      "clues": [
+        "Cientistas encontrados congelados em posições de pânico segurando aquecedores elétricos fundidos",
+        "Microscopia com filamentos cristalinos que pulsam como artérias"
+      ],
+      "hooks": "Se o parasita alcançar o oceano aberto, estima-se um evento de glaciação em cascata para 2027.",
+      "relationships": [
+        "Espécime central da crise na Estação Criogênica Zero"
+      ]
+    },
+    {
+      "id": "creature_leviata_branco",
+      "name": "Leviatã Branco (Moby Dick das Fendas)",
+      "scientific_name": "Physeter Macrocephalus Calcareus",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Registros Orais de Baleeiros de Nova Caronte",
+        "Avistamentos da Frota Nácar"
+      ],
+      "origin_hypotheses": [
+        "Cachalote albina ancestral que adentrou a anomalia marítima séculos atrás e desenvolveu hiper-mineralização biológica por MDA.",
+        "Soberano independente das águas profundas do Atlântico."
+      ],
+      "habitats": [
+        "Águas Profundas do Triângulo das Bermudas",
+        "Correntes Oceânicas da Fenda"
+      ],
+      "threat_level": "NÍVEL ÔMEGA // SOBERANO COSSAL",
+      "behavior": "Solitário e implacável; patrulha grandes profundidades e destrói qualquer embarcação de grande porte que produza vibração harmônica.",
+      "senses": "Ecolocalização sísmica capaz de mapear o leito marinho a 50 quilômetros de distância.",
+      "warning_signs": "Bandos inteiros de peixes saltando para fora da água sem predador visível; água completamente límpida e sonar acusando 'montanha em movimento'.",
+      "abilities": [
+        "Sonar Devastador: Emite pulso sônico aquático que tritura órgãos internos e estilhaça cascos reforçados.",
+        "Placas de Calcificação Ôssea: Tumores calcificados endurecidos que atuam como armadura quase impenetrável.",
+        "Investida de Aríete Submarino: Capaz de partir navios de guerra ao meio pelo impacto da cabeça."
+      ],
+      "limits": "Necessita vir à superfície para respirar em intervalos de 90 minutos.",
+      "weaknesses": [
+        "Fraqueza biológica definitiva NÃO INFORMADA nos arquivos atuais. Investigar padrões de rota, respiração e dormência."
+      ],
+      "ecological_role": "Soberano territorial pelágico; predador ápice que impede monopólio do Kraken nas águas do Triângulo.",
+      "combat_profile": "Inatacável por combate pessoal de pequena escala; exige artilharia naval pesada ou fuga imediata.",
+      "non_combat_solution": "Calar imediatamente motores e sonar tático ao primeiro sinal acústico da baleia; navegar à vela ou em botes de madeira.",
+      "clues": [
+        "Pedaço de couraça de calcário retirado de um recife com 40 cm de espessura",
+        "Gravação de sonar submarino com estalo estrondoso que estourou os fones do operador"
+      ],
+      "hooks": "O capitão de um navio antigo em Nova Caronte procura marinheiros dispostos a arpoar a criatura para abrir caminho para fora da fenda.",
+      "relationships": [
+        "Rival territorial do Kraken do Fosso"
+      ]
+    },
+    {
+      "id": "creature_povo_sauriano",
+      "name": "Povo Sauriano da Ilha (Guerreiros do Arquipélago dos Ossos)",
+      "scientific_name": "Sauria Sapiens Anomala",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Diários de Bordo de Navegadores de 1542 e 1620",
+        "Relatos de Náufragos Negociadores"
+      ],
+      "origin_hypotheses": [
+        "Linhagem de répteis pré-históricos isolados na anomalia que adquiriram sapiência, cujo contato com um náufrago humano há ~400 anos introduziu costumes culturais de canibalismo ritual e guerra organizada."
+      ],
+      "habitats": [
+        "Ilha dos Répteis Primordiais",
+        "Arquipélago dos Ossos"
+      ],
+      "threat_level": "NÍVEL ALFA // SOCIEDADE GUERREIRA",
+      "behavior": "Comportamento de caça cooperativa, emboscadas coordenadas e defesa estrita de santuários. Respeitam leis de hospitalidade se acordos forem selados por oferendas de metal e sal.",
+      "senses": "Olfação apurada por órgão vomeronasal e percepção de calor corporal em fendas faciais.",
+      "warning_signs": "Paredes de bambu e crânios polidos fincados na orla da praia; som ritmado de tambores de madeira oca reverberando da selva.",
+      "abilities": [
+        "Caça Cooperativa Coordenada: Bônus de flanqueamento tático (+3 em acertos contra alvos isolados).",
+        "Garras Serrilhadas e Armas de Sílex/Ferro: Infligem sangramento e ferimentos graves.",
+        "Camuflagem Epidérmica na Vegetação: Vantagem em Furtividade na mata fechada."
+      ],
+      "limits": "Submetem-se estritamente aos tabus de sua sociedade; recusam-se a perseguir presas além de seus marcos territoriais sagrados.",
+      "weaknesses": [
+        "Não se trata de monstros sem mente: soluções diplomáticas, troca justa de recursos (ferro refinado, pólvora, sal) e respeito a seus costumes evitam o conflito armado."
+      ],
+      "ecological_role": "Sociedade de topo da cadeia terrestre no arquipélago isolado do Triângulo.",
+      "combat_profile": "Emboscada em bando com redes, lanças e fechamento de cerco.",
+      "non_combat_solution": "Depor armas na orla, apresentar oferendas e solicitar audiência com o Conselho dos Anciãos Répteis.",
+      "clues": [
+        "Trilhas limpas no meio da mata fechada sem folhas secas caídas",
+        "Inscrições rituais talhadas em troncos de árvores centenárias"
+      ],
+      "hooks": "O náufrago humano de 400 anos atrás morreu, vive ainda sob efeito do MDA ou tornou-se uma divindade mitológica venerada pela tribo?",
+      "relationships": [
+        "Comunidade soberana e independente dentro do Triângulo"
+      ]
+    },
+    {
+      "id": "creature_primogenito_arquiteto",
+      "name": "O Primogênito / Arquiteto do Caos / Diabo do Mar",
+      "scientific_name": "Homo Primigenius Anomaliae",
+      "canon_status": "open_mystery",
+      "sources": [
+        "Manuscrito da Incursão (Autor)",
+        "Arquivo Confidencial A.E.G.I.S. Cobaia Zero",
+        "Mitos Populares Náuticos"
+      ],
+      "origin_hypotheses": [
+        "O primeiro ser humano a atravessar a anomalia do Triângulo há milênios, que sobreviveu à dissolução celular e aprendeu a manipular as leis físicas do espaço.",
+        "A lendária Cobaia Zero de experimentos modernos de bio-engenharia que absorveu o tecido da fenda e assumiu os títulos mitológicos do Diabo do Mar."
+      ],
+      "habitats": [
+        "O Centro Imóvel do Vórtice",
+        "Manifestações no Campo de Rosas",
+        "Cidadela Oculta"
+      ],
+      "threat_level": "NÍVEL ÔMEGA // ENTIDADE QUASE-DIVINA",
+      "behavior": "Observador, calculista e cínico; conhece os nomes e fraquezas morais dos viajantes antes mesmo de cruzar com eles.",
+      "senses": "Onipresença perceptual dentro dos limites da fenda das Bermudas.",
+      "warning_signs": "Água do mar tornando-se azul-petróleo escuro; ferrugem azul cobrindo superfícies metálicas; queda do som ambiente para silêncio absoluto.",
+      "abilities": [
+        "Manipulação Espaço-Temporal Local: Altera distâncias, faz corredores repetirem-se indefinidamente e inverte a gravidade.",
+        "Manto de Absorção de Luz: Manto negro que absorve 100% dos fótons ao redor, impedindo visualização de seu rosto.",
+        "Indução de Torpor e Ilusão: Projeta visões hiper-realistas de memórias pessoais para desestabilizar mentes."
+      ],
+      "limits": "Seu corpo físico requer ancoragem na água salgada anômala; a máscara de madeira/osso preserva uma consciência fragmentada.",
+      "weaknesses": [
+        "Limites e fraquezas físicas concretas permanecem ABERTOS e sob mistério deliberado. Não inventar soluções fáceis antes de definição autoral."
+      ],
+      "ecological_role": "Entidade regente e consciência central das distorções no Triângulo das Bermudas.",
+      "combat_profile": "Não combate por dano físico direto; quebra a convicção, altera o cenário e submete os alvos a dilemas existenciais.",
+      "non_combat_solution": "Negociação baseada em sacrifícios conceituais, decifração de seus enigmas históricos e manutenção de lucidez psíquica.",
+      "clues": [
+        "Máscara de osso e madeira talhada deixada sobre mesas vazias",
+        "Mensagens escritas na ferrugem azul das anteparas"
+      ],
+      "hooks": "O Arquiteto alega ter sido a inspiração de deuses e mitos da antiguidade humana; a A.E.G.I.S. tenta provar que se trata apenas de delírio megalomaníaco de uma cobaia modificada.",
+      "relationships": [
+        "Figura central de todo o horror no Triângulo das Bermudas"
+      ]
+    },
+    {
+      "id": "creature_parasita_redoma_oeht",
+      "name": "Parasita da Redoma / Manifestação do Bolo de Oeht",
+      "scientific_name": "Parasitus Devorator Convivalis",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Transcrição da Gala da Mansão Belvedere",
+        "Relatório de Necrópsia de Campo Kaelen"
+      ],
+      "origin_hypotheses": [
+        "Organismo extradimensional comercializado no mercado negro como relíquia de controle de leis físicas, mas que na verdade infecta matéria orgânica densa para gerar bio-massa faminta."
+      ],
+      "habitats": [
+        "Mansão Belvedere (Salão Principal da Gala)"
+      ],
+      "threat_level": "NÍVEL ALFA // PARASITA EXTRADIMENSIONAL",
+      "behavior": "Permanece em dormência na caixa da redoma blindada emanando radiação de lodo roxo; ao romper a tranca ou atingir a meia-noite, assimila a matéria circundante (inclusive o bolo monumental) para devorar todos os presentes.",
+      "senses": "Reconhecimento de massa biológica e calor corporal concentrado.",
+      "warning_signs": "Lodo viscoso violeta escorrendo do cofre; raios roxos silenciosos sobre a mansão; cheiro enjoativo de açúcar queimado misturado a ferro oxidado.",
+      "abilities": [
+        "Animação Macabra de Objetos Circundantes: Converte confeitos, velas violetas e talheres flutuantes em apêndices perfurantes.",
+        "Explosão de Bio-Massa Contaminada: Desfere pulso expansivo que arremessa corpos humanos com violência contra as paredes.",
+        "Indução Hipnótica de Posse: Faz seu portador (como Oeht) acreditar que está no controle de um milagre tecnológico."
+      ],
+      "limits": "Confinado pela redoma de policarbonato e chumbo enquanto as travas de segurança estiverem ativas.",
+      "weaknesses": [
+        "A chave mestra pessoal de Oeht desativa as travas de ancoragem antes da ativação final.",
+        "Destruição do núcleo do relicário antes que atinja a massa crítica da meia-noite."
+      ],
+      "ecological_role": "Parasita predador extradimensional atraído por eventos de alta concentração social humana.",
+      "combat_profile": "Ataque em área com projéteis improvisados (talheres de prata e açúcar cristalizado ácido) e sopro de lodo roxo.",
+      "non_combat_solution": "Convencer Oeht do perigo iminente antes das 23h59 com testes de Diplomacia/Enganação (DT 15) para obter a chave mestra e desligar a redoma.",
+      "clues": [
+        "Gota de lodo roxo que corrói o assoalho de carvalho do gabinete",
+        "Relatório secreto da A.E.G.I.S. classificando o lote do mercado negro como vetor de infecção"
+      ],
+      "hooks": "Quem foi o contrabandista do mercado negro que vendeu a caixa para Oeht sabendo de sua natureza devoradora?",
+      "relationships": [
+        "Artefato central da conspiração corporativa na Mansão Belvedere"
       ]
     }
   ],
@@ -7559,15 +9293,58 @@ class DataLoader {
       "ability": "Onda de Silenciamento Dimensional",
       "effect": "Cria uma zona de 6 metros de silêncio absoluto onde nenhuma habilidade mística oral ou efeito sonoro hostil pode ser executado.",
       "description": "Um diapasão forjado pelos monges da Floresta Negra com prata esterlina e inscrições heréticas. Vibra em uma frequência inaudível aos ouvidos humanos que desarma vórtices acústicos do LIMIAR."
+    },
+    {
+      "id": "relic_relogio_temporal",
+      "name": "Relógio de Dobra Temporal de 6 Segundos",
+      "origin": "Laboratório de Pesquisa Metafísica A.E.G.I.S.",
+      "effect": "Acelera o fluxo temporal subjetivo do portador por 6 segundos de tempo local, permitindo ações sem reação imediata do ambiente.",
+      "mda_risk": "Baixo (1% de MDA por uso excessivo)",
+      "description": "Relógio de bolso em latão e cristal fosco com engrenagens que giram no sentido anti-horário ao puxar o pino superior. Entregue ao agente infiltrado na Mansão Belvedere.",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Briefing Diretor Kaelen",
+        "Laboratório Metafísico A.E.G.I.S."
+      ]
+    },
+    {
+      "id": "relic_parasita_redoma",
+      "name": "A Relíquia Parasita da Redoma Belvedere",
+      "origin": "Origem Extradimensional // Adquirida no Mercado Oculto por Oeht",
+      "effect": "Promete reescrever leis locais à meia-noite, mas consome a matéria biológica de todos em raio de 100 metros ao despertar.",
+      "mda_risk": "Extremo // 99% de MDA em caso de contato com o lodo roxo",
+      "description": "Caixa metálica hexagonal escura com filigranas que vertem secreção violeta luminescente constante.",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Dossiê Operação Belvedere A.E.G.I.S."
+      ]
     }
   ],
   "timeline": [
     {
+      "id": "time_antiguidade",
+      "year": "Antiguidade Remota",
+      "chronological_year": 0,
+      "era_badge": "Gênese Primordial",
+      "title": "O Primeiro Cruzamento da Fenda // Gênese do Primogênito",
+      "location": "Oceano Atlântico Norte / Fenda Temporal",
+      "category": "Gênese Dimensional",
+      "campaign_id": "camp_001",
+      "threat_stars": 5,
+      "threat_level": "Nível 5 - Cataclísmico",
+      "status": "Mito Canônico // Questão Aberta",
+      "canon_status": "open_mystery",
+      "sources": [
+        "Manuscrito da Incursão (Autor)"
+      ],
+      "description": "Segundo manuscritos do Triângulo, o primeiro ser humano adentra a anomalia marítima e aprende a moldar leis físicas locais. A data e a identidade objetiva permanecem sem confirmação científica."
+    },
+    {
       "id": "time_ale_01",
-      "year": "Ano 2023",
-      "chronological_year": 2023,
-      "era_badge": "Gênese do Oculto (2023)",
-      "title": "O Selamento da Abadia de Friburgo",
+      "year": "Ano 1348 [Preservado 2023]",
+      "chronological_year": 1348,
+      "era_badge": "Gênese do Oculto (1348/2023)",
+      "title": "O Selamento da Abadia de Friburgo // Os Sem-Rosto",
       "location": "Floresta Negra (Alemanha)",
       "category": "Investigação Ocultista & Selamento",
       "campaign_id": "camp_005",
@@ -7580,13 +9357,73 @@ class DataLoader {
         "char_greta",
         "char_hans"
       ],
-      "description": "Greta Falk e Hans Richter desmantelam o culto dos Sem-Rosto na Floresta Negra e selam a cripta com concreto hidrofóbico após a perda definitiva da voz de Greta diante das presenças dimensionais."
+      "canon_status": "in_world_report",
+      "sources": [
+        "Crônicas da Abadia de Santo Agostinho (1348)",
+        "Dossiê A.E.G.I.S. Schwarzwald"
+      ],
+      "description": "A Abadia de Santo Agostinho sela a cripta e os sinos de bronze após o surto de perda de voz e manifestações de Ecos Subterrâneos durante a Peste Negra na Floresta Negra."
+    },
+    {
+      "id": "time_sec_xvi",
+      "year": "Século XVI (~1542-1620)",
+      "chronological_year": 1542,
+      "era_badge": "Era dos Navegadores",
+      "title": "Náufrago Humano e a Sociedade Sauriana // O Mar das Rosas",
+      "location": "Oceano Atlântico Norte (Triângulo das Bermudas)",
+      "category": "Contato Antropológico Anômalo",
+      "campaign_id": "camp_001",
+      "threat_stars": 4,
+      "threat_level": "Nível 4 - Crítico",
+      "status": "Relato de Bordo",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Diários de Bordo Espanhóis e Portugueses"
+      ],
+      "description": "Diários de caravelas relatam manchas de mar azul escuro com rosas flutuantes no Atlântico e a chegada de um humano que ensinou ritos canibais à sociedade reptiliana do Arquipélago dos Ossos."
+    },
+    {
+      "id": "time_1892_vilar",
+      "year": "Ano 1892",
+      "chronological_year": 1892,
+      "era_badge": "Revolução Mineral",
+      "title": "Fundação do Consórcio Mineral Vilar",
+      "location": "San Lorenzo (México)",
+      "category": "Fundação Histórica",
+      "campaign_id": "camp_002",
+      "threat_stars": 3,
+      "threat_level": "Nível 3 - Severo",
+      "status": "Documento Cartorial",
+      "canon_status": "confirmed",
+      "sources": [
+        "Cartório de San Lorenzo",
+        "Ministério da Mineração"
+      ],
+      "description": "A família Vilar inicia a perfuração de minas profundas de prata em San Lorenzo, perfurando acidentalmente galerias onde Ecos Subterrâneos repousavam dormentes."
+    },
+    {
+      "id": "time_1968_aegis",
+      "year": "Ano 1968",
+      "chronological_year": 1968,
+      "era_badge": "Pós-Guerra Fria",
+      "title": "Fundação Notarial da A.E.G.I.S. em Genebra",
+      "location": "Genebra (Suíça)",
+      "category": "Institucional",
+      "campaign_id": "camp_filantropo_oeht",
+      "threat_stars": 2,
+      "threat_level": "Nível 2 - Moderado",
+      "status": "Institucional",
+      "canon_status": "confirmed",
+      "sources": [
+        "Registro Notarial de Genebra 1968"
+      ],
+      "description": "Registrada formalmente na Suíça a Fundação A.E.G.I.S. / C.R.I.S. para monitorar vazamentos anômalos da Guerra Fria e catalogar incursões pelo planeta."
     },
     {
       "id": "time_01",
-      "year": "Ano 2023 (-3)",
+      "year": "Ano 2023 (-3) [Variante Out/2021]",
       "chronological_year": 2023.5,
-      "era_badge": "Incidente das Minas (2023)",
+      "era_badge": "Incidente das Minas (2021/2023)",
       "title": "O Desaparecimento nas Minas",
       "location": "Mansão Vilar & Minas (México)",
       "category": "Incidente Inicial",
@@ -7598,9 +9435,18 @@ class DataLoader {
       "casualties": "Nenhuma confirmada (Desaparecimento arquivado)",
       "characters": [
         "char_lucas",
-        "char_gabriel"
+        "char_gabriel",
+        "char_rafael",
+        "char_helena",
+        "char_diego",
+        "char_bia",
+        "char_arthur"
       ],
-      "description": "Durante uma brincadeira entre seis amigos nas proximidades da Mansão Vilar no México, Lucas Vilar entra nos túneis abandonados da ferrovia e desaparece na escuridão. O caso é arquivado pela polícia como fuga, mas uma culpa profunda consome o grupo."
+      "canon_status": "disputed",
+      "sources": [
+        "Dossiê Até o Amanhecer (2021) vs. Linha Tática (-3 anos de 2026)"
+      ],
+      "description": "Durante uma expedição juvenil de amigos nas proximidades da Mansão Vilar no México, Lucas Vilar entra nos túneis abandonados da ferrovia e desaparece na escuridão. O grupo esconde segredos da noite."
     },
     {
       "id": "time_02",
@@ -7619,7 +9465,11 @@ class DataLoader {
       "characters": [
         "char_gabriel"
       ],
-      "description": "Recusando-se a aceitar a morte do irmão, Gabriel Vilar tranca-se no casarão. Ele descobre fontes de energia anômala nas rochas da serra e inicia a construção da arma de portais dimensionais: o LIMIAR."
+      "canon_status": "confirmed",
+      "sources": [
+        "Esquemas Técnicos Gabriel Vilar"
+      ],
+      "description": "Recusando-se a aceitar a perda do irmão, Gabriel Vilar tranca-se no casarão. Ele descobre fontes de energia anômala nas rochas da serra e inicia a construção da arma de portais dimensionais: o LIMIAR."
     },
     {
       "id": "time_03",
@@ -7637,6 +9487,11 @@ class DataLoader {
       "casualties": "Flotilha costeira e tripulações civis",
       "characters": [
         "char_arquiteto"
+      ],
+      "canon_status": "confirmed",
+      "sources": [
+        "Manuscrito da Incursão",
+        "Dossiê A.E.G.I.S."
       ],
       "description": "No Oceano Atlântico, experimentos com bio-ressonância culminam na ascensão do Arquiteto do Caos (99% MDA). Um buraco de minhoca abre-se no mar, engolindo flotilhas, aviões e submarinos, criando a anomalia permanente do Triângulo."
     },
@@ -7658,13 +9513,17 @@ class DataLoader {
         "char_thiago",
         "char_camila"
       ],
+      "canon_status": "confirmed",
+      "sources": [
+        "Relatório de Missão Operação Selva"
+      ],
       "description": "O esquadrão Curupira liderado pelo Capitão Thiago Santos penetra a cratera de quartzo negro no Brasil, enfrentando mutações biológicas vegetais e resgatando a Dra. Camila Neves antes da floração letal."
     },
     {
       "id": "time_04",
-      "year": "Ano 2026 (Ano 0)",
+      "year": "Ano 2026 (Ano 0) [Variante Out/2024]",
       "chronological_year": 2026,
-      "era_badge": "Clímax da Mansão Vilar (2026)",
+      "era_badge": "Clímax da Mansão Vilar (2024/2026)",
       "title": "A Noite da Confissão & O Resgate",
       "location": "Mansão Vilar & Minas (México)",
       "category": "Clímax de Campanha",
@@ -7672,15 +9531,24 @@ class DataLoader {
       "threat_level": "Nível 4 - Crítico",
       "threat_stars": 4,
       "status": "Concluído com Sobreviventes",
-      "survivors": "Lucas Vilar, Gabriel Vilar, Rafael Montes, Júlia Prado",
+      "survivors": "Lucas Vilar, Gabriel Vilar, Rafael Montes, Helena Castro, Diego Ramos, Bia Albuquerque, Arthur Valente, Júlia Drummond",
       "casualties": "Criaturas das Minas exterminadas",
       "characters": [
         "char_lucas",
         "char_gabriel",
         "char_rafael",
+        "char_helena",
+        "char_diego",
+        "char_bia",
+        "char_arthur",
         "char_julia"
       ],
-      "description": "Gabriel atrai os antigos amigos de volta ao México com bilhetes de trem anônimos. Usando a máscara de Davi Reis e o LIMIAR, força as confissões. No subsolo, enfrentam os Ecos e resgatam Lucas com vida após 3 anos de isolamento e sobrevivência."
+      "canon_status": "confirmed",
+      "sources": [
+        "Roteiro de Até o Amanhecer",
+        "Relatório San Lorenzo A.E.G.I.S."
+      ],
+      "description": "Gabriel atrai os antigos amigos de volta com bilhetes de trem anônimos. Sob a máscara de Davi Reis e empunhando o LIMIAR, força as confissões. No subsolo, enfrentam os Ecos e resgatam Lucas com vida após anos de sobrevivência."
     },
     {
       "id": "time_05",
@@ -7701,7 +9569,34 @@ class DataLoader {
         "char_evelyn",
         "char_arquiteto"
       ],
+      "canon_status": "confirmed",
+      "sources": [
+        "Manuscrito da Incursão (Autor)"
+      ],
       "description": "O navio de 5.000 almas é tragado pela fenda no Atlântico. Os sobreviventes fundam a cidadela caótica de Nova Caronte, onde precisam lidar com mutações forçadas, os ataques do Mímico e as profecias do Arquiteto do Caos."
+    },
+    {
+      "id": "time_oeht_belvedere",
+      "year": "Ano 2026 [Data Reservada]",
+      "chronological_year": 2026.7,
+      "era_badge": "Conspiração Corporativa (2026)",
+      "title": "A Gala da Meia-Noite // Operação Belvedere",
+      "location": "Mansão Belvedere (Europa Central)",
+      "category": "Infiltração Tática A.E.G.I.S.",
+      "campaign_id": "camp_filantropo_oeht",
+      "threat_stars": 4,
+      "threat_level": "Nível 4 - Crítico",
+      "status": "Sob Quarentena Tática // Registro Parcial",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Briefing Kaelen",
+        "Transcrição de Infiltração A.E.G.I.S."
+      ],
+      "characters": [
+        "char_oeht",
+        "char_kaelen"
+      ],
+      "description": "Operação de infiltração da A.E.G.I.S. sob direção de Kaelen para conter a ativação da relíquia parasita durante a gala de magnatas organizada pelo bilionário Oeht."
     },
     {
       "id": "time_06",
@@ -7719,6 +9614,10 @@ class DataLoader {
       "casualties": "12 cientistas criogênicos desaparecidos no gelo",
       "characters": [
         "char_evelyn"
+      ],
+      "canon_status": "proposal",
+      "sources": [
+        "Modelagem Preditiva Estação Zero"
       ],
       "description": "A estação de pesquisa cessa todas as transmissões de rádio após relatar a quebra da câmara criogênica primária e manifestações do Polimorfo. Uma equipe tática da A.E.G.I.S. é despachada em meio a uma tempestade ártica nível 5."
     }
@@ -9145,7 +11044,14 @@ class DataLoader {
         "char_hans",
         "char_greta"
       ],
-      "description": "Instituição responsável pelo monitoramento de anomalias biológicas e físicas no planeta Evren, bem como pela manutenção do Arquivo Histórico Global."
+      "description": "Instituição responsável pelo monitoramento de anomalias biológicas e físicas no planeta Evren, bem como pela manutenção do Arquivo Histórico Global.",
+      "name_variants": [
+        "Fundação A.E.G.I.S. / C.R.I.S. (Registro de Fachada Genebra 1968)",
+        "Agência de Exploração e Gerenciamento de Incursões Secretas (Designação Operacional Triângulo)",
+        "Agência de Segurança Metafísica (Denominação Pública de Oeht na Gala Belvedere)"
+      ],
+      "canon_status": "confirmed",
+      "curator_notes": "A organização opera sob sigilo e compartimentação de células; os nomes refletem o nível de acesso e o teatro de operações."
     },
     {
       "id": "org_familia_vilar",
@@ -9173,6 +11079,36 @@ class DataLoader {
       ],
       "members": [],
       "description": "Comunidade monástica que custodiou a Cripta do Eco Silencioso por sete séculos nas montanhas alemãs."
+    },
+    {
+      "id": "org_oeht_corp",
+      "name": "Consórcio Oculto de Oeht // Iniciativa Belvedere",
+      "type": "Megacorporação Privada Paranormal Clandestina",
+      "headquarters": "Genebra / Zurique / Mansão Belvedere",
+      "founded": "2025 // Em fundação clandestina",
+      "status": "Sob Cerco e Desmantelamento Tático",
+      "scope": "Global / Comercialização do Paranormal e Venda de Relíquias a Bilionários",
+      "description": "Cartel clandestino de investidores de alto escalão, CEOs de tecnologia e magnatas do submundo financeiro, liderados por Theo 'Oeht' Vanderberg, que buscavam privatizar o Outro Lado e invalidar as ordens de quarentena da A.E.G.I.S.",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Documentos Apreendidos no Cofre de Oeht",
+        "Briefing de Kaelen"
+      ]
+    },
+    {
+      "id": "org_sauriana",
+      "name": "Sociedade Sauriana do Arquipélago dos Ossos",
+      "type": "Sociedade Tribal Anômala com Agência e Costumes Próprios",
+      "headquarters": "Ilha dos Répteis Primordiais (Triângulo das Bermudas)",
+      "founded": "Aproximadamente 1620 (Introdução do canibalismo por marinheiro humano)",
+      "status": "Ativa // Soberania Territorial",
+      "scope": "Regional (Triângulo das Bermudas)",
+      "description": "Comunidade de répteis humanoides com inteligência tática, domínio de armas de pedra e ferro recuperadas de naufrágios, e língua de cliques acústicos. Possui tabus invioláveis, ritos funerários e capacidade de negociação diplomática quando honrados seus limites territoriais.",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Diários de Bordo de 1542 e 1620",
+        "Relatos de Náufragos de Nova Caronte"
+      ]
     }
   ],
   "museum_collections": {
@@ -9500,15 +11436,365 @@ class DataLoader {
         "lore": "Nas profundezas da Floresta Negra alemã, as ruínas da abadia guardavam um sino sem badalo forjado com ligas de meteorito. Quando Greta Falk tocou a campana durante a invasão, a frequência mística devorou a voz física de todos os presentes, silenciando o culto dos Sem-Rosto e permitindo que Hans Richter selasse os portões com concreto de chumbo."
       }
     ]
-  }
+  },
+  "canon_ledger": [
+    {
+      "id": "ledger_aegis_variants",
+      "topic": "Nomenclatura e Natureza da A.E.G.I.S.",
+      "claim": "A A.E.G.I.S. opera sob múltiplas designações de cobertura conforme a jurisdição e o interlocutor.",
+      "status": "disputed",
+      "sources": [
+        "world_data.json: 'Fundação A.E.G.I.S. / C.R.I.S.' (Sede Genebra 1968)",
+        "Manuscrito do Triângulo: 'Agência de Exploração e Gerenciamento de Incursões Secretas'",
+        "Discurso de Oeht na Gala Belvedere: 'Agência de Segurança Metafísica'"
+      ],
+      "contradictions": [
+        "Fundação civil-científica vs. Agência militar-estatal sombria vs. Força reguladora metafísica."
+      ],
+      "confidence": "Média (Variantes de Fachada Concorrentes)",
+      "curator_notes": "A A.E.G.I.S. utiliza compartimentação rigorosa. As três formulações são válidas no universo como fachadas jurídicas e percepções de agentes externos. A sigla C.R.I.S. permanece sem expansão confirmada."
+    },
+    {
+      "id": "ledger_vilar_dates",
+      "topic": "Cronologia dos Eventos da Mansão Vilar",
+      "claim": "O desaparecimento de Lucas e o clímax do casarão apresentam registros de datas discordantes entre os arquivos de campo.",
+      "status": "disputed",
+      "sources": [
+        "Relatório de Campo A.E.G.I.S. (Evento 002): Desaparecimento em Out/2021, resgate em Out/2024.",
+        "Linha do Tempo Tática (time_mex_01): Incidente registrado no Ano 2023 (-3), clímax projetado para 2026."
+      ],
+      "contradictions": [
+        "Janela temporal de 2021-2024 vs. 2023-2026."
+      ],
+      "confidence": "Aberta (Registros Conflitantes de Época)",
+      "curator_notes": "Ambas as cronologias foram mantidas no banco de dados. O autor decidirá oportunamente se trata-se de dilatação temporal anômala provocada pelo dispositivo LIMIAR ou erro cadastral de relatórios de campo."
+    },
+    {
+      "id": "ledger_vilar_cast",
+      "topic": "Elenco de Sobreviventes da Mansão Vilar",
+      "claim": "A expedição adolescente de Até o Amanhecer contou com 5 protagonistas e 4 coadjuvantes centrais, além de registros legados de arquivo.",
+      "status": "confirmed",
+      "sources": [
+        "Roteiro de Até o Amanhecer: Rafael, Helena, Diego, Bia e Arthur (protagonistas); Gabriel/Davi Reis, Camila Torres, Mauro Azevedo e Elias Rocha (NPCs).",
+        "Arquivo Legado world_data.json: Júlia Drummond (pesquisadora de arquivo associada ao caso)."
+      ],
+      "contradictions": [
+        "Júlia Drummond não constava no roteiro de campo inicial dos jovens da serra."
+      ],
+      "confidence": "Alta (Elenco do Roteiro + Variante de Arquivo)",
+      "curator_notes": "Júlia Drummond é mantida como perita investigadora externa que arquivou os depoimentos do caso, preservando compatibilidade com versões anteriores da base."
+    },
+    {
+      "id": "ledger_triangulo_origin",
+      "topic": "Gênese do Triângulo das Bermudas",
+      "claim": "O Triângulo das Bermudas é uma anomalia natural imemorial usada como prisão dimensional, cuja barreira sofreu fissuras por testes nucleares e experimentos modernos.",
+      "status": "open_mystery",
+      "sources": [
+        "Manuscrito do Autor: Anomalia natural primordial anterior à história humana, servindo de cárcere para entidades.",
+        "Base de Dados A.E.G.I.S.: Fenda aberta ou acelerada por experimentos secretos submarinos durante a Guerra Fria."
+      ],
+      "contradictions": [
+        "Anomalia geológica milenar vs. Rompimento causado por ação antrópica recente."
+      ],
+      "confidence": "Média (Hipóteses Complementares Não Homologadas)",
+      "curator_notes": "A teoria de síntese sugere que a anomalia sempre existiu, mas experimentos modernos enfraqueceram o tecido do espaço-tempo marítimo, permitindo o colapso acelerado observado em 2026."
+    },
+    {
+      "id": "ledger_triangulo_passengers",
+      "topic": "Capacidade e Vítimas do Navio Tragado no Triângulo",
+      "claim": "A embarcação de cruzeiro tragada para o interior da fenda transportava cerca de 5.000 passageiros e tripulantes.",
+      "status": "confirmed",
+      "sources": [
+        "Manuscrito Canônico da Incursão: 5.000 pessoas a bordo; aviso de emergência de TV cortado na transmissão.",
+        "Resumos Rápidos Legados: Menção imprecisa a 'centenas de sobreviventes'."
+      ],
+      "contradictions": [
+        "5.000 ocupantes totais vs. 'centenas' de sobreviventes organizados nos barcos de Nova Caronte."
+      ],
+      "confidence": "Alta (5.000 embarcados, sobreviventes fracionados)",
+      "curator_notes": "5.000 é o número canônico total de passageiros tragados pelo evento marítimo. As 'centenas' referem-se àqueles que conseguiram se agrupar nos destroços de Nova Caronte."
+    },
+    {
+      "id": "ledger_primogenito_identity",
+      "topic": "Identidade do Primogênito / Arquiteto do Caos / Diabo do Mar",
+      "claim": "A entidade central do Triângulo é apontada ora como o primeiro ser humano a atravessar a fenda há milênios, ora como a Cobaia Zero de um projeto moderno de reescrita biológica.",
+      "status": "disputed",
+      "sources": [
+        "Manuscrito do Autor: Primeiro humano a entrar na anomalia na antiguidade, reescreveu leis físicas locais.",
+        "Base A.E.G.I.S. (world_data.json): Cobaia Zero de experimento genético proibido que assumiu a alcunha do Diabo do Mar."
+      ],
+      "contradictions": [
+        "Entidade milenar mitológica vs. Vítima e arquiteto de experimento humano moderno."
+      ],
+      "confidence": "Aberta (Mito Concorrente)",
+      "curator_notes": "As duas hipóteses coexistem nos arquivos. O manto que absorve a luz e a máscara de osso impedem confirmação biológica independente da idade celular."
+    },
+    {
+      "id": "ledger_oeht_belvedere",
+      "topic": "Operação Gala Belvedere & Bilionário Oeht",
+      "claim": "A Mansão Belvedere sediou a gala secreta de aniversário de Oeht para privatizar o paranormal; a operação de infiltração A.E.G.I.S. foi coordenada por Kaelen.",
+      "status": "in_world_report",
+      "sources": [
+        "Briefing de Kaelen / Transcrição de Infiltração: Gala de investidores, redoma com relíquia parasita, lodo roxo no cofre, relógio de dobra temporal de 6s, discurso das 23h.",
+        "Registro de Corte: Cenas posteriores ao início da Zona B (Mesa de Poker VIP) estão truncadas."
+      ],
+      "contradictions": [
+        "Mansão Belvedere é uma propriedade distinta da Mansão Vilar no México."
+      ],
+      "confidence": "Média (Fonte Documental Parcial Recuperada)",
+      "curator_notes": "Os fatos até o confronto do bolo colossal são canônicos segundo a transcrição; os desdobramentos da Zona B e desfecho definitivo aguardam recuperação documental integral."
+    },
+    {
+      "id": "ledger_magic_doctrine",
+      "topic": "Doutrina de Magia vs. Biologia Hiper-Adaptativa em Evren",
+      "claim": "No universo de Evren não há magia genérica ou sobrenatural clássico; anomalias operam por leis da MDA e distorções dimensionais, embora o Primogênito afirme 'reescrever a realidade'.",
+      "status": "proposal",
+      "sources": [
+        "Manuscrito do Autor: Criaturas explicadas pela biologia acelerada e MDA; ausência de feitiçaria.",
+        "Doutrina A.E.G.I.S.: Fenômenos anômicos observáveis através de física e genética não-euclidiana."
+      ],
+      "contradictions": [
+        "Afirmações do Arquiteto de reescrever leis como magia vs. Paradigma biopunk materialista."
+      ],
+      "confidence": "Alta (Fundamento Filosófico de Evren)",
+      "curator_notes": "A tensão entre a explicação biopunk científica e a percepção subjetiva de horror místico é parte intencional do universo de Evren."
+    }
+  ],
+  "powers": [
+    {
+      "id": "power_dobra_temporal",
+      "name": "Dobra Temporal de Emergência",
+      "category": "Manipulação Crono-Anômala",
+      "origin_type": "Tecnologia / Foco Metafísico A.E.G.I.S.",
+      "belief_conflict": "A recusa em aceitar que o tempo é uma prisão imutável.",
+      "observable_effect": "Desloca o fluxo temporal em um raio de 2 metros ao redor do usuário, acelerando suas ações em 6 segundos de tempo subjetivo.",
+      "trigger": "Ativação mecânica no pino de um relógio analógico sincronizado.",
+      "range_duration_targets": "Pessoal / 6 segundos / 1 alvo (usuário)",
+      "cost_pd": 3,
+      "risk_mda": 2,
+      "sensory_sign": "O ambiente congela em um matiz azulado monocromático; o som de ponteiros de relógio ecoa metálico nos tímpanos.",
+      "limits": "Não permite interagir com objetos sob tranca física pesada nem transportar terceiros sem partilha de custo.",
+      "counterplay": "Campos de pulso eletromagnético (EMP) ou ressonância vulcânica desestabilizam o escapamento cronológico.",
+      "consequences": "Tontura, perda de percepção de segundos no tempo real e fadiga nas articulações.",
+      "canon_status": "in_world_report",
+      "sources": [
+        "Relatório de Infiltração Mansão Belvedere",
+        "Laboratório Metafísico A.E.G.I.S."
+      ]
+    },
+    {
+      "id": "power_eco_ressonante",
+      "name": "Ressonância Acústica Anti-Eco",
+      "category": "Expressão Sonora Anímica",
+      "origin_type": "Sobrevivência às Minas Vilar",
+      "belief_conflict": "O apego obsessivo a uma voz real gravada que impede o mimetismo dos predadores.",
+      "observable_effect": "Emite uma frequência harmônica pura através das cordas vocais ou diapasão de campo, repelindo Ecos Subterrâneos por 1 rodada.",
+      "trigger": "Cantarolar ou vocalizar a nota fundamental de 432 Hz sob respiração controlada.",
+      "range_duration_targets": "Raio de 9 metros / 1 rodada / Todas as criaturas auditivas na área",
+      "cost_pd": 2,
+      "risk_mda": 1,
+      "sensory_sign": "Pequenas pedras e poeira mineral levitam milímetros do chão com o zumbido harmônico.",
+      "limits": "Inútil contra criaturas desprovidas de ecolocalização ou imunes a vibração acústica.",
+      "counterplay": "Ruídos industriais altos, colapso de rochas e motores a combustão abafam a frequência.",
+      "consequences": "Dor de garganta aguda, sangramento nasal leve e perda temporária de audição após uso repetido.",
+      "canon_status": "confirmed",
+      "sources": [
+        "Notas de Campo de Gabriel Vilar",
+        "Diário de Sobrevivência de Lucas Vilar"
+      ]
+    },
+    {
+      "id": "power_ancoragem_limiar",
+      "name": "Estabilização de Âncoras do LIMIAR",
+      "category": "Projeção Espacial",
+      "origin_type": "Engenharia de Dobra Espacial (Gabriel Vilar)",
+      "belief_conflict": "A certeza matemática de que dois pontos distantes no espaço podem ser fundidos pela dor da perda.",
+      "observable_effect": "Fixa uma micro-âncora quântica em uma superfície visível, permitindo que o dispositivo LIMIAR abra uma dobra de travessia estável.",
+      "trigger": "Disparo guiado a laser acoplado ao capacitor traseiro da arma portátil.",
+      "range_duration_targets": "15 metros / 2 rodadas de abertura / Até 3 pessoas por travessia",
+      "cost_pd": 4,
+      "risk_mda": 4,
+      "sensory_sign": "Odor penetrante de ozônio queimado e faiscamento azul-cobalto nas bordas do portal.",
+      "limits": "Requer linha de visão desobstruída e solo sólido como receptor. Não atravessa paredes com blindagem de chumbo ou quartzo negro.",
+      "counterplay": "Sobrecarga de bateria e quebra da âncora receptora por impacto físico.",
+      "consequences": "Microqueimaduras nas mãos do operador e distorção na memória de curto prazo.",
+      "canon_status": "confirmed",
+      "sources": [
+        "Patente Clandestina Gabriel Vilar",
+        "Arquivos Técnicos A.E.G.I.S. LIMIAR-01"
+      ]
+    },
+    {
+      "id": "power_foco_animico_defensivo",
+      "name": "Foco Anímico Resistido",
+      "category": "Resistência Anímica Fundamental",
+      "origin_type": "Doutrina de Campo de Agentes",
+      "belief_conflict": "A recusa moral em ceder ao pânico cósmico diante da incompreensão da anomalia.",
+      "observable_effect": "Ergue uma barreira de determinação pura contra ataques de pavor, ilusões miméticas ou distorção gravitacional.",
+      "trigger": "Afirmação firme da própria identidade ou apego a um objeto de ancoragem pessoal.",
+      "range_duration_targets": "Pessoal / Instantâneo / 1 alvo (usuário ou aliado adjacente tocado)",
+      "cost_pd": 2,
+      "risk_mda": 0,
+      "sensory_sign": "Pulso térmico que aquece a palma da mão e dissipa névoa gelada ao redor.",
+      "limits": "Não absorve dano puramente cinético de projéteis ou garras físicas.",
+      "counterplay": "Ataques físicos rápidos e colapso de oxigênio no ambiente.",
+      "consequences": "Esgotamento de determinação mental; exige descanso tático após conflito.",
+      "canon_status": "proposal",
+      "sources": [
+        "Manual Tático de Agentes A.E.G.I.S.",
+        "Compêndio de Regras de Evren"
+      ]
+    }
+  ],
+  "folklore_cases": [
+    {
+      "id": "folk_devils_bridge_pontarfynach",
+      "name": "Devil's Bridge (Pontarfynach, País de Gales)",
+      "real_location": "Ceredigion, País de Gales (Reino Unido)",
+      "origin_culture": "Folclore Tradicional Galês (Três Pontes Sobrepostas sobre o Rio Mynach)",
+      "bibliographic_source": "Visit Wales Archives & Mid Wales Historical Documentation (Lenda da Mulher que enganou o Diabo com um cão).",
+      "folklore_variations": "A lenda afirma que o Diabo ofereceu construir uma ponte sobre a ravina impossível em troca da primeira alma que a cruzasse; uma anciã astuta atirou um pedaço de pão, fazendo com que seu cão cruzasse primeiro.",
+      "evren_evidence": "Investigações da A.E.G.I.S. detectaram vestígios de corrosão mineral anômala na rocha de base da ponte inferior, idêntica aos padrões de ferrugem azul observados na fenda do Atlântico Norte.",
+      "aegis_interpretation": "A anomalia do Primogênito/Arquiteto projeta manifestações históricas em gargantas e travessias geográficas difíceis. A lenda popular é uma codificação mitopoiética de um contato real com dobras dimensionais.",
+      "confirmation_level": "open_mystery",
+      "cultural_note": "Trata-se de patrimônio folclórico documentado do povo galês; a narrativa de Evren a utiliza como inspiração temática, sem desrespeitar o significado cultural e histórico da comunidade local."
+    },
+    {
+      "id": "folk_sinos_floresta_negra",
+      "name": "Os Sinos Submersos da Floresta Negra (Alemanha)",
+      "real_location": "Schwarzwald, Baden-Württemberg, Alemanha",
+      "origin_culture": "Tradição Monástica Medieval e Lendas Germânicas do Século XIV",
+      "bibliographic_source": "Crônicas da Abadia de Santo Agostinho (1348) & Registros de Epidemias da Peste Negra.",
+      "folklore_variations": "Camponeses relatavam ouvir o badalar de sinos de bronze vindos de lagos e ravinas em noites sem vento, prenunciando figuras encapuzadas que roubavam as vozes de aldeões isolados.",
+      "evren_evidence": "A cripta selada da abadia contém condutos acústicos de calcário e restos fossilizados de espécimes preliminares de Ecos Subterrâneos.",
+      "aegis_interpretation": "Precedente histórico europeu de infecção anômala auditiva. O 'Sem-Rosto' medieval era uma manifestação embrionária de Ecos em ambiente cárstico.",
+      "confirmation_level": "in_world_report",
+      "cultural_note": "Registrado nos anais medievais germânicos como sinal da peste; preservada a separação entre registro religioso histórico e análise biopunk contemporânea."
+    },
+    {
+      "id": "folk_minas_san_lorenzo",
+      "name": "O Poço dos Sussurros de San Lorenzo (México)",
+      "real_location": "Serra de Aguascalientes / Zacatecas, México",
+      "origin_culture": "Tradição Mineira Mexicana do Século XIX (Mina de Santa Rita / Consórcio Vilar)",
+      "bibliographic_source": "Boletins do Ministério da Mineração do México (1898) & Depoimentos de Famílias Mineiras.",
+      "folklore_variations": "Diz-se que os mineiros que desciam além do nível 4 ouviam parentes falecidos chamando por socorro nas rochas de prata; aqueles que respondiam perdiam o rumo e desapareciam nos desmoronamentos.",
+      "evren_evidence": "Galerias seladas em 1920 apresentavam marcas de garras e tecidos de pele sintética compatíveis com Ecos Subterrâneos.",
+      "aegis_interpretation": "Infestação profunda de predadores sonoros adormecidos que despertaram após perfurações do Consórcio Vilar em busca de prata e quartzo.",
+      "confirmation_level": "confirmed",
+      "cultural_note": "Relacionado à memória histórica de trabalhadores das minas mexicanas; mantido com respeito à classe trabalhadora da serra."
+    },
+    {
+      "id": "folk_campo_rosas_atlantico",
+      "name": "O Mar das Rosas Negras das Bermudas",
+      "real_location": "Mar dos Sargaços / Triângulo das Bermudas",
+      "origin_culture": "Tradição de Navegadores Portugueses, Espanhóis e Ingleses (Século XVI em diante)",
+      "bibliographic_source": "Diários de Bordo de Caravelas Espanholas (1542) & Cartas Náuticas de Navios Negreiros e Mercantes.",
+      "folklore_variations": "Marinheiros descreviam manchas calmas no oceano onde a água assumia tom azul escuro sobrenatural e flores semelhantes a rosas brotavam da superfície salina antes de tempestades sem vento.",
+      "evren_evidence": "Coletas no Campo de Rosas de Nova Caronte revelaram que as 'pétalas' são filamentos orgânicos de MDA cristalizado com temperatura de congelamento anormal.",
+      "aegis_interpretation": "Marcador territorial direto do Primogênito / Arquiteto do Caos. Atua como anestésico neurológico que induz euforia e apatia nas tripulações prestes a serem engolidas.",
+      "confirmation_level": "in_world_report",
+      "cultural_note": "Inspirado em lendas náuticas do Atlântico e nos mistérios cartográficos do Mar dos Sargaços."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "EVREN",
+      "category": "Cosmologia",
+      "definition": "Universo compartilhado físico e coerente de horror investigativo e biopunk, contido em um único planeta navegável, onde a realidade é marcada por regiões estáveis e áreas sujeitas a anomalias dimensionais e biológicas."
+    },
+    {
+      "term": "A.E.G.I.S.",
+      "category": "Organizações",
+      "definition": "Organização central de contenção e monitoramento anômalo. Conhecida sob as fachadas 'Fundação A.E.G.I.S. / C.R.I.S.', 'Agência de Exploração e Gerenciamento de Incursões Secretas' e 'Agência de Segurança Metafísica'."
+    },
+    {
+      "term": "C.R.I.S.",
+      "category": "Padronização Tática",
+      "definition": "Padrão tático e protocolo de codificação de fichas operacionais de campo, agentes e relatórios confidenciais da A.E.G.I.S. (expansão da sigla não homologada)."
+    },
+    {
+      "term": "MDA",
+      "category": "Fisiologia Anômala",
+      "definition": "Mutagênese Dimensional Anômala. Processo celular de exposição e hiper-adaptação genética induzido por fendas dimensionais, que acelera mutações e reescreve tecidos biológicos sem recurso a feitiçaria."
+    },
+    {
+      "term": "PD",
+      "category": "Mecânicas",
+      "definition": "Pontos de Determinação. Reserva mental, esforço extremo e coragem tática de um personagem para realizar proezas ou canalizar expressões anímicas. Não representa integridade corporal física."
+    },
+    {
+      "term": "SAN",
+      "category": "Mecânicas",
+      "definition": "Sanidade. Estabilidade subjetiva do personagem perante a revelação do horror cósmico e anômalo. Tratada com respeito à agência do jogador e ferramentas de consentimento e pausa dramática."
+    },
+    {
+      "term": "PV",
+      "category": "Mecânicas",
+      "definition": "Pontos de Vida. Medida quantitativa de integridade biológica e corporal de um agente ou criatura. Dano cinético ou térmico sempre reduz PV."
+    },
+    {
+      "term": "LIMIAR",
+      "category": "Tecnologia / Relíquias",
+      "definition": "Arma de Portais e estabilização de dobras dimensionais projetada por Gabriel Vilar, utilizando âncoras quânticas e pesadas baterias eletroquímicas para abrir fendas de travessia."
+    },
+    {
+      "term": "Ecos Subterrâneos",
+      "category": "Bestiário",
+      "definition": "Predadores humanoides cegos habitantes de galerias profundas que caçam por ecolocalização e atraem vítimas imitando com precisão as vozes de entes queridos já devorados."
+    },
+    {
+      "term": "Nova Caronte",
+      "category": "Geografia Anômala",
+      "definition": "Cidade flutuante no coração da anomalia do Triângulo das Bermudas, construída sobre os cascos encadeados de embarcações de diversas épocas históricas."
+    },
+    {
+      "term": "Triângulo Verdadeiro",
+      "category": "Geografia Anômala",
+      "definition": "A fenda dimensional marítima no Atlântico Norte, interpretada como uma prisão natural milenar cuja barreira protetora está se desfazendo aceleradamente."
+    },
+    {
+      "term": "Primogênito",
+      "category": "Entidades",
+      "definition": "Denominação atribuída pelo manuscrito ao ser que atravessou a anomalia há milênios e aprendeu a manipular a matéria. Disputado com a teoria de Cobaia Zero."
+    },
+    {
+      "term": "Arquiteto do Caos / Diabo do Mar",
+      "category": "Entidades",
+      "definition": "Títulos lendários e temidos da figura encapuzada de máscara de madeira/osso e aura azul que domina as correntes e mentes no Triângulo das Bermudas."
+    },
+    {
+      "term": "Expressão Anímica",
+      "category": "Paranormal / Alma",
+      "definition": "Habilidade singular manifestada a partir da convicção, memória ou alma de um indivíduo, gerando efeitos empíricos delimitados sem recorrer a magias clássicas de fantasia."
+    },
+    {
+      "term": "Campo de Rosas",
+      "category": "Fenômenos",
+      "definition": "Área marítima de águas geladas com flores negras flutuantes e aura azul escura atribuída ao Arquiteto do Caos, onde a razão humana se esvai em torpor euforizante."
+    },
+    {
+      "term": "Incursão",
+      "category": "Fenômenos",
+      "definition": "Vazamento ou transbordamento de matéria, criaturas e leis anômalas de uma fenda para regiões geográficas estáveis do planeta."
+    },
+    {
+      "term": "Outro Lado",
+      "category": "Cosmologia",
+      "definition": "Termo de gíria tática utilizado por diretores da A.E.G.I.S. (como Kaelen) e contrabandistas para designar a realidade extradimensional de onde emanam os artefatos e parasitas."
+    },
+    {
+      "term": "Relíquia Parasita",
+      "category": "Relíquias",
+      "definition": "Objeto contido na redoma da Mansão Belvedere, comercializado no mercado oculto como fonte de poder, mas diagnosticado pela A.E.G.I.S. como organismo devorador biológico."
+    }
+  ]
 };
   }
 }
 
-// Instância global
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.DataLoader = DataLoader;
 }
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = DataLoader;
 }

@@ -322,6 +322,19 @@ class MuseumController {
     return map[kind] || 'Feição Geográfica';
   }
 
+  formatCanonStatusBadge(status) {
+    const map = {
+      'confirmed': { label: 'CONFIRMADO', color: '#39ff14', bg: 'rgba(57, 255, 20, 0.12)' },
+      'in_world_report': { label: 'RELATO DE CAMPO', color: '#00e5ff', bg: 'rgba(0, 229, 255, 0.12)' },
+      'disputed': { label: 'DISPUTADO // VARIANTES', color: '#ffd700', bg: 'rgba(255, 215, 0, 0.12)' },
+      'open_mystery': { label: 'MISTÉRIO ABERTO', color: '#ff7700', bg: 'rgba(255, 119, 0, 0.12)' },
+      'proposal': { label: 'PROPOSTA (PLAYTEST)', color: '#b388ff', bg: 'rgba(179, 136, 255, 0.12)' },
+      'superseded': { label: 'LEGADO // SUPERSEDED', color: '#888888', bg: 'rgba(136, 136, 136, 0.12)' }
+    };
+    const item = map[status] || { label: (status || 'REGISTRADO').toUpperCase(), color: '#00e5ff', bg: 'rgba(0, 229, 255, 0.1)' };
+    return `<span class="canon-status-badge" style="display: inline-block; padding: 2px 7px; border-radius: 3px; font-family: monospace; font-size: 10px; font-weight: 700; color: ${item.color}; background: ${item.bg}; border: 1px solid ${item.color}; margin-bottom: 4px;">⚖️ ${item.label}</span>`;
+  }
+
   /* ==========================================================================
      MODAL DE EXPOSIÇÃO HISTÓRICA DA CAMPANHA (SEÇÃO 4)
      ========================================================================== */
@@ -400,6 +413,7 @@ class MuseumController {
           <div class="exhibition-card">
             <h4 class="exhibition-card__label">Ficha Cartográfica do Acervo</h4>
             <ul class="exhibition-stat-list">
+              <li class="exhibition-stat-item"><strong>Estado de Cânone:</strong> <span>${this.formatCanonStatusBadge(camp.canon_status || 'confirmed')}</span></li>
               <li class="exhibition-stat-item"><strong>Período Histórico:</strong> <span>${this.escapeHtml(hi.year || camp.year || '')}</span></li>
               <li class="exhibition-stat-item"><strong>Status no Planeta:</strong> <span style="color: ${statusText.toLowerCase().includes('concl') ? '#2ecc71' : 'var(--museum-gold-bright)'}; font-weight: 600;">${this.escapeHtml(statusText)}</span></li>
               <li class="exhibition-stat-item"><strong>Gênero & Temática:</strong> <span>${this.escapeHtml(hi.genre_theme || camp.theme || '')}</span></li>
@@ -410,6 +424,17 @@ class MuseumController {
               <li class="exhibition-stat-item"><strong>Cidade / Distrito:</strong> <span>${this.escapeHtml(hierarchy?.city?.name || 'Não classificado')}</span></li>
               <li class="exhibition-stat-item"><strong>Classificação de Ameaça:</strong> <span>${this.escapeHtml(camp.danger_rating || 'Nível Padrão')}</span></li>
             </ul>
+            ${camp.curator_notes ? `
+              <div style="background: rgba(0, 229, 255, 0.08); border-left: 3px solid #00e5ff; padding: 10px; margin-top: 12px; border-radius: 0 4px 4px 0;">
+                <strong style="color: #00e5ff; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase;">Nota de Curadoria // Proveniência:</strong>
+                <p style="font-size: 11.5px; color: var(--museum-text-muted); margin: 4px 0 0 0;">${this.escapeHtml(camp.curator_notes)}</p>
+              </div>
+            ` : ''}
+            ${(camp.sources && camp.sources.length > 0) ? `
+              <div style="margin-top: 10px; font-size: 11px; color: var(--museum-text-muted);">
+                <strong>Fontes de Arquivo:</strong> ${camp.sources.map(s => `<span style="display:inline-block; margin-right:4px; padding:1px 6px; background:rgba(255,255,255,0.06); border-radius:3px;">${this.escapeHtml(s)}</span>`).join('')}
+              </div>
+            ` : ''}
           </div>
         </div>
       </div>
@@ -845,7 +870,23 @@ class MuseumController {
   }
 
   applyArchivePreset(preset) {
-    if (preset === 'missing') {
+    if (preset === 'ledger') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, entityType: 'ledger' };
+    } else if (preset === 'bestiary') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, entityType: 'bestiary' };
+    } else if (preset === 'powers') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, entityType: 'powers' };
+    } else if (preset === 'folklore') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, entityType: 'folklore' };
+    } else if (preset === 'relics') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, entityType: 'artifacts' };
+    } else if (preset === 'completed') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, campaignStatus: 'completed', entityType: 'campaigns' };
+    } else if (preset === 'all') {
+      this.activeArchiveFilters = { ...this.activeArchiveFilters, entityType: 'all', query: '' };
+      const searchInp = document.getElementById('archive-search-input');
+      if (searchInp) searchInp.value = '';
+    } else if (preset === 'missing') {
       this.activeArchiveFilters = { ...this.activeArchiveFilters, characterStatus: 'desaparecido', entityType: 'characters' };
     } else if (preset === 'brazil') {
       this.activeArchiveFilters = { ...this.activeArchiveFilters, countryId: 'country_brasil', entityType: 'all' };
@@ -891,7 +932,11 @@ class MuseumController {
       (results.events?.length || 0) +
       (results.sessions?.length || 0) +
       (results.artifacts?.length || 0) +
-      (results.organizations?.length || 0);
+      (results.organizations?.length || 0) +
+      (results.bestiary?.length || 0) +
+      (results.ledger?.length || 0) +
+      (results.powers?.length || 0) +
+      (results.folklore?.length || 0);
 
     if (counterEl) {
       counterEl.textContent = `${total} registro(s) histórico(s) conectado(s) encontrado(s)`;
@@ -906,7 +951,10 @@ class MuseumController {
         <div class="exhibition-character-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin-bottom: 20px;">
           ${results.campaigns.map((c) => `
             <div class="exhibition-card" style="cursor: pointer;" data-open-campaign-id="${this.escapeHtml(c.id)}">
-              <strong style="color: var(--museum-gold-bright); font-size: 14px;">${this.escapeHtml(c.title || c.name)}</strong><br>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <strong style="color: var(--museum-gold-bright); font-size: 14px;">${this.escapeHtml(c.title || c.name)}</strong>
+                ${this.formatCanonStatusBadge(c.canon_status || 'confirmed')}
+              </div>
               <span style="font-size: 11px; color: var(--museum-text-muted);">${this.escapeHtml(c.year)} • ${this.escapeHtml(c.country_location || '')}</span>
               <p style="font-size: 12px; color: var(--museum-text-muted); margin-top: 6px;">${this.escapeHtml((c.synopsis || c.description || '').slice(0, 140))}...</p>
             </div>
@@ -965,6 +1013,97 @@ class MuseumController {
               <span style="font-size: 11px; font-weight: 700; color: var(--museum-gold);">${this.escapeHtml(evt.date)}</span>
               <strong style="color: var(--museum-text-main); font-size: 13.5px; display: block; margin: 2px 0 4px;">${this.escapeHtml(evt.title)}</strong>
               <p style="font-size: 12px; color: var(--museum-text-muted);">${this.escapeHtml(evt.description)}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 5. Bestiário Canônico (10 Espécimes)
+    if (results.bestiary && results.bestiary.length > 0) {
+      html += `
+        <h4 class="exhibition-card__label" style="margin-top: 15px;">🐾 Bestiário Canônico de Evren (${results.bestiary.length})</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          ${results.bestiary.map((b) => `
+            <div class="exhibition-card" style="border-left: 3px solid #ff4d4d;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                <strong style="color: #ff6b6b; font-size: 14px;">${this.escapeHtml(b.name)}</strong>
+                ${this.formatCanonStatusBadge(b.canon_status || 'confirmed')}
+              </div>
+              <span style="font-size: 11px; font-style: italic; color: var(--museum-text-muted);">${this.escapeHtml(b.scientific_name || '')}</span><br>
+              <span class="badge-tag danger" style="margin: 4px 0 6px; display: inline-block;">${this.escapeHtml(b.threat_level || '')}</span>
+              <p style="font-size: 12px; color: var(--museum-text-muted); line-height: 1.4; margin-top: 4px;">${this.escapeHtml(b.behavior || b.description || '')}</p>
+              <div style="margin-top: 8px; font-size: 11px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px;">
+                <strong>Fraqueza / Limite:</strong> <span style="color: #ffd700;">${(b.weaknesses && b.weaknesses.length > 0) ? this.escapeHtml(b.weaknesses.join('; ')) : 'NÃO INFORMADA / SOB INVESTIGAÇÃO'}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 6. Ledger Canônico (Gestão de Cânone & Hipóteses)
+    if (results.ledger && results.ledger.length > 0) {
+      html += `
+        <h4 class="exhibition-card__label" style="margin-top: 15px;">⚖️ Ledger Canônico & Gestão de Divergências (${results.ledger.length})</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+          ${results.ledger.map((item) => `
+            <div class="exhibition-card" style="border-left: 3px solid #00e5ff;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                <strong style="color: #00e5ff; font-size: 13.5px;">${this.escapeHtml(item.topic)}</strong>
+                ${this.formatCanonStatusBadge(item.status)}
+              </div>
+              <p style="font-size: 12.5px; color: var(--museum-text-main); font-weight: 500; margin: 4px 0;">${this.escapeHtml(item.claim)}</p>
+              <div style="background: rgba(0, 0, 0, 0.25); padding: 8px; border-radius: 4px; margin-top: 6px; font-size: 11px; color: var(--museum-text-muted);">
+                <strong style="color: #ffd700;">Nota do Curador:</strong> ${this.escapeHtml(item.curator_notes || '')}
+              </div>
+              ${(item.sources && item.sources.length > 0) ? `
+                <div style="margin-top: 6px; font-size: 10.5px; color: var(--museum-text-muted);">
+                  <strong>Fontes Concorrentes:</strong> ${item.sources.map(s => `<span style="display:inline-block; margin-right:4px; padding:1px 5px; background:rgba(255,255,255,0.05); border-radius:3px;">${this.escapeHtml(s)}</span>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 7. Expressões Anímicas
+    if (results.powers && results.powers.length > 0) {
+      html += `
+        <h4 class="exhibition-card__label" style="margin-top: 15px;">⚡ Expressões Anímicas (${results.powers.length})</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          ${results.powers.map((p) => `
+            <div class="exhibition-card" style="border-left: 3px solid #b388ff;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                <strong style="color: #b388ff; font-size: 13.5px;">${this.escapeHtml(p.name)}</strong>
+                <span class="badge-tag" style="background: rgba(179,136,255,0.15); color: #b388ff; border: 1px solid #b388ff;">${p.cost_pd} PD</span>
+              </div>
+              <span style="font-size: 11px; color: var(--museum-text-muted);">${this.escapeHtml(p.category || 'Manifestação')} • ${this.escapeHtml(p.range_duration_targets || '')}</span>
+              <p style="font-size: 12px; color: var(--museum-text-main); margin-top: 6px;">${this.escapeHtml(p.observable_effect || '')}</p>
+              <div style="font-size: 11px; color: var(--museum-text-muted); margin-top: 6px; font-style: italic;">
+                "${this.escapeHtml(p.belief_conflict || '')}"
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 8. Casos de Folclore e Tradições Orais
+    if (results.folklore && results.folklore.length > 0) {
+      html += `
+        <h4 class="exhibition-card__label" style="margin-top: 15px;">📜 Casos de Folclore & Tradições Orais (${results.folklore.length})</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+          ${results.folklore.map((f) => `
+            <div class="exhibition-card" style="border-left: 3px solid #f39c12;">
+              <strong style="color: #f39c12; font-size: 13.5px;">${this.escapeHtml(f.name)}</strong><br>
+              <span style="font-size: 11px; color: var(--museum-text-muted);">${this.escapeHtml(f.real_location)} • Cultura: ${this.escapeHtml(f.origin_culture)}</span>
+              <p style="font-size: 12px; color: var(--museum-text-main); margin: 6px 0;"><strong>Lenda Tradicional:</strong> ${this.escapeHtml(f.folklore_variations)}</p>
+              <div style="background: rgba(243, 156, 18, 0.08); padding: 8px; border-radius: 4px; font-size: 11.5px; color: var(--museum-text-muted);">
+                <strong style="color: #f39c12;">Evidência em Evren:</strong> ${this.escapeHtml(f.evren_evidence)}<br>
+                <strong style="color: #00e5ff;">Leitura da A.E.G.I.S.:</strong> ${this.escapeHtml(f.aegis_interpretation)}
+              </div>
             </div>
           `).join('')}
         </div>

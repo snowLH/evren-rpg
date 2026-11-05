@@ -23,7 +23,7 @@ class MuseumStorageManager {
     this.MERGEABLE_COLLECTIONS = [
       'continents', 'countries', 'regions', 'cities', 'campaigns', 'locations',
       'characters', 'historical_events', 'chronicles', 'timeline', 'relics',
-      'bestiary', 'organizations', 'maps'
+      'bestiary', 'organizations', 'maps', 'canon_ledger', 'powers', 'folklore_cases', 'glossary'
     ];
   }
 

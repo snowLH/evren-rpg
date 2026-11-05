@@ -33,16 +33,18 @@ Antes de propor ou executar qualquer alteração estrutural, arquitetural ou mec
    - Utilize apenas **HTML5 puro, CSS3 modular e JavaScript ES6 nativo**.
 
 3. **Integridade de IDs do DOM (100% Obrigatório):**
-   - Qualquer elemento acessado via `document.getElementById('...')` nos 19 scripts JS DEVE existir fisicamente em `index.html`.
-   - O comando `python test_integrity.py` DEVE rodar com **100% PASS (258 IDs)**. Jamais renomeie ou remova IDs existentes sem atualizar todos os arquivos relacionados.
+   - Qualquer elemento acessado via `document.getElementById('...')` nos scripts JS DEVE existir fisicamente em `index.html`.
+   - O comando `python test_integrity.py` DEVE rodar com **100% PASS (335 IDs)**. Jamais renomeie ou remova IDs existentes sem atualizar todos os arquivos relacionados.
 
-4. **Resiliência do DataLoader (Dual-Mode):**
+4. **Resiliência do DataLoader (Dual-Mode) e Integridade Canônica:**
    - O arquivo `scripts/data-loader.js` carrega dados assincronamente via `fetch('world_data.json')` com fallback automático e imediato para `getEmbeddedFallbackData()`.
-   - Se novas campanhas ou personagens canônicos forem adicionados ao `world_data.json`, mantenha paridade no fallback embutido.
+   - Se novas campanhas, criaturas ou personagens canônicos forem adicionados, mantenha paridade exata no fallback embutido.
+   - Respeite os estados epistêmicos do `canon_ledger` (`confirmed`, `in_world_report`, `disputed`, `open_mystery`, `proposal`, `superseded`). Não resolva artificialmente contradições históricas (e.g. datas da Mansão Vilar 2021/2024 vs 2023/2026; navio de 5.000 passageiros vs centenas; expansões da sigla A.E.G.I.S.).
+   - Aplique as mecânicas canônicas: 5 Atributos, 28 perícias canônicas com aliases (`Ciências`/`Ciência`, `Ocultismo`/`Misticismo`), resolução por rolagem única `max((Atributo)d20) + bônus`, e separação métrica: PV (saúde física), PD (esforço/habilidades), SAN (estabilidade mental) e MDA (mutagênese).
 
-5. **Persistência em localStorage:**
+5. **Persistência em localStorage e IndexedDB:**
    - Modificações de PV, PE, SAN e status vital das fichas devem persistir na chave `evren_character_stat_overrides`.
-   - Não quebre os canais de persistência do `BackupManager`.
+   - As coleções `canon_ledger`, `powers`, `folklore_cases` e `glossary` estão registradas no `scripts/museum-storage.js` para mesclagem limpa no IndexedDB.
 
 6. **Interatividade Desobstruída:**
    - Mantenha os 177 países interativos com tooltips e cliques funcionais.
@@ -55,13 +57,19 @@ Antes de propor ou executar qualquer alteração estrutural, arquitetural ou mec
 Antes de concluir qualquer tarefa ou enviar alterações para o Git, execute:
 
 ```bash
-# 1. Validação de IDs do DOM e arquivos CSS/JS:
+# 1. Teste do servidor HTTP e políticas de segurança:
+python test_server.py
+
+# 2. Validação de integridade de IDs do DOM (335 IDs) e arquivos CSS/JS:
 python test_integrity.py
 
-# 2. Testes unitários do DataLoader (Node.js):
+# 3. Testes unitários do DataLoader, Canon Ledger e Bestiário (Node.js):
 node test_data_loader.js
 
-# 3. Verificação de sintaxe dos scripts modificados:
-node -c scripts/ui-controller.js
-node -c scripts/map-engine.js
+# 4. Verificação de sintaxe dos scripts modificados:
+node -c scripts/data-loader.js
+node -c scripts/museum-controller.js
+node -c scripts/combat-arena.js
+node -c scripts/museum-storage.js
+node -c scripts/app.js
 ```

@@ -41,6 +41,7 @@ sync_*.js
 sync_*.py
 enrich_*.js
 enrich_*.py
+build_*.js
 update_world_data.py
 generate_app_icons.py
 

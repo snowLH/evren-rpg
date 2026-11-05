@@ -335,7 +335,7 @@ class CombatArena {
       resultText = `
         <strong style="color: #ff6b6b;">⚔️ GOLPE CONECTADO!</strong><br>
         ${attacker.name} venceu a disputa [${totalAtk} vs ${totalDef}].<br>
-        Dano infligido: <strong>-${damage} PD</strong> na integridade de ${defender.name}.
+        Dano infligido: <strong>-${damage} PV</strong> na integridade física de ${defender.name}.
       `;
       if (window.soundFX) window.soundFX.playArmorSacrifice();
     } else if (diff < 0) {
@@ -354,12 +354,13 @@ class CombatArena {
       }
       if (window.soundFX) window.soundFX.playTacticalBeep();
     } else {
-      // EMPATE EXATO -> DESEMPATE LETAL IMEDIATO!
+      // EMPATE EXATO -> PELA REGRA CANÔNICA DE EVREN, FAVORECE QUEM JÁ DEFENDIA A SITUAÇÃO
       resultText = `
-        <strong style="color: #ffd700; font-size: 14px;">⚡ EMPATE EXATO EM CONFLITO DIRETO [${totalAtk} x ${totalDef}]!</strong><br>
-        Sem recuo! A regra de Desempate Letal entra em vigor imediato. Golpe simultâneo de sobrevivência!
+        <strong style="color: #00e5ff; font-size: 14px;">🛡️ EMPATE RESISTIDO [${totalAtk} x ${totalDef}] — VANTAGEM DEFENSIVA!</strong><br>
+        Pela regra canônica de Conflito Direto de Evren, o empate favorece quem já defendia a posição.<br>
+        <span style="color:#a0e0ff;">${defender.name} neutralizou completamente o avanço ofensivo de ${attacker.name}!</span>
       `;
-      if (window.soundFX) window.soundFX.playRadarPing();
+      if (window.soundFX) window.soundFX.playTacticalBeep();
     }
 
     if (banner) banner.innerHTML = resultText;
