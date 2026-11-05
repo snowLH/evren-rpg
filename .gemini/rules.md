@@ -34,7 +34,7 @@ Antes de propor ou executar qualquer alteração estrutural, arquitetural ou mec
 
 3. **Integridade de IDs do DOM (100% Obrigatório):**
    - Qualquer elemento acessado via `document.getElementById('...')` nos scripts JS DEVE existir fisicamente em `index.html`.
-   - O comando `python test_integrity.py` DEVE rodar com **100% PASS (335 IDs)**. Jamais renomeie ou remova IDs existentes sem atualizar todos os arquivos relacionados.
+   - O comando `python test_integrity.py` DEVE rodar com **100% PASS (347 IDs)**. Jamais renomeie ou remova IDs existentes sem atualizar todos os arquivos relacionados.
 
 4. **Resiliência do DataLoader (Dual-Mode) e Integridade Canônica:**
    - O arquivo `scripts/data-loader.js` carrega dados assincronamente via `fetch('world_data.json')` com fallback automático e imediato para `getEmbeddedFallbackData()`.

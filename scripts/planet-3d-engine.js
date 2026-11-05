@@ -555,6 +555,20 @@ class Planet3DEngine {
   }
 
   /**
+   * Converte um vetor 3D na superfície da esfera de volta em coordenadas geográficas (lat, lng)
+   */
+  vector3ToLatLng(vec) {
+    const norm = vec.clone().normalize();
+    const phi = Math.acos(Math.max(-1, Math.min(1, norm.y)));
+    const lat = 90 - (phi * 180 / Math.PI);
+    const theta = Math.atan2(norm.z, -norm.x);
+    let lng = (theta * 180 / Math.PI) - 180;
+    while (lng > 180) lng -= 360;
+    while (lng < -180) lng += 360;
+    return { lat, lng };
+  }
+
+  /**
    * Constrói todos os marcadores geográficos e históricos do planeta:
    * - Oceanos, Continentes, Países, Regiões, Cidades, Locais Históricos,
    *   Cadeias de Montanhas, Florestas, Rios, Desertos, Áreas Não Documentadas e Campanhas.
@@ -778,19 +792,30 @@ class Planet3DEngine {
 
     // 8. Campanhas / Exposições Históricas (Visíveis em todas as escalas com detalhamento progressivo)
     campaigns.forEach((camp) => {
-      if (!camp.coordinates || camp.coordinates.length < 2) return;
+      let coords = camp.world_coordinates || camp.coordinates;
+      if (!coords || coords.length < 2) {
+        const city = this.dataLoader.getCityById(camp.city_id);
+        if (city && city.coordinates) coords = city.coordinates;
+        else {
+          const locs = this.dataLoader.getLocations(camp.id);
+          if (locs.length > 0 && locs[0].coordinates) coords = locs[0].coordinates;
+        }
+      }
+      if (!coords || coords.length < 2) return;
+
       const statusMuseum = camp.status_museum || (camp.category === 'completed' ? 'concluída' : 'em andamento');
+      const campTitle = camp.title || camp.name || 'Campanha';
       this.registerMarker({
         id: camp.id,
         kind: 'campaign',
-        name: camp.name,
-        subtitle: `${camp.epoch || ''} • ${camp.region || ''}`,
+        name: campTitle,
+        subtitle: `${camp.year || camp.epoch || ''} • ${camp.country_location || camp.region || ''}`,
         statusMuseum,
         category: camp.category || 'ongoing',
-        lat: camp.coordinates[0] - 0.35,
-        lng: camp.coordinates[1] - 0.45,
-        trueLat: camp.coordinates[0],
-        trueLng: camp.coordinates[1],
+        lat: coords[0] - 0.35,
+        lng: coords[1] - 0.45,
+        trueLat: coords[0],
+        trueLng: coords[1],
         continentId: camp.continent_id,
         countryId: camp.country_id,
         regionId: camp.region_id,
@@ -799,7 +824,7 @@ class Planet3DEngine {
         data: camp
       });
 
-      this.add3DPinMesh(camp.coordinates[0], camp.coordinates[1], 0xd4af37, 0.85);
+      this.add3DPinMesh(coords[0], coords[1], 0xd4af37, 0.85);
     });
   }
 
@@ -1064,6 +1089,70 @@ class Planet3DEngine {
   }
 
   /**
+   * Foca a câmera diretamente em uma campanha histórica no globo 3D
+   */
+  focusCampaign(campaignId) {
+    const camp = this.dataLoader.getCampaignById(campaignId);
+    if (!camp) return;
+    const coords = camp.world_coordinates || camp.coordinates;
+    if (!coords || coords.length < 2) return;
+    const [lat, lng] = coords;
+
+    this.highlightSurfacePoint(lat, lng);
+    const hierarchy = this.dataLoader.getGeographicHierarchyForCampaign(camp.id);
+    this.focusedContext = {
+      continent: hierarchy?.continent || null,
+      country: hierarchy?.country || null,
+      region: hierarchy?.region || null,
+      city: hierarchy?.city || null,
+      location: (hierarchy?.locations && hierarchy.locations[0]) || null,
+      campaign: camp
+    };
+
+    const targetDist = this.cameraState.distance > 140 ? 124 : this.cameraState.distance;
+    this.flyToGeo(lat, lng, targetDist, () => {
+      if (this.onSelectionCallback) {
+        this.onSelectionCallback('campaign', camp, this.focusedContext);
+      }
+    }, 1100);
+  }
+
+  zoomIn() {
+    this.pauseAutoRotate();
+    this.flightAnim = null;
+    this.cameraState.targetDistance = Math.max(this.minDistance, this.cameraState.targetDistance - 32);
+  }
+
+  zoomOut() {
+    this.pauseAutoRotate();
+    this.flightAnim = null;
+    this.cameraState.targetDistance = Math.min(this.maxDistance, this.cameraState.targetDistance + 32);
+  }
+
+  toggleAutoRotate() {
+    this.autoRotate = !this.autoRotate;
+    if (this.autoRotateIdleTimer) clearTimeout(this.autoRotateIdleTimer);
+    return this.autoRotate;
+  }
+
+  resetView() {
+    this.focusedContext = {
+      continent: null,
+      country: null,
+      region: null,
+      city: null,
+      location: null,
+      campaign: null
+    };
+    this.flyToGeo(12.0, -42.0, 285, () => {
+      this.autoRotate = true;
+      if (this.onSelectionCallback) {
+        this.onSelectionCallback('scale_change', { scale: 'global', distance: 285 }, this.focusedContext);
+      }
+    }, 1200);
+  }
+
+  /**
    * Aplica filtros de visualização nos marcadores do planeta
    */
   setFilter(filterOptions = {}) {
@@ -1078,9 +1167,19 @@ class Planet3DEngine {
     if (!dom) return;
 
     dom.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('.planet-marker')) return;
+      if (
+        e.target.closest('.planet-marker') ||
+        e.target.closest('.planet-ctrl-btn') ||
+        e.target.closest('.quick-camp-pill') ||
+        e.target.closest('.museum-scale-btn') ||
+        e.target.closest('.museum-hud-bottom') ||
+        e.target.closest('.museum-context-panel') ||
+        e.target.closest('.museum-view-toggle-btn')
+      ) return;
+
       this.isDragging = true;
       this.dragMoved = false;
+      this.pointerDownPos = { x: e.clientX, y: e.clientY };
       this.lastPointer = { x: e.clientX, y: e.clientY };
       this.flightAnim = null;
       this.pauseAutoRotate();
@@ -1090,7 +1189,7 @@ class Planet3DEngine {
       if (!this.isDragging) return;
       const dx = e.clientX - this.lastPointer.x;
       const dy = e.clientY - this.lastPointer.y;
-      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) this.dragMoved = true;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) this.dragMoved = true;
 
       // Sensibilidade proporcional à distância da câmera (mais precisa quando aproximada)
       const zoomFactor = (this.cameraState.distance - 95) / 200;
@@ -1104,8 +1203,26 @@ class Planet3DEngine {
       this.lastPointer = { x: e.clientX, y: e.clientY };
     });
 
-    window.addEventListener('pointerup', () => {
+    window.addEventListener('pointerup', (e) => {
+      if (!this.isDragging) return;
       this.isDragging = false;
+
+      const totalMoved = Math.hypot(
+        e.clientX - (this.pointerDownPos?.x || e.clientX),
+        e.clientY - (this.pointerDownPos?.y || e.clientY)
+      );
+      if (!this.dragMoved && totalMoved < 6) {
+        this.handleSurfaceRaycastClick(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener('pointercancel', () => {
+      this.isDragging = false;
+    });
+
+    dom.addEventListener('dblclick', (e) => {
+      if (e.target.closest('.planet-marker')) return;
+      this.handleSurfaceRaycastDblClick(e.clientX, e.clientY);
     });
 
     dom.addEventListener('wheel', (e) => {
@@ -1119,6 +1236,66 @@ class Planet3DEngine {
         Math.min(this.maxDistance, this.cameraState.targetDistance + step)
       );
     }, { passive: false });
+  }
+
+  handleSurfaceRaycastClick(clientX, clientY) {
+    if (!this.camera || !this.planetMesh || !this.canvasContainer) return;
+    const rect = this.canvasContainer.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const mouseX = ((clientX - rect.left) / rect.width) * 2 - 1;
+    const mouseY = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), this.camera);
+    const intersects = raycaster.intersectObject(this.planetMesh, false);
+    if (intersects.length > 0) {
+      const geo = this.vector3ToLatLng(intersects[0].point);
+      this.highlightSurfacePoint(geo.lat, geo.lng);
+
+      // Procura marcador próximo (até 12 graus de distância angular)
+      let closestItem = null;
+      let minDistance = 12;
+      this.markerItems.forEach((item) => {
+        if (item.kind !== 'campaign' && item.kind !== 'location' && item.kind !== 'city') return;
+        const targetLat = item.trueLat !== undefined ? item.trueLat : item.lat;
+        const targetLng = item.trueLng !== undefined ? item.trueLng : item.lng;
+        const dist = Math.hypot(targetLat - geo.lat, targetLng - geo.lng);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestItem = item;
+        }
+      });
+
+      if (closestItem) {
+        this.handleMarkerClick(closestItem);
+      } else {
+        this.cameraState.targetLat = Math.max(-82, Math.min(82, geo.lat));
+        this.cameraState.targetLng = geo.lng;
+        if (this.onSelectionCallback) {
+          this.onSelectionCallback('surface_click', geo, this.focusedContext);
+        }
+      }
+    }
+  }
+
+  handleSurfaceRaycastDblClick(clientX, clientY) {
+    if (!this.camera || !this.planetMesh || !this.canvasContainer) return;
+    const rect = this.canvasContainer.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const mouseX = ((clientX - rect.left) / rect.width) * 2 - 1;
+    const mouseY = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), this.camera);
+    const intersects = raycaster.intersectObject(this.planetMesh, false);
+    if (intersects.length > 0) {
+      const geo = this.vector3ToLatLng(intersects[0].point);
+      this.highlightSurfacePoint(geo.lat, geo.lng);
+      const targetDist = Math.max(this.minDistance, this.cameraState.distance * 0.68);
+      this.flyToGeo(geo.lat, geo.lng, targetDist);
+    }
   }
 
   pauseAutoRotate() {

@@ -845,12 +845,23 @@ class UIController {
 
     // Se o usuário selecionou 'Todas as Campanhas' e está no mapa local, retorna ao mapa múndi
     if (filter === 'all') {
+      if (window.planetEngine) {
+        window.planetEngine.setFilter({ status: 'all' });
+        window.planetEngine.setScaleView('global');
+      }
       if (window.app?.mapEngine && window.app.mapEngine.currentScale === 'local') {
         window.retornarAoMapaMundi();
       }
     } else {
-      // Se selecionou uma campanha específica e ainda está no globo, mergulha nela
-      if (window.app?.mapEngine && (window.app.mapEngine.currentScale === 'global' || window.app.mapEngine.currentRpgId !== filter)) {
+      // Se selecionou uma campanha específica no Planeta 3D, foca a campanha
+      if (window.planetEngine) {
+        window.planetEngine.focusCampaign(filter);
+        if (window.museumController) {
+          setTimeout(() => {
+            window.museumController.openExhibitionModal(filter);
+          }, 900);
+        }
+      } else if (window.app?.mapEngine && (window.app.mapEngine.currentScale === 'global' || window.app.mapEngine.currentRpgId !== filter)) {
         window.mergulhoNasNuvens(filter);
       }
     }
@@ -1661,10 +1672,13 @@ ${char.summary || 'Sem registro adicional.'}
 
           <div class="campaign-card-actions">
             <button class="btn-campaign-story-open" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.uiController.openCampaignStory('${c.id}');">
-              📖 Dossiê & Fichas
+              📖 Dossiê Completo
+            </button>
+            <button class="btn-secondary" style="border-color: #ffd700; color: #ffd700; font-size: 0.78rem; padding: 6px 12px;" onclick="window.uiController.closeModal('modal-campaigns-hub'); if (window.museumController) window.museumController.switchTo3DView(); if (window.planetEngine) window.planetEngine.focusCampaign('${c.id}');">
+              🪐 Focar no Planeta 3D
             </button>
             <button class="btn-campaign-dive" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.mergulhoNasNuvens('${c.id}');">
-              📍 Mergulhar no Mapa
+              📍 Mapa Tático 2D
             </button>
           </div>
         </div>

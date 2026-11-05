@@ -67,12 +67,52 @@ class MuseumController {
     this.bindHeaderNavEvents();
     this.bindBreadcrumbEvents();
     this.bindScaleSelectorEvents();
+    this.bindPlanetControlEvents();
     this.bindModalCloseEvents();
     this.bindArchiveFilterEvents();
     this.bindAdminEvents();
     this.updateBreadcrumbs({ planet: this.dataLoader.getPlanet() });
 
     console.log('✓ MuseumController inicializado com sucesso.');
+  }
+
+  /* ==========================================================================
+     CONTROLES INTERATIVOS DO PLANETA 3D E NAVEGAÇÃO RÁPIDA
+     ========================================================================== */
+  bindPlanetControlEvents() {
+    document.getElementById('btn-planet-zoom-in')?.addEventListener('click', () => {
+      if (this.planetEngine) this.planetEngine.zoomIn();
+    });
+
+    document.getElementById('btn-planet-zoom-out')?.addEventListener('click', () => {
+      if (this.planetEngine) this.planetEngine.zoomOut();
+    });
+
+    document.getElementById('btn-planet-rotate-toggle')?.addEventListener('click', (e) => {
+      if (this.planetEngine) {
+        const isRotating = this.planetEngine.toggleAutoRotate();
+        e.currentTarget.style.color = isRotating ? 'var(--museum-gold-bright)' : 'var(--museum-text-muted)';
+        e.currentTarget.title = isRotating ? 'Rotação Automática Ativa (Clique para Pausar)' : 'Rotação Pausada (Clique para Ativar)';
+      }
+    });
+
+    document.getElementById('btn-planet-reset')?.addEventListener('click', () => {
+      if (this.planetEngine) this.planetEngine.resetView();
+    });
+
+    // Pílulas de Acesso Rápido às Campanhas no Planeta
+    document.querySelectorAll('.quick-camp-pill').forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const campId = pill.dataset.campId;
+        if (!campId) return;
+        this.switchTo3DView();
+        if (this.planetEngine) {
+          this.planetEngine.focusCampaign(campId);
+        } else {
+          this.openExhibitionModal(campId);
+        }
+      });
+    });
   }
 
   /* ==========================================================================
@@ -290,13 +330,21 @@ class MuseumController {
         document.getElementById('context-panel-desc').textContent = data.description || data.historical_summary || data.summary || data.note || '';
 
         const actionBtn = document.getElementById('context-panel-btn');
-        const campCount = (data.campaigns || data.campaign_ids || []).length;
+        const campList = data.campaigns || data.campaign_ids || [];
         if (actionBtn) {
-          actionBtn.style.display = campCount > 0 ? 'block' : 'none';
-          actionBtn.textContent = `Explorar Campanhas (${campCount})`;
-          actionBtn.onclick = () => {
-            this.openGlobalArchiveModal({ countryId: data.country_id || data.id, continentId: data.continent_id || data.id });
-          };
+          actionBtn.style.display = campList.length > 0 ? 'block' : 'none';
+          if (campList.length === 1) {
+            const campId = typeof campList[0] === 'string' ? campList[0] : campList[0].id;
+            actionBtn.textContent = '🏛️ Abrir Exposição da Campanha';
+            actionBtn.onclick = () => {
+              this.openExhibitionModal(campId);
+            };
+          } else {
+            actionBtn.textContent = `Explorar Campanhas (${campList.length})`;
+            actionBtn.onclick = () => {
+              this.openGlobalArchiveModal({ countryId: data.country_id || data.id, continentId: data.continent_id || data.id });
+            };
+          }
         }
       } else if (kind === 'location') {
         this.openLocationDossier(data.id);

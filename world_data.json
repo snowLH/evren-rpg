@@ -636,7 +636,12 @@
           "Classe Alta (Cidadela de Nácar)",
           "Soberanos (Kraken, Leviatã Branco, Povo Sauriano, Arquiteto)"
         ]
-      }
+      },
+      "coordinates": [
+        25.5,
+        -71.5
+      ],
+      "name": "A Incursão: O Purgatório Genético"
     },
     {
       "id": "camp_002",
@@ -728,7 +733,12 @@
           "Elias Rocha",
           "Júlia Drummond (Arquivo)"
         ]
-      }
+      },
+      "coordinates": [
+        21.85,
+        -102.25
+      ],
+      "name": "Até o Amanhecer: O Limiar da Mansão Vilar"
     },
     {
       "id": "camp_003",
@@ -792,7 +802,12 @@
         "genre_theme": "Terror Sci-Fi & Claustrofobia Polar",
         "synopsis": "Uma expedição de biopesquisa da A.E.G.I.S. na Groenlândia extraiu amostras celulares de um monólito de gelo negro ligado à fenda do Triângulo das Bermudas. Quando o espécime rompeu a quarentena, o Comandante Miller e a Dra. Evelyn Shaw entraram em isolamento de emergência.",
         "historical_context": "Expedição científica e militar de alta prioridade instalada na Calota Polar da Groenlândia em 2026, após radares de penetração no gelo identificarem uma estrutura monolítica e um organismo colossal preservado a 800 metros de profundidade."
-      }
+      },
+      "coordinates": [
+        72,
+        -40
+      ],
+      "name": "O Túmulo do Leviatã: Estação Criogênica Zero"
     },
     {
       "id": "camp_004",
@@ -855,7 +870,12 @@
         "genre_theme": "Horror Cósmico & Sobrevivência Tática",
         "synopsis": "Uma expedição secreta do esquadrão Curupira penetrou a selva após o sumiço de geólogos. O Capitão Thiago Santos e a Dra. Camila Neves descobriram que as raízes da floresta canalizavam frequências do Arquiteto do Caos. Após uma fuga desesperada, a caverna de quartzo foi detonada para evitar a proliferação dos esporos.",
         "historical_context": "Operação de investigação ambiental, científica e militar realizada em 2025 no coração da Floresta Amazônica brasileira, ao longo da bacia do Rio Tapajós, após o desaparecimento de operários em um garimpo clandestino."
-      }
+      },
+      "coordinates": [
+        -4.25,
+        -55.98
+      ],
+      "name": "Protocolo Selva: Os Ecos do Ouro Negro"
     },
     {
       "id": "camp_005",
@@ -918,7 +938,12 @@
         "genre_theme": "Mistério Gótico & Amnésia Psicológica",
         "synopsis": "Em 2023, o historiador Hans Richter e a investigadora forense Greta Falk foram contratados para investigar peregrinos que retornavam da floresta sem memória ou fisionomia identificável. No interior da cripta gótica, encontraram o altar do 'Eco Silencioso' ressonando com artefatos do LIMIAR.",
         "historical_context": "Registrada em 2023 nas montanhas da Floresta Negra (Baden-Württemberg, Alemanha), esta é a exposição cronologicamente mais antiga das cinco grandes campanhas modernas do acervo, documentando o caso do Monastério de Santo Agostinho."
-      }
+      },
+      "coordinates": [
+        48.15,
+        8.2
+      ],
+      "name": "O Sussurro da Floresta Negra: O Monastério dos Sem-Rosto"
     },
     {
       "id": "camp_filantropo_oeht",
@@ -970,7 +995,12 @@
         "outcome": "[CONTEÚDO TRUNCADO NA FONTE] A transmissão do registro de campo é interrompida no início da 'Zona B: A Mesa de Poker VIP (O Jogo de Memórias)'. Cenas posteriores permanecem sob sigilo documental até novas ordens do curador."
       },
       "pending_documentation": "Desfecho da Mesa de Poker VIP, identidade dos demais patrocinadores no cofre e confirmação de sobrevivência de Oeht.",
-      "historical_identification": "Operação Belvedere // A.E.G.I.S. Protocolo Filantropia Clandestina"
+      "historical_identification": "Operação Belvedere // A.E.G.I.S. Protocolo Filantropia Clandestina",
+      "coordinates": [
+        46.2044,
+        6.1432
+      ],
+      "name": "A Gala da Meia-Noite: A Falsa Filantropia de Oeht"
     }
   ],
   "locations": [

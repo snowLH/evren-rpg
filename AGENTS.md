@@ -35,7 +35,7 @@ All narrative content, factions, monsters, relics, and mechanical terms must bel
 
 ### 🚫 Invariant 3: Strict DOM ID Integrity (100% PASS Required)
 - Every single element accessed via `document.getElementById('...')` across all JavaScript files in `scripts/` MUST exist in `index.html`.
-- You MUST run `python test_integrity.py` and ensure `100% PASS (335 HTML IDs)` after modifying any HTML or JS file.
+- You MUST run `python test_integrity.py` and ensure `100% PASS (347 HTML IDs)` after modifying any HTML or JS file.
 
 ### 🚫 Invariant 4: Dual Data Mode in DataLoader & Canon Integrity
 - `scripts/data-loader.js` fetches `world_data.json` asynchronously, but provides `getEmbeddedFallbackData()` to handle `file:///` executions where CORS blocks local `fetch()`. Keep the fallback data in exact parity with any core schema additions.

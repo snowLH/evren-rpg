@@ -373,9 +373,13 @@
    ========================================================================== */
 .modal-dice-backdrop {
   z-index: 10050;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
+}
+
+.modal-dice-backdrop.open {
+  display: flex;
 }
 
 .dice-clash-box {
