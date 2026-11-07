@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="styles/campaign-creator.css">
   <link rel="stylesheet" href="styles/campaigns-hub.css">
   <link rel="stylesheet" href="styles/museum.css">
+  <link rel="stylesheet" href="styles/teia-do-tempo.css">
 </head>
 <body class="paranormal-fx">
 
@@ -180,6 +181,10 @@
         <button id="btn-nav-characters" type="button" class="btn-hud btn-primary-nav" title="Galeria de Figuras Históricas">
           <span class="btn-icon">👤</span> <span class="btn-text">Personagens</span>
         </button>
+        <!-- Botão Teia do Tempo -->
+        <button id="btn-nav-teia-do-tempo" type="button" class="btn-hud btn-primary-nav" title="Teia do Tempo: História Conectada, Linhas do Tempo e Vertentes">
+          <span class="btn-icon">⏳</span> <span class="btn-text">Teia do Tempo</span>
+        </button>
         <button id="btn-nav-admin" type="button" class="btn-hud btn-primary-nav museum-nav-btn--admin" title="Administração & Curadoria do Museu">
           <span class="btn-icon">⚙️</span> <span class="btn-text">Curadoria</span>
         </button>
@@ -223,6 +228,9 @@
           </button>
           <div class="hud-dropdown-menu right-aligned">
             <div class="hud-dropdown-group-title">LORE & EXPLORAÇÃO</div>
+            <button id="btn-open-teia-do-tempo" class="hud-dropdown-item">
+              <span class="btn-icon">🕸️</span> <span>Teia do Tempo [W]</span>
+            </button>
             <button id="btn-open-timeline" class="hud-dropdown-item">
               <span class="btn-icon">⏳</span> <span>Cronologia Histórica [T]</span>
             </button>
@@ -554,6 +562,93 @@
     </aside>
 
     <!-- MODAL 1: REGRAS DO SISTEMA (UNIVERSO EVREN) -->
+    
+    <!-- MODAL: TEIA DO TEMPO // TAPEÇARIA CÓSMICA & LINHAS TEMPORAIS -->
+    <div id="modal-teia-do-tempo" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="teia-modal-title">
+      <div class="modal-container modal-teia-container">
+        <!-- Cabeçalho Tático -->
+        <div class="teia-header">
+          <div class="teia-header-left">
+            <svg class="teia-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+              <path d="M12 2a10 10 0 0 1 10 10"/>
+            </svg>
+            <div class="teia-title-wrap">
+              <h2 id="teia-modal-title">TEIA DO TEMPO <span class="badge-system" style="color: #ffd700; border-color: #ffd700;">TAPEÇARIA CÓSMICA</span></h2>
+              <div class="teia-subtitle">História Oculta, Linhas do Tempo Paralelas & Apocalipse Dimensional</div>
+            </div>
+          </div>
+
+          <!-- Alternador de Modos de Exibição -->
+          <div class="teia-view-switcher">
+            <button type="button" class="teia-view-btn active" data-view="canvas" title="Rede Cósmica Interativa (Grafo 2D)">
+              <span>🕸️</span> <span>Grafo Cósmico</span>
+            </button>
+            <button type="button" class="teia-view-btn" data-view="strands" title="Vertentes Temporais em Paralelo">
+              <span>⚡</span> <span>Vertentes Paralelas</span>
+            </button>
+            <button type="button" class="teia-view-btn" data-view="causal" title="Genealogia Causal & Consequências">
+              <span>📜</span> <span>Crônica Causal</span>
+            </button>
+          </div>
+
+          <button id="btn-close-teia-do-tempo" class="btn-close-modal" data-close="modal-teia-do-tempo" title="Fechar [ESC]">✕</button>
+        </div>
+
+        <!-- Barra de Filtros e Busca Rápida -->
+        <div class="teia-toolbar">
+          <div class="teia-filter-group">
+            <span class="teia-filter-label">ERAS:</span>
+            <button type="button" class="teia-chip teia-era-chip active" data-era="all">Todas as Eras</button>
+            <button type="button" class="teia-chip teia-era-chip" data-era="era_primordial">🌌 Primordial (+5.000a)</button>
+            <button type="button" class="teia-chip teia-era-chip" data-era="era_mitica">⚔️ Mítica & Folclore</button>
+            <button type="button" class="teia-chip teia-era-chip" data-era="era_navegacoes">⚓ Navegações (~400a)</button>
+            <button type="button" class="teia-chip teia-era-chip" data-era="era_moderna">🏭 Séc. XX & Lendas</button>
+            <button type="button" class="teia-chip teia-era-chip" data-era="vertente_colapso">💥 Colapso da Realidade</button>
+          </div>
+
+          <div class="teia-filter-group">
+            <span class="teia-filter-label">VERTENTES:</span>
+            <button type="button" class="teia-chip teia-vertente-chip active" data-vertente="all">Todas as Vertentes</button>
+            <button type="button" class="teia-chip teia-vertente-chip" data-vertente="vertente_triangulo">⚡ Triângulo (1998)</button>
+            <button type="button" class="teia-chip teia-vertente-chip" data-vertente="vertente_vilar">🏰 Mansão Vilar (2024)</button>
+            <button type="button" class="teia-chip teia-vertente-chip" data-vertente="vertente_oeht">🎭 Gala Belvedere (2026)</button>
+          </div>
+
+          <div class="teia-filter-group">
+            <input type="text" id="teia-search-input" class="teia-search-input" placeholder="Buscar nós, eventos, relíquias..." autocomplete="off">
+          </div>
+        </div>
+
+        <!-- Viewport Principal Interativo -->
+        <div class="teia-viewport">
+          <!-- Modo 1: Canvas Cósmico -->
+          <div id="teia-canvas-container" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+            <canvas id="teia-canvas"></canvas>
+            <!-- Controles de Câmera Sobrepostos -->
+            <div class="teia-canvas-controls">
+              <button id="btn-teia-zoom-in" type="button" class="teia-ctrl-btn" title="Aumentar Zoom">➕ Zoom</button>
+              <button id="btn-teia-zoom-out" type="button" class="teia-ctrl-btn" title="Diminuir Zoom">➖ Zoom</button>
+              <button id="btn-teia-reset" type="button" class="teia-ctrl-btn" title="Resetar Visualização">⟲ Centralizar</button>
+            </div>
+          </div>
+
+          <!-- Modo 2: Vertentes Paralelas -->
+          <div id="teia-strands-view" class="teia-strands-view" style="display: none;"></div>
+
+          <!-- Modo 3: Crônica Causal -->
+          <div id="teia-causal-view" class="teia-causal-view" style="display: none;"></div>
+
+          <!-- Dossiê Lateral de Inspeção de Nó Temporal -->
+          <aside id="teia-inspector" class="teia-inspector" style="display: none;">
+            <button id="btn-close-teia-inspector" class="teia-inspector-close" title="Fechar Dossiê">✕</button>
+            <div id="teia-inspector-content"></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  
     <div id="modal-rules" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-rules-title">
       <div class="modal-container">
         <div class="modal-header">
@@ -567,6 +662,65 @@
           <button class="btn-close-modal" data-close="modal-rules" title="Fechar [ESC]">✕</button>
         </div>
         <div class="modal-body">
+          <!-- VIRTUDES DE ALMA // LIVRO DE REGRAS TOMO III -->
+          <div class="rule-card" style="border-left: 4px solid #ffd700; background: rgba(212, 175, 55, 0.08);">
+            <div class="rule-title">
+              <span style="color: #ffd700;">✨ Virtudes de Alma & A Tríade da Identidade (Tomo III)</span>
+              <span class="badge-system" style="border-color: #ffd700; color: #ffd700;">METAFÍSICA ANÍMICA v2.0</span>
+            </div>
+            <p class="rule-desc">
+              A Alma é a manifestação física e metafísica da identidade do indivíduo. Três camadas constituem o portador:
+              <br><br>
+              • <strong>1. Personalidade (A Superfície Ativa):</strong> Comportamento visível e maneirismos cotidianos; molda a postura e estilo de combate.<br>
+              • <strong>2. Experiências (A Memória Esculpida):</strong> Traumas, culpas ocultas e conquistas; esculpem a anatomia visual, cicatrizes e técnicas da Alma.<br>
+              • <strong>3. Essência (O Núcleo Imutável):</strong> A verdade última que a pessoa não pode negar para si mesma; determina a Virtude de Alma.
+            </p>
+          </div>
+
+          <!-- OS TRÊS GRUPOS CONCEITUAIS -->
+          <div class="rule-card">
+            <div class="rule-title">
+              <span>⚖️ Os Três Grupos Conceituais & Simetria</span>
+              <span class="badge-tag status">LEI NATURAL</span>
+            </div>
+            <p class="rule-desc">
+              As 11 Virtudes dividem-se em 3 famílias temáticas sem vantagens automáticas de 'pedra-papel-tesoura':
+              <br><br>
+              • <strong>I. Virtudes Construtivas:</strong> <em>Coragem</em>, <em>Compaixão</em>, <em>Disciplina</em> e <em>Sabedoria</em>. Focadas em estruturação, proteção, método e análise profunda.<br>
+              • <strong>II. Virtudes Transformadoras:</strong> <em>Esperança</em>, <em>Justiça</em>, <em>Liberdade</em> e <em>Ambição</em>. Focadas na superação, causalidade de atos, ruptura de amarras e assimilação contínua.<br>
+              • <strong>III. Virtudes Instintivas:</strong> <em>Orgulho</em>, <em>Fúria</em> e <em>Medo</em>. Forças viscerais da psique: soberania, explosão destrutiva e domínio sobre o pavor primordial.
+            </p>
+          </div>
+
+          <!-- MODALIDADES DE MANIFESTAÇÃO -->
+          <div class="rule-card">
+            <div class="rule-title">
+              <span>🌀 As Três Modalidades de Manifestação</span>
+              <span class="badge-system">PROJEÇÃO // SINTONIA // CONVERGÊNCIA</span>
+            </div>
+            <p class="rule-desc">
+              • <strong>Projeção (A Alma Exteriorizada):</strong> Avatar tangível fora do corpo (Alcance Curto 1,5–3m ou Longo 9–30m). Custa 2 EA (1 EA se primária). Dano sofrido pela Projeção transfere integralmente à Vitalidade (Regra do Elo Vital).<br>
+              • <strong>Sintonia (O Revestimento Espiritual):</strong> A Alma reveste nervos e músculos; +2 em atributo ligado à Virtude e capacidade de ferir entidades diretamente com punhos ou armas.<br>
+              • <strong>Convergência (A Fusão Absoluta):</strong> Fusão total com a Alma (MDA 40%+). Custa 10 EA + 6 PD no ato e consome 3 EA + 2 EST/rodada. Todos Atributos +2, RD +6 e dano aumentado em 1 passo de dado.
+            </p>
+          </div>
+
+          <!-- COMBATE ATIVO SEM DEFESA ESTÁTICA -->
+          <div class="rule-card rule-blood">
+            <div class="rule-title">
+              <span>⚔️ Combate Ativo, Duelos Anímicos & Hitkill</span>
+              <span class="badge-tag status">SEM CA PASSIVA</span>
+            </div>
+            <p class="rule-desc">
+              Não existe Classe de Armadura passiva. Diante de qualquer ataque, o alvo escolhe ativamente sua reação:
+              <br><br>
+              1. <strong>Esquivar (Agilidade + Reflexos/Acrobacia):</strong> Se vencer ou empatar, anula todo o dano.<br>
+              2. <strong>Bloquear (Vigor + Fortitude/Luta):</strong> Soma bônus de armadura e aplica Redução de Dano (RD 2 Leve, RD 4 Média, RD 6 Pesada). Permite Sacrifício de Guarda.<br>
+              3. <strong>Contra-Atacar (Luta/Pontaria/Ocultismo):</strong> Ambos atacam simultaneamente. Regra de Hitkill: quem tirar maior resultado golpeia primeiro se for abater o rival.<br>
+              • <strong>Tabela de Ruptura Espiritual (EST 0):</strong> Rola 1d6: 1-2 Colapso/Apagão; 3-4 Descontrole Frenético; 5 Vazamento Somático (2d6 dano); 6 Deformação da Alma.
+            </p>
+          </div>
+    
           <!-- MDA -->
           <div class="rule-card rule-moss">
             <div class="rule-title">
@@ -2147,6 +2301,7 @@
   <script src="scripts/map-engine.js"></script>
   <script src="scripts/ui-controller.js"></script>
   <script src="scripts/radar-widget.js"></script>
+  <script src="scripts/teia-do-tempo.js"></script>
   <script src="scripts/app.js"></script>
 </body>
 </html>

@@ -125,6 +125,13 @@ class InteractiveTabletopApp {
       }
 
       // 14. Inicializa Criador de Campanhas e Zonas
+            // 15. Inicializa Teia do Tempo (Tapeçaria Cósmica & Vertentes Temporais)
+      if (window.TeiaDoTempoController) {
+        this.teiaController = new TeiaDoTempoController(this.dataLoader);
+        this.teiaController.init();
+        window.teiaController = this.teiaController;
+      }
+
       if (window.CampaignCreator) {
         this.campaignCreator = new CampaignCreator(this.dataLoader, this.mapEngine, this.uiController);
         this.campaignCreator.init();

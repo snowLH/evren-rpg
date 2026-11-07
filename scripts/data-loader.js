@@ -701,6 +701,14 @@ class DataLoader {
     return this.data?.relics?.find(r => r.id === id) || null;
   }
 
+    getTeiaDoTempo() {
+    return this.data?.teia_do_tempo || { eras: [], nodes: [], links: [] };
+  }
+
+  getVirtuesSystem() {
+    return this.data?.universe_rules?.virtues_system || null;
+  }
+
   getRelationsGraph() {
     return this.data?.relations_graph || { nodes: [], links: [] };
   }
@@ -1352,6 +1360,98 @@ class DataLoader {
         }
       ],
       "armor_sacrifice": "Sacrifício Único de Armadura: Em golpes letais (hitkill), o defensor pode estilhaçar completamente sua couraça para anular o dano mortal."
+    },
+    "virtues_system": {
+      "version": "v2.0 Integrada",
+      "title": "As Onze Virtudes Oficiais de Alma & Metafísica Anímica",
+      "triad_of_identity": {
+        "title": "A Tríade da Identidade",
+        "pillars": [
+          {
+            "name": "Personalidade (A Superfície Ativa)",
+            "desc": "Comportamentos e postura visível; molda maneirismos e estilo de combate."
+          },
+          {
+            "name": "Experiências (A Memória Esculpida)",
+            "desc": "Traumas, perdas e cicatrizes; esculpe a anatomia visual e técnicas da Alma."
+          },
+          {
+            "name": "Essência (O Núcleo Imutável)",
+            "desc": "A verdade irredutível do ego; determina qual das 11 Virtudes se manifesta."
+          }
+        ]
+      },
+      "metaphysical_triad": {
+        "title": "A Tríade Metafísica: Corpo, Alma e Verdadeira Magia",
+        "spheres": [
+          {
+            "name": "Mutação Biológica Extrema (O Corpo)",
+            "rule": "Lei da Alucinação. Reescrita de DNA por fendas e estresse letal."
+          },
+          {
+            "name": "Virtudes de Alma (A Identidade)",
+            "rule": "Densidade espiritual anímica em Projeção, Sintonia ou Convergência."
+          },
+          {
+            "name": "A Verdadeira Magia (A Regra)",
+            "rule": "Exclusiva do Primogênito: reescrita direta das leis da realidade."
+          }
+        ]
+      },
+      "conceptual_groups": [
+        {
+          "group": "Virtudes Construtivas",
+          "philosophy": "Edificação, preservação, coesão e discernimento.",
+          "virtues": [
+            "Coragem",
+            "Compaixão",
+            "Disciplina",
+            "Sabedoria"
+          ]
+        },
+        {
+          "group": "Virtudes Transformadoras",
+          "philosophy": "Alteração ativa do estado das coisas: superação, leis proporcionais, fluidez e conquista.",
+          "virtues": [
+            "Esperança",
+            "Justiça",
+            "Liberdade",
+            "Ambição"
+          ]
+        },
+        {
+          "group": "Virtudes Instintivas",
+          "philosophy": "Forças viscerais: autoridade soberana, explosão de ódio e domínio do terror primordial.",
+          "virtues": [
+            "Orgulho",
+            "Fúria",
+            "Medo"
+          ]
+        }
+      ],
+      "manifestation_modes": [
+        {
+          "mode": "Projeção (Avatar Exterior)",
+          "cost": "2 EA (1 se primária)",
+          "effect": "Avatar tangível à distância; dano sofrido reverbera no usuário (Elo Vital)."
+        },
+        {
+          "mode": "Sintonia (Revestimento)",
+          "cost": "2 EA (1 se primária)",
+          "effect": "Corpo revestido por energia anímica; +2 em atributo e punhos capazes de ferir entidades."
+        },
+        {
+          "mode": "Convergência (Fusão Total)",
+          "cost": "10 EA + 6 PD no ato; 3 EA + 2 EST por rodada",
+          "effect": "Fusão absoluta com a Alma. Exige MDA 40%+. +2 em todos atributos, +6 RD."
+        }
+      ],
+      "gauges": {
+        "pv": "Vitalidade (Corpo): 20 + (Vigor * 5) + Bônus MDA.",
+        "pd": "Determinação (Esforço Humano): 15 a 70 PD para Arquétipos e Relíquias.",
+        "ea": "Energia de Alma: Bônus Base MDA + (Presença * 3) para Manifestações e Técnicas.",
+        "est": "Estabilidade: 10 + Presença + Intelecto (a 0 EST ocorre Teste de Ruptura 1d6)."
+      }
     }
   },
   "maps": [
@@ -1482,7 +1582,7 @@ class DataLoader {
     {
       "id": "camp_001",
       "title": "A Incursão: O Purgatório Genético",
-      "status": "Futura Campanha",
+      "status": "futura campanha",
       "category": "future",
       "theme": "Survival Horror Biológico",
       "map_id": "map_triangulo",
@@ -1491,13 +1591,19 @@ class DataLoader {
         -71.5
       ],
       "gateway_name": "O Triângulo das Bermudas / A Incursão",
-      "danger_rating": "NÍVEL ÔMEGA // 99% MDA",
-      "country_location": "Oceano Atlântico Norte (Triângulo das Bermudas)",
-      "year": "Ano 2026 // Presente",
+      "danger_rating": "NÍVEL ÔMEGA // LEI DA ALUCINAÇÃO",
+      "country_location": "Triângulo das Bermudas (Oceano Atlântico Norte)",
+      "year": "1998 // Registro Histórico Inicial",
       "description": "No coração do verdadeiro Triângulo das Bermudas, um buraco de minhoca no Atlântico engole navios. Lá, a magia não existe: apenas mutação biológica violenta sob a mente do Arquiteto do Caos.",
-      "synopsis": "Um navio com centenas de sobreviventes foi tragado pelo vórtice dimensional no Atlântico. Ao cruzarem a fenda para Nova Caronte, descobriram que leis biológicas foram distorcidas. O Arquiteto do Caos manipula mentes e corpos enquanto a A.E.G.I.S. tenta conter o colapso.",
+      "synopsis": "Um grupo de sobreviventes é tragado pelo Triângulo das Bermudas, atravessando cinco estágios dimensionais brutais (borda infinita, repetição em loop, redemoinhos gravitacionais, dor craniana e êxtase de adaptação). Na Sessão 1, a manifestação da Verdadeira Magia do Primogênito — O Diabo do Mar congela as águas em azul-escuro e corrói metais em ferrugem brilhante; diante do letal Campo de Rosas, o Guia Temporário sacrifica a própria vida para salvar os recém-chegados. Na Sessão 2, o grupo explora o arquipélago hostil e descobre a Ilha Canibal, onde há 400 anos um humano náufrago ensinou práticas de canibalismo aos dinossauros nativos. A jornada por entre as carcaças de Nova Caronte, a opulência escravista da Cidadela de Nácar, os pulsos eletromagnéticos do Fosso do Kraken e o sonar destrutivo do Leviatã Branco culmina na quebra do bloqueio dimensional e no recrutamento dos sobreviventes pelo Diretor Kaelen da A.E.G.I.S.",
       "participants": [
-        "char_arquiteto"
+        "char_arquiteto",
+        "char_guia_temporario",
+        "char_marcos_valente",
+        "char_iris_vento_solto",
+        "char_valerius",
+        "char_mateus_alencar",
+        "char_raissa_carnica"
       ],
       "locations_list": [
         "loc_caronte",
@@ -1570,7 +1676,7 @@ class DataLoader {
     {
       "id": "camp_002",
       "title": "Até o Amanhecer: O Limiar da Mansão Vilar",
-      "status": "Concluída",
+      "status": "concluída",
       "category": "completed",
       "theme": "Thriller Psicológico Investigativo",
       "map_id": "map_vilar",
@@ -1579,11 +1685,11 @@ class DataLoader {
         -102.25
       ],
       "gateway_name": "Mansão Vilar: Até o Amanhecer (México)",
-      "danger_rating": "NÍVEL ALFA // ECOS & LIMIAR",
-      "country_location": "México (Serra Mineradora)",
+      "danger_rating": "NÍVEL ALFA // ECOS SUBTERRÂNEOS & LIMIAR",
+      "country_location": "México (Sierra Madre / Sonora)",
       "year": "Ano 2024 // Finalizada",
       "description": "Na região montanhosa e mineradora do México, cinco amigos retornam à isolada Mansão Vilar, onde foram manipulados psicologicamente por uma figura mascarada armada com o LIMIAR.",
-      "synopsis": "Três anos após o desaparecimento trágico de Lucas Vilar nas minas mexicanas, o grupo de amigos reuniu-se na propriedade isolada. Gabriel Vilar assumiu o manto de 'O Mascarado', usando a arma de portais LIMIAR para encenar um jogo de terror psicológico para expor a culpa de cada um. No clímax subterrâneo, o grupo enfrentou os Ecos e explodiu o complexo.",
+      "synopsis": "Três anos após o desaparecimento de Lucas Vilar nas minas, cinco amigos (Rafael, Helena, Diego, Bia e Arthur) são atraídos para a isolada Estação e Mansão Vilar a bordo de um trem com um misterioso sexto bilhete validado para Lucas. Na propriedade, uma figura mascarada munida do Projeto LIMIAR — dispositivo de portais de curto alcance com cheiro de ozônio e som elétrico ZZZZT — aterroriza o grupo para forçar a confissão de seus segredos. Desmascarado como Gabriel Vilar, o irmão mais velho descobre que os amigos não mataram Lucas, e a busca move-se para as minas abandonadas. Enfrentando o horror biológico do predador cego O Eco (que atrai vítimas imitando vozes humanas perfeitamente), o grupo encontra Lucas Vilar vivo nas profundezas, adaptado à escuridão com a perna quebrada. A fuga culmina na explosão das galerias e na reconciliação da família.",
       "outcome": "✓ Lucas Vilar foi resgatado com vida (cego e marcado pelas profundezas).\n✓ Gabriel Vilar foi desmascarado e desapareceu através de uma dobra do LIMIAR.\n✓ A Mansão Vilar e as entradas das minas foram detonadas com cargas explosivas para conter os Ecos.",
       "participants": [
         "char_lucas",
@@ -1668,7 +1774,7 @@ class DataLoader {
     {
       "id": "camp_filantropo_oeht",
       "title": "A Gala da Meia-Noite: A Falsa Filantropia de Oeht",
-      "status": "Futura Campanha",
+      "status": "futura campanha",
       "category": "future",
       "theme": "Horror Institucional & Conspiração Corporativa",
       "map_id": "map_belvedere",
@@ -1677,9 +1783,9 @@ class DataLoader {
         6.1432
       ],
       "gateway_name": "Mansão Belvedere: Gala Oculta de Oeht",
-      "danger_rating": "NÍVEL ÉPSILON // RELÍQUIA PARASITA & RELÂMPAGOS VIOLETAS",
-      "country_location": "Europa Central (Mansão Belvedere / Zona Tática A.E.G.I.S.)",
-      "year": "Data Reservada // Análise A.E.G.I.S.",
+      "danger_rating": "NÍVEL ÉPSILON // REDOMA E O ANÁRQUICO",
+      "country_location": "Suíça (Alpes de Genebra / Mansão Belvedere)",
+      "year": "Ano 2026 // Operação Belvedere",
       "description": "Oeht, aclamado publicamente como magnata filantropo e mecenas das artes, reuniu a elite global na suntuosa Mansão Belvedere para uma gala de aniversário secreta. Sob o pretexto de celebrar sua data natalícia, prepara o anúncio de uma megacorporação privada rival destinada a mercantilizar o paranormal e quebrar o monopólio de contenção da A.E.G.I.S. Porém, um lodo roxo escorre do cofre de seu gabinete privado e relâmpagos violetas silenciosos cortam o céu: a relíquia protegida por uma redoma blindada não é uma máquina de controle, mas um parasita extradimensional prestes a devorar todos à meia-noite.",
       "synopsis": "Infiltração de agentes da A.E.G.I.S. sob comando do Diretor Kaelen. O relógio de dobra temporal de 6 segundos, o discurso arrogante das 23h, a desconfiança da elite em testes de DT 15 e o dilema de desativar a redoma antes que o colossal bolo de aniversário se converta em uma monstruosidade canibal.",
       "outcome": "Desfecho com quarentena em vigor. A transcrição de campo foi corrompida no início da Zona B (Mesa de Poker VIP).",
@@ -1727,7 +1833,7 @@ class DataLoader {
   "locations": [
     {
       "id": "loc_caronte",
-      "name": "Nova Caronte",
+      "name": "Nova Caronte & A Goela do Cachalote",
       "zone": "O Triângulo das Bermudas (Anomalia Atlântica)",
       "type": "Cidadela Flutuante",
       "map_id": "map_triangulo",
@@ -1736,7 +1842,7 @@ class DataLoader {
         25.5,
         -73.2
       ],
-      "description": "Um aglomerado caótico de galeões espanhóis, submarinos soviéticos e navios piratas no epicentro do Triângulo das Bermudas. Cheira a peixe podre e desespero.",
+      "description": "Cidade flutuante erguida sobre carcaças de galeões e submarinos. Abriga o bar 'A Goela do Cachalote' em ossada colossal.",
       "chronicles": [
         "cron_inc_01"
       ],
@@ -1761,7 +1867,9 @@ class DataLoader {
       "epochs_active": [
         "2025",
         "2026 (Presente)"
-      ]
+      ],
+      "campaign_id": "camp_001",
+      "country": "Triângulo das Bermudas"
     },
     {
       "id": "loc_kraken",
@@ -1808,7 +1916,7 @@ class DataLoader {
         21.85,
         -102.25
       ],
-      "description": "Uma mansão cercada por floresta e tempestade nas serras do México. No porão, a entrada para as minas esquecidas assombradas pelos Ecos.",
+      "description": "Casarão aristocrático e minas profundas onde Gabriel instalou o Projeto LIMIAR e onde viveu Lucas com o predador O Eco.",
       "chronicles": [
         "cron_vil_01"
       ],
@@ -1837,7 +1945,9 @@ class DataLoader {
       "epochs_active": [
         "2021 (Desaparecimento)",
         "2024 (A Noite da Confissão)"
-      ]
+      ],
+      "campaign_id": "camp_002",
+      "country": "México (Sonora)"
     },
     {
       "id": "loc_vilar_casarao",
@@ -1937,7 +2047,7 @@ class DataLoader {
         "camp_filantropo_oeht"
       ],
       "illustration": "assets/ref_interior_tavern.jpg",
-      "description": "Mansão de veraneio e mecenato de Oeht. Possui salas de recepção suntuosas, cofre reforçado no escritório do piso superior e uma redoma de policarbonato e chumbo no salão principal, onde a relíquia parasita estava exposta.",
+      "description": "Palácio nos Alpes suíços onde ocorreu a gala, o poker VIP, o vazamento do lodo roxo e o despertar do Anárquico sob a redoma.",
       "features": [
         "Salão Nobre da Gala com candelabros de cristal e convidados da alta finança.",
         "Escritório de Oeht com cofre reforçado vazando secreção viscosa violeta.",
@@ -1947,7 +2057,8 @@ class DataLoader {
       "canon_status": "in_world_report",
       "sources": [
         "Transcrição da Gala de Infiltração A.E.G.I.S."
-      ]
+      ],
+      "country": "Suíça (Genebra)"
     },
     {
       "id": "loc_ilha_sauriana",
@@ -5032,6 +5143,841 @@ class DataLoader {
         }
       ],
       "curator_notes": "Voz firme, pragmática e inflexível. Coordena equipes de contenção através de canais criptografados."
+    },
+    {
+      "id": "char_marcos_valente",
+      "name": "Marcos 'Quebra-Mar' Valente",
+      "codename": "O Farol de Ferro",
+      "player": "Herói Conceitual • Virtude da Coragem",
+      "class": "Combatente",
+      "origin": "Ex-Mergulhador de Resgate",
+      "virtue_name": "Coragem",
+      "virtue_group": "Construtiva",
+      "primary_mode": "Projeção",
+      "mda_level": 20,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_001",
+      "hp": {
+        "current": 45,
+        "max": 45
+      },
+      "pd": {
+        "current": 25,
+        "max": 30
+      },
+      "ea": {
+        "current": 14,
+        "max": 14
+      },
+      "stability": {
+        "current": 15,
+        "max": 15
+      },
+      "armor": {
+        "type": "Pesada",
+        "rd": 6
+      },
+      "attributes": {
+        "for": 4,
+        "vig": 4,
+        "agi": 2,
+        "pre": 3,
+        "int": 2
+      },
+      "skills": {
+        "Luta": 10,
+        "Fortitude": 10,
+        "Atletismo": 5,
+        "Sobrevivência": 5,
+        "Vontade": 5
+      },
+      "soul_manifestation": {
+        "name": "Farol de São Telmo",
+        "appearance": "Escafandrista colossal de latão oxidado e vidro espesso com chama azul incandescente no visor.",
+        "temperament": "Protetor e inabalável",
+        "techniques": [
+          {
+            "name": "Ancorar o Abismo",
+            "cost_ea": 4,
+            "desc": "+5 ao Bloqueio e imunidade a empurrões."
+          },
+          {
+            "name": "Golpe de Descompressão",
+            "cost_ea": 5,
+            "desc": "Soco pressurizado com +2d6 de dano concussivo."
+          }
+        ]
+      },
+      "biography": "Ex-mergulhador de resgate cujo navio foi tragado para o Triângulo das Bermudas. Perdeu metade da tripulação para tentáculos no Fosso do Kraken, mas permaneceu no convés atirando sinalizadores para salvar os botes."
+    },
+    {
+      "id": "char_clara_mendes",
+      "name": "Dra. Clara Mendes",
+      "codename": "Mãos da Misericórdia",
+      "player": "Heroína Conceitual • Virtude da Compaixão",
+      "class": "Conjuradora",
+      "origin": "Médica Legista da A.E.G.I.S.",
+      "virtue_name": "Compaixão",
+      "virtue_group": "Construtiva",
+      "primary_mode": "Projeção",
+      "mda_level": 20,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_filantropo_oeht",
+      "hp": {
+        "current": 35,
+        "max": 35
+      },
+      "pd": {
+        "current": 25,
+        "max": 30
+      },
+      "ea": {
+        "current": 15,
+        "max": 15
+      },
+      "stability": {
+        "current": 14,
+        "max": 16
+      },
+      "armor": {
+        "type": "Leve",
+        "rd": 2
+      },
+      "attributes": {
+        "for": 1,
+        "vig": 2,
+        "agi": 2,
+        "pre": 4,
+        "int": 4
+      },
+      "skills": {
+        "Medicina": 15,
+        "Ocultismo": 10,
+        "Intuição": 10,
+        "Diplomacia": 5,
+        "Vontade": 5
+      },
+      "soul_manifestation": {
+        "name": "Pietà de Porcelana",
+        "appearance": "Figura feminina flutuante sem olhos, feita de porcelana branca rachada com fios carmesins que estancam ferimentos.",
+        "temperament": "Silencioso e compassivo",
+        "techniques": [
+          {
+            "name": "Transfusão Anímica",
+            "cost_ea": 3,
+            "desc": "Restaura 2d8 PV de aliado conectado pelos fios a até 12m."
+          },
+          {
+            "name": "Mártir Voluntário",
+            "cost_ea": 4,
+            "desc": "Reação que absorve 100% do dano de um aliado com RD 4 espiritual."
+          }
+        ]
+      },
+      "biography": "Médica legista recrutada pela A.E.G.I.S. após sobreviver a um ataque de Mímico Genético em um hospital, onde recusou abandonar pacientes infectados."
+    },
+    {
+      "id": "char_kenji_sato",
+      "name": "Agente Sênior Kenji Sato",
+      "codename": "O Cronômetro de Sangue",
+      "player": "Herói Conceitual • Virtude da Disciplina",
+      "class": "Combatente",
+      "origin": "Veterano Tático da A.E.G.I.S.",
+      "virtue_name": "Disciplina",
+      "virtue_group": "Construtiva",
+      "primary_mode": "Sintonia",
+      "mda_level": 40,
+      "mda_stage": "3º Estágio: Sintonia Plena",
+      "perception_condition": "Desperto",
+      "campaign": "camp_filantropo_oeht",
+      "hp": {
+        "current": 50,
+        "max": 50
+      },
+      "pd": {
+        "current": 35,
+        "max": 40
+      },
+      "ea": {
+        "current": 20,
+        "max": 22
+      },
+      "stability": {
+        "current": 16,
+        "max": 18
+      },
+      "armor": {
+        "type": "Pesada",
+        "rd": 6
+      },
+      "attributes": {
+        "for": 3,
+        "vig": 4,
+        "agi": 4,
+        "pre": 3,
+        "int": 3
+      },
+      "skills": {
+        "Luta": 15,
+        "Reflexos": 15,
+        "Fortitude": 10,
+        "Tática": 10,
+        "Vontade": 10
+      },
+      "soul_manifestation": {
+        "name": "Zero Absoluto",
+        "appearance": "Samurai esguio composto por lâminas de aço cirúrgico e réguas flutuantes em ângulos de 90 graus perfeitos.",
+        "temperament": "Frio e matemático",
+        "techniques": [
+          {
+            "name": "Guarda dos Oito Ângulos",
+            "cost_ea": 3,
+            "desc": "+4 em Bloqueio ou Esquiva contra ataques múltiplos enquanto plantado."
+          },
+          {
+            "name": "Bisseção Perfeita",
+            "cost_ea": 6,
+            "desc": "Golpe cirúrgico que ignora totalmente armaduras ou carapaças."
+          }
+        ]
+      },
+      "biography": "Operador veterano da A.E.G.I.S. sob comando direto do Diretor Kaelen. Sobreviveu a um loop temporal de 48 horas mantendo a sanidade contando mentalmente cada segundo."
+    },
+    {
+      "id": "char_veronica_dias",
+      "name": "Verônica 'Coruja' Dias",
+      "codename": "O Olho Que Tudo Grava",
+      "player": "Heroína Conceitual • Virtude da Sabedoria",
+      "class": "Especialista",
+      "origin": "Criptógrafa Independente",
+      "virtue_name": "Sabedoria",
+      "virtue_group": "Construtiva",
+      "primary_mode": "Projeção",
+      "mda_level": 20,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_002",
+      "hp": {
+        "current": 30,
+        "max": 30
+      },
+      "pd": {
+        "current": 28,
+        "max": 30
+      },
+      "ea": {
+        "current": 16,
+        "max": 16
+      },
+      "stability": {
+        "current": 15,
+        "max": 17
+      },
+      "armor": {
+        "type": "Leve",
+        "rd": 2
+      },
+      "attributes": {
+        "for": 1,
+        "vig": 2,
+        "agi": 2,
+        "pre": 3,
+        "int": 5
+      },
+      "skills": {
+        "Investigação": 15,
+        "Tecnologia": 15,
+        "Ocultismo": 10,
+        "Percepção": 10,
+        "Intuição": 10
+      },
+      "soul_manifestation": {
+        "name": "Lanterna de Diógenes",
+        "appearance": "Esfera armilar flutuante de bronze antigo contendo um olho prismático que projeta luz ultravioleta espiritual.",
+        "temperament": "Inquisitivo e vigilante",
+        "techniques": [
+          {
+            "name": "Raio-X da Verdade",
+            "cost_ea": 3,
+            "desc": "Ilumina área de 6m revelando invisibilidade, portais LIMIAR ou disfarces de Mímicos."
+          },
+          {
+            "name": "Leitura de Padrão",
+            "cost_ea": 4,
+            "desc": "+3 no ataque e defesa de um aliado contra o alvo analisado."
+          }
+        ]
+      },
+      "biography": "Criptógrafa e investigadora independente que ajudou a decifrar arquivos ocultos sobre as minas da região de Vilar. Despertou sua Alma ao encarar um espelho anômalo sem enlouquecer."
+    },
+    {
+      "id": "char_mateus_alencar",
+      "name": "Padre Mateus Alencar",
+      "codename": "O Guardião da Esperança",
+      "player": "Herói Conceitual • Virtude da Esperança",
+      "class": "Conjurador",
+      "origin": "Capelão Naval",
+      "virtue_name": "Esperança",
+      "virtue_group": "Transformadora",
+      "primary_mode": "Projeção",
+      "mda_level": 20,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_001",
+      "hp": {
+        "current": 35,
+        "max": 35
+      },
+      "pd": {
+        "current": 25,
+        "max": 30
+      },
+      "ea": {
+        "current": 17,
+        "max": 17
+      },
+      "stability": {
+        "current": 16,
+        "max": 18
+      },
+      "armor": {
+        "type": "Leve",
+        "rd": 2
+      },
+      "attributes": {
+        "for": 1,
+        "vig": 2,
+        "agi": 2,
+        "pre": 5,
+        "int": 3
+      },
+      "skills": {
+        "Religião": 15,
+        "Diplomacia": 10,
+        "Vontade": 10,
+        "Intuição": 5,
+        "Medicina": 5
+      },
+      "soul_manifestation": {
+        "name": "Estrela d'Alva",
+        "appearance": "Anjo sem rosto esculpido em coral branco bioluminescente e chamas douradas suaves.",
+        "temperament": "Radiante e protetor",
+        "techniques": [
+          {
+            "name": "Cântico contra o Abismo",
+            "cost_ea": 4,
+            "desc": "Anula sussurros de Névoas Traumáticas e recupera 2 EST dos aliados em 9m."
+          },
+          {
+            "name": "Vigília Inextinguível",
+            "cost_ea": 6,
+            "desc": "Impede que aliados na área caiam a 0 PV por 2 rodadas."
+          }
+        ]
+      },
+      "biography": "Capelão naval cujo navio foi tragado para o Triângulo das Bermudas. Em Nova Caronte, fundou um abrigo na carcaça de um barco pesqueiro para acolher recém-chegados."
+    },
+    {
+      "id": "char_helena_vargas",
+      "name": "Inspetora Helena Vargas",
+      "codename": "A Balança de Chumbo",
+      "player": "Heroína Conceitual • Virtude da Justiça",
+      "class": "Especialista",
+      "origin": "Corregedora da A.E.G.I.S.",
+      "virtue_name": "Justiça",
+      "virtue_group": "Transformadora",
+      "primary_mode": "Projeção e Sintonia",
+      "mda_level": 40,
+      "mda_stage": "3º Estágio: Sintonia Plena",
+      "perception_condition": "Desperto",
+      "campaign": "camp_filantropo_oeht",
+      "hp": {
+        "current": 45,
+        "max": 45
+      },
+      "pd": {
+        "current": 35,
+        "max": 40
+      },
+      "ea": {
+        "current": 21,
+        "max": 21
+      },
+      "stability": {
+        "current": 17,
+        "max": 19
+      },
+      "armor": {
+        "type": "Média",
+        "rd": 4
+      },
+      "attributes": {
+        "for": 2,
+        "vig": 3,
+        "agi": 3,
+        "pre": 4,
+        "int": 4
+      },
+      "skills": {
+        "Investigação": 15,
+        "Intimidação": 15,
+        "Vontade": 10,
+        "Pontaria": 10,
+        "Luta": 5
+      },
+      "soul_manifestation": {
+        "name": "Lex Talionis",
+        "appearance": "Juiz-carrasco de 2,2 metros com toga de chumbo, balança de ferro e cutelo espectral.",
+        "temperament": "Severo e legalista",
+        "techniques": [
+          {
+            "name": "Auto de Acusação",
+            "cost_ea": 3,
+            "desc": "Marca quem feriu inocente; ataques ganham +3 de acerto e +1d8 de dano."
+          },
+          {
+            "name": "Algemas do Veredito",
+            "cost_ea": 6,
+            "desc": "Correntes reduzem deslocamento do assassino a zero."
+          }
+        ]
+      },
+      "biography": "Ex-promotora criminal que descobriu redes de tráfico humano voltadas a rituais da elite financeira. Ingressou na corregedoria interna da A.E.G.I.S."
+    },
+    {
+      "id": "char_iris_vento_solto",
+      "name": "Capitã Íris 'Vento Solto'",
+      "codename": "A Corsária das Fendas",
+      "player": "Heroína Conceitual • Virtude da Liberdade",
+      "class": "Combatente",
+      "origin": "Ex-Escrava de Nácar / Corsária",
+      "virtue_name": "Liberdade",
+      "virtue_group": "Transformadora",
+      "primary_mode": "Sintonia",
+      "mda_level": 40,
+      "mda_stage": "3º Estágio: Sintonia Plena",
+      "perception_condition": "Desperto",
+      "campaign": "camp_001",
+      "hp": {
+        "current": 45,
+        "max": 45
+      },
+      "pd": {
+        "current": 35,
+        "max": 40
+      },
+      "ea": {
+        "current": 18,
+        "max": 18
+      },
+      "stability": {
+        "current": 14,
+        "max": 16
+      },
+      "armor": {
+        "type": "Leve",
+        "rd": 2
+      },
+      "attributes": {
+        "for": 3,
+        "vig": 3,
+        "agi": 5,
+        "pre": 3,
+        "int": 2
+      },
+      "skills": {
+        "Acrobacia": 15,
+        "Luta": 15,
+        "Pilotagem": 10,
+        "Reflexos": 10,
+        "Atletismo": 10
+      },
+      "soul_manifestation": {
+        "name": "Zéfiro Rebelde",
+        "appearance": "Espírito acrobático de velas de navio rasgadas, ventos cortantes e grilhões abertos nos pulsos.",
+        "temperament": "Inquieto e indomável",
+        "techniques": [
+          {
+            "name": "Dança sobre as Espumas",
+            "cost_ea": 3,
+            "desc": "Permite correr sobre a água, triplicar salto e ignorar agarrões."
+          },
+          {
+            "name": "Lâmina de Barlavento",
+            "cost_ea": 5,
+            "desc": "Dispara lâminas de ar comprimido com o sabre a até 9m com 1d10+4 de dano."
+          }
+        ]
+      },
+      "biography": "Ex-escrava capturada para os leilões de Nácar que liderou um motim vitorioso, quebrou as próprias algemas e roubou uma lancha rápida para navegar livre no Triângulo."
+    },
+    {
+      "id": "char_lorenzo_vane",
+      "name": "Lorenzo Vane",
+      "codename": "O Cobrador do Submundo",
+      "player": "Herói Conceitual • Virtude da Ambição",
+      "class": "Conjurador / Negociador",
+      "origin": "Ex-Mercador de Relíquias",
+      "virtue_name": "Ambição",
+      "virtue_group": "Transformadora",
+      "primary_mode": "Projeção",
+      "mda_level": 40,
+      "mda_stage": "3º Estágio: Sintonia Plena",
+      "perception_condition": "Desperto",
+      "campaign": "camp_filantropo_oeht",
+      "hp": {
+        "current": 40,
+        "max": 40
+      },
+      "pd": {
+        "current": 30,
+        "max": 40
+      },
+      "ea": {
+        "current": 22,
+        "max": 22
+      },
+      "stability": {
+        "current": 13,
+        "max": 17
+      },
+      "armor": {
+        "type": "Média",
+        "rd": 4
+      },
+      "attributes": {
+        "for": 2,
+        "vig": 3,
+        "agi": 2,
+        "pre": 4,
+        "int": 4
+      },
+      "skills": {
+        "Enganação": 15,
+        "Ocultismo": 15,
+        "Diplomacia": 10,
+        "Crime": 10,
+        "Intuição": 5
+      },
+      "soul_manifestation": {
+        "name": "Banco de Midas",
+        "appearance": "Nobre esguio em terno escuro com tronco em forma de cofre dourado entreaberto e bocas nas palmas das mãos.",
+        "temperament": "Cobiçoso e calculista",
+        "techniques": [
+          {
+            "name": "Execução de Dívida",
+            "cost_ea": 4,
+            "desc": "Toque drena 1d6 PD/EA e converte em escudo de PV."
+          },
+          {
+            "name": "Juros Compostos",
+            "cost_ea": 6,
+            "desc": "Armazena até 15 pontos de dano bloqueado para desferir no próximo ataque."
+          }
+        ]
+      },
+      "biography": "Ex-sócio menor de Victor Kael no mercado negro de relíquias. Após ser traído e deixado para morrer em uma fenda, despertou sua Alma devorando a energia de um artefato quebrado."
+    },
+    {
+      "id": "char_valerius",
+      "name": "Comandante Valerius",
+      "codename": "O Soberano de Ferro",
+      "player": "Herói Conceitual • Virtude do Orgulho",
+      "class": "Combatente",
+      "origin": "Oficial Naval de Época",
+      "virtue_name": "Orgulho",
+      "virtue_group": "Instintiva",
+      "primary_mode": "Projeção e Convergência",
+      "mda_level": 60,
+      "mda_stage": "3º Estágio Avançado (Abençoado)",
+      "perception_condition": "Desperto",
+      "campaign": "camp_001",
+      "hp": {
+        "current": 65,
+        "max": 65
+      },
+      "pd": {
+        "current": 45,
+        "max": 50
+      },
+      "ea": {
+        "current": 28,
+        "max": 28
+      },
+      "stability": {
+        "current": 16,
+        "max": 18
+      },
+      "armor": {
+        "type": "Pesada",
+        "rd": 6
+      },
+      "attributes": {
+        "for": 5,
+        "vig": 5,
+        "agi": 2,
+        "pre": 4,
+        "int": 2
+      },
+      "skills": {
+        "Luta": 15,
+        "Intimidação": 15,
+        "Fortitude": 15,
+        "Tática": 10,
+        "Vontade": 10
+      },
+      "soul_manifestation": {
+        "name": "Sol Invictus",
+        "appearance": "Colosso imperial de 2,5m revestido de ouro branco e luz ofuscante empunhando uma alabarda solar.",
+        "temperament": "Imperial e severo",
+        "techniques": [
+          {
+            "name": "Genuflexão Obrigatória",
+            "cost_ea": 5,
+            "desc": "Pressão gravitacional em 6m que derruba inimigos de joelhos."
+          },
+          {
+            "name": "Fulgor do Monarca",
+            "cost_ea": 8,
+            "desc": "Golpe vertical de alabarda que projeta feixe térmico com 1d12+8 de dano."
+          }
+        ]
+      },
+      "biography": "Oficial de uma embarcação histórica absorvida pelo Triângulo. Recusou-se a ajoelhar diante dos Soberanos de Nácar e esculpiu um domínio independente."
+    },
+    {
+      "id": "char_raissa_carnica",
+      "name": "Raíssa 'Carniça'",
+      "codename": "A Fera do Cretáceo",
+      "player": "Heroína Conceitual • Virtude da Fúria",
+      "class": "Combatente",
+      "origin": "Sobrevivente da Ilha Canibal",
+      "virtue_name": "Fúria",
+      "virtue_group": "Instintiva",
+      "primary_mode": "Sintonia e Convergência",
+      "mda_level": 20,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_001",
+      "hp": {
+        "current": 40,
+        "max": 40
+      },
+      "pd": {
+        "current": 25,
+        "max": 30
+      },
+      "ea": {
+        "current": 15,
+        "max": 15
+      },
+      "stability": {
+        "current": 12,
+        "max": 14
+      },
+      "armor": {
+        "type": "Média",
+        "rd": 4
+      },
+      "attributes": {
+        "for": 4,
+        "vig": 4,
+        "agi": 3,
+        "pre": 3,
+        "int": 1
+      },
+      "skills": {
+        "Luta": 15,
+        "Atletismo": 10,
+        "Fortitude": 10,
+        "Sobrevivência": 10,
+        "Intimidação": 5
+      },
+      "soul_manifestation": {
+        "name": "Mandíbula do Cretáceo",
+        "appearance": "Fera humanoide revestida de placas ósseas avermelhadas e vapor fervente, com braços que terminam em crânios de répteis de energia.",
+        "temperament": "Feroz e sanguinário",
+        "techniques": [
+          {
+            "name": "Combustão de Adrenalina",
+            "cost_ea": 3,
+            "desc": "+1d8 de dano extra no próximo golpe ao contra-atacar sob ferimento."
+          },
+          {
+            "name": "Mordida Sísmica",
+            "cost_ea": 6,
+            "desc": "Reduz a RD do inimigo em -2 permanentemente e causa 1d12+5 de dano."
+          }
+        ]
+      },
+      "biography": "Única sobrevivente de uma expedição dizimada nos templos da Ilha Canibal. Passou duas semanas caçando os sequestradores de sua irmã e despertou sua Alma no altar de sacrifício."
+    },
+    {
+      "id": "char_jonas_silveira",
+      "name": "Jonas 'Vulto' Silveira",
+      "codename": "O Espectro da Ferrovia",
+      "player": "Herói Conceitual • Virtude do Medo",
+      "class": "Especialista / Infiltrador",
+      "origin": "Ex-Ferroviário da Linha Vilar",
+      "virtue_name": "Medo",
+      "virtue_group": "Instintiva",
+      "primary_mode": "Projeção",
+      "mda_level": 20,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_002",
+      "hp": {
+        "current": 30,
+        "max": 30
+      },
+      "pd": {
+        "current": 28,
+        "max": 30
+      },
+      "ea": {
+        "current": 15,
+        "max": 15
+      },
+      "stability": {
+        "current": 13,
+        "max": 15
+      },
+      "armor": {
+        "type": "Leve",
+        "rd": 2
+      },
+      "attributes": {
+        "for": 1,
+        "vig": 2,
+        "agi": 4,
+        "pre": 3,
+        "int": 3
+      },
+      "skills": {
+        "Furtividade": 15,
+        "Crime": 10,
+        "Percepção": 10,
+        "Intuição": 5,
+        "Tecnologia": 5
+      },
+      "soul_manifestation": {
+        "name": "O Vigia do Túnel",
+        "appearance": "Figura curvada de 3m feita de fuligem negra e fiação partida, com lanterna de trem apagada que absorve a luz.",
+        "temperament": "Paciente e assustador",
+        "techniques": [
+          {
+            "name": "Apagar as Luzes",
+            "cost_ea": 3,
+            "desc": "Extingue lâmpadas comuns e mergulha área de 6m em penumbra densa."
+          },
+          {
+            "name": "Alucinação da Fobia",
+            "cost_ea": 5,
+            "desc": "Materializa o pior trauma do alvo forçando teste de Vontade contra pânico."
+          }
+        ]
+      },
+      "biography": "Ex-funcionário ferroviário que ficou quatro dias preso em um túnel desabado perto da Estação Vilar ouvindo as imitações do Eco. Tornou o terror sua arma defensiva."
+    },
+    {
+      "id": "char_victor_kael",
+      "name": "Victor Kael",
+      "codename": "O Leiloeiro do Oculto",
+      "player": "NPC Antagonista Ocultista",
+      "class": "Conjurador / Sabotador",
+      "origin": "Mercador de Relíquias Negras",
+      "virtue_name": "Orgulho",
+      "virtue_group": "Instintiva",
+      "primary_mode": "Sintonia",
+      "mda_level": 40,
+      "mda_stage": "3º Estágio: Sintonia Plena",
+      "perception_condition": "Desperto",
+      "campaign": "camp_filantropo_oeht",
+      "hp": {
+        "current": 45,
+        "max": 45
+      },
+      "pd": {
+        "current": 30,
+        "max": 40
+      },
+      "ea": {
+        "current": 20,
+        "max": 22
+      },
+      "stability": {
+        "current": 14,
+        "max": 16
+      },
+      "armor": {
+        "type": "Leve",
+        "rd": 2
+      },
+      "attributes": {
+        "for": 2,
+        "vig": 2,
+        "agi": 3,
+        "pre": 4,
+        "int": 4
+      },
+      "skills": {
+        "Ocultismo": 15,
+        "Crime": 10,
+        "Enganação": 10,
+        "Furtividade": 10
+      },
+      "biography": "Homem de terno vinho infiltrado na gala de Oeht. Sabotador ativo contra a A.E.G.I.S., trabalha para que o ritual da redoma e do Anárquico se concretize."
+    },
+    {
+      "id": "char_guia_temporario",
+      "name": "O Guia Temporário",
+      "codename": "O Alerta de Ferro",
+      "player": "NPC Mártir Canônico",
+      "class": "Combatente / Sobrevivente",
+      "origin": "Navegador do Atlântico",
+      "virtue_name": "Coragem",
+      "virtue_group": "Construtiva",
+      "primary_mode": "Projeção",
+      "mda_level": 30,
+      "mda_stage": "2º Estágio: Manifestação",
+      "perception_condition": "Desperto",
+      "campaign": "camp_001",
+      "hp": {
+        "current": 0,
+        "max": 40
+      },
+      "pd": {
+        "current": 0,
+        "max": 30
+      },
+      "ea": {
+        "current": 0,
+        "max": 14
+      },
+      "stability": {
+        "current": 0,
+        "max": 15
+      },
+      "armor": {
+        "type": "Média",
+        "rd": 4
+      },
+      "attributes": {
+        "for": 3,
+        "vig": 3,
+        "agi": 3,
+        "pre": 3,
+        "int": 2
+      },
+      "skills": {
+        "Pilotagem": 15,
+        "Sobrevivência": 10,
+        "Luta": 10,
+        "Vontade": 10
+      },
+      "biography": "Primeiro aliado dos sobreviventes na Sessão 1 do Triângulo. Reconheceu a chegada do Primogênito ao ver a água congelar azul. Alvo do Campo de Rosas, sacrificou a própria vida para alertar os outros."
     }
   ],
   "chronicles": [
@@ -5061,434 +6007,135 @@ class DataLoader {
   ],
   "bestiary": [
     {
-      "id": "creature_eco",
-      "name": "Ecos Subterrâneos",
-      "scientific_name": "Homo Cavernicola Mimeticus",
-      "canon_status": "confirmed",
-      "sources": [
-        "Autópsia de Campo A.E.G.I.S. San Lorenzo",
-        "Diários de Sobrevivência de Lucas Vilar",
-        "Crônicas da Abadia de Santo Agostinho (1348)"
-      ],
-      "origin_hypotheses": [
-        "Humanoides adaptados às profundezas de minas cársticas que sofreram mutagênese por veios de quartzo negro e dobras do LIMIAR.",
-        "Sobreviventes medievais selados em criptas durante a Peste Negra que degeneraram em predadores acústicos."
-      ],
-      "habitats": [
-        "Minas Antigas de San Lorenzo",
-        "Criptas e Galerias da Floresta Negra",
-        "Túneis Subterrâneos Úmidos"
-      ],
-      "threat_level": "NÍVEL BETA // PREDADOR DE TÚNEL",
-      "behavior": "Caça furtiva em matilhas de 2 a 4 indivíduos; permanece imóvel no teto das cavernas, ouvindo conversas por horas antes de atacar.",
-      "senses": "Audição ultra-apurada e ecolocalização de alta frequência; cegueira biológica completa.",
-      "warning_signs": "Vozes de pessoas conhecidas chamando por socorro em túneis lacrados; respiração sibilante vinda do teto; ausência súbita de eco natural.",
-      "abilities": [
-        "Mimetismo Acústico Perfeito: Reproduz vozes roubadas com entonação idêntica à da vítima antes da morte.",
-        "Garras de Perfuração Mineral: Escala rocha pura e causa dano de perfuração letal.",
-        "Ataque em Emboscada Vertical: Salta de tetos sobre alvos desatentos."
-      ],
-      "limits": "Completamente ineficaz em campo aberto exposto a ventos fortes; desorienta-se com frequências harmônicas acima de 400 Hz.",
-      "weaknesses": [
-        "Frequências harmônicas puras (diapasão de 432 Hz) atordoam o sistema neural.",
-        "Superfícies acolchoadas ou amortecedoras que eliminam a reflexão do som.",
-        "Regra de Ouro: 'Não responda à voz'."
-      ],
-      "ecological_role": "Predador de topo de ecossistemas subterrâneos e galerias de mineração.",
-      "combat_profile": "Ataca pela surpresa com bônus de +4 em iniciativa em ambientes escuros; recua se ferido gravemente.",
-      "non_combat_solution": "Caminhar sob silêncio absoluto, emitir frequências sônicas contínuas ou usar gravadores com ruído branco para mascarar o rastro auditivo.",
-      "clues": [
-        "Marcas de unhas no teto a 3 metros de altura",
-        "Eco de uma frase que um aliado falou há 10 minutos em outra galeria"
-      ],
-      "hooks": "Um Eco vocaliza uma frase secreta que somente o irmão desaparecido sabia.",
-      "relationships": [
-        "Inimigo natural de expedicionários",
-        "Manipulado indiretamente pelas dobras do LIMIAR"
-      ]
+      "id": "creature_primogenito_arquiteto",
+      "name": "O Primogênito — O Diabo do Mar",
+      "classification": "Dominador / Detentor da Verdadeira Magia",
+      "mda_level": "MDA 99%",
+      "danger_tier": "CATASTRÓFICO // REALIDADE ALTERADA",
+      "origin": "Campanha I: O Triângulo das Bermudas (Sessão 1)",
+      "appearance": "Forma física verdadeira atrofiada e debilitada. Projeção flutuante sob um manto que absorve toda a luz, envolto em aura azul-escura e máscara de madeira e osso com sorriso cínico (relíquia ancestral associada ao mito de Loki).",
+      "behavior": "Reescrita das leis físicas, temporais e genéticas da realidade (Verdadeira Magia). Sua presença é anunciada por água congelada em azul-escuro, ferrugem reluzente e névoa azulada.",
+      "signature_ability": "Campo de Rosas (Mar de Rosas): Ilusão neurológica suprema que invade diretamente o córtex cerebral, desligando as funções vitais ao ser presenciada. Provocou a morte heróica do Guia na Sessão 1.",
+      "weakness": "Almas no estágio de Sintonia Plena ou Transcendência ancoram a identidade mortal e oferecem resistência crucial contra a desintegração mental.",
+      "lore_notes": "Primeiro humano a encontrar a anomalia dimensional há milênios. Moldou os mitos de Loki, as lendas sobre Merlin e os rituais de sacrifício da magia humana."
+    },
+    {
+      "id": "creature_kraken",
+      "name": "O Kraken do Fosso",
+      "classification": "Soberano Biológico — Classe Alta",
+      "mda_level": "MDA 80%–99%",
+      "danger_tier": "TITÂNICO / TERRITORIAL",
+      "origin": "Campanha I: O Triângulo das Bermudas",
+      "appearance": "Cefalópode colossal cujo manto e epiderme fundiram-se simbioticamente com rocha vulcânica abissal e crostas de magma resfriado.",
+      "behavior": "Guardião do Fosso. Não usa magia, operando por bioeletrogênese levada ao ápice evolutivo pela Lei da Alucinação.",
+      "signature_ability": "Pulsos Eletromagnéticos (PEM): Seus tentáculos disparam ondas de alta voltagem que apagam sistemas elétricos, inutilizam maquinários navais e fritam os tecidos nervosos da tripulação.",
+      "weakness": "Aberturas sensoriais nas junções entre as placas de basalto de sua couraça.",
+      "lore_notes": "Soberano territorial que inspirou as lendas marítimas sobre devoradores de frotas e monstros abissais."
+    },
+    {
+      "id": "creature_leviata_branco",
+      "name": "Moby Dick — O Leviatã Branco",
+      "classification": "Soberano Biológico — Classe Alta",
+      "mda_level": "MDA 80%–99%",
+      "danger_tier": "TITÂNICO / ANCESTRAL",
+      "origin": "Campanha I: O Triângulo das Bermudas",
+      "appearance": "Cachalote pré-histórico colossal revestido por uma armadura natural impenetrável de tumores calcificados acumulados ao longo de milênios.",
+      "behavior": "Predador ancestral de mar aberto que inspirou a lenda de Melville. Patrulha águas profundas destruindo cascos que vibram em frequências hostis.",
+      "signature_ability": "Sonar Destrutivo: Clique bioacústico de pressão extrema capaz de estilhaçar cascos de madeira maciça instantaneamente e infligir danos neurológicos agudos e hemorragias.",
+      "weakness": "Abertura respiratória dorsal durante a emersão para oxigenação.",
+      "lore_notes": "A lendária baleia branca de Melville existe e patrulha as águas abertas da anomalia marítima."
+    },
+    {
+      "id": "creature_parasita_redoma_oeht",
+      "name": "O Anárquico",
+      "classification": "Entidade de Ritual",
+      "mda_level": "MDA 80%",
+      "danger_tier": "GRAVE / COLAPSO URBANO",
+      "origin": "Campanha III: A Gala da Meia-Noite de Oeht",
+      "canon_status": "in_world_report",
+      "appearance": "Monstruosidade colossal despertada à meia-noite a partir da transmutação do bolo gigante de aniversário de Oeht, alimentada pelo artefato do cofre e pelo lodo roxo.",
+      "behavior": "Manifesta-se sob a redoma hermética de Belvedere, convertendo servos e garçons em Zumbis de Sangue e fazendo reflexos saírem dos espelhos.",
+      "signature_ability": "Vínculo Acústico de Invulnerabilidade: Defesa e resistência física colossais enquanto a caixa de música estiver ativa no palco; desativar a caixa reduz drasticamente sua proteção.",
+      "weakness": "Destruir ou interromper o mecanismo da caixa de música retira seu escudo ritual.",
+      "lore_notes": "Entidade concebida para coroar a privatização do paranormal proclamada no discurso das 23h00 do bilionário Theo Vanderberg."
     },
     {
       "id": "creature_mimico",
       "name": "Mímico Genético",
-      "scientific_name": "Morpheus Cellularis Anomala",
-      "canon_status": "confirmed",
-      "sources": [
-        "Dossiê de Necrópsia Nova Caronte",
-        "Arquivo Biológico A.E.G.I.S. MDA-04"
-      ],
-      "origin_hypotheses": [
-        "Colônia de células estaminais hiper-mutáveis que assimila o código genético de organismos mortos na anomalia marítima.",
-        "Subproduto de bio-engenharia de quarentena do Primogênito."
-      ],
-      "habitats": [
-        "Porões de navios de Nova Caronte",
-        "Áreas inundadas",
-        "Zonas de descarte biológico"
-      ],
-      "threat_level": "NÍVEL GAMA // INFILTRADOR",
-      "behavior": "Infiltra-se em grupos de sobreviventes assumindo a aparência de marinheiros caídos; age passivamente até isolar um membro.",
-      "senses": "Recepção térmica e quimiotaxia avançada; detecta batimentos cardíacos a 5 metros.",
-      "warning_signs": "Discrepância na temperatura da pele (gelada ao toque); hesitação ao recordar nomes íntimos; excesso de umidade no chão ao redor.",
-      "abilities": [
-        "Morfogênese Rápida: Copia feições, cicatrizes e tom de voz de tecido humano absorvido.",
-        "Regeneração Celular em Umidade: Recupera 5 PV por rodada se em contato com água salgada.",
-        "Tentáculos Citoplasmáticos: Desdobra apêndices perfurantes do próprio torso."
-      ],
-      "limits": "Não consegue duplicar memórias profundas de infância nem manter a forma em ambiente com umidade relativa inferior a 15%.",
-      "weaknesses": [
-        "Fogo e cauterização interrompem a proliferação celular.",
-        "Substâncias desidratantes (cal virgem, sal concentrado).",
-        "Perguntas de checagem de identidade pessoal e memórias afetivas."
-      ],
-      "ecological_role": "Decompositor e assimilador de matéria orgânica no Triângulo das Bermudas.",
-      "combat_profile": "Engana para desferir golpe surpresa com dano de constrição; se descoberto, tenta fugir para a água.",
-      "non_combat_solution": "Interrogatório cruzado com fatos que apenas o indivíduo original saberia; aplicação de teste de cauterização de sangue.",
-      "clues": [
-        "Ficha médica com tipo sanguíneo incompatível com o tecido recolhido",
-        "Pessoa que não pisca durante 10 minutos de conversa"
-      ],
-      "hooks": "Um tripulante recém-resgatado jura ser o médico do navio, mas não sabe o nome de sua própria filha.",
-      "relationships": [
-        "Vetor de terror psicológico em Nova Caronte"
-      ]
+      "classification": "Predador Furtivo Metamórfico",
+      "mda_level": "MDA 20%–40%",
+      "danger_tier": "INFILTRAÇÃO / LETAL",
+      "origin": "Campanha I: O Triângulo das Bermudas",
+      "appearance": "Massa celular adaptativa capaz de mimetizar qualquer corpo humano recém-morto com fidelidade absoluta de voz e maneirismos.",
+      "behavior": "Infiltra-se entre tripulantes e sobreviventes absorvendo o DNA de cadáveres para caçar por dentro e alimentar paranoia constante.",
+      "signature_ability": "Mimetismo Genético de Cadáveres: Copia DNA, cicatrizes e memórias superficiais da vítima.",
+      "weakness": "Jamais consegue replicar a Virtude de Alma de um Desperto — sendo essa a metodologia mais infalível usada pela A.E.G.I.S. para desmascará-los.",
+      "lore_notes": "Origem real das lendas urbanas de 'pessoas trocadas por sósias' nas grandes cidades."
     },
     {
-      "id": "creature_kraken",
-      "name": "Soberano Abissal (O Kraken do Fosso)",
-      "scientific_name": "Architeuthis Titanus Basalticus",
-      "canon_status": "confirmed",
-      "sources": [
-        "Sonar Tático A.E.G.I.S. Submarino",
-        "Cartas de Navegação de Nova Caronte"
-      ],
-      "origin_hypotheses": [
-        "Cefalópode primordial colossal fundido à crosta vulcânica submarina após milênios de exposição ao núcleo da fenda.",
-        "Guardião territorial biológico instalado no Fosso das Bermudas."
-      ],
-      "habitats": [
-        "Fosso do Kraken (Fossa Submarina a 4.000m)",
-        "Vórtice Central do Atlântico Norte"
-      ],
-      "threat_level": "NÍVEL ÔMEGA // SOBERANO TERRITORIAL",
-      "behavior": "Territorial e ciclópico; repousa em sono geotérmico e desperta com vibrações de sonares ou motores pesados.",
-      "senses": "Linha lateral sensível a microcorrentes elétricas; visão adaptada à bioluminescência abissal.",
-      "warning_signs": "Bússolas girando descontroladamente; vibração profunda no casco de navios; mar espumando com bolhas sulfurosas.",
-      "abilities": [
-        "Bioeletricidade & Pulso EMP Subaquático: Apaga sistemas elétricos em raio de 1.500m.",
-        "Couraça de Basalto Vulcânico: Armadura natural pesada (absorve 8 de dano por impacto).",
-        "Vórtice Sugador: Cria redemoinho capaz de tragar fragatas inteiras."
-      ],
-      "limits": "Incapaz de perseguir embarcações em águas rasas (menos de 30 metros de profundidade).",
-      "weaknesses": [
-        "Respiradouros biológicos centrais vulneráveis a cargas explosivas concentradas durante a exalação de gases.",
-        "Intervalo de recarga de 3 minutos após cada pulso bioelétrico."
-      ],
-      "ecological_role": "Soberano do ápice marítimo no ecossistema abissal do Triângulo.",
-      "combat_profile": "Combate colossal de escala de navio; requer manobras de evasão naval ou armamento pesado.",
-      "non_combat_solution": "Navegação silenciosa sem motores a combustão durante a janela de dormência; desvio de rota para recifes de coral.",
-      "clues": [
-        "Madeira de caravelas antigas incrustada com ventosas de 2 metros de diâmetro",
-        "Pulso de sonar que retorna como estática viva"
-      ],
-      "hooks": "A única rota de saída de Nova Caronte cruza o território de alimentação do Kraken.",
-      "relationships": [
-        "Soberano territorial em conflito com o Leviatã Branco"
-      ]
+      "id": "creature_eco",
+      "name": "O Eco",
+      "classification": "Predador Cavernoso Subterrâneo",
+      "mda_level": "MDA 25%–35%",
+      "danger_tier": "SUBTERRÂNEO / EMBOSCADA",
+      "origin": "Campanha II: O Mistério da Mansão Vilar",
+      "appearance": "Humanoide esguio, pálido por séculos sem luz solar, quase totalmente cego, com audição sobre-humana e garras escavadoras.",
+      "behavior": "Caça no escuro das minas da família Vilar. Grava com fidelidade absoluta vozes de humanos e as reproduz para atrair vítimas para emboscadas.",
+      "signature_ability": "Mimetismo Fonador Perfeito: Reproduz vozes de familiares (como a esposa de Elias Rocha ou gritos de socorro dos cinco amigos).",
+      "weakness": "Sensibilidade extrema a frequências sonoras agudas e descargas elétricas de portais LIMIAR.",
+      "lore_notes": "A criatura que assombrava as minas de Vilar e que caçou os cinco amigos durante o resgate de Lucas."
+    },
+    {
+      "id": "creature_povo_sauriano",
+      "name": "Dinossauros e Tribais da Ilha Canibal",
+      "classification": "Ecossistema Simbiótico Mutante",
+      "mda_level": "MDA 15%–60%",
+      "danger_tier": "SELVA MORTAL / HIERARQUIA",
+      "origin": "Campanha I: O Triângulo das Bermudas (Sessão 2)",
+      "appearance": "Répteis pré-históricos e humanos mutantes em simbiose com placas dérmicas e pinturas rituais de sangue.",
+      "behavior": "Sociedade predatória iniciada há 400 anos quando um náufrago solitário ensinou canibalismo às feras da ilha. Dividida em Classe Baixa, Média e Governantes.",
+      "signature_ability": "Ataque Sincronizado de Emboscada em Templos de Pedra.",
+      "weakness": "Desorganização rápida na ausência dos líderes de casta média.",
+      "lore_notes": "Estudo canônico de como a Lei da Alucinação funde faunas extintas a ritos de sangue humanos."
     },
     {
       "id": "creature_sentinela",
       "name": "Sentinela do LIMIAR",
-      "scientific_name": "Mechanismus Custos Dimensionalis",
-      "canon_status": "confirmed",
-      "sources": [
-        "Esquemas Técnicos Gabriel Vilar",
-        "Relatório de Desativação Tática A.E.G.I.S."
-      ],
-      "origin_hypotheses": [
-        "Autômato de segurança construído por Gabriel Vilar utilizando sucatas industriais e o núcleo estabilizador de um portal LIMIAR danificado."
-      ],
-      "habitats": [
-        "Gabinete Secreto da Mansão Vilar",
-        "Galeria 7 das Minas de Prata"
-      ],
-      "threat_level": "NÍVEL BETA // GUARDIÃO MECÂNICO",
-      "behavior": "Guarda estática de perímetro; ataca qualquer entidade que se aproxime do cofre de projetos sem o código de rádio correto.",
-      "senses": "Sensor térmico infravermelho e leitor de densidade quântica de espaço-tempo.",
-      "warning_signs": "Cheiro forte de ozônio; zumbido de capacitor carregando; laser de mira azul varrendo o piso.",
-      "abilities": [
-        "Micro-Salto Dimensional: Teleporta-se até 6 metros em linha reta reescrevendo sua posição física.",
-        "Descarga de Arco Elétrico: Dispara feixe de plasma concentrado causando dano térmico severo.",
-        "Blindagem de Aço Cementado: Imunidade a ataques perfurantes leves."
-      ],
-      "limits": "Bateria drena rapidamente se forçada a múltiplos micro-saltos consecutivos.",
-      "weaknesses": [
-        "Capacitor traseiro de alta voltagem exposto durante o resfriamento pós-disparo.",
-        "Pulsos eletromagnéticos e jatos de água condutora provocam curto-circuito interno."
-      ],
-      "ecological_role": "Guardião artificial projetado para proteger a pesquisa de portais de Gabriel Vilar.",
-      "combat_profile": "Ataca à distância com disparos de plasma, alternando posições por micro-saltos.",
-      "non_combat_solution": "Digitação do código de rádio de Gabriel ou desarme do gerador de alimentação antes de entrar no sensor.",
-      "clues": [
-        "Cabos de alta tensão cortados com precisão cirúrgica",
-        "Fita adesiva com anotações de calibração na lateral do chassi"
-      ],
-      "hooks": "A memória da máquina contém as últimas coordenadas digitadas por Gabriel antes de desaparecer.",
-      "relationships": [
-        "Criado por Gabriel Vilar para deter invasores da A.E.G.I.S. e Ecos"
-      ]
+      "classification": "Constructo Mecânico-Espacial",
+      "mda_level": "MDA 10%",
+      "danger_tier": "DEFESA / PORTAIS",
+      "origin": "Campanha II: O Mistério da Mansão Vilar",
+      "appearance": "Autômato de bronze e cobre construído por Gabriel Vilar acoplado às âncoras espaciais das paredes da mansão.",
+      "behavior": "Guarda automatizada ativada por sensores de movimento quando os portais LIMIAR são disparados.",
+      "signature_ability": "Estabilização de Fenda e Disparo de Choque em ZZZZT.",
+      "weakness": "Esgotamento da bateria após 3 ciclos de salto dimensional.",
+      "lore_notes": "Mecanismo patenteado por Gabriel para patrulhar os corredores da Mansão Vilar."
     },
     {
       "id": "creature_mao_rosas",
       "name": "Mão de Rosas (Manifestação do Campo de Rosas)",
-      "scientific_name": "Emanatio Glacialis Caerulea",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Sessão 1 da Incursão (Manuscrito)",
-        "Depoimentos de Sobreviventes do Navio"
-      ],
-      "origin_hypotheses": [
-        "Projeção anímica de terror e vontade biológica atribuída diretamente ao Arquiteto do Caos / Diabo do Mar.",
-        "Emanação botânico-cristalina de MDA gerada pelo congelamento quântico da água do mar."
-      ],
-      "habitats": [
-        "O Campo de Rosas",
-        "Mar das Bermudas"
-      ],
-      "threat_level": "NÍVEL ALFA // DISTORÇÃO AMBIENTAL",
-      "behavior": "Manifesta-se como botões de rosas flutuantes no mar gelado que coalescem em mãos translúcidas puxando embarcações.",
-      "senses": "Sente o desespero e a perda de convicção dos navegadores.",
-      "warning_signs": "Queda súbita de 15°C na temperatura ambiente; perfume penetrante de rosas congeladas; água do mar assumindo cor anil escuro.",
-      "abilities": [
-        "Torpor Eufórico: Induz apatia e sono calmo nas tripulações, anulando instintos de fuga.",
-        "Garras de Gelo Cristalino: Rompe cascos de madeira e fibra de vidro puxando as vítimas para o fundo.",
-        "Distorção Visual da Linha do Horizonte: O céu e o mar fundem-se em uma única abóbada azul."
-      ],
-      "limits": "Dissipa-se sob calor intenso e chamas abertas.",
-      "weaknesses": [
-        "Determinação moral inabalável e apego a vínculos afetivos quebrem o torpor hipnótico.",
-        "Fogo e motores com queima de óleo que alterem a temperatura da água circundante."
-      ],
-      "ecological_role": "Armadilha de caça do ecossistema anômalo da entrada do Triângulo.",
-      "combat_profile": "Dano psíquico na Sanidade e constrição nos cascos.",
-      "non_combat_solution": "Acender tochas náuticas, queimar querosene no convés e manter os tripulantes cantando ou recitando suas identidades em voz alta.",
-      "clues": [
-        "Botão de rosa negra colhido que não murcha e queima a pele pelo frio extremo",
-        "Bote à deriva com o marinheiro dormindo em sorriso sereno"
-      ],
-      "hooks": "O guia da expedição desapareceu no Campo de Rosas; o relato de sua morte é deliberadamente ambíguo.",
-      "relationships": [
-        "Atribuída ao Arquiteto do Caos / Diabo do Mar"
-      ]
+      "classification": "Projeção da Verdadeira Magia",
+      "mda_level": "MDA 99%",
+      "danger_tier": "MENTAL / ILUSÃO",
+      "origin": "Campanha I: O Triângulo das Bermudas",
+      "appearance": "Mãos etéreas azuladas envoltas em pétalas de gelo negro e ferrugem cintilante que brotam da água.",
+      "behavior": "Extensão direta da vontade do Primogênito para sufocar sinapses cerebrais à distância.",
+      "signature_ability": "Toque Sináptico de Paralisia Cerebral.",
+      "weakness": "Interrupção pelo choque de morte heroica voluntária (como o tiro do Guia).",
+      "lore_notes": "A emanação direta que precedeu o sacrifício do Guia na Sessão 1."
     },
     {
       "id": "creature_leviathan",
       "name": "Parasita Glacial Primordial",
-      "scientific_name": "Crio-Parasitus Antarticus",
-      "canon_status": "confirmed",
-      "sources": [
-        "Relatório de Quarentena Estação Criogênica Zero",
-        "Biópsia de Núcleo de Gelo A.E.G.I.S."
-      ],
-      "origin_hypotheses": [
-        "Organismo primordial preservado no gelo antártico por 400.000 anos, reativado pela perfuração científica da Estação Zero.",
-        "Vetor biológico dormente vinculado à mesma linhagem das anomalias do Triângulo."
-      ],
-      "habitats": [
-        "Estação Criogênica Zero (Polo Sul)",
-        "Monólito de Gelo Negro"
-      ],
-      "threat_level": "NÍVEL ÔMEGA // VETOR DE EXTINÇÃO POLAR",
-      "behavior": "Parasitismo celular agressivo; consome calor ambiente e calorias de seres vivos para produzir filamentos cristalinos condutores.",
-      "senses": "Termossensibilidade apurada em escala de miligraus centígrados.",
-      "warning_signs": "Gelo negro crescendo no sentido inverso ao fluxo térmico; estática em cabos elétricos; respiração congelando instantaneamente no peito.",
-      "abilities": [
-        "Drenagem Térmica Acelerada: Absorve todo o calor corporal de alvos tocados, congelando tecidos vitais em segundos.",
-        "Replicação de Espinhos Criogênicos: Projeta fragmentos de gelo negro perfurantes a 12 metros.",
-        "Névoa de Zero Absoluto: Reduz a visibilidade e extingue chamas abertas."
-      ],
-      "limits": "Diminui atividade metabólica em temperaturas acima de 45°C.",
-      "weaknesses": [
-        "Fraqueza biológica definitiva ainda NÃO INFORMADA pela pesquisa da A.E.G.I.S. (investigação ativa)."
-      ],
-      "ecological_role": "Organismo predador de eras glaciais primitivas.",
-      "combat_profile": "Dano de frio paralisante e redução imediata de PV; imune a armas convencionais que dependam de sangramento.",
-      "non_combat_solution": "Manutenção de barreira térmica de ar forçado a 60°C e selamento hermético dos módulos afetados.",
-      "clues": [
-        "Cientistas encontrados congelados em posições de pânico segurando aquecedores elétricos fundidos",
-        "Microscopia com filamentos cristalinos que pulsam como artérias"
-      ],
-      "hooks": "Se o parasita alcançar o oceano aberto, estima-se um evento de glaciação em cascata para 2027.",
-      "relationships": [
-        "Espécime central da crise na Estação Criogênica Zero"
-      ]
-    },
-    {
-      "id": "creature_leviata_branco",
-      "name": "Leviatã Branco (Moby Dick das Fendas)",
-      "scientific_name": "Physeter Macrocephalus Calcareus",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Registros Orais de Baleeiros de Nova Caronte",
-        "Avistamentos da Frota Nácar"
-      ],
-      "origin_hypotheses": [
-        "Cachalote albina ancestral que adentrou a anomalia marítima séculos atrás e desenvolveu hiper-mineralização biológica por MDA.",
-        "Soberano independente das águas profundas do Atlântico."
-      ],
-      "habitats": [
-        "Águas Profundas do Triângulo das Bermudas",
-        "Correntes Oceânicas da Fenda"
-      ],
-      "threat_level": "NÍVEL ÔMEGA // SOBERANO COSSAL",
-      "behavior": "Solitário e implacável; patrulha grandes profundidades e destrói qualquer embarcação de grande porte que produza vibração harmônica.",
-      "senses": "Ecolocalização sísmica capaz de mapear o leito marinho a 50 quilômetros de distância.",
-      "warning_signs": "Bandos inteiros de peixes saltando para fora da água sem predador visível; água completamente límpida e sonar acusando 'montanha em movimento'.",
-      "abilities": [
-        "Sonar Devastador: Emite pulso sônico aquático que tritura órgãos internos e estilhaça cascos reforçados.",
-        "Placas de Calcificação Ôssea: Tumores calcificados endurecidos que atuam como armadura quase impenetrável.",
-        "Investida de Aríete Submarino: Capaz de partir navios de guerra ao meio pelo impacto da cabeça."
-      ],
-      "limits": "Necessita vir à superfície para respirar em intervalos de 90 minutos.",
-      "weaknesses": [
-        "Fraqueza biológica definitiva NÃO INFORMADA nos arquivos atuais. Investigar padrões de rota, respiração e dormência."
-      ],
-      "ecological_role": "Soberano territorial pelágico; predador ápice que impede monopólio do Kraken nas águas do Triângulo.",
-      "combat_profile": "Inatacável por combate pessoal de pequena escala; exige artilharia naval pesada ou fuga imediata.",
-      "non_combat_solution": "Calar imediatamente motores e sonar tático ao primeiro sinal acústico da baleia; navegar à vela ou em botes de madeira.",
-      "clues": [
-        "Pedaço de couraça de calcário retirado de um recife com 40 cm de espessura",
-        "Gravação de sonar submarino com estalo estrondoso que estourou os fones do operador"
-      ],
-      "hooks": "O capitão de um navio antigo em Nova Caronte procura marinheiros dispostos a arpoar a criatura para abrir caminho para fora da fenda.",
-      "relationships": [
-        "Rival territorial do Kraken do Fosso"
-      ]
-    },
-    {
-      "id": "creature_povo_sauriano",
-      "name": "Povo Sauriano da Ilha (Guerreiros do Arquipélago dos Ossos)",
-      "scientific_name": "Sauria Sapiens Anomala",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Diários de Bordo de Navegadores de 1542 e 1620",
-        "Relatos de Náufragos Negociadores"
-      ],
-      "origin_hypotheses": [
-        "Linhagem de répteis pré-históricos isolados na anomalia que adquiriram sapiência, cujo contato com um náufrago humano há ~400 anos introduziu costumes culturais de canibalismo ritual e guerra organizada."
-      ],
-      "habitats": [
-        "Ilha dos Répteis Primordiais",
-        "Arquipélago dos Ossos"
-      ],
-      "threat_level": "NÍVEL ALFA // SOCIEDADE GUERREIRA",
-      "behavior": "Comportamento de caça cooperativa, emboscadas coordenadas e defesa estrita de santuários. Respeitam leis de hospitalidade se acordos forem selados por oferendas de metal e sal.",
-      "senses": "Olfação apurada por órgão vomeronasal e percepção de calor corporal em fendas faciais.",
-      "warning_signs": "Paredes de bambu e crânios polidos fincados na orla da praia; som ritmado de tambores de madeira oca reverberando da selva.",
-      "abilities": [
-        "Caça Cooperativa Coordenada: Bônus de flanqueamento tático (+3 em acertos contra alvos isolados).",
-        "Garras Serrilhadas e Armas de Sílex/Ferro: Infligem sangramento e ferimentos graves.",
-        "Camuflagem Epidérmica na Vegetação: Vantagem em Furtividade na mata fechada."
-      ],
-      "limits": "Submetem-se estritamente aos tabus de sua sociedade; recusam-se a perseguir presas além de seus marcos territoriais sagrados.",
-      "weaknesses": [
-        "Não se trata de monstros sem mente: soluções diplomáticas, troca justa de recursos (ferro refinado, pólvora, sal) e respeito a seus costumes evitam o conflito armado."
-      ],
-      "ecological_role": "Sociedade de topo da cadeia terrestre no arquipélago isolado do Triângulo.",
-      "combat_profile": "Emboscada em bando com redes, lanças e fechamento de cerco.",
-      "non_combat_solution": "Depor armas na orla, apresentar oferendas e solicitar audiência com o Conselho dos Anciãos Répteis.",
-      "clues": [
-        "Trilhas limpas no meio da mata fechada sem folhas secas caídas",
-        "Inscrições rituais talhadas em troncos de árvores centenárias"
-      ],
-      "hooks": "O náufrago humano de 400 anos atrás morreu, vive ainda sob efeito do MDA ou tornou-se uma divindade mitológica venerada pela tribo?",
-      "relationships": [
-        "Comunidade soberana e independente dentro do Triângulo"
-      ]
-    },
-    {
-      "id": "creature_primogenito_arquiteto",
-      "name": "O Primogênito / Arquiteto do Caos / Diabo do Mar",
-      "scientific_name": "Homo Primigenius Anomaliae",
-      "canon_status": "open_mystery",
-      "sources": [
-        "Manuscrito da Incursão (Autor)",
-        "Arquivo Confidencial A.E.G.I.S. Cobaia Zero",
-        "Mitos Populares Náuticos"
-      ],
-      "origin_hypotheses": [
-        "O primeiro ser humano a atravessar a anomalia do Triângulo há milênios, que sobreviveu à dissolução celular e aprendeu a manipular as leis físicas do espaço.",
-        "A lendária Cobaia Zero de experimentos modernos de bio-engenharia que absorveu o tecido da fenda e assumiu os títulos mitológicos do Diabo do Mar."
-      ],
-      "habitats": [
-        "O Centro Imóvel do Vórtice",
-        "Manifestações no Campo de Rosas",
-        "Cidadela Oculta"
-      ],
-      "threat_level": "NÍVEL ÔMEGA // ENTIDADE QUASE-DIVINA",
-      "behavior": "Observador, calculista e cínico; conhece os nomes e fraquezas morais dos viajantes antes mesmo de cruzar com eles.",
-      "senses": "Onipresença perceptual dentro dos limites da fenda das Bermudas.",
-      "warning_signs": "Água do mar tornando-se azul-petróleo escuro; ferrugem azul cobrindo superfícies metálicas; queda do som ambiente para silêncio absoluto.",
-      "abilities": [
-        "Manipulação Espaço-Temporal Local: Altera distâncias, faz corredores repetirem-se indefinidamente e inverte a gravidade.",
-        "Manto de Absorção de Luz: Manto negro que absorve 100% dos fótons ao redor, impedindo visualização de seu rosto.",
-        "Indução de Torpor e Ilusão: Projeta visões hiper-realistas de memórias pessoais para desestabilizar mentes."
-      ],
-      "limits": "Seu corpo físico requer ancoragem na água salgada anômala; a máscara de madeira/osso preserva uma consciência fragmentada.",
-      "weaknesses": [
-        "Limites e fraquezas físicas concretas permanecem ABERTOS e sob mistério deliberado. Não inventar soluções fáceis antes de definição autoral."
-      ],
-      "ecological_role": "Entidade regente e consciência central das distorções no Triângulo das Bermudas.",
-      "combat_profile": "Não combate por dano físico direto; quebra a convicção, altera o cenário e submete os alvos a dilemas existenciais.",
-      "non_combat_solution": "Negociação baseada em sacrifícios conceituais, decifração de seus enigmas históricos e manutenção de lucidez psíquica.",
-      "clues": [
-        "Máscara de osso e madeira talhada deixada sobre mesas vazias",
-        "Mensagens escritas na ferrugem azul das anteparas"
-      ],
-      "hooks": "O Arquiteto alega ter sido a inspiração de deuses e mitos da antiguidade humana; a A.E.G.I.S. tenta provar que se trata apenas de delírio megalomaníaco de uma cobaia modificada.",
-      "relationships": [
-        "Figura central de todo o horror no Triângulo das Bermudas"
-      ]
-    },
-    {
-      "id": "creature_parasita_redoma_oeht",
-      "name": "Parasita da Redoma / Manifestação do Bolo de Oeht",
-      "scientific_name": "Parasitus Devorator Convivalis",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Transcrição da Gala da Mansão Belvedere",
-        "Relatório de Necrópsia de Campo Kaelen"
-      ],
-      "origin_hypotheses": [
-        "Organismo extradimensional comercializado no mercado negro como relíquia de controle de leis físicas, mas que na verdade infecta matéria orgânica densa para gerar bio-massa faminta."
-      ],
-      "habitats": [
-        "Mansão Belvedere (Salão Principal da Gala)"
-      ],
-      "threat_level": "NÍVEL ALFA // PARASITA EXTRADIMENSIONAL",
-      "behavior": "Permanece em dormência na caixa da redoma blindada emanando radiação de lodo roxo; ao romper a tranca ou atingir a meia-noite, assimila a matéria circundante (inclusive o bolo monumental) para devorar todos os presentes.",
-      "senses": "Reconhecimento de massa biológica e calor corporal concentrado.",
-      "warning_signs": "Lodo viscoso violeta escorrendo do cofre; raios roxos silenciosos sobre a mansão; cheiro enjoativo de açúcar queimado misturado a ferro oxidado.",
-      "abilities": [
-        "Animação Macabra de Objetos Circundantes: Converte confeitos, velas violetas e talheres flutuantes em apêndices perfurantes.",
-        "Explosão de Bio-Massa Contaminada: Desfere pulso expansivo que arremessa corpos humanos com violência contra as paredes.",
-        "Indução Hipnótica de Posse: Faz seu portador (como Oeht) acreditar que está no controle de um milagre tecnológico."
-      ],
-      "limits": "Confinado pela redoma de policarbonato e chumbo enquanto as travas de segurança estiverem ativas.",
-      "weaknesses": [
-        "A chave mestra pessoal de Oeht desativa as travas de ancoragem antes da ativação final.",
-        "Destruição do núcleo do relicário antes que atinja a massa crítica da meia-noite."
-      ],
-      "ecological_role": "Parasita predador extradimensional atraído por eventos de alta concentração social humana.",
-      "combat_profile": "Ataque em área com projéteis improvisados (talheres de prata e açúcar cristalizado ácido) e sopro de lodo roxo.",
-      "non_combat_solution": "Convencer Oeht do perigo iminente antes das 23h59 com testes de Diplomacia/Enganação (DT 15) para obter a chave mestra e desligar a redoma.",
-      "clues": [
-        "Gota de lodo roxo que corrói o assoalho de carvalho do gabinete",
-        "Relatório secreto da A.E.G.I.S. classificando o lote do mercado negro como vetor de infecção"
-      ],
-      "hooks": "Quem foi o contrabandista do mercado negro que vendeu a caixa para Oeht sabendo de sua natureza devoradora?",
-      "relationships": [
-        "Artefato central da conspiração corporativa na Mansão Belvedere"
-      ]
+      "classification": "Bio-Anomalia Criogênica",
+      "mda_level": "MDA 50%",
+      "danger_tier": "CRIOGÊNICO / ABISSAL",
+      "origin": "Arquivos Árticos A.E.G.I.S.",
+      "appearance": "Organismo filamentoso de gelo negro e silício vivo preservado no permafrost.",
+      "behavior": "Infesta sistemas nervosos de criaturas expostas ao frio profundo.",
+      "signature_ability": "Criostase Nervosa Instantânea.",
+      "weakness": "Calor extremo e técnicas anímicas da Virtude da Coragem (Brasa da Última Trincheira).",
+      "lore_notes": "Registrado nos dossiês de contenção do Diretor Kaelen."
     }
   ],
   "relics": [
@@ -7948,14 +8595,806 @@ class DataLoader {
       "category": "Relíquias",
       "definition": "Objeto contido na redoma da Mansão Belvedere, comercializado no mercado oculto como fonte de poder, mas diagnosticado pela A.E.G.I.S. como organismo devorador biológico."
     }
-  ]
+  ],
+  "teia_do_tempo": {
+    "title": "Teia do Tempo: Tapeçaria Cósmica de Evren",
+    "subtitle": "História Oculta, Vertentes Temporais Conectadas & Apocalipse Dimensional",
+    "description": "Módulo interativo que mapeia todas as conexões causais, lendas históricas e linhas do tempo paralelas do universo EVREN.",
+    "eras": [
+      {
+        "id": "era_primordial",
+        "name": "Era Primordial (+5.000 Anos)",
+        "badge": "🌌 ERA PRIMORDIAL",
+        "color": "#38bdf8",
+        "summary": "A biotecnologia Cambriana esquecida e o despertar da Verdadeira Magia pelo Primogênito na aurora dos tempos."
+      },
+      {
+        "id": "era_mitica",
+        "name": "Era Mítica & Folclórica",
+        "badge": "⚔️ ERA MÍTICA",
+        "color": "#eab308",
+        "summary": "O Diabo do Mar caminhando entre os homens: as origens do mito de Loki, o ciclo arturiano e as primeiras ordens de sacrifício."
+      },
+      {
+        "id": "era_navegacoes",
+        "name": "Grandes Navegações (~400 Anos)",
+        "badge": "⚓ GRANDES NAVEGAÇÕES",
+        "color": "#10b981",
+        "summary": "Galeões tragados para o Triângulo, a origem da sociedade canibal e os primeiros avistamentos do Kraken e Leviatã Branco."
+      },
+      {
+        "id": "era_moderna",
+        "name": "Século XX & Lendas Urbanas",
+        "badge": "🏭 SÉCULO XX // GUERRAS",
+        "color": "#f97316",
+        "summary": "A Guerra Fria, submarinos em Nova Caronte, o surgimento dos Mímicos e a fundação clandestina da A.E.G.I.S."
+      },
+      {
+        "id": "vertente_triangulo",
+        "name": "Vertente 1: O Triângulo (1998)",
+        "badge": "⚡ VERTENTE I",
+        "color": "#c084fc",
+        "status_label": "(Futura Campanha)",
+        "summary": "A travessia dos cinco estágios, o Campo de Rosas, a Ilha Canibal e a rota de fuga rumo à A.E.G.I.S."
+      },
+      {
+        "id": "vertente_vilar",
+        "name": "Vertente 2: Mansão Vilar (2024)",
+        "badge": "🏰 VERTENTE II",
+        "color": "#22c55e",
+        "status_label": "Concluída",
+        "summary": "O Expresso, o sexto bilhete, os portais LIMIAR, a teia de mentiras, O Eco e o resgate de Lucas vivo."
+      },
+      {
+        "id": "vertente_oeht",
+        "name": "Vertente 3: Gala Belvedere (2026)",
+        "badge": "🎭 VERTENTE III",
+        "color": "#a855f7",
+        "status_label": "(Futura Campanha)",
+        "summary": "A conspiração de Oeht, o leilão de Victor Kael, o lodo roxo e o despertar do Anárquico sob a redoma à meia-noite."
+      },
+      {
+        "id": "vertente_colapso",
+        "name": "O Colapso da Realidade Exterior",
+        "badge": "💥 HORIZONTE CRÍTICO",
+        "color": "#ef4444",
+        "status_label": "Ponto de Convergência",
+        "summary": "A fenda global aberta: 5.000 pessoas desaparecidas em transmissão ao vivo e a fusão dimensional sob a Lei da Alucinação."
+      }
+    ],
+    "nodes": [
+      {
+        "id": "node_hallucigenia",
+        "title": "Biotecnologia Cambriana & Armadura Hallucigenia",
+        "era_id": "era_primordial",
+        "vertente_id": "era_primordial",
+        "year_display": "+5.000 Anos Atrás",
+        "importance": "Fundacional",
+        "summary": "Civilizações ancestrais desenvolvem tecnologia orgânica consciente fundida à medula espinhal, rompendo a barreira entre biologia e engenharia.",
+        "quote": "Sua existência prova que a fronteira entre tecnologia avançada e simbiose biológica já havia sido rompida na pré-história.",
+        "characters": [
+          "char_iris_vento_solto",
+          "char_mateus_alencar"
+        ],
+        "relics": [
+          "relic_hallucigenia"
+        ],
+        "caused_by": [],
+        "leads_to": [
+          "node_primogenito_fenda"
+        ]
+      },
+      {
+        "id": "node_primogenito_fenda",
+        "title": "Gênese do Primogênito // Despertar da Verdadeira Magia",
+        "era_id": "era_primordial",
+        "vertente_id": "era_primordial",
+        "year_display": "Aurora da Humanidade",
+        "importance": "Cataclísmico",
+        "summary": "O primeiro humano encontra a fenda primordial no oceano. Em vez de ser destruído, expande sua mente além dos limites mortais e compreende o código-fonte da realidade.",
+        "quote": "Ele sobreviveu, compreendeu o código-fonte do cosmos e despertou a Verdadeira Magia, tornando-se O Primogênito — O Diabo do Mar.",
+        "characters": [
+          "char_arquiteto",
+          "char_guia_temporario"
+        ],
+        "bestiary": [
+          "creature_primogenito_arquiteto"
+        ],
+        "relics": [
+          "relic_loki_mask"
+        ],
+        "caused_by": [
+          "node_hallucigenia"
+        ],
+        "leads_to": [
+          "node_loki_mito",
+          "node_merlin_excalibur",
+          "node_campo_de_rosas"
+        ]
+      },
+      {
+        "id": "node_loki_mito",
+        "title": "A Sombra Nórdica: O Mito de Loki",
+        "era_id": "era_mitica",
+        "vertente_id": "era_mitica",
+        "year_display": "Século IX // Era Viking",
+        "importance": "Folclore Explicado",
+        "summary": "Avistamentos do Primogênito usando sua máscara de osso e madeira, manipulando percepções e cinismo, são registrados pelos escaldos nórdicos como os feitos do deus da trapaça.",
+        "quote": "A própria máscara de madeira e osso utilizada pelo Primogênito é a relíquia ancestral que deu origem aos mitos escandinavos sobre Loki.",
+        "characters": [
+          "char_arquiteto"
+        ],
+        "bestiary": [
+          "creature_primogenito_arquiteto"
+        ],
+        "relics": [
+          "relic_loki_mask"
+        ],
+        "caused_by": [
+          "node_primogenito_fenda"
+        ],
+        "leads_to": [
+          "node_folclore_maritimo"
+        ]
+      },
+      {
+        "id": "node_merlin_excalibur",
+        "title": "O Ciclo Arturiano & As Lâminas da Bretanha",
+        "era_id": "era_mitica",
+        "vertente_id": "era_mitica",
+        "year_display": "Século V-VI // Bretanha",
+        "importance": "Folclore Explicado",
+        "summary": "O Primogênito caminha entre cortes medievais sob o disfarce do conselheiro Merlin, entregando relíquias de corte anômalo como Excalibur para testar a soberania dos reis mortais.",
+        "quote": "A lâmina e os prodígios atribuídos a Merlin são vestígios diretos da manipulação histórica do Primogênito.",
+        "characters": [
+          "char_valerius"
+        ],
+        "relics": [
+          "relic_excalibur"
+        ],
+        "caused_by": [
+          "node_primogenito_fenda"
+        ],
+        "leads_to": [
+          "node_ordens_sacrificio"
+        ]
+      },
+      {
+        "id": "node_ordens_sacrificio",
+        "title": "Nascimento das Ordens Ocultistas Humanas",
+        "era_id": "era_mitica",
+        "vertente_id": "era_mitica",
+        "year_display": "Idade Média Tardia",
+        "importance": "Metafísica Oculta",
+        "summary": "Conjuradores mortais aprendem que o sacrifício de memórias e sangue força brechas nas regras físicas do mundo, criando a base para rituais humanos.",
+        "quote": "Conjuradores aprenderam que o sacrifício de coisas genuinamente valiosas cria uma ressonância espiritual capaz de dobrar a matéria.",
+        "characters": [
+          "char_victor_kael",
+          "char_clara_mendes"
+        ],
+        "caused_by": [
+          "node_merlin_excalibur"
+        ],
+        "leads_to": [
+          "node_gala_oeht_plano"
+        ]
+      },
+      {
+        "id": "node_ilha_canibal_origem",
+        "title": "Origem da Sociedade da Ilha Canibal",
+        "era_id": "era_navegacoes",
+        "vertente_id": "era_navegacoes",
+        "year_display": "Século XVI (~1542 / Há 400 Anos)",
+        "importance": "Horror Evolutivo",
+        "summary": "Um humano náufrago solitário atinge uma ilha habitada por dinossauros preservados no Triângulo e ensina canibalismo às feras pré-históricas, criando uma cultura tribal de 400 anos.",
+        "quote": "Em vez de ser devorado, esse indivíduo ensinou práticas de canibalismo às próprias feras, evoluindo para templos e rituais de sangue.",
+        "characters": [
+          "char_raissa_carnica"
+        ],
+        "bestiary": [
+          "creature_povo_sauriano"
+        ],
+        "caused_by": [
+          "node_primogenito_fenda"
+        ],
+        "leads_to": [
+          "node_sessao_2_triangulo"
+        ]
+      },
+      {
+        "id": "node_folclore_maritimo",
+        "title": "Vazamento da Barreira & Lendas do Kraken e Leviatã",
+        "era_id": "era_navegacoes",
+        "vertente_id": "era_navegacoes",
+        "year_display": "Século XVII-XVIII",
+        "importance": "Lendas Históricas",
+        "summary": "Navegadores que escaparam das bordas da anomalia levam para a Europa relatos apavorantes sobre lulas de rocha com descargas elétricas e baleias gigantes encouraçadas.",
+        "quote": "Marinheiros que sobreviveram às bordas da anomalia trouxeram para os portos europeus os relatos do Kraken e de Moby Dick.",
+        "characters": [
+          "char_marcos_valente",
+          "char_iris_vento_solto"
+        ],
+        "bestiary": [
+          "creature_kraken",
+          "creature_leviata_branco"
+        ],
+        "relics": [
+          "relic_patitre"
+        ],
+        "caused_by": [
+          "node_primogenito_fenda"
+        ],
+        "leads_to": [
+          "node_nova_caronte_fundacao"
+        ]
+      },
+      {
+        "id": "node_nova_caronte_fundacao",
+        "title": "Expansão de Nova Caronte & A Goela do Cachalote",
+        "era_id": "era_moderna",
+        "vertente_id": "era_moderna",
+        "year_display": "Século XX // Guerra Fria",
+        "importance": "Geografia Anômala",
+        "summary": "Submarinos soviéticos e navios cargueiros desaparecidos no Atlântico fundem-se em Nova Caronte. A Goela do Cachalote vira o epicentro de comércio de relíquias.",
+        "quote": "Cidade flutuante erguida sobre o emaranhado de carcaças navais de várias eras: galeões espanhóis e submarinos soviéticos.",
+        "characters": [
+          "char_iris_vento_solto",
+          "char_mateus_alencar"
+        ],
+        "caused_by": [
+          "node_folclore_maritimo"
+        ],
+        "leads_to": [
+          "node_cinco_estagios"
+        ]
+      },
+      {
+        "id": "node_lendas_urbanas_mimetismo",
+        "title": "Microfendas Terrestres: Mímicos e O Eco",
+        "era_id": "era_moderna",
+        "vertente_id": "era_moderna",
+        "year_display": "Décadas de 1970-1990",
+        "importance": "Transição para o Continente",
+        "summary": "Com a barreira enfraquecida, anomalias biológicas infiltram-se no continente: Mímicos Genéticos substituem pessoas e criaturas como O Eco aninham-se em minas profundas.",
+        "quote": "Relatos de pessoas substituídas por impostores e vozes de parentes falecidos chamando em túneis nasceram de vazamentos reais.",
+        "characters": [
+          "char_elias_rocha"
+        ],
+        "bestiary": [
+          "creature_mimico",
+          "creature_eco"
+        ],
+        "caused_by": [
+          "node_folclore_maritimo"
+        ],
+        "leads_to": [
+          "node_fundacao_aegis",
+          "node_sumico_lucas"
+        ]
+      },
+      {
+        "id": "node_fundacao_aegis",
+        "title": "Fundação da A.E.G.I.S. & Doutrina Kaelen",
+        "era_id": "era_moderna",
+        "vertente_id": "era_moderna",
+        "year_display": "1968 // Notariado em Genebra",
+        "importance": "Ordem Tática Global",
+        "summary": "A Agência de Exploração e Gerenciamento de Incursões Secretas é fundada sob o Diretor Kaelen, combinando Sensitivos forenses e Agentes Despertos armados.",
+        "quote": "Câmeras comuns gravam apenas móveis voando; apenas lentes tratadas com cristais anômalos da A.E.G.I.S. registram o contorno de uma Alma.",
+        "characters": [
+          "char_kaelen",
+          "char_kenji_sato",
+          "char_helena_vargas"
+        ],
+        "relics": [
+          "relic_retrovirus"
+        ],
+        "caused_by": [
+          "node_lendas_urbanas_mimetismo"
+        ],
+        "leads_to": [
+          "node_resgate_triangulo_aegis",
+          "node_gala_oeht_plano"
+        ]
+      },
+      {
+        "id": "node_cinco_estagios",
+        "title": "A Travessia dos Cinco Estágios Sensoriais",
+        "era_id": "vertente_triangulo",
+        "vertente_id": "vertente_triangulo",
+        "year_display": "1998 // Início da Campanha I",
+        "importance": "Ruptura Dimensional",
+        "summary": "A embarcação cruza o horizonte: borda infinita, repetição em loop, redemoinhos gravitacionais, dor craniana pela Lei da Alucinação e o êxtase final.",
+        "quote": "No instante exato da passagem, a dor cessa abruptamente e dá lugar a uma euforia sobrenatural.",
+        "characters": [
+          "char_guia_temporario"
+        ],
+        "caused_by": [
+          "node_nova_caronte_fundacao"
+        ],
+        "leads_to": [
+          "node_campo_de_rosas"
+        ]
+      },
+      {
+        "id": "node_campo_de_rosas",
+        "title": "Sessão 1: O Campo de Rosas & O Sacrifício do Guia",
+        "era_id": "vertente_triangulo",
+        "vertente_id": "vertente_triangulo",
+        "year_display": "1998 // Sessão 1",
+        "importance": "Clímax de Horror",
+        "summary": "O mar congela azul e surge o Diabo do Mar. Diante do colapso neurológico iminente pelo Campo de Rosas, o Guia dispara para o alto e se sacrifica para que os sobreviventes fujam.",
+        "quote": "O impacto traumático desse sacrifício estabelece o Diabo do Mar como o predador supremo da realidade.",
+        "characters": [
+          "char_guia_temporario",
+          "char_arquiteto"
+        ],
+        "bestiary": [
+          "creature_primogenito_arquiteto"
+        ],
+        "caused_by": [
+          "node_cinco_estagios",
+          "node_primogenito_fenda"
+        ],
+        "leads_to": [
+          "node_sessao_2_triangulo"
+        ]
+      },
+      {
+        "id": "node_sessao_2_triangulo",
+        "title": "Sessão 2: Travessia do Arquipélago & A Ilha Canibal",
+        "era_id": "vertente_triangulo",
+        "vertente_id": "vertente_triangulo",
+        "year_display": "1998 // Sessão 2",
+        "importance": "Sobrevivência Selvagem",
+        "summary": "Sem guia, o grupo navega entre postos de contrabandistas até aportar na Ilha Canibal, enfrentando castas baixas armadas de osso e feras de 400 anos.",
+        "quote": "O próprio ambiente mutagênico força os sobreviventes a desenvolverem pequenas adaptações biológicas para não perecerem.",
+        "characters": [
+          "char_raissa_carnica"
+        ],
+        "bestiary": [
+          "creature_povo_sauriano"
+        ],
+        "caused_by": [
+          "node_campo_de_rosas",
+          "node_ilha_canibal_origem"
+        ],
+        "leads_to": [
+          "node_cidadela_nacar_conflito"
+        ]
+      },
+      {
+        "id": "node_cidadela_nacar_conflito",
+        "title": "Os Leilões da Cidadela de Nácar & O Fosso",
+        "era_id": "vertente_triangulo",
+        "vertente_id": "vertente_triangulo",
+        "year_display": "1998 // Sessão 3",
+        "importance": "Rebelião & Fuga",
+        "summary": "O grupo evita a captura escravista em Nácar, sobrevive aos pulsos de PEM no Fosso do Kraken e escapa das ondas acústicas do Leviatã Branco.",
+        "quote": "Sociedade rigidamente estratificada notória por organizar leilões de recém-chegados capturados nas águas externas.",
+        "characters": [
+          "char_iris_vento_solto",
+          "char_valerius"
+        ],
+        "bestiary": [
+          "creature_kraken",
+          "creature_leviata_branco"
+        ],
+        "caused_by": [
+          "node_sessao_2_triangulo"
+        ],
+        "leads_to": [
+          "node_resgate_triangulo_aegis"
+        ]
+      },
+      {
+        "id": "node_resgate_triangulo_aegis",
+        "title": "Rompimento do Bloqueio & Recrutamento A.E.G.I.S.",
+        "era_id": "vertente_triangulo",
+        "vertente_id": "vertente_triangulo",
+        "year_display": "1998 // Desfecho",
+        "importance": "Integração Canônica",
+        "summary": "Os sobreviventes abrem brecha dimensional e são interceptados pela frota da A.E.G.I.S. O Diretor Kaelen recruta o grupo devido ao alto MDA e resistência mental.",
+        "quote": "Estabelecendo a ponte direta entre o horror marítimo da Campanha I e as operações de contenção urbana das campanhas seguintes.",
+        "characters": [
+          "char_kaelen",
+          "char_marcos_valente"
+        ],
+        "caused_by": [
+          "node_cidadela_nacar_conflito",
+          "node_fundacao_aegis"
+        ],
+        "leads_to": [
+          "node_colapso_iminente"
+        ]
+      },
+      {
+        "id": "node_sumico_lucas",
+        "title": "A Noite da Farsa & O Desaparecimento de Lucas",
+        "era_id": "vertente_vilar",
+        "vertente_id": "vertente_vilar",
+        "year_display": "2021 (-3 Anos) // Incidente Inicial",
+        "importance": "Gênese do Conflito",
+        "summary": "Uma brincadeira humilhante orquestrada por Rafael e uma briga com Arthur fazem Lucas fugir na mata, cair nas galerias da mina e quebrar a perna no escuro.",
+        "quote": "Nenhum dos cinco amigos assassinou Lucas, mas cada um deles carrega uma fração direta de culpa pelo desaparecimento.",
+        "characters": [
+          "char_lucas",
+          "char_rafael",
+          "char_arthur",
+          "char_bia",
+          "char_helena",
+          "char_diego"
+        ],
+        "caused_by": [
+          "node_lendas_urbanas_mimetismo"
+        ],
+        "leads_to": [
+          "node_criacao_limiar"
+        ]
+      },
+      {
+        "id": "node_criacao_limiar",
+        "title": "O Luto de Gabriel & Criação do Projeto LIMIAR",
+        "era_id": "vertente_vilar",
+        "vertente_id": "vertente_vilar",
+        "year_display": "2022-2023 // Projeto Secreto",
+        "importance": "Tecnologia Experimental",
+        "summary": "Gabriel Vilar, convencido de que o irmão caçula foi assassinado pelos amigos, desenvolve portais de curta distância com som ZZZZT e âncoras na mansão.",
+        "quote": "Diferente da magia, o Projeto LIMIAR opera sob limitações de física: exige âncoras espaciais prévias e tem bateria restrita.",
+        "characters": [
+          "char_gabriel"
+        ],
+        "relics": [
+          "relic_limiar"
+        ],
+        "caused_by": [
+          "node_sumico_lucas"
+        ],
+        "leads_to": [
+          "node_expresso_vilar"
+        ]
+      },
+      {
+        "id": "node_expresso_vilar",
+        "title": "Atos I-II: O Expresso, o Sexto Bilhete & Davi Reis",
+        "era_id": "vertente_vilar",
+        "vertente_id": "vertente_vilar",
+        "year_display": "2024 // Atos I-II",
+        "importance": "Início do Thriller",
+        "summary": "Os 5 amigos voltam à serra; o fiscal valida 6 bilhetes; a gravação promete julgamento. Na mansão isolada, encontram os NPCs e o suposto eletricista Davi Reis.",
+        "quote": "'Três anos. Cinco mentirosos. Hoje nós vamos descobrir o que vocês fizeram com Lucas.'",
+        "characters": [
+          "char_rafael",
+          "char_gabriel",
+          "char_camila_torres",
+          "char_mauro_azevedo",
+          "char_elias_rocha"
+        ],
+        "caused_by": [
+          "node_criacao_limiar"
+        ],
+        "leads_to": [
+          "node_limiar_ataques"
+        ]
+      },
+      {
+        "id": "node_limiar_ataques",
+        "title": "Atos III-V: Ataques do Mascarado & A Queda da Máscara",
+        "era_id": "vertente_vilar",
+        "vertente_id": "vertente_vilar",
+        "year_display": "2024 // Atos III-V",
+        "importance": "Revelação Psicológica",
+        "summary": "Ataques com portais de ozônio forçam os cinco a revelarem suas culpas. Gabriel é desmascarado; ao saber que não houve homicídio, a busca volta-se às minas.",
+        "quote": "A revelação dos segredos dos cinco amigos prova que ninguém matou Lucas, redirecionando a investigação para as minas.",
+        "characters": [
+          "char_gabriel",
+          "char_helena",
+          "char_diego",
+          "char_bia"
+        ],
+        "relics": [
+          "relic_limiar"
+        ],
+        "caused_by": [
+          "node_expresso_vilar"
+        ],
+        "leads_to": [
+          "node_minas_eco_resgate"
+        ]
+      },
+      {
+        "id": "node_minas_eco_resgate",
+        "title": "Atos VI-VIII: A Caçada do Eco, Lucas Vivo & Explosão",
+        "era_id": "vertente_vilar",
+        "vertente_id": "vertente_vilar",
+        "year_display": "2024 // Desfecho Concluído",
+        "importance": "Resolução Heróica",
+        "summary": "Descida às galerias sob perseguição do Eco; encontro de Lucas vivo adaptado às trevas; fuga tensa e detonação das minas, encerrando o trauma familiar.",
+        "quote": "Lucas sobreviveu no escuro por três anos. Apesar das mutações de sobrevivência, ele ainda é Lucas.",
+        "characters": [
+          "char_lucas",
+          "char_gabriel",
+          "char_arthur"
+        ],
+        "bestiary": [
+          "creature_eco"
+        ],
+        "caused_by": [
+          "node_limiar_ataques"
+        ],
+        "leads_to": [
+          "node_colapso_iminente"
+        ]
+      },
+      {
+        "id": "node_gala_oeht_plano",
+        "title": "A Conspiração Corporativa de Theo Vanderberg",
+        "era_id": "vertente_oeht",
+        "vertente_id": "vertente_oeht",
+        "year_display": "2026 // Fase Tática 1",
+        "importance": "Privatização Paranormal",
+        "summary": "Oeht desafia a A.E.G.I.S. ao montar um mercado clandestino de relíquias anômalas para a elite mundial em Genebra, guardando lodo ácido no cofre.",
+        "quote": "Empresário visionário e arrogante que declarou guerra à A.E.G.I.S. para privatizar o controle do paranormal.",
+        "characters": [
+          "char_oeht",
+          "char_kaelen",
+          "char_victor_kael"
+        ],
+        "caused_by": [
+          "node_fundacao_aegis",
+          "node_ordens_sacrificio"
+        ],
+        "leads_to": [
+          "node_infiltracao_belvedere"
+        ]
+      },
+      {
+        "id": "node_infiltracao_belvedere",
+        "title": "Infiltração em Belvedere & A Mesa de Poker VIP",
+        "era_id": "vertente_oeht",
+        "vertente_id": "vertente_oeht",
+        "year_display": "2026 // Fase Tática 2",
+        "importance": "Espionagem Oculta",
+        "summary": "Agentes Despertos infiltram-se no baile nos Alpes. Victor Kael sabota a contenção; o vazamento de lodo roxo é detectado antes do discurso das 23h00.",
+        "quote": "Homem de terno vinho infiltrado na gala de Oeht. Sabotador ativo da missão da A.E.G.I.S.",
+        "characters": [
+          "char_kenji_sato",
+          "char_victor_kael",
+          "char_lorenzo_vane"
+        ],
+        "caused_by": [
+          "node_gala_oeht_plano"
+        ],
+        "leads_to": [
+          "node_meia_noite_anarquico"
+        ]
+      },
+      {
+        "id": "node_meia_noite_anarquico",
+        "title": "Meia-Noite: A Redoma Hermética & O Anárquico",
+        "era_id": "vertente_oeht",
+        "vertente_id": "vertente_oeht",
+        "year_display": "2026 // Clímax da Campanha III",
+        "importance": "Ameaça Cataclísmica",
+        "summary": "À 00h00, a redoma sela a mansão; o bolo gigante transmuta-se no Anárquico; a caixa de música toca no palco e garçons tornam-se Zumbis de Sangue.",
+        "quote": "Criatura colossal despertada à meia-noite a partir da transmutação do bolo de Oeht, invulnerável enquanto a caixa de música tocar.",
+        "characters": [
+          "char_oeht",
+          "char_clara_mendes",
+          "char_helena_vargas"
+        ],
+        "bestiary": [
+          "creature_parasita_redoma_oeht",
+          "mob_blood_zombies",
+          "mob_gallery_reflections"
+        ],
+        "caused_by": [
+          "node_infiltracao_belvedere"
+        ],
+        "leads_to": [
+          "node_colapso_iminente"
+        ]
+      },
+      {
+        "id": "node_colapso_iminente",
+        "title": "O Colapso da Realidade Exterior & O Apocalipse Genético",
+        "era_id": "vertente_colapso",
+        "vertente_id": "vertente_colapso",
+        "year_display": "Horizonte Futuro Crítico",
+        "importance": "Ponto de Convergência Universal",
+        "summary": "A barreira do Triângulo cede em escala planetária. Um navio com 5.000 passageiros desaparece em transmissão ao vivo. A Terra caminha para a fusão com a Lei da Alucinação.",
+        "quote": "'Incursão acontecendo, é o fim do...' — Última transmissão antes da perda total de sinal no desaparecimento de 5.000 pessoas.",
+        "characters": [
+          "char_kaelen",
+          "char_oeht",
+          "char_lucas"
+        ],
+        "bestiary": [
+          "creature_primogenito_arquiteto",
+          "creature_kraken"
+        ],
+        "caused_by": [
+          "node_resgate_triangulo_aegis",
+          "node_minas_eco_resgate",
+          "node_meia_noite_anarquico"
+        ],
+        "leads_to": []
+      }
+    ],
+    "links": [
+      {
+        "from": "node_hallucigenia",
+        "to": "node_primogenito_fenda",
+        "type": "ancestry",
+        "label": "Origem Biológica"
+      },
+      {
+        "from": "node_primogenito_fenda",
+        "to": "node_loki_mito",
+        "type": "myth",
+        "label": "Mito Escandinavo"
+      },
+      {
+        "from": "node_primogenito_fenda",
+        "to": "node_merlin_excalibur",
+        "type": "myth",
+        "label": "Ciclo Arturiano"
+      },
+      {
+        "from": "node_merlin_excalibur",
+        "to": "node_ordens_sacrificio",
+        "type": "esoteric",
+        "label": "Ocultismo Humano"
+      },
+      {
+        "from": "node_primogenito_fenda",
+        "to": "node_ilha_canibal_origem",
+        "type": "evolution",
+        "label": "Vazamento Biológico"
+      },
+      {
+        "from": "node_primogenito_fenda",
+        "to": "node_folclore_maritimo",
+        "type": "folklore",
+        "label": "Monstros nos Mares"
+      },
+      {
+        "from": "node_folclore_maritimo",
+        "to": "node_nova_caronte_fundacao",
+        "type": "expansion",
+        "label": "Cidade de Carcaças"
+      },
+      {
+        "from": "node_folclore_maritimo",
+        "to": "node_lendas_urbanas_mimetismo",
+        "type": "leakage",
+        "label": "Fendas Terrestres"
+      },
+      {
+        "from": "node_lendas_urbanas_mimetismo",
+        "to": "node_fundacao_aegis",
+        "type": "response",
+        "label": "Doutrina de Contenção"
+      },
+      {
+        "from": "node_lendas_urbanas_mimetismo",
+        "to": "node_sumico_lucas",
+        "type": "tragedy",
+        "label": "O Eco nas Minas"
+      },
+      {
+        "from": "node_nova_caronte_fundacao",
+        "to": "node_cinco_estagios",
+        "type": "campaign_1",
+        "label": "Horizonte Atemporal"
+      },
+      {
+        "from": "node_cinco_estagios",
+        "to": "node_campo_de_rosas",
+        "type": "campaign_1",
+        "label": "Sessão 1: Mar de Rosas"
+      },
+      {
+        "from": "node_campo_de_rosas",
+        "to": "node_sessao_2_triangulo",
+        "type": "campaign_1",
+        "label": "Sessão 2: Arquipélago"
+      },
+      {
+        "from": "node_ilha_canibal_origem",
+        "to": "node_sessao_2_triangulo",
+        "type": "lore_link",
+        "label": "Encontro Canibal"
+      },
+      {
+        "from": "node_sessao_2_triangulo",
+        "to": "node_cidadela_nacar_conflito",
+        "type": "campaign_1",
+        "label": "Leilões e Abismos"
+      },
+      {
+        "from": "node_cidadela_nacar_conflito",
+        "to": "node_resgate_triangulo_aegis",
+        "type": "campaign_1",
+        "label": "Fuga & Extração"
+      },
+      {
+        "from": "node_fundacao_aegis",
+        "to": "node_resgate_triangulo_aegis",
+        "type": "tactical",
+        "label": "Recrutamento Kaelen"
+      },
+      {
+        "from": "node_sumico_lucas",
+        "to": "node_criacao_limiar",
+        "type": "campaign_2",
+        "label": "Vendeta de Gabriel"
+      },
+      {
+        "from": "node_criacao_limiar",
+        "to": "node_expresso_vilar",
+        "type": "campaign_2",
+        "label": "O Sexto Bilhete"
+      },
+      {
+        "from": "node_expresso_vilar",
+        "to": "node_limiar_ataques",
+        "type": "campaign_2",
+        "label": "Portais na Mansão"
+      },
+      {
+        "from": "node_limiar_ataques",
+        "to": "node_minas_eco_resgate",
+        "type": "campaign_2",
+        "label": "Descida & Resgate"
+      },
+      {
+        "from": "node_ordens_sacrificio",
+        "to": "node_gala_oeht_plano",
+        "type": "ritual",
+        "label": "Leilão de Artefatos"
+      },
+      {
+        "from": "node_fundacao_aegis",
+        "to": "node_gala_oeht_plano",
+        "type": "tactical",
+        "label": "Alerta em Genebra"
+      },
+      {
+        "from": "node_gala_oeht_plano",
+        "to": "node_infiltracao_belvedere",
+        "type": "campaign_3",
+        "label": "Infiltração Tática"
+      },
+      {
+        "from": "node_infiltracao_belvedere",
+        "to": "node_meia_noite_anarquico",
+        "type": "campaign_3",
+        "label": "A Meia-Noite"
+      },
+      {
+        "from": "node_resgate_triangulo_aegis",
+        "to": "node_colapso_iminente",
+        "type": "critical",
+        "label": "Barreira Cedendo"
+      },
+      {
+        "from": "node_minas_eco_resgate",
+        "to": "node_colapso_iminente",
+        "type": "critical",
+        "label": "Fendas Continentais"
+      },
+      {
+        "from": "node_meia_noite_anarquico",
+        "to": "node_colapso_iminente",
+        "type": "critical",
+        "label": "Ruptura de Redoma"
+      }
+    ]
+  }
 };
   }
 }
 
-if (typeof window !== "undefined") {
-  window.DataLoader = DataLoader;
-}
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = DataLoader;
-}
+// Instância global
+window.DataLoader = DataLoader;

@@ -1,0 +1,571 @@
+/* ==========================================================================
+   TEIA DO TEMPO: TAPEÇARIA CÓSMICA & LINHAS DO TEMPO DO UNIVERSO EVREN
+   Identidade: Biopunk Ocultista, Dark Holographic HUD, Holograma de Linhas Temporais
+   ========================================================================== */
+
+:root {
+  --teia-bg-dark: #03070d;
+  --teia-panel-bg: rgba(6, 14, 24, 0.94);
+  --teia-card-bg: rgba(10, 22, 36, 0.88);
+  --teia-border: rgba(0, 229, 255, 0.28);
+  --teia-border-gold: rgba(212, 175, 55, 0.35);
+
+  --era-primordial: #38bdf8;
+  --era-mitica: #ffd700;
+  --era-navegacoes: #10b981;
+  --era-moderna: #f97316;
+  --vertente-triangulo: #c084fc;
+  --vertente-vilar: #22c55e;
+  --vertente-oeht: #a855f7;
+  --vertente-colapso: #ef4444;
+}
+
+/* Modal Backdrop & Container */
+.modal-teia-container {
+  max-width: 96vw;
+  width: 1400px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 20%, rgba(14, 28, 48, 0.98) 0%, rgba(4, 9, 16, 0.99) 85%);
+  border: 1px solid var(--teia-border);
+  box-shadow: 0 0 50px rgba(0, 229, 255, 0.15), 0 25px 60px rgba(0, 0, 0, 0.9);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Header */
+.teia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(3, 7, 13, 0.95);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.teia-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.teia-header-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--era-primordial);
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+  animation: pulse-aura 3s infinite ease-in-out;
+}
+
+.teia-title-wrap h2 {
+  font-family: 'Cinzel Decorative', 'Courier New', serif;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.teia-title-wrap .teia-subtitle {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  color: #728a9c;
+  letter-spacing: 1px;
+}
+
+.teia-view-switcher {
+  display: flex;
+  background: rgba(10, 20, 32, 0.8);
+  padding: 3px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  gap: 4px;
+}
+
+.teia-view-btn {
+  background: transparent;
+  border: none;
+  color: #8da4be;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.teia-view-btn:hover {
+  color: #fff;
+  background: rgba(0, 229, 255, 0.1);
+}
+
+.teia-view-btn.active {
+  background: rgba(0, 229, 255, 0.25);
+  color: #00e5ff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+/* Toolbar & Filters */
+.teia-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 18px;
+  background: rgba(5, 12, 20, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.teia-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.teia-filter-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-right: 4px;
+}
+
+.teia-chip {
+  background: rgba(12, 25, 40, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #9ab1c7;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.teia-chip:hover {
+  border-color: #00e5ff;
+  color: #fff;
+}
+
+.teia-chip.active {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+  color: #00e5ff;
+  font-weight: 700;
+}
+
+.teia-search-input {
+  background: rgba(6, 14, 24, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #e6eef7;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 4px;
+  outline: none;
+  width: 240px;
+  transition: all 0.2s ease;
+}
+
+.teia-search-input:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+/* Main Interactive Area */
+.teia-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, #071322 0%, #020509 90%);
+}
+
+/* Canvas View */
+#teia-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+#teia-canvas:active {
+  cursor: grabbing;
+}
+
+/* Controls Overlay on Canvas */
+.teia-canvas-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+  background: rgba(4, 10, 18, 0.85);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  backdrop-filter: blur(6px);
+}
+
+.teia-ctrl-btn {
+  background: rgba(12, 24, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8da4be;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.teia-ctrl-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  color: #fff;
+  border-color: #00e5ff;
+}
+
+/* Strands View (Vertentes Paralelas) */
+.teia-strands-view {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.teia-strand-lane {
+  display: flex;
+  flex-direction: column;
+  background: rgba(8, 16, 28, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.teia-strand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+}
+
+.teia-strand-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.05rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.teia-strand-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.teia-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.teia-node-card {
+  background: var(--teia-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #00e5ff;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teia-node-card:hover {
+  transform: translateY(-2px);
+  border-color: #00e5ff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 229, 255, 0.2);
+}
+
+.teia-node-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.teia-node-card-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #e6eef7;
+  line-height: 1.3;
+}
+
+.teia-node-card-year {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: #ffd700;
+  white-space: nowrap;
+}
+
+.teia-node-card-summary {
+  font-size: 0.76rem;
+  color: #9cb3c9;
+  line-height: 1.4;
+}
+
+.teia-node-card-footer {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.teia-node-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 229, 255, 0.1);
+  color: #8da4be;
+}
+
+/* Causal Flow View (Causa e Efeito) */
+.teia-causal-view {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.teia-causal-chain {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.teia-causal-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.teia-causal-step::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: -20px;
+  width: 2px;
+  background: linear-gradient(180deg, #00e5ff, rgba(0, 229, 255, 0.1));
+}
+
+.teia-causal-step:last-child::before {
+  display: none;
+}
+
+.teia-causal-step-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #06121f;
+  border: 2px solid #00e5ff;
+  color: #00e5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+  z-index: 2;
+}
+
+.teia-causal-content {
+  flex: 1;
+  background: rgba(10, 22, 36, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 6px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Lateral Inspector / Dossiê Tático */
+.teia-inspector {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  bottom: 14px;
+  width: 420px;
+  max-width: calc(100% - 28px);
+  background: rgba(4, 10, 18, 0.96);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 229, 255, 0.15);
+  backdrop-filter: blur(12px);
+  z-index: 50;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.teia-inspector-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #728a9c;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.teia-inspector-close:hover {
+  color: #fff;
+}
+
+.teia-dossier-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffd700;
+  font-weight: 700;
+}
+
+.teia-dossier-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  color: #fff;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.teia-dossier-quote {
+  font-style: italic;
+  font-size: 0.78rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 2px solid #38bdf8;
+  padding: 8px 12px;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.4;
+}
+
+.teia-dossier-body {
+  font-size: 0.8rem;
+  color: #c5d4e2;
+  line-height: 1.5;
+}
+
+.teia-dossier-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.teia-dossier-section-title {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8da4be;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 4px;
+}
+
+.teia-pill-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.teia-action-pill {
+  background: rgba(14, 28, 48, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: #e6eef7;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.teia-action-pill:hover {
+  background: rgba(0, 229, 255, 0.25);
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+
+.teia-conn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.teia-conn-link {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.74rem;
+  color: #9cb3c9;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid #ffd700;
+  transition: all 0.2s ease;
+}
+
+.teia-conn-link:hover {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+}
