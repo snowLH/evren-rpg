@@ -136,7 +136,7 @@ Para garantir integridade contínua e ausência de regressões:
 # 1. Teste de servidor seguro e barreiras defensivas
 python test_server.py
 
-# 2. Teste de integridade estrutural (347 IDs do DOM em index.html e 41 arquivos CSS/JS)
+# 2. Teste de integridade estrutural (344 IDs do DOM em index.html e 41 arquivos CSS/JS)
 python test_integrity.py
 
 # 3. Teste unitário de DataLoader, Canon Ledger, Perícias e Bestiário (Node.js)
@@ -149,7 +149,7 @@ node test_data_loader.js
 
 ```
 evren-rpg/
-├── index.html                  # Interface central do Museu 3D e do VTT (347 IDs)
+├── index.html                  # Interface central do Museu 3D e do VTT (344 IDs)
 ├── world_data.json             # Acervo histórico canônico do Universo Evren (schema 3.0.0-museum)
 ├── world_data_legacy_backup.json # Backup imutável da base original
 ├── server.py                   # Servidor HTTP local seguro (restrito a 127.0.0.1)
@@ -161,7 +161,7 @@ evren-rpg/
 ├── LICENSE                     # Licença MIT e créditos de terceiros
 ├── AGENTS.md                   # Diretrizes universais para agentes de IA
 ├── test_server.py              # Suite de testes HTTP defensivos
-├── test_integrity.py           # Suite de integridade do DOM (347 IDs) e arquivos
+├── test_integrity.py           # Suite de integridade do DOM (344 IDs) e arquivos
 ├── test_data_loader.js         # Suite de testes do DataLoader e mecânicas
 ├── docs/                       # Bíblia canônica e dossiês do Universo EVREN
 │   ├── lore/                   # Cosmologia, cronologia unificada e facções

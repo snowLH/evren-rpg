@@ -445,12 +445,9 @@
     <!-- BARRA FLUTUANTE DE ACESSO RÁPIDO ÀS CAMPANHAS DO PLANETA -->
     <div id="planet-quick-campaigns" class="planet-quick-campaigns" aria-label="Navegação Rápida entre Campanhas">
       <span class="quick-camp-label">🌍 CAMPANHAS NO PLANETA:</span>
-      <button type="button" class="quick-camp-pill" data-camp-id="camp_001" title="Triângulo das Bermudas (1998)">⚡ Triângulo</button>
-      <button type="button" class="quick-camp-pill" data-camp-id="camp_002" title="Mansão Vilar (México, 2024)">🏰 Mansão Vilar</button>
-      <button type="button" class="quick-camp-pill" data-camp-id="camp_003" title="Estação Zero (Groenlândia, 2025)">❄️ Estação Zero</button>
-      <button type="button" class="quick-camp-pill" data-camp-id="camp_004" title="Base Tapajós (Brasil, 2025)">🌲 Tapajós</button>
-      <button type="button" class="quick-camp-pill" data-camp-id="camp_005" title="Floresta Negra (Alemanha, 1348)">⛪ Floresta Negra</button>
-      <button type="button" class="quick-camp-pill" data-camp-id="camp_filantropo_oeht" title="Gala Belvedere (Suíça, 2026)">🎭 Gala Belvedere</button>
+      <button type="button" class="quick-camp-pill" data-camp-id="camp_002" title="Mansão Vilar (México, 2024) — Concluída">🏰 Mansão Vilar <span class="pill-status-tag pill-status-tag--concluded">Concluída</span></button>
+      <button type="button" class="quick-camp-pill" data-camp-id="camp_001" title="Triângulo das Bermudas (1998) — Futura Campanha">⚡ Triângulo <span class="pill-status-tag pill-status-tag--future">(Futura Campanha)</span></button>
+      <button type="button" class="quick-camp-pill" data-camp-id="camp_filantropo_oeht" title="Gala Belvedere (Suíça, 2026) — Futura Campanha">🎭 Gala Belvedere <span class="pill-status-tag pill-status-tag--future">(Futura Campanha)</span></button>
     </div>
 
 
@@ -976,11 +973,9 @@
                 <div class="creator-field-group">
                   <label class="creator-label" for="creator-campaign">Campanha Atribuída</label>
                   <select id="creator-campaign" class="creator-select">
-                    <option value="camp_001">A Incursão: O Purgatório Genético</option>
-                    <option value="camp_002" selected>Até o Amanhecer: O Limiar da Mansão Vilar</option>
-                    <option value="camp_003">O Túmulo do Leviatã: Estação Criogênica Zero</option>
-                    <option value="camp_004">Protocolo Selva: Os Ecos do Ouro Negro (Brasil)</option>
-                    <option value="camp_005">O Sussurro da Floresta Negra: O Monastério dos Sem-Rosto (Alemanha)</option>
+                    <option value="camp_002" selected>Até o Amanhecer: Mansão Vilar (Concluída)</option>
+                    <option value="camp_001">A Incursão: Triângulo das Bermudas (Futura Campanha)</option>
+                    <option value="camp_filantropo_oeht">A Gala da Meia-Noite: Mansão Belvedere (Futura Campanha)</option>
                   </select>
                 </div>
               </div>
@@ -1387,11 +1382,9 @@
                 <div class="creator-field-group" style="margin-top: 10px;">
                   <label class="creator-label" for="loc-new-campaign">Campanha Associada</label>
                   <select id="loc-new-campaign" class="creator-select">
-                    <option value="camp_002">Até o Amanhecer: O Limiar da Mansão Vilar</option>
-                    <option value="camp_001">A Incursão: O Purgatório Genético</option>
-                    <option value="camp_003">O Túmulo do Leviatã: Estação Zero</option>
-                    <option value="camp_004">Protocolo Selva: Os Ecos do Ouro Negro (Brasil)</option>
-                    <option value="camp_005">O Sussurro da Floresta Negra: O Monastério dos Sem-Rosto (Alemanha)</option>
+                    <option value="camp_002" selected>Até o Amanhecer: Mansão Vilar (Concluída)</option>
+                    <option value="camp_001">A Incursão: Triângulo das Bermudas (Futura Campanha)</option>
+                    <option value="camp_filantropo_oeht">A Gala da Meia-Noite: Mansão Belvedere (Futura Campanha)</option>
                   </select>
                 </div>
                 <div class="creator-field-group" style="margin-top: 10px;">
@@ -1442,11 +1435,9 @@
             <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
               <label for="cris-campaign-select" style="font-size: 0.75rem; color: #8da4be;">Vincular à Campanha:</label>
               <select id="cris-campaign-select" class="creator-select" style="max-width: 250px; font-size: 0.75rem; padding: 4px 8px;">
-                <option value="camp_002">Até o Amanhecer: Mansão Vilar</option>
-                <option value="camp_001">A Incursão: Triângulo das Bermudas</option>
-                <option value="camp_003">O Túmulo do Leviatã: Estação Zero</option>
-                <option value="camp_004">Protocolo Selva: Rio Tapajós</option>
-                <option value="camp_005">O Sussurro da Floresta Negra</option>
+                <option value="camp_002" selected>Até o Amanhecer: Mansão Vilar (Concluída)</option>
+                <option value="camp_001">A Incursão: Triângulo das Bermudas (Futura Campanha)</option>
+                <option value="camp_filantropo_oeht">A Gala da Meia-Noite: Mansão Belvedere (Futura Campanha)</option>
                 <option value="none">Agente Independente / Sem Campanha</option>
               </select>
             </div>
@@ -1651,11 +1642,9 @@
                   <div class="creator-field-group">
                     <label class="creator-label" for="session-camp-select">Campanha Associada</label>
                     <select id="session-camp-select" class="creator-select">
-                      <option value="camp_002">Até o Amanhecer: Mansão Vilar</option>
-                      <option value="camp_001">A Incursão: Triângulo das Bermudas</option>
-                      <option value="camp_003">O Túmulo do Leviatã: Estação Zero</option>
-                      <option value="camp_004">Protocolo Selva: Rio Tapajós</option>
-                      <option value="camp_005">O Sussurro da Floresta Negra</option>
+                      <option value="camp_002" selected>Até o Amanhecer: Mansão Vilar (Concluída)</option>
+                      <option value="camp_001">A Incursão: Triângulo das Bermudas (Futura Campanha)</option>
+                      <option value="camp_filantropo_oeht">A Gala da Meia-Noite: Mansão Belvedere (Futura Campanha)</option>
                     </select>
                   </div>
                   <div class="creator-field-group">

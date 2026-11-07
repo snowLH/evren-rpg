@@ -803,7 +803,9 @@ class Planet3DEngine {
       }
       if (!coords || coords.length < 2) return;
 
-      const statusMuseum = camp.status_museum || (camp.category === 'completed' ? 'concluída' : 'em andamento');
+      const isFuture = camp.is_future || (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
+      const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
+      const statusMuseum = isFuture ? '(futura campanha)' : (isCompleted ? 'concluída' : 'futura campanha');
       const campTitle = camp.title || camp.name || 'Campanha';
       this.registerMarker({
         id: camp.id,
@@ -811,7 +813,8 @@ class Planet3DEngine {
         name: campTitle,
         subtitle: `${camp.year || camp.epoch || ''} • ${camp.country_location || camp.region || ''}`,
         statusMuseum,
-        category: camp.category || 'ongoing',
+        category: isFuture ? 'future' : (isCompleted ? 'completed' : 'future'),
+        isFuture,
         lat: coords[0] - 0.35,
         lng: coords[1] - 0.45,
         trueLat: coords[0],
@@ -824,7 +827,8 @@ class Planet3DEngine {
         data: camp
       });
 
-      this.add3DPinMesh(coords[0], coords[1], 0xd4af37, 0.85);
+      const pinColor = isFuture ? 0xa855f7 : 0xd4af37;
+      this.add3DPinMesh(coords[0], coords[1], pinColor, 0.85);
     });
   }
 
@@ -867,9 +871,10 @@ class Planet3DEngine {
 
     let iconHtml = '';
     if (item.kind === 'campaign') {
-      const statusClass = item.category === 'completed' ? 'is-completed' : 'is-ongoing';
+      const isFuture = item.isFuture || item.category === 'future' || (item.statusMuseum && item.statusMuseum.includes('futur'));
+      const statusClass = isFuture ? 'is-future' : (item.category === 'completed' || item.statusMuseum === 'concluída' ? 'is-completed' : 'is-ongoing');
       el.classList.add(statusClass);
-      iconHtml = `<span class="planet-marker__beacon"></span>`;
+      iconHtml = `<span class="planet-marker__beacon ${isFuture ? 'planet-marker__beacon--future' : ''}"></span>`;
     } else if (item.kind === 'location') {
       iconHtml = `<span class="planet-marker__dot planet-marker__dot--location"></span>`;
     } else if (item.kind === 'city') {
@@ -880,9 +885,13 @@ class Planet3DEngine {
       iconHtml = `<span class="planet-marker__dot planet-marker__dot--feature"></span>`;
     }
 
-    const badgeText = item.kind === 'campaign'
-      ? `<span class="planet-marker__status">${item.statusMuseum === 'concluída' ? 'CONCLUÍDA' : 'EM ANDAMENTO'}</span>`
-      : '';
+    let badgeText = '';
+    if (item.kind === 'campaign') {
+      const isFuture = item.isFuture || item.category === 'future' || (item.statusMuseum && item.statusMuseum.includes('futur'));
+      const isCompleted = !isFuture && (item.category === 'completed' || item.statusMuseum === 'concluída');
+      const label = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
+      badgeText = `<span class="planet-marker__status ${isFuture ? 'planet-marker__status--future' : ''}">${label}</span>`;
+    }
 
     el.innerHTML = `
       ${iconHtml}

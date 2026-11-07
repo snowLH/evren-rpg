@@ -639,6 +639,40 @@
   transform: translateY(0);
 }
 
+.pill-status-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  margin-left: 3px;
+}
+
+.pill-status-tag--concluded {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.5);
+}
+
+.pill-status-tag--future {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.5);
+}
+
+.planet-marker.is-future .planet-marker__beacon {
+  background: #a855f7 !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.9) !important;
+}
+
+.planet-marker__status--future {
+  background: rgba(168, 85, 247, 0.25) !important;
+  border-color: #a855f7 !important;
+  color: #c084fc !important;
+}
+
 /* ==========================================================================
    MODAL DE EXPOSIÇÃO HISTÓRICA DA CAMPANHA
    ========================================================================== */

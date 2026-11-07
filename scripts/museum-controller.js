@@ -397,7 +397,11 @@ class MuseumController {
     const modal = document.getElementById('museum-exhibition-modal');
     if (!modal) return;
 
-    document.getElementById('exhibition-modal-badge').textContent = `EXPOSIÇÃO HISTÓRICA // ${camp.category === 'completed' ? 'CONCLUÍDA' : 'EM ANDAMENTO'}`;
+    const isFuture = (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
+    const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
+    const badgeStatus = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
+
+    document.getElementById('exhibition-modal-badge').textContent = `EXPOSIÇÃO HISTÓRICA // ${badgeStatus}`;
     document.getElementById('exhibition-modal-title').textContent = camp.title || camp.name;
 
     this.renderExhibitionTabIdentificacao(camp, hierarchy);
@@ -431,7 +435,10 @@ class MuseumController {
     if (!container) return;
 
     const geoPlace = hi.geographic_location || camp.country_location || `${hierarchy?.country?.name || ''} (${hierarchy?.region?.name || ''})`;
-    const statusText = hi.status || camp.status_museum || (camp.category === 'completed' ? 'Concluída' : 'Em andamento');
+    const isFuture = (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
+    const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
+    const statusText = isFuture ? '(Futura Campanha)' : (isCompleted ? 'Concluída' : 'Futura Campanha');
+    const statusColor = isFuture ? '#c084fc' : (isCompleted ? '#2ecc71' : 'var(--museum-gold-bright)');
 
     const pendingHtml = (camp.pending_documentation && camp.pending_documentation.length > 0)
       ? `
@@ -463,7 +470,7 @@ class MuseumController {
             <ul class="exhibition-stat-list">
               <li class="exhibition-stat-item"><strong>Estado de Cânone:</strong> <span>${this.formatCanonStatusBadge(camp.canon_status || 'confirmed')}</span></li>
               <li class="exhibition-stat-item"><strong>Período Histórico:</strong> <span>${this.escapeHtml(hi.year || camp.year || '')}</span></li>
-              <li class="exhibition-stat-item"><strong>Status no Planeta:</strong> <span style="color: ${statusText.toLowerCase().includes('concl') ? '#2ecc71' : 'var(--museum-gold-bright)'}; font-weight: 600;">${this.escapeHtml(statusText)}</span></li>
+              <li class="exhibition-stat-item"><strong>Status no Planeta:</strong> <span style="color: ${statusColor}; font-weight: 600;">${this.escapeHtml(statusText)}</span></li>
               <li class="exhibition-stat-item"><strong>Gênero & Temática:</strong> <span>${this.escapeHtml(hi.genre_theme || camp.theme || '')}</span></li>
               <li class="exhibition-stat-item"><strong>Localização Planetária:</strong> <span>${this.escapeHtml(geoPlace)}</span></li>
               <li class="exhibition-stat-item"><strong>Continente:</strong> <span>${this.escapeHtml(hierarchy?.continent?.name || 'Setor Oceânico')}</span></li>

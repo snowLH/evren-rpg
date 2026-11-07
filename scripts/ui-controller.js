@@ -1622,9 +1622,10 @@ ${char.summary || 'Sem registro adicional.'}
     }
 
     grid.innerHTML = campaigns.map(c => {
-      const isCompleted = c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída');
-      const statusBadge = isCompleted ? '📜 CONCLUÍDA / HISTÓRICA' : '🟢 EM ANDAMENTO';
-      const statusClass = isCompleted ? 'completed' : 'ongoing';
+      const isFuture = (c.status && c.status.toLowerCase().includes('futur')) || c.id !== 'camp_002';
+      const isCompleted = !isFuture && (c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída'));
+      const statusBadge = isFuture ? '🔮 (FUTURA CAMPANHA)' : (isCompleted ? '📜 CONCLUÍDA / HISTÓRICA' : '🟢 EM ANDAMENTO');
+      const statusClass = isFuture ? 'future' : (isCompleted ? 'completed' : 'ongoing');
 
       // Agentes participantes
       const participantIds = c.participants || [];
@@ -1716,9 +1717,10 @@ ${char.summary || 'Sem registro adicional.'}
     const modalBody = document.getElementById('campaign-story-content');
     if (!modalBody) return;
 
-    const isCompleted = camp.category === 'completed' || camp.status?.toLowerCase().includes('finalizada') || camp.status?.toLowerCase().includes('concluída');
-    const statusBadge = isCompleted ? '📜 CONCLUÍDA / ARQUIVADA' : '🟢 EM ANDAMENTO / ATIVA';
-    const statusClass = isCompleted ? 'completed' : 'ongoing';
+    const isFuture = (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
+    const isCompleted = !isFuture && (camp.category === 'completed' || camp.status?.toLowerCase().includes('finalizada') || camp.status?.toLowerCase().includes('concluída'));
+    const statusBadge = isFuture ? '🔮 (FUTURA CAMPANHA)' : (isCompleted ? '📜 CONCLUÍDA / ARQUIVADA' : '🟢 EM ANDAMENTO / ATIVA');
+    const statusClass = isFuture ? 'future' : (isCompleted ? 'completed' : 'ongoing');
 
     // Personagens vinculados a esta campanha
     const characters = this.getCampaignCharacters(camp.id);
