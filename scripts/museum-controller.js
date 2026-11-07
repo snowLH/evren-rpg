@@ -127,6 +127,15 @@ class MuseumController {
       });
     }
 
+    const btnTeia = document.getElementById('btn-nav-teia-do-tempo');
+    if (btnTeia) {
+      btnTeia.addEventListener('click', () => {
+        if (window.teiaController) {
+          window.teiaController.open();
+        }
+      });
+    }
+
     const btnArchive = document.getElementById('btn-nav-archive');
     if (btnArchive) {
       btnArchive.addEventListener('click', () => {
@@ -401,7 +410,7 @@ class MuseumController {
     const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
     const badgeStatus = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
 
-    document.getElementById('exhibition-modal-badge').textContent = `EXPOSIÇÃO HISTÓRICA // ${badgeStatus}`;
+    document.getElementById('exhibition-modal-badge').textContent = `DOSSIÊ DA CAMPANHA // ${badgeStatus}`;
     document.getElementById('exhibition-modal-title').textContent = camp.title || camp.name;
 
     this.renderExhibitionTabIdentificacao(camp, hierarchy);
@@ -831,9 +840,15 @@ class MuseumController {
   }
 
   /* ==========================================================================
-     ARQUIVO HISTÓRICO GLOBAL (SEÇÃO 7)
+     ARQUIVO HISTÓRICO GLOBAL (INTEGRADO À TEIA DO TEMPO)
      ========================================================================== */
   openGlobalArchiveModal(presetFilters = null) {
+    // Redireciona diretamente para a Teia do Tempo (o arquivo canônico principal)
+    if (window.teiaController) {
+      window.teiaController.open();
+      return;
+    }
+
     const modal = document.getElementById('museum-archive-modal');
     if (!modal) return;
 
@@ -1199,13 +1214,21 @@ class MuseumController {
   }
 
   /* ==========================================================================
-     MODAL DE LISTAGEM RÁPIDA DE EXPOSIÇÕES & GALERIA DE PERSONAGENS
+     MODAL DE LISTAGEM RÁPIDA DE CAMPANHAS & GALERIA DE PERSONAGENS
      ========================================================================== */
   openExhibitionsListModal() {
+    if (window.uiController) {
+      window.uiController.openModal('modal-campaigns-hub');
+      return;
+    }
     this.openGlobalArchiveModal({ entityType: 'campaigns' });
   }
 
   openCharactersGalleryModal() {
+    if (window.uiController) {
+      window.uiController.openModal('modal-character-creator');
+      return;
+    }
     this.openGlobalArchiveModal({ entityType: 'characters' });
   }
 

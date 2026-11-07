@@ -140,8 +140,8 @@
           <circle cx="12" cy="12" r="3" fill="#00e5ff" fill-opacity="0.3"/>
         </svg>
         <div class="hud-title-wrap">
-          <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">MUSEU HISTÓRICO 3D</span></h1>
-          <div class="hud-subline">Arquivo & Atlas Planetário Interativo</div>
+          <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">RPG</span></h1>
+          <div class="hud-subline">Atlas Planetário & Teia do Tempo</div>
           <div id="map-breadcrumb" class="map-breadcrumb" style="display:none;" title="Escala Atual do Mapa">
             <span id="breadcrumb-label" class="breadcrumb-world">🧭 PLANISFÉRIO</span>
           </div>
@@ -166,41 +166,44 @@
         </div>
       </div>
 
-      <!-- Painel Direito: Ações Principais (Clean & Organized) -->
+      <!-- Painel Direito: Ações Principais do Universo EVREN (Organizado & Unificado) -->
       <div class="hud-panel hud-actions">
-                <!-- Botões de Navegação do Museu Histórico 3D -->
-        <button id="btn-nav-planet" type="button" class="btn-hud btn-primary-nav museum-nav-btn--active" title="Planeta 3D (Globo Físico)">
+        <!-- 1. Planeta 3D -->
+        <button id="btn-nav-planet" type="button" class="btn-hud btn-primary-nav museum-nav-btn--active" title="Planeta 3D (Globo Físico Interativo)">
           <span class="btn-icon">🪐</span> <span class="btn-text">Planeta 3D</span>
         </button>
-        <button id="btn-nav-archive" type="button" class="btn-hud btn-primary-nav" title="Arquivo Histórico Global (Consultas Relacionais)">
-          <span class="btn-icon">📜</span> <span class="btn-text">Arquivo Global</span>
+
+        <!-- 2. Teia do Tempo (O PRINCIPAL - Destacado) -->
+        <button id="btn-nav-teia-do-tempo" type="button" class="btn-hud btn-primary-nav btn-hud-teia-principal" title="Teia do Tempo: História Conectada, Linhas do Tempo e Vertentes [W]">
+          <span class="btn-icon">🕸️</span> <span class="btn-text">Teia do Tempo</span> <span class="btn-kbd">[W]</span>
         </button>
-        <button id="btn-nav-exhibitions" type="button" class="btn-hud btn-primary-nav" title="Exposições das Campanhas">
-          <span class="btn-icon">🏛️</span> <span class="btn-text">Exposições</span>
-        </button>
-        <button id="btn-nav-characters" type="button" class="btn-hud btn-primary-nav" title="Galeria de Figuras Históricas">
-          <span class="btn-icon">👤</span> <span class="btn-text">Personagens</span>
-        </button>
-        <!-- Botão Teia do Tempo -->
-        <button id="btn-nav-teia-do-tempo" type="button" class="btn-hud btn-primary-nav" title="Teia do Tempo: História Conectada, Linhas do Tempo e Vertentes">
-          <span class="btn-icon">⏳</span> <span class="btn-text">Teia do Tempo</span>
-        </button>
-        <button id="btn-nav-admin" type="button" class="btn-hud btn-primary-nav museum-nav-btn--admin" title="Administração & Curadoria do Museu">
-          <span class="btn-icon">⚙️</span> <span class="btn-text">Curadoria</span>
-        </button>
-        <!-- 4 Botões Principais Claros e Diretos (Compatibilidade) -->
+
+        <!-- 3. Central de Campanhas -->
         <button id="btn-open-campaigns-hub" class="btn-hud btn-primary-nav" title="Central de Campanhas & Histórias">
           <span class="btn-icon">📜</span> <span class="btn-text">Campanhas</span>
         </button>
-        <button id="btn-open-characters" class="btn-hud btn-primary-nav" title="Fichas dos Personagens (C.R.I.S.)">
+
+        <!-- 4. Personagens (C.R.I.S.) -->
+        <button id="btn-open-characters" class="btn-hud btn-primary-nav" title="Fichas dos Personagens (C.R.I.S.) [D]">
           <span class="btn-icon">👤</span> <span class="btn-text">Personagens</span> <span class="btn-kbd">[D]</span>
         </button>
-        <button id="btn-open-locations" class="btn-hud btn-primary-nav" title="Atlas de Locais das Histórias">
+
+        <!-- 5. Atlas de Locais -->
+        <button id="btn-open-locations" class="btn-hud btn-primary-nav" title="Atlas de Locais e Fendas">
           <span class="btn-icon">📍</span> <span class="btn-text">Locais</span>
         </button>
-        <button id="btn-open-chronicles" class="btn-hud btn-primary-nav" title="Crônicas e Histórias das Mesas">
-          <span class="btn-icon">📖</span> <span class="btn-text">Crônicas</span>
+
+        <!-- 6. Regras & Virtudes de Alma -->
+        <button id="btn-open-rules" class="btn-hud btn-primary-nav" title="Regras de Evren & Virtudes de Alma [R]">
+          <span class="btn-icon">📖</span> <span class="btn-text">Regras</span> <span class="btn-kbd">[R]</span>
         </button>
+
+        <!-- Elementos mantidos ocultos para compatibilidade com handlers e integridade de IDs -->
+        <button id="btn-nav-archive" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-nav-exhibitions" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-nav-characters" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-nav-admin" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-chronicles" type="button" style="display:none;" aria-hidden="true"></button>
 
         <!-- Menu Dropdown: Cadastrar Novo -->
         <div class="hud-dropdown-wrap">
@@ -1968,23 +1971,23 @@
        MODAIS DO MUSEU HISTÓRICO INTERATIVO DE EVREN
        ========================================================================== -->
 
-  <!-- MODAL: EXPOSIÇÃO HISTÓRICA DA CAMPANHA (SEÇÃO 4) -->
+  <!-- MODAL: DOSSIÊ TÁTICO DA CAMPANHA (SEÇÃO 4) -->
   <div id="museum-exhibition-modal" class="museum-exhibition-modal" role="dialog" aria-modal="true" aria-labelledby="exhibition-modal-title">
     <div class="museum-exhibition-dialog">
       <header class="museum-exhibition-header">
         <div class="museum-exhibition-header__meta">
-          <span id="exhibition-modal-badge" class="museum-exhibition-badge">EXPOSIÇÃO HISTÓRICA // STATUS</span>
+          <span id="exhibition-modal-badge" class="museum-exhibition-badge">DOSSIÊ DA CAMPANHA // STATUS</span>
           <h2 id="exhibition-modal-title" class="museum-exhibition-title">Título da Campanha</h2>
         </div>
-        <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Exposição (ESC)">✕</button>
+        <button type="button" class="museum-modal-close museum-exhibition-close" title="Fechar Dossiê (ESC)">✕</button>
       </header>
-      <nav class="museum-exhibition-nav" aria-label="Abas da Exposição">
+      <nav class="museum-exhibition-nav" aria-label="Abas da Campanha">
         <button type="button" class="museum-tab-btn museum-tab-btn--active" data-tab="identificacao">Identificação & Contexto</button>
         <button type="button" class="museum-tab-btn" data-tab="narrativa">História da Campanha</button>
         <button type="button" class="museum-tab-btn" data-tab="linha-do-tempo">Linha do Tempo</button>
         <button type="button" class="museum-tab-btn" data-tab="personagens">Personagens Históricos</button>
         <button type="button" class="museum-tab-btn" data-tab="locais">Locais Históricos</button>
-        <button type="button" class="museum-tab-btn" data-tab="acervo">Acervo & Sessões</button>
+        <button type="button" class="museum-tab-btn" data-tab="acervo">Relíquias & Sessões</button>
       </nav>
       <div class="museum-exhibition-body">
         <section id="exhibition-sec-identificacao" class="exhibition-section is-active"></section>

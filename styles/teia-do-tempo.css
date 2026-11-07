@@ -20,6 +20,34 @@
   --vertente-colapso: #ef4444;
 }
 
+/* Destaque Principal da Teia do Tempo no HUD */
+.btn-hud-teia-principal {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.22), rgba(192, 132, 252, 0.28)) !important;
+  border: 1px solid #00e5ff !important;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.45), inset 0 0 10px rgba(192, 132, 252, 0.25) !important;
+  color: #00e5ff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  position: relative !important;
+}
+
+.btn-hud-teia-principal .btn-kbd {
+  background: rgba(0, 229, 255, 0.25) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(0, 229, 255, 0.5) !important;
+  font-size: 0.65rem !important;
+  padding: 1px 4px !important;
+  border-radius: 3px !important;
+  margin-left: 4px !important;
+}
+
+.btn-hud-teia-principal:hover {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.35), rgba(192, 132, 252, 0.45)) !important;
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.75), inset 0 0 14px rgba(192, 132, 252, 0.4) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
 /* Modal Backdrop & Container */
 .modal-teia-container {
   max-width: 96vw;
