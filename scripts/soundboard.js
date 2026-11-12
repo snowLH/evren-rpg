@@ -68,11 +68,9 @@ class SoundboardController {
    */
   playCampaignAtmosphere(campaignId) {
     const map = {
-      'camp_001': { type: 'bermuda', label: 'Triângulo: Abissal' },
+      'camp_001': { type: 'bermuda', label: 'Triângulo & Vera Cruz' },
       'camp_002': { type: 'vilar', label: 'Mansão Vilar: Tempestade' },
-      'camp_003': { type: 'polar', label: 'Estação Zero: Nevasca' },
-      'camp_004': { type: 'selva', label: 'Protocolo Selva: Amazônia' },
-      'camp_005': { type: 'monasterio', label: 'Floresta Negra: Órgão Sombrio' }
+      'camp_filantropo_oeht': { type: 'monasterio', label: 'Gala Belvedere: Redoma' }
     };
 
     const target = map[campaignId] || { type: 'vilar', label: 'Ambiência Evren' };
@@ -222,7 +220,7 @@ class SoundboardController {
         intervals.push(tickInt);
 
       } else if (type === 'polar') {
-        // === 3. ESTAÇÃO ZERO: NEVASCA CRIOGÊNICA & RESSONÂNCIA DE CRISTAL ===
+        // === 3. GELO NEGRO & VENTO ABISSAL (SAL & NEVOEIRO POLAR) ===
         const windBuf = this.createNoiseBuffer(ctx, 4.0);
         if (windBuf) {
           const windSrc = ctx.createBufferSource();
@@ -263,7 +261,7 @@ class SoundboardController {
         nodes.push(ice, iceGain);
 
       } else if (type === 'selva') {
-        // === 4. PROTOCOLO SELVA: COPAS TROPICAIS & RESSONÂNCIA BIOLUMINESCENTE ===
+        // === 4. VERA CRUZ DAS ALMAS: MATA FECHADA, CANIBALISMO & FENDAS ===
         const jungleDrone = ctx.createOscillator();
         jungleDrone.type = 'triangle';
         jungleDrone.frequency.setValueAtTime(110, now);
@@ -471,21 +469,27 @@ class SoundboardController {
    * Wires de presets no modal do mixer
    */
   togglePreset(preset, btn) {
-    if (this.activeAtmosphere && (this.activeAtmosphere.type === preset || (preset === 'triangulo' && this.activeAtmosphere.type === 'bermuda'))) {
+    const resolvedType = preset === 'triangulo' ? 'bermuda'
+      : preset === 'veracruz' ? 'selva'
+      : preset === 'belvedere' ? 'monasterio'
+      : preset === 'alucinacao' ? 'polar'
+      : preset;
+
+    if (this.activeAtmosphere && this.activeAtmosphere.type === resolvedType) {
       this.stopAtmosphere();
       return;
     }
 
     const labels = {
       'vilar': 'Mansão Vilar',
-      'triangulo': 'Triângulo das Bermudas',
-      'polar': 'Estação Zero',
-      'selva': 'Protocolo Selva',
-      'monasterio': 'Floresta Negra',
+      'triangulo': 'O Triângulo',
+      'veracruz': 'Vera Cruz das Almas',
+      'belvedere': 'Gala Belvedere',
+      'alucinacao': 'Lei da Alucinação',
       'combate': 'Conflito Direto'
     };
 
-    this.startAtmosphere(preset === 'triangulo' ? 'bermuda' : preset, labels[preset] || preset);
+    this.startAtmosphere(resolvedType, labels[preset] || preset);
   }
 
   /* ==========================================================================

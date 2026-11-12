@@ -35,6 +35,84 @@ class InteractiveTabletopApp {
         });
         this.planetEngine.init();
         window.planetEngine = this.planetEngine;
+
+        // De-overlap screen-space marker cards & enforce safe zone below HUD
+        const origProject = this.planetEngine.projectMarkersToScreen.bind(this.planetEngine);
+        this.planetEngine.projectMarkersToScreen = () => {
+          origProject();
+          const container = this.planetEngine.markersLayer;
+          if (!container) return;
+          const markers = Array.from(container.children).filter(el => el.style.display !== 'none');
+          const W = window.innerWidth || 1280;
+          const H = window.innerHeight || 720;
+          const prio = (el) => {
+            if (el.classList.contains('planet-marker--campaign')) return 4;
+            if (el.classList.contains('planet-marker--location') || el.classList.contains('planet-marker--city')) return 3;
+            if (el.classList.contains('planet-marker--continent') || el.classList.contains('planet-marker--country')) return 2;
+            return 1;
+          };
+          markers.sort((a, b) => prio(b) - prio(a));
+
+          // Phase 1: Batch-read intrinsic card dimensions once & extract projected coordinates
+          const items = [];
+          for (const el of markers) {
+            const label = el.querySelector('.planet-marker__card');
+            if (!label) continue;
+            const m = el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/);
+            if (!m) continue;
+            if (!el._cardDim) {
+              el._cardDim = {
+                w: Math.max(120, Math.min(255, label.offsetWidth || 220)),
+                h: Math.max(36, Math.min(92, label.offsetHeight || 56))
+              };
+            }
+            items.push({ el, label, px: parseFloat(m[1]), py: parseFloat(m[2]), dim: el._cardDim, pr: prio(el) });
+          }
+
+          // Phase 2: Pure-math non-overlapping placement in screen space
+          const placed = [];
+          const tryOffsets = [
+            [0, 0], [0, -76], [0, 76], [235, 0], [-235, 0],
+            [0, -148], [0, 148], [210, -72], [-210, -72], [210, 72], [-210, 72]
+          ];
+
+          for (const it of items) {
+            const { label, px, py, dim, pr } = it;
+            if (py < 108 || py > H - 64 || px < 28 || px > W - 28) {
+              label.style.opacity = '0';
+              label.style.pointerEvents = 'none';
+              continue;
+            }
+            let chosenDx = 0, chosenDy = 0, collided = true;
+
+            for (const [dx, dy] of tryOffsets) {
+              const cx = px + dx;
+              const cy = py + dy;
+              const bx1 = cx - dim.w / 2;
+              const bx2 = cx + dim.w / 2;
+              const by1 = cy - dim.h / 2;
+              const by2 = cy + dim.h / 2;
+              if (by1 < 108 || by2 > H - 64 || bx1 < 10 || bx2 > W - 10) continue;
+              const hits = placed.some(r => !(bx2 <= r.x1 || bx1 >= r.x2 || by2 <= r.y1 || by1 >= r.y2));
+              if (!hits) {
+                chosenDx = dx;
+                chosenDy = dy;
+                placed.push({ x1: bx1 - 8, x2: bx2 + 8, y1: by1 - 6, y2: by2 + 6 });
+                collided = false;
+                break;
+              }
+            }
+
+            if (collided) {
+              label.style.opacity = '0';
+              label.style.pointerEvents = 'none';
+            } else {
+              label.style.opacity = '';
+              label.style.pointerEvents = 'auto';
+              label.style.transform = (chosenDx || chosenDy) ? `translate(${chosenDx}px, ${chosenDy}px)` : '';
+            }
+          }
+        };
       }
 
       // 1.3 Inicializa Controlador do Museu Histórico (Exposições, Linha do Tempo, Arquivo, Admin)
@@ -246,7 +324,13 @@ class InteractiveTabletopApp {
 
         case 'r':
         case 'R':
+          this.uiController.renderRulesV3Modal?.();
           this.uiController.openModal('modal-rules');
+          break;
+
+        case 'w':
+        case 'W':
+          if (window.teiaController) window.teiaController.openModal();
           break;
 
         case 'c':
@@ -288,7 +372,11 @@ class InteractiveTabletopApp {
 
         case 'b':
         case 'B':
-          this.uiController.openDrawer('bestiary');
+          if (this.uiController.openBestiaryModal) {
+            this.uiController.openBestiaryModal();
+          } else {
+            this.uiController.openDrawer('bestiary');
+          }
           break;
 
         case 't':

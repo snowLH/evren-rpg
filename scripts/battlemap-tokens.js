@@ -366,11 +366,23 @@ class BattlemapTokens {
   }
 
   /**
-   * Invoca uma criatura diretamente do Bestiário para o Battlemap
+   * Invoca uma criatura diretamente do Bestiário ou Tomo IV para o Battlemap 2D
    */
-  spawnCreatureFromBestiary(creatureId) {
-    const creature = this.dataLoader.getCreatureById(creatureId);
+  spawnCreatureFromBestiary(creatureId, retryCount = 0) {
+    const creature = this.dataLoader.getCreatureById(creatureId) || this.dataLoader.getTomo4EntityById?.(creatureId);
     if (!creature) return;
+
+    window.uiController?.closeModal('modal-bestiary');
+
+    if (!this.mapEngine?.map) {
+      if (retryCount < 6) {
+        if (retryCount === 0) {
+          document.getElementById('btn-museum-toggle-2d')?.click();
+        }
+        setTimeout(() => this.spawnCreatureFromBestiary(creatureId, retryCount + 1), 160);
+      }
+      return;
+    }
 
     // Centro do mapa atual com um leve offset aleatório
     const center = this.mapEngine.map.getCenter();

@@ -194,7 +194,10 @@
         </button>
 
         <!-- 6. Regras & Virtudes de Alma -->
-        <button id="btn-open-rules" class="btn-hud btn-primary-nav" title="Regras de Evren & Virtudes de Alma [R]">
+        <button id="btn-nav-tomo4" type="button" class="btn-hud btn-primary-nav" title="Tomo IV: 65 Fichas Oficiais (Agentes A.E.G.I.S., Soberanos & Bestiário) [B]">
+          <span class="btn-icon">👹</span> <span class="btn-text">Tomo IV</span>
+        </button>
+        <button id="btn-open-rules" class="btn-hud btn-primary-nav" title="Regras Oficiais V3.0 & Virtudes de Alma [R]">
           <span class="btn-icon">📖</span> <span class="btn-text">Regras</span> <span class="btn-kbd">[R]</span>
         </button>
 
@@ -252,7 +255,7 @@
             <button id="btn-open-codex" class="hud-dropdown-item">
               <span class="btn-icon">🗂️</span> <span>Códice da Lore [C]</span>
             </button>
-            <button id="btn-open-rules" class="hud-dropdown-item">
+            <button id="btn-open-rules-menu" class="hud-dropdown-item">
               <span class="btn-icon">📜</span> <span>Regras de Evren [R]</span>
             </button>
             <button id="btn-open-relics" class="hud-dropdown-item">
@@ -458,6 +461,7 @@
       <span class="quick-camp-label">🌍 CAMPANHAS NO PLANETA:</span>
       <button type="button" class="quick-camp-pill" data-camp-id="camp_002" title="Mansão Vilar (México, 2024) — Concluída">🏰 Mansão Vilar <span class="pill-status-tag pill-status-tag--concluded">Concluída</span></button>
       <button type="button" class="quick-camp-pill" data-camp-id="camp_001" title="Triângulo das Bermudas (1998) — Futura Campanha">⚡ Triângulo <span class="pill-status-tag pill-status-tag--future">(Futura Campanha)</span></button>
+      <button type="button" id="btn-pill-veracruz" class="quick-camp-pill" onclick="window.planetEngine?.flyToGeo(-17.3, -38.5, 165)" title="Arquipélago de Vera Cruz das Almas (Queda do Véu, 1500) — 4 Ilhas">🌿 Vera Cruz <span class="pill-status-tag pill-status-tag--future">4 Ilhas</span></button>
       <button type="button" class="quick-camp-pill" data-camp-id="camp_filantropo_oeht" title="Gala Belvedere (Suíça, 2026) — Futura Campanha">🎭 Gala Belvedere <span class="pill-status-tag pill-status-tag--future">(Futura Campanha)</span></button>
     </div>
 
@@ -665,129 +669,21 @@
           <button class="btn-close-modal" data-close="modal-rules" title="Fechar [ESC]">✕</button>
         </div>
         <div class="modal-body">
-          <!-- VIRTUDES DE ALMA // LIVRO DE REGRAS TOMO III -->
-          <div class="rule-card" style="border-left: 4px solid #ffd700; background: rgba(212, 175, 55, 0.08);">
-            <div class="rule-title">
-              <span style="color: #ffd700;">✨ Virtudes de Alma & A Tríade da Identidade (Tomo III)</span>
-              <span class="badge-system" style="border-color: #ffd700; color: #ffd700;">METAFÍSICA ANÍMICA v2.0</span>
-            </div>
-            <p class="rule-desc">
-              A Alma é a manifestação física e metafísica da identidade do indivíduo. Três camadas constituem o portador:
-              <br><br>
-              • <strong>1. Personalidade (A Superfície Ativa):</strong> Comportamento visível e maneirismos cotidianos; molda a postura e estilo de combate.<br>
-              • <strong>2. Experiências (A Memória Esculpida):</strong> Traumas, culpas ocultas e conquistas; esculpem a anatomia visual, cicatrizes e técnicas da Alma.<br>
-              • <strong>3. Essência (O Núcleo Imutável):</strong> A verdade última que a pessoa não pode negar para si mesma; determina a Virtude de Alma.
-            </p>
+          <div class="rules-v3-tabs" role="tablist" aria-label="Capítulos do Tomo III V3.0">
+            <button type="button" id="rules-tab-quaternario" class="rules-v3-tab-btn active" data-rules-tab="quaternario">⚖️ Quaternário &amp; MDA</button>
+            <button type="button" id="rules-tab-virtudes" class="rules-v3-tab-btn" data-rules-tab="virtudes">✨ 11 Virtudes &amp; Exemplares</button>
+            <button type="button" id="rules-tab-racas" class="rules-v3-tab-btn" data-rules-tab="racas">🧬 7 Raças &amp; 10 Elementos</button>
+            <button type="button" id="rules-tab-pactos" class="rules-v3-tab-btn" data-rules-tab="pactos">🌒 6 Pactos das Lendas</button>
+            <button type="button" id="rules-tab-combate" class="rules-v3-tab-btn" data-rules-tab="combate">⚔️ Combate, Ruptura &amp; Arsenal</button>
           </div>
-
-          <!-- OS TRÊS GRUPOS CONCEITUAIS -->
-          <div class="rule-card">
-            <div class="rule-title">
-              <span>⚖️ Os Três Grupos Conceituais & Simetria</span>
-              <span class="badge-tag status">LEI NATURAL</span>
+          <div id="rules-v3-mount">
+            <div class="rule-card" style="border-left: 4px solid #ffd700; background: rgba(212, 175, 55, 0.08);">
+              <div class="rule-title">
+                <span style="color: #ffd700;">✨ Livro de Regras Oficial V3.0 (Tomo III Integrado)</span>
+                <span class="badge-system" style="border-color: #ffd700; color: #ffd700;">SISTEMA EVREN V3.0</span>
+              </div>
+              <p class="rule-desc">Quaternário (Corpo, Mente, Espírito e Alma), 11 Virtudes Oficiais e seus 11 Exemplares, 7 Raças/Linhagens, 10 Elementos, 6 Pactos das Lendas, Tabela de MDA/EST/EA e Combate Ativo.</p>
             </div>
-            <p class="rule-desc">
-              As 11 Virtudes dividem-se em 3 famílias temáticas sem vantagens automáticas de 'pedra-papel-tesoura':
-              <br><br>
-              • <strong>I. Virtudes Construtivas:</strong> <em>Coragem</em>, <em>Compaixão</em>, <em>Disciplina</em> e <em>Sabedoria</em>. Focadas em estruturação, proteção, método e análise profunda.<br>
-              • <strong>II. Virtudes Transformadoras:</strong> <em>Esperança</em>, <em>Justiça</em>, <em>Liberdade</em> e <em>Ambição</em>. Focadas na superação, causalidade de atos, ruptura de amarras e assimilação contínua.<br>
-              • <strong>III. Virtudes Instintivas:</strong> <em>Orgulho</em>, <em>Fúria</em> e <em>Medo</em>. Forças viscerais da psique: soberania, explosão destrutiva e domínio sobre o pavor primordial.
-            </p>
-          </div>
-
-          <!-- MODALIDADES DE MANIFESTAÇÃO -->
-          <div class="rule-card">
-            <div class="rule-title">
-              <span>🌀 As Três Modalidades de Manifestação</span>
-              <span class="badge-system">PROJEÇÃO // SINTONIA // CONVERGÊNCIA</span>
-            </div>
-            <p class="rule-desc">
-              • <strong>Projeção (A Alma Exteriorizada):</strong> Avatar tangível fora do corpo (Alcance Curto 1,5–3m ou Longo 9–30m). Custa 2 EA (1 EA se primária). Dano sofrido pela Projeção transfere integralmente à Vitalidade (Regra do Elo Vital).<br>
-              • <strong>Sintonia (O Revestimento Espiritual):</strong> A Alma reveste nervos e músculos; +2 em atributo ligado à Virtude e capacidade de ferir entidades diretamente com punhos ou armas.<br>
-              • <strong>Convergência (A Fusão Absoluta):</strong> Fusão total com a Alma (MDA 40%+). Custa 10 EA + 6 PD no ato e consome 3 EA + 2 EST/rodada. Todos Atributos +2, RD +6 e dano aumentado em 1 passo de dado.
-            </p>
-          </div>
-
-          <!-- COMBATE ATIVO SEM DEFESA ESTÁTICA -->
-          <div class="rule-card rule-blood">
-            <div class="rule-title">
-              <span>⚔️ Combate Ativo, Duelos Anímicos & Hitkill</span>
-              <span class="badge-tag status">SEM CA PASSIVA</span>
-            </div>
-            <p class="rule-desc">
-              Não existe Classe de Armadura passiva. Diante de qualquer ataque, o alvo escolhe ativamente sua reação:
-              <br><br>
-              1. <strong>Esquivar (Agilidade + Reflexos/Acrobacia):</strong> Se vencer ou empatar, anula todo o dano.<br>
-              2. <strong>Bloquear (Vigor + Fortitude/Luta):</strong> Soma bônus de armadura e aplica Redução de Dano (RD 2 Leve, RD 4 Média, RD 6 Pesada). Permite Sacrifício de Guarda.<br>
-              3. <strong>Contra-Atacar (Luta/Pontaria/Ocultismo):</strong> Ambos atacam simultaneamente. Regra de Hitkill: quem tirar maior resultado golpeia primeiro se for abater o rival.<br>
-              • <strong>Tabela de Ruptura Espiritual (EST 0):</strong> Rola 1d6: 1-2 Colapso/Apagão; 3-4 Descontrole Frenético; 5 Vazamento Somático (2d6 dano); 6 Deformação da Alma.
-            </p>
-          </div>
-    
-          <!-- MDA -->
-          <div class="rule-card rule-moss">
-            <div class="rule-title">
-              <span>🧬 MDA — Mutação e Deformação Aberrante</span>
-              <span class="badge-system">BIOPUNK HORROR</span>
-            </div>
-            <p class="rule-desc">
-              No Triângulo e em zonas anômalas, a magia cede lugar à mutação biológica agressiva. O nível de MDA (0% a 100%) dita a absorção celular de matéria paranormal. 
-              <br><br>
-              • <strong>0% a 20%:</strong> Estabilidade celular; mutações incipientes e aumento sensorial circunscrito.<br>
-              • <strong>21% a 60%:</strong> Deformação manifesta; ossatura hiper-densificada, sentidos aberrantes, perda gradual de empatia.<br>
-              • <strong>90% a 99%:</strong> <em>Dominador Supremo</em> (como o Arquiteto do Caos). O corpo se atrofia enquanto a consciência subjuga o tecido da realidade biológica local.
-            </p>
-          </div>
-
-          <!-- PD -->
-          <div class="rule-card rule-blood">
-            <div class="rule-title">
-              <span>🧠 Pontos de Determinação (PD) & Surto de Loucura</span>
-              <span class="badge-tag status">COLAPSO MENTAL</span>
-            </div>
-            <p class="rule-desc">
-              Os Pontos de Determinação medem a âncora de sanidade e resiliência psicológica do personagem frente às atrocidades da Anomalia.
-              <br><br>
-              • <strong>Drenagem:</strong> Encontros com entidades cósmicas, falhas em testes de Presença e uso de relíquias custam PD.<br>
-              • <strong>PD 0 (OVERLOAD):</strong> Ocorrendo esgotamento total, o personagem sofre um <strong>Surto Paranormal de Loucura</strong> imediato. Todas as ações mentais sofrem -2d20 de penalidade, e a mente fica exposta aos ataques mentais da anomalia.
-            </p>
-          </div>
-
-          <!-- Sacrifício de Armadura -->
-          <div class="rule-card">
-            <div class="rule-title">
-              <span>🛡️ Sacrifício de Armadura</span>
-              <span class="badge-system">SOBREVIVÊNCIA</span>
-            </div>
-            <p class="rule-desc">
-              Em situações de iminente aniquilação, o combatente pode escolher estraçalhar sua proteção corporal para dissipar totalmente a energia de um ataque que seria mortal.
-              <br><br>
-              • <strong>Efeito:</strong> Anula o dano fatal da rodada atual.<br>
-              • <strong>Custo:</strong> A blindagem é destruída irreversivelmente (Redução de Dano = 0) até que seja reparada em uma forja de Nova Caronte.
-            </p>
-          </div>
-
-          <!-- Desempate Letal -->
-          <div class="rule-card rule-blood">
-            <div class="rule-title">
-              <span>💀 Desempate Letal</span>
-              <span class="badge-tag status">CLASH INSTANTÂNEO</span>
-            </div>
-            <p class="rule-desc">
-              Quando atacante e defensor empatam no teste de acerto vs esquiva ou bloqueio em combate letal, não há recuo:
-              ambos os combatentes executam um choque de letalidade imediata (1d20 + Agilidade ou Vigor). Aquele com maior velocidade ou ferocidade desfere o golpe crítico mortal primeiro.
-            </p>
-          </div>
-
-          <!-- Atributos -->
-          <div class="rule-card">
-            <div class="rule-title">
-              <span>📊 Atributos Básicos</span>
-              <span class="badge-system">DICE POOL</span>
-            </div>
-            <p class="rule-desc">
-              O sistema baseia-se em 5 atributos: <strong>Força</strong>, <strong>Vigor</strong>, <strong>Agilidade</strong>, <strong>Presença</strong> e <strong>Intelecto</strong>. Cada ponto no atributo confere 1 dado d20 na rolagem, selecionando-se o maior valor obtido. Um resultado 20 em qualquer dado é considerado Crítico Extremo.
-            </p>
           </div>
         </div>
       </div>
@@ -979,12 +875,12 @@
               </button>
             </div>
             <div class="soundboard-presets-row">
-              <span style="font-family: monospace; font-size: 0.72rem; color: #8da4be; display: flex; align-items: center; margin-right: 4px;">PRESETS:</span>
+              <span style="font-family: monospace; font-size: 0.75rem; color: #8da4be; display: flex; align-items: center; margin-right: 4px;">PRESETS:</span>
               <button class="btn-sound-preset" data-preset="vilar">🏚️ Mansão Vilar</button>
               <button class="btn-sound-preset" data-preset="triangulo">🌊 O Triângulo</button>
-              <button class="btn-sound-preset" data-preset="polar">❄️ Estação Zero</button>
-              <button class="btn-sound-preset" data-preset="selva">🌿 Amazônia</button>
-              <button class="btn-sound-preset" data-preset="monasterio">🔔 Floresta Negra</button>
+              <button class="btn-sound-preset" data-preset="veracruz">🌿 Vera Cruz das Almas</button>
+              <button class="btn-sound-preset" data-preset="belvedere">🎭 Gala Belvedere</button>
+              <button class="btn-sound-preset" data-preset="alucinacao">🌀 Lei da Alucinação</button>
               <button class="btn-sound-preset" data-preset="combate">⚔️ Conflito Direto</button>
             </div>
           </div>
@@ -1131,35 +1027,104 @@
                   <label class="creator-label" for="creator-campaign">Campanha Atribuída</label>
                   <select id="creator-campaign" class="creator-select">
                     <option value="camp_002" selected>Até o Amanhecer: Mansão Vilar (Concluída)</option>
-                    <option value="camp_001">A Incursão: Triângulo das Bermudas (Futura Campanha)</option>
+                    <option value="camp_001">A Incursão: Triângulo &amp; Vera Cruz (Futura Campanha)</option>
                     <option value="camp_filantropo_oeht">A Gala da Meia-Noite: Mansão Belvedere (Futura Campanha)</option>
+                  </select>
+                </div>
+                <div class="creator-field-group">
+                  <label class="creator-label" for="creator-race">Raça / Linhagem (Tomo III V3.0)</label>
+                  <select id="creator-race" class="creator-select">
+                    <option value="Humanos Despertos" selected>Humanos Despertos (Base Global / A.E.G.I.S.)</option>
+                    <option value="Nobres Bioluminescentes de Nácar">Nobres Bioluminescentes de Nácar</option>
+                    <option value="Sobreviventes Abissais de Nova Caronte">Sobreviventes Abissais de Nova Caronte</option>
+                    <option value="Castas Saurianas da Ilha Canibal">Castas Saurianas da Ilha Canibal</option>
+                    <option value="Marcados pelo Pacto da Lenda">Marcados pelo Pacto da Lenda (Vera Cruz)</option>
+                    <option value="Receptáculos da Coroa Branca">Receptáculos da Coroa Branca (||O)</option>
+                    <option value="Retornados da Linhagem de Stumpp">Retornados da Linhagem de Stumpp (Ciclo Lupino)</option>
+                  </select>
+                </div>
+                <div class="creator-field-group">
+                  <label class="creator-label" for="creator-virtue">Virtude de Alma (11 Oficiais)</label>
+                  <select id="creator-virtue" class="creator-select">
+                    <option value="Coragem" selected>Coragem (Construtiva — Marcos Valente)</option>
+                    <option value="Compaixão">Compaixão (Construtiva — Dra. Clara Mendes)</option>
+                    <option value="Disciplina">Disciplina (Construtiva — Kenji Sato)</option>
+                    <option value="Sabedoria">Sabedoria (Construtiva — Verônica Dias)</option>
+                    <option value="Esperança">Esperança (Transformadora — Padre Mateus)</option>
+                    <option value="Justiça">Justiça (Transformadora — Helena Vargas)</option>
+                    <option value="Liberdade">Liberdade (Transformadora — Capitã Íris)</option>
+                    <option value="Ambição">Ambição (Transformadora — Lorenzo Vane)</option>
+                    <option value="Orgulho">Orgulho (Instintiva — Cmdt. Valerius)</option>
+                    <option value="Fúria">Fúria (Instintiva — Raíssa "Carniça")</option>
+                    <option value="Medo">Medo (Instintiva — Jonas Silveira)</option>
                   </select>
                 </div>
               </div>
 
-              <!-- Seção 2: Genética & Relíquia -->
+              <!-- Seção 2: Genética, Elemento, Pacto & EA/EST -->
               <div class="creator-section-card">
                 <div class="creator-section-title">
                   <span>🧬</span>
-                  <span>GENÉTICA ANÔMALA & RELÍQUIA</span>
+                  <span>ELEMENTO, PACTO &amp; QUATERNÁRIO V3.0</span>
                 </div>
                 <div class="creator-field-group">
+                  <label class="creator-label" for="creator-element">Elemento Primordial (10 Cânones)</label>
+                  <select id="creator-element" class="creator-select">
+                    <option value="Ferro Frio & Correntes" selected>Ferro Frio &amp; Correntes (Bandeirantes)</option>
+                    <option value="Cinza Litúrgica & Brasa">Cinza Litúrgica &amp; Brasa (Ordem da Cinza)</option>
+                    <option value="Sangue & Ossos">Sangue &amp; Ossos</option>
+                    <option value="Prata & Juramento">Prata &amp; Juramento</option>
+                    <option value="Sombra/Névoa & Vazio">Sombra/Névoa &amp; Vazio</option>
+                    <option value="Peste/Seiva & Espinhos">Peste/Seiva &amp; Espinhos</option>
+                    <option value="Sal Abissal & Gelo Negro">Sal Abissal &amp; Gelo Negro</option>
+                    <option value="Pedra & Termia Solar">Pedra &amp; Termia Solar</option>
+                    <option value="Ouro & Relâmpago">Ouro &amp; Relâmpago</option>
+                    <option value="Vidro/Espelho & Nácar">Vidro/Espelho &amp; Nácar</option>
+                  </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="creator-field-group">
+                    <label class="creator-label" for="creator-modality">Modalidade Primária</label>
+                    <select id="creator-modality" class="creator-select">
+                      <option value="Projeção" selected>Projeção (1 EA)</option>
+                      <option value="Sintonia">Sintonia (+2 Atr)</option>
+                      <option value="Convergência">Convergência (40% MDA)</option>
+                    </select>
+                  </div>
+                  <div class="creator-field-group">
+                    <label class="creator-label" for="creator-pact">Pacto da Lenda</label>
+                    <select id="creator-pact" class="creator-select">
+                      <option value="Nenhum" selected>Sem Pacto</option>
+                      <option value="Anhangá (Névoa & Caçada)">Anhangá</option>
+                      <option value="Boitatá (Chama Fátua)">Boitatá</option>
+                      <option value="Corpo-Seco (Terra & Imortalidade)">Corpo-Seco</option>
+                      <option value="Curupira (Desorientação & Fogo)">Curupira</option>
+                      <option value="Iara Decaída (Canto Abissal)">Iara Decaída</option>
+                      <option value="Mula-Sem-Cabeça (Fornalha)">Mula-Sem-Cabeça</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="creator-field-group" style="margin-top: 6px;">
                   <label class="creator-label">Taxa de Modificação de DNA (MDA %)</label>
                   <div class="creator-mda-slider-wrap">
                     <input type="range" id="creator-mda-slider" class="creator-mda-slider" min="5" max="80" value="15">
                     <span id="creator-mda-val" class="creator-mda-badge">15%</span>
                   </div>
-                  <span style="font-size: 0.68rem; color: #728a9c; margin-top: 2px;">5% Humano Estável ➔ 80% Quimera Hipertrófica</span>
-                </div>
-                <div class="creator-field-group" style="margin-top: 10px;">
-                  <label class="creator-label" for="creator-relic">Relíquia / Equipamento Oculto</label>
-                  <input type="text" id="creator-relic" class="creator-input" placeholder="Ex: Injetor de Criostase Inversa ou LIMIAR">
+                  <span style="font-size: 0.72rem; color: #8da4be; margin-top: 2px;">5% Humano Estável ➔ 80% Quimera Hipertrófica</span>
                 </div>
                 <div class="creator-field-group" style="margin-top: 8px;">
-                  <label class="creator-label">Pontos de Determinação (PD Inicial)</label>
-                  <div style="font-family: monospace; font-size: 0.95rem; color: #00e5ff; padding: 6px 0;">
-                    20 / 20 PD <span style="font-size: 0.72rem; color: #8da4be;">(Alerta de Overload em 0 PD)</span>
+                  <label class="creator-label" for="creator-relic">Relíquia / Arsenal Colonial</label>
+                  <input type="text" id="creator-relic" class="creator-input" placeholder="Ex: Espada de Ferro Frio ou Dispositivo LIMIAR">
+                </div>
+                <div class="creator-field-group" style="margin-top: 8px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                    <label class="creator-label" style="margin:0;">Quaternário (PV • PD • EA • EST)</label>
+                    <button type="button" id="btn-creator-roll-chosen" class="btn-secondary" style="font-size: 11px; padding: 3px 9px; border-color:#ffd700; color:#ffd700;">🎲 Testar 1d1000 Escolhido</button>
                   </div>
+                  <div id="creator-ea-est-preview" style="font-family: monospace; font-size: 12px; color: #00e5ff; padding: 6px 8px; background: rgba(0,229,255,0.08); border-radius: 4px; margin-top: 4px;">
+                    PV 26 • PD 20 • EA 11 • EST 10
+                  </div>
+                  <div id="creator-chosen-result" style="font-size: 11.5px; color: #c084fc; margin-top: 3px;"></div>
                 </div>
               </div>
 
@@ -1362,7 +1327,7 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                   <div class="creator-field-group">
                     <label class="creator-label" for="camp-title">Título da Campanha</label>
-                    <input type="text" id="camp-title" class="creator-input" placeholder="Ex: O Abismo da Floresta Negra" required>
+                    <input type="text" id="camp-title" class="creator-input" placeholder="Ex: As Profundezas de Nova Caronte" required>
                   </div>
                   <div class="creator-field-group">
                     <label class="creator-label" for="camp-theme">Gênero / Tema</label>
@@ -1370,7 +1335,7 @@
                   </div>
                   <div class="creator-field-group">
                     <label class="creator-label" for="camp-country">País / Setor Geográfico</label>
-                    <input type="text" id="camp-country" class="creator-input" placeholder="Ex: Brasil (Amazônia) ou Alemanha" required>
+                    <input type="text" id="camp-country" class="creator-input" placeholder="Ex: Triângulo das Bermudas ou Suíça" required>
                   </div>
                   <div class="creator-field-group">
                     <label class="creator-label" for="camp-status">Status</label>
@@ -1485,7 +1450,8 @@
             <button class="loc-filter-pill active" data-zone="all">Todos os Locais</button>
             <button class="loc-filter-pill" data-zone="México">🇲🇽 México (Mansão Vilar)</button>
             <button class="loc-filter-pill" data-zone="Triângulo">🌊 Triângulo das Bermudas</button>
-            <button class="loc-filter-pill" data-zone="Groenlândia">❄️ Groenlândia (Estação Zero)</button>
+            <button class="loc-filter-pill" data-zone="Vera Cruz">🌿 Vera Cruz das Almas</button>
+            <button class="loc-filter-pill" data-zone="Genebra">🎭 Genebra (Mansão Belvedere)</button>
           </div>
           <button id="btn-atlas-new-location" class="btn-secondary" style="font-size: 0.75rem; border-color: #39ff14; color: #39ff14;">+ Cadastrar Novo Local</button>
         </div>
@@ -1828,6 +1794,37 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL COMPÊNDIO TOMO IV: 65 FICHAS CANÔNICAS & BESTIÁRIO (#modal-bestiary) -->
+  <div id="modal-bestiary" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="bestiary-v4-modal-title">
+    <div class="modal-container modal-bestiary-container">
+      <div class="modal-header">
+        <h2 id="bestiary-v4-modal-title">
+          <span class="modal-icon">👹</span>
+          TOMO IV // COMPÊNDIO DE AGENTES, SOBERANOS &amp; BESTIÁRIO OFICIAL
+        </h2>
+        <button class="btn-close-modal" data-close="modal-bestiary" title="Fechar [ESC]">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 16px 20px; gap: 14px;">
+        <div class="tomo4-toolbar">
+          <div class="tomo4-filter-pills" id="bestiary-v4-filters">
+            <button type="button" class="tomo4-filter-btn active" data-t4-cat="all">📚 Todos (65)</button>
+            <button type="button" class="tomo4-filter-btn" data-t4-cat="aegis_elite">🛡️ Agentes A.E.G.I.S.</button>
+            <button type="button" class="tomo4-filter-btn" data-t4-cat="soberanos_alma">👑 Soberanos do Triângulo</button>
+            <button type="button" class="tomo4-filter-btn" data-t4-cat="videos">📼 Fitas &amp; Vídeos</button>
+            <button type="button" class="tomo4-filter-btn" data-t4-cat="vera_cruz_vilar">🌿 Vera Cruz &amp; Crônicas</button>
+            <button type="button" class="tomo4-filter-btn" data-t4-cat="lendas_mundiais">🌍 Lendas Mundiais</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="text" id="bestiary-v4-search" class="creator-input" style="width:230px; padding:6px 10px; font-size:12.5px;" placeholder="🔍 Buscar ficha, virtude, poder...">
+            <span id="bestiary-v4-count" style="font-family:monospace; font-size:12px; color:#ffd700;">65 Fichas</span>
+          </div>
+        </div>
+        <div id="bestiary-v4-detail" class="tomo4-detail-box" style="display:none;"></div>
+        <div id="bestiary-v4-grid" class="tomo4-grid"></div>
       </div>
     </div>
   </div>

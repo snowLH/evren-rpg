@@ -709,6 +709,46 @@ class DataLoader {
     return this.data?.universe_rules?.virtues_system || null;
   }
 
+  getTomo4Entities() {
+    return this.data?.tomo4_entities || [];
+  }
+
+  getTomo4EntityById(id) {
+    return (this.data?.tomo4_entities || []).find(e => e.id === id) || null;
+  }
+
+  getRaces() {
+    return this.data?.universe_rules?.races || [];
+  }
+
+  getElements() {
+    return this.data?.universe_rules?.elements || [];
+  }
+
+  getPacts() {
+    return this.data?.universe_rules?.pacts || [];
+  }
+
+  getOfficialVirtues() {
+    return this.data?.universe_rules?.virtues_v3 || this.data?.universe_rules?.virtues_system?.virtudes || [];
+  }
+
+  getQuaternario() {
+    return this.data?.universe_rules?.quaternario_metafisico || null;
+  }
+
+  getMdaTable() {
+    return this.data?.universe_rules?.mda_table || [];
+  }
+
+  getColonialArsenal() {
+    return this.data?.universe_rules?.colonial_arsenal || [];
+  }
+
+  getPavorRuptureTable() {
+    return this.data?.universe_rules?.pavor_rupture_table || [];
+  }
+
   getRelationsGraph() {
     return this.data?.relations_graph || { nodes: [], links: [] };
   }
@@ -932,7 +972,7 @@ class DataLoader {
   "universe_rules": {
     "system": "Evren",
     "universe": "Evren",
-    "edition": "Evren Core Rules (3.5 Canonical Playtest Proposal)",
+    "edition": "Sistema Oficial Evren V3.0 (Tomos I–IV Unificados)",
     "attributes": [
       {
         "name": "Força",
@@ -1362,97 +1402,702 @@ class DataLoader {
       "armor_sacrifice": "Sacrifício Único de Armadura: Em golpes letais (hitkill), o defensor pode estilhaçar completamente sua couraça para anular o dano mortal."
     },
     "virtues_system": {
-      "version": "v2.0 Integrada",
-      "title": "As Onze Virtudes Oficiais de Alma & Metafísica Anímica",
-      "triad_of_identity": {
-        "title": "A Tríade da Identidade",
-        "pillars": [
-          {
-            "name": "Personalidade (A Superfície Ativa)",
-            "desc": "Comportamentos e postura visível; molda maneirismos e estilo de combate."
-          },
-          {
-            "name": "Experiências (A Memória Esculpida)",
-            "desc": "Traumas, perdas e cicatrizes; esculpe a anatomia visual e técnicas da Alma."
-          },
-          {
-            "name": "Essência (O Núcleo Imutável)",
-            "desc": "A verdade irredutível do ego; determina qual das 11 Virtudes se manifesta."
-          }
-        ]
-      },
-      "metaphysical_triad": {
-        "title": "A Tríade Metafísica: Corpo, Alma e Verdadeira Magia",
-        "spheres": [
-          {
-            "name": "Mutação Biológica Extrema (O Corpo)",
-            "rule": "Lei da Alucinação. Reescrita de DNA por fendas e estresse letal."
-          },
-          {
-            "name": "Virtudes de Alma (A Identidade)",
-            "rule": "Densidade espiritual anímica em Projeção, Sintonia ou Convergência."
-          },
-          {
-            "name": "A Verdadeira Magia (A Regra)",
-            "rule": "Exclusiva do Primogênito: reescrita direta das leis da realidade."
-          }
-        ]
-      },
-      "conceptual_groups": [
-        {
-          "group": "Virtudes Construtivas",
-          "philosophy": "Edificação, preservação, coesão e discernimento.",
-          "virtues": [
-            "Coragem",
-            "Compaixão",
-            "Disciplina",
-            "Sabedoria"
-          ]
-        },
-        {
-          "group": "Virtudes Transformadoras",
-          "philosophy": "Alteração ativa do estado das coisas: superação, leis proporcionais, fluidez e conquista.",
-          "virtues": [
-            "Esperança",
-            "Justiça",
-            "Liberdade",
-            "Ambição"
-          ]
-        },
-        {
-          "group": "Virtudes Instintivas",
-          "philosophy": "Forças viscerais: autoridade soberana, explosão de ódio e domínio do terror primordial.",
-          "virtues": [
-            "Orgulho",
-            "Fúria",
-            "Medo"
-          ]
-        }
+      "doctrine_summary": "Cada pessoa desperta uma única Virtude entre as 11 Virtudes Oficiais (Construtivas, Transformadoras e Instintivas), moldada por sua Tríade (Personalidade, Experiências, Essência) e condensada em 1 dos 10 Elementos de Ressonância.",
+      "virtues": [
+        "Coragem (Construtiva) — A Alma Indomável",
+        "Compaixão (Construtiva) — A Alma Conectada",
+        "Disciplina (Construtiva) — A Alma Inquebrável",
+        "Sabedoria (Construtiva) — A Alma Observadora",
+        "Esperança (Transformadora) — A Alma Renascente",
+        "Justiça (Transformadora) — A Alma Julgadora",
+        "Liberdade (Transformadora) — A Alma Sem Correntes",
+        "Ambição (Transformadora) — A Alma Insaciável",
+        "Orgulho (Instintiva) — A Alma Soberana",
+        "Fúria (Instintiva) — A Alma Devastadora",
+        "Medo (Instintiva) — A Alma Abissal"
       ],
       "manifestation_modes": [
-        {
-          "mode": "Projeção (Avatar Exterior)",
-          "cost": "2 EA (1 se primária)",
-          "effect": "Avatar tangível à distância; dano sofrido reverbera no usuário (Elo Vital)."
-        },
-        {
-          "mode": "Sintonia (Revestimento)",
-          "cost": "2 EA (1 se primária)",
-          "effect": "Corpo revestido por energia anímica; +2 em atributo e punhos capazes de ferir entidades."
-        },
-        {
-          "mode": "Convergência (Fusão Total)",
-          "cost": "10 EA + 6 PD no ato; 3 EA + 2 EST por rodada",
-          "effect": "Fusão absoluta com a Alma. Exige MDA 40%+. +2 em todos atributos, +6 RD."
-        }
-      ],
-      "gauges": {
-        "pv": "Vitalidade (Corpo): 20 + (Vigor * 5) + Bônus MDA.",
-        "pd": "Determinação (Esforço Humano): 15 a 70 PD para Arquétipos e Relíquias.",
-        "ea": "Energia de Alma: Bônus Base MDA + (Presença * 3) para Manifestações e Técnicas.",
-        "est": "Estabilidade: 10 + Presença + Intelecto (a 0 EST ocorre Teste de Ruptura 1d6)."
+        "Projeção (2 EA / 1 EA se primária): Avatar tangível externo (Alcance Curto 1,5–3m ou Tático 9–30m). Regra do Elo Vital: dano transferido ao PV.",
+        "Sintonia (2 EA / 1 EA se primária): Revestimento no corpo/armas; +2 em atributo da Virtude e capacidade de ferir espíritos e lendas.",
+        "Convergência (MDA 40%+): Fusão total (+2 todos Atributos, +6 RD, passo de dado +1). Custa 10 EA + 6 PD + 3 EA/2 EST por rodada."
+      ]
+    },
+    "quaternario_metafisico": [
+      {
+        "id": "esfera_corpo",
+        "number": 1,
+        "name": "Mutação Biológica Extrema (O Corpo)",
+        "origin": "Regida pela Lei da Alucinação. O DNA é reescrito pela exposição a fendas, estresse letal ou assimilação genética de organismos ancestrais.",
+        "relation": "Gera desde escamas, olhos bioluminescentes e sonar destrutivo até a hierarquia biológica do Triângulo (Classes Baixa, Média e Soberanos) e predadores subterrâneos como O Eco."
+      },
+      {
+        "id": "esfera_alma",
+        "number": 2,
+        "name": "Virtudes de Alma (A Identidade Humana)",
+        "origin": "Expressão física e metafísica da tríade que constitui o indivíduo — Personalidade, Experiências e Essência — manifestada através das Onze Virtudes em Projeção, Sintonia ou Convergência.",
+        "relation": "Forja espiritual despertada pelos Bandeirantes do Véu e por agentes Despertos. Consome Energia de Alma (EA) e exige Estabilidade (EST) contra a Ruptura."
+      },
+      {
+        "id": "esfera_lenda",
+        "number": 3,
+        "name": "O Pacto da Lenda (A Marca Ancestral)",
+        "origin": "Conexão proibida e raríssima entre a alma de um mortal e uma Lenda Folclórica encarnada após a Queda do Véu, obtida por Escolha de Nascença (0,05% a 0,1% / 1d1000=1) ou Ritual de Subjugação na Lua Nova.",
+        "relation": "Concede uma Segunda Árvore de poder somada à Virtude original e mutações estéticas sinistras. Se descoberto pela Ordem da Cinza ou ala purista da A.E.G.I.S., é caçado como Bruxo/Herege."
+      },
+      {
+        "id": "esfera_verdadeira_magia",
+        "number": 4,
+        "name": "A Verdadeira Magia (A Regra)",
+        "origin": "Descoberta exclusivamente pelo Primogênito milhares de anos atrás ao expandir sua mente diante da anomalia primordial do mar.",
+        "relation": "Não é mutação, virtude humana nem pacto folclórico: é a autoridade absoluta para reescrever o código-fonte das leis físicas, temporais e genéticas da realidade."
       }
-    }
+    ],
+    "virtues_v3": [
+      {
+        "id": "virt_coragem",
+        "name": "Coragem",
+        "epithet": "A Alma Indomável",
+        "group": "Construtiva",
+        "principle": "O avanço inabalável diante do perigo e da desvantagem esmagadora; vetor de força cinética e térmica proporcional à hostilidade do ambiente.",
+        "appearance": "Guerreiros encouraçados, forjas ambulantes ou silhuetas com cicatrizes luminosas e núcleos peitorais em brasa.",
+        "affinities": "Energia cinética de impacto, ignição anímica, fortalecimento reativo sob dano, imunidade a terror psíquico e ruptura de barreiras.",
+        "techniques": [
+          {
+            "name": "Passo contra a Tempestade",
+            "cost": "3 EA",
+            "desc": "Avança até 9m ignorando terreno difícil, empurrões ou zonas de medo; +4 no primeiro ataque ou bloqueio do turno."
+          },
+          {
+            "name": "Brasa da Última Trincheira",
+            "cost": "6 EA + 2 PD",
+            "desc": "Ativável com <50% PV: +4 RD e +1d8 de dano anímico em golpes corpo a corpo por 3 rodadas."
+          }
+        ],
+        "limitations": "As técnicas falham se o usuário agir por covardia, traição furtiva ou fugir abandonando o que jurou proteger.",
+        "sintonia_effect": "Coração brilha no peito e manoplas de brasa revestem os punhos (+Força/Vigor, imune a empurrões).",
+        "exemplary": {
+          "name": "Marcos \"Quebra-Mar\" Valente",
+          "role": "Combatente, MDA 20%",
+          "alma": "Farol de São Telmo",
+          "lore": "Ex-mergulhador de Nova Caronte que enfrentou tentáculos no Fosso do Kraken. Projeção 2m; desfaz-se se recuar >3m."
+        }
+      },
+      {
+        "id": "virt_compaixao",
+        "name": "Compaixão",
+        "epithet": "A Alma Conectada",
+        "group": "Construtiva",
+        "principle": "Ressonância empática profunda entre seres vivos; tece laços espirituais que compartilham fardos, vitalidade e sentidos.",
+        "appearance": "Figuras cirúrgicas ou angelicais com múltiplos braços, árvores de nervos bioluminescentes ou tecelãs de fios carmesins/dourados.",
+        "affinities": "Restauração celular e anímica, transferência de ferimentos, telepatia empática e sincronização de reflexos.",
+        "techniques": [
+          {
+            "name": "Sutura de Almas",
+            "cost": "4 EA",
+            "desc": "Conecta até dois aliados a 12m por 3 rodadas; o dano pode ser dividido igualmente e todos recebem +2 em Vontade."
+          },
+          {
+            "name": "Bálsamo da Empatia",
+            "cost": "5 EA",
+            "desc": "Restaura 2d8 + Presença em PV de um alvo e remove medo/paralisia, mas o usuário perde 2 EST temporários."
+          }
+        ],
+        "limitations": "Baixo potencial destrutivo isolado; se um aliado vinculado morrer, sofre choque espiritual direto (-1d8 EST).",
+        "sintonia_effect": "Fios cirúrgicos luminosos saem das mãos; toque estanca hemorragias e sente os batimentos do grupo.",
+        "exemplary": {
+          "name": "Dra. Clara Mendes",
+          "role": "Conjuradora, MDA 20%",
+          "alma": "Pietà de Porcelana",
+          "lore": "Médica legista da A.E.G.I.S. que protegeu pacientes de um Mímico Genético. Incapaz de ataques letais diretos."
+        }
+      },
+      {
+        "id": "virt_disciplina",
+        "name": "Disciplina",
+        "epithet": "A Alma Inquebrável",
+        "group": "Construtiva",
+        "principle": "Domínio absoluto do método, da repetição perfeita e do autocontrole; impõe constância matemática, simetria e precisão ao espaço.",
+        "appearance": "Autômatos de relojoaria fina, monges de geometria perfeita ou estruturas poliédricas de platina e pedra polida.",
+        "affinities": "Defesa impenetrável, contra-ataques cirúrgicos, barreiras geométricas, economia de EA e cortes que ignoram armaduras.",
+        "techniques": [
+          {
+            "name": "Bastião Inamovível",
+            "cost": "3 EA",
+            "desc": "Enquanto permanecer imóvel, recebe +4 em Vigor para Bloquear e +4 de RD."
+          },
+          {
+            "name": "Corte do Meridiano Exato",
+            "cost": "5 EA",
+            "desc": "Após observar ou bloquear um golpe do alvo, desfere golpe que ignora toda a RD de armadura ou couraça."
+          }
+        ],
+        "limitations": "Rigidez tática; quando surpreendido pelo caos imprevisível ou forçado a improvisar fora de postura, sequências quebram.",
+        "sintonia_effect": "Aura geométrica cristalina nos braços e lâminas; apara projéteis ou garras com precisão matemática.",
+        "exemplary": {
+          "name": "Agente Sênior Kenji Sato",
+          "role": "Combatente, MDA 40%",
+          "alma": "Zero Absoluto",
+          "lore": "Operador de elite do Diretor Kaelen que sobreviveu a um loop temporal contando segundos."
+        }
+      },
+      {
+        "id": "virt_sabedoria",
+        "name": "Sabedoria",
+        "epithet": "A Alma Observadora",
+        "group": "Construtiva",
+        "principle": "Compreensão lúcida da verdade oculta por trás das aparências; filtro revelador contra a Lei da Alucinação e assombrações da mata.",
+        "appearance": "Corujas ou serpentes de múltiplos olhos, escribas com astrolábios ou esferas oculares de luz reveladora.",
+        "affinities": "Clarividência de curto alcance, leitura de MDA e pontos fracos (vínculo do Anárquico, bocarra do Mapinguari, Mímicos), dissolução de ilusões.",
+        "techniques": [
+          {
+            "name": "Lente da Anatomia Oculta",
+            "cost": "3 EA",
+            "desc": "Analisa criatura por uma ação (Intelecto); revela vulnerabilidades e dá +3 nos ataques do grupo contra o ponto fraco por 3 rodadas."
+          },
+          {
+            "name": "Antecipação de Trajetória",
+            "cost": "4 EA",
+            "desc": "Reação: usa Intelecto no lugar de Agilidade para Esquivar com +2 de bônus."
+          }
+        ],
+        "limitations": "Fragilidade física direta; analisar entidades de MDA 99% sem proteção sobrecarrega a mente e drena EST.",
+        "sintonia_effect": "Terceiro olho espectral ou lentes de luz sobre a face; desacelera percepção do tempo e revela pontos vitais.",
+        "exemplary": {
+          "name": "Verônica \"Coruja\" Dias",
+          "role": "Especialista, MDA 20%",
+          "alma": "Lanterna de Diógenes",
+          "lore": "Criptógrafa que investigou as minas de Vilar e os arquivos da Ordem da Cinza."
+        }
+      },
+      {
+        "id": "virt_esperanca",
+        "name": "Esperança",
+        "epithet": "A Alma Renascente",
+        "group": "Transformadora",
+        "principle": "Força antientrópica cuja luz purificadora e regenerativa floresce nos cenários mais devastados.",
+        "appearance": "Aves solares translúcidas, figuras coroadas por chamas brancas, faróis espirituais ou vitrais vivos.",
+        "affinities": "Luz purificadora, restauração de PD e EST, revogação de quase-morte e dissipação de névoas alucinógenas.",
+        "techniques": [
+          {
+            "name": "Farol na Tempestade",
+            "cost": "4 EA",
+            "desc": "Pulso de luz em raio de 9m por 3 rodadas; dissipa névoas, impede tochas de apagar e concede +2 em resistências + 1d4 PD."
+          },
+          {
+            "name": "Cinzas do Amanhã",
+            "cost": "8 EA (Reação)",
+            "desc": "Quando você ou aliado a até 6m cairia a 0 PV, mantém o alvo de pé com 10 PV e remove uma condição negativa."
+          }
+        ],
+        "limitations": "Se o portador cair em desespero profundo ou aceitar a derrota, a Alma enfraquece drasticamente.",
+        "sintonia_effect": "Halo de luz cálida nos ombros; voz acalma aliados em pânico e regenera ferimentos leves.",
+        "exemplary": {
+          "name": "Padre Mateus Alencar",
+          "role": "Conjurador, MDA 20%",
+          "alma": "Estrela d'Alva",
+          "lore": "Capelão naval que ergueu abrigo em Nova Caronte e abençoa Bandeirantes com sal e fogo."
+        }
+      },
+      {
+        "id": "virt_justica",
+        "name": "Justiça",
+        "epithet": "A Alma Julgadora",
+        "group": "Transformadora",
+        "principle": "Equilíbrio implacável entre ação e consequência; introduz causalidade moral e contratual na realidade física.",
+        "appearance": "Magistrados blindados de olhos vendados, carrascos com balanças, correntes de prata ou espadas de execução.",
+        "affinities": "Retribuição de dano, imposição de leis de combate, aprisionamento por correntes espirituais e bônus contra traidores/hereges.",
+        "techniques": [
+          {
+            "name": "Sentença de Reciprocidade",
+            "cost": "4 EA",
+            "desc": "Marca inimigo a até 12m por 3 rodadas; metade de todo dano que ele causar ao grupo retorna como dano espiritual nele."
+          },
+          {
+            "name": "Decreto da Arena Justa",
+            "cost": "6 EA",
+            "desc": "Círculo de 9m por 2 rodadas; atacar pelas costas ou em superioridade numérica sofre -4 no teste e 2d6 de dano anímico."
+          }
+        ],
+        "limitations": "Exige Gatilho de Culpa; não funciona contra quem ainda não cometeu ato hostil, e a lei aplica-se também ao usuário.",
+        "sintonia_effect": "Correntes espirituais enrolam-se nos braços e armas, dobrando o peso punitivo contra quem feriu inocentes.",
+        "exemplary": {
+          "name": "Inspetora Helena Vargas",
+          "role": "Especialista, MDA 40%",
+          "alma": "Lex Talionis",
+          "lore": "Ex-promotora e inquisidora da corregedoria da A.E.G.I.S."
+        }
+      },
+      {
+        "id": "virt_liberdade",
+        "name": "Liberdade",
+        "epithet": "A Alma Sem Correntes",
+        "group": "Transformadora",
+        "principle": "Recusa absoluta a cativeiro ou estagnação espacial; dissolve trancas, ignora gravidade e possui sinergia natural com a Armadura Hallucigenia.",
+        "appearance": "Criaturas aladas de vento, navios/arraias espectrais ou figuras com grilhões partidos nos pulsos.",
+        "affinities": "Velocidade extrema, voo/levitação, intangibilidade momentânea, manipulação de correntes de ar e quebra de agarrões.",
+        "techniques": [
+          {
+            "name": "Quebra de Grilhões",
+            "cost": "3 EA (Reação/Ação)",
+            "desc": "Rompe instantaneamente agarrões, raízes, cordas ou algemas em si ou aliado tocado e move 6m sem ataques de oportunidade."
+          },
+          {
+            "name": "Vendaval de Passo Livre",
+            "cost": "5 EA",
+            "desc": "Por 3 rodadas, dobra deslocamento, corre sobre superfícies verticais/água e ganha +3 em Agilidade para Esquivar."
+          }
+        ],
+        "limitations": "Perde eficácia se forçado a ficar imóvel defendendo ponto fixo ou trancado em cubículos minúsculos.",
+        "sintonia_effect": "Plumas de vento nos calcanhares e costas; saltos triplos e imunidade a agarrões.",
+        "exemplary": {
+          "name": "Capitã Íris \"Vento Solto\"",
+          "role": "Combatente, MDA 40%",
+          "alma": "Zéfiro Rebelde",
+          "lore": "Ex-escrava fugitiva dos leilões da Cidadela de Nácar e corsária entre o Triângulo e o Arquipélago."
+        }
+      },
+      {
+        "id": "virt_ambicao",
+        "name": "Ambição",
+        "epithet": "A Alma Insaciável",
+        "group": "Transformadora",
+        "principle": "Desejo incessante de transcender a própria condição; vórtice que toma forças externas do adversário como combustível.",
+        "appearance": "Reis espectrais com mantos cheios de gaiolas, dragões metálicos ou figuras com bocas nas palmas das mãos.",
+        "affinities": "Drenagem de EA ou PD do inimigo, absorção e redirecionamento de impacto e amplificação de relíquias.",
+        "techniques": [
+          {
+            "name": "Tributo do Conquistador",
+            "cost": "4 EA",
+            "desc": "Ao atingir corpo a corpo, drena 1d4 PD ou EA do alvo e transfere metade para o usuário."
+          },
+          {
+            "name": "Usurpação de Potência",
+            "cost": "6 EA",
+            "desc": "Ao bloquear ataque especial/energético, adiciona +6 de dano ao próximo ataque na rodada seguinte."
+          }
+        ],
+        "limitations": "Risco de Gula Espiritual: absorver mais energia que a Estabilidade atual causa dano interno e perda de EST.",
+        "sintonia_effect": "Vórtices escuros nas palmas; ao agarrar ou bloquear, suga a energia do golpe para os próprios músculos.",
+        "exemplary": {
+          "name": "Lorenzo Vane",
+          "role": "Conjurador, MDA 40%",
+          "alma": "Banco de Midas",
+          "lore": "Ex-sócio traído por Victor Kael que despertou devorando um artefato."
+        }
+      },
+      {
+        "id": "virt_orgulho",
+        "name": "Orgulho",
+        "epithet": "A Alma Soberana",
+        "group": "Instintiva",
+        "principle": "Afirmação absoluta da própria dignidade e autoridade perante homens, lendas ou deuses; trata o espaço ao redor como território soberano.",
+        "appearance": "Monarcas colossais em armaduras imperiais, leões solares ou tronos flutuantes.",
+        "affinities": "Pressão gravitacional/psíquica de submissão (Presença Soberana), energia radiante e fortalecimento em duelos solitários.",
+        "techniques": [
+          {
+            "name": "Peso da Coroa",
+            "cost": "4 EA",
+            "desc": "Onda em raio de 6m; inimigos falham em Vontade vs Intimidação sofrem -3 em todas as ações e metade do deslocamento por 2 rodadas."
+          },
+          {
+            "name": "Decreto Solitário",
+            "cost": "5 EA",
+            "desc": "Em duelo sem aliados a <6m, ganha +3 nos ataques e +6 de dano final."
+          }
+        ],
+        "limitations": "Não pode usar técnicas escondendo-se furtivamente ou implorando; ser derrubado (Caído) ou humilhado causa -1d4 EST imediato.",
+        "sintonia_effect": "Coroa espectral e manto imperial; a pressão gravitacional racha o chão e dificulta aproximação inimiga.",
+        "exemplary": {
+          "name": "Comandante Valerius",
+          "role": "Combatente, MDA 60%",
+          "alma": "Sol Invictus",
+          "lore": "Oficial histórico que jamais se ajoelhou perante os Soberanos de Nácar."
+        }
+      },
+      {
+        "id": "virt_furia",
+        "name": "Fúria",
+        "epithet": "A Alma Devastadora",
+        "group": "Instintiva",
+        "principle": "Explosão vulcânica da indignação, dor acumulada e instinto de destruição; converte trauma e adrenalina em força bruta avassaladora.",
+        "appearance": "Bestas vulcânicas, colossos em correntes arrebentadas e fumaça negra ou demônios de osso e brasa.",
+        "affinities": "Destruição física massiva, ondas de choque concussivas, combustão anímica e demolição de armaduras.",
+        "techniques": [
+          {
+            "name": "Ruptura de Sangue Fervilhante",
+            "cost": "4 EA",
+            "desc": "Por 4 rodadas, cada dano físico recebido dá +2 cumulativo no dano (até +10), sofrendo -2 em Esquiva/Bloqueio."
+          },
+          {
+            "name": "Impacto Cataclísmico",
+            "cost": "6 EA",
+            "desc": "Dano normal +2d8; criaturas a 3m fazem teste de Fortitude ou caem no chão."
+          }
+        ],
+        "limitations": "Alto consumo de EST e risco de fogo amigo; abuso exige teste de Vontade para não atacar o alvo mais próximo.",
+        "sintonia_effect": "Veias incandescentes e placas ósseas nos braços; golpes geram ondas de choque devastadoras.",
+        "exemplary": {
+          "name": "Raíssa \"Carniça\"",
+          "role": "Combatente, MDA 20%",
+          "alma": "Mandíbula do Cretáceo",
+          "lore": "Sobrevivente dos templos da Ilha Canibal e caçadora implacável nas matas de Vera Cruz."
+        }
+      },
+      {
+        "id": "virt_medo",
+        "name": "Medo",
+        "epithet": "A Alma Abissal",
+        "group": "Instintiva",
+        "principle": "Domínio sobre o desconhecido, a sombra e o pavor primordial da extinção; projeta seus traumas como arma sobre o inimigo.",
+        "appearance": "Espantalhos alongados, espectros de fuligem que absorvem luz e som, enxames de névoa com máscaras pálidas.",
+        "affinities": "Manipulação de sombras/escuridão, alucinações fóbicas, paralisia neural pelo pavor e furtividade espiritual absoluta.",
+        "techniques": [
+          {
+            "name": "Sussurro do Quarto Escuro",
+            "cost": "3 EA",
+            "desc": "Estímulo fóbico a 12m; falha em Vontade oposta deixa alvo Amedrontado por 2 rodadas (-3 ataques, não pode aproximar)."
+          },
+          {
+            "name": "Predador da Penumbra",
+            "cost": "5 EA",
+            "desc": "Dissolve-se nas sombras por 3 rodadas: +5 Furtividade e +2d6 dano psíquico em alvos amedrontados ou surpresos."
+          }
+        ],
+        "limitations": "Eficácia reduzida contra constructos sem mente ou sob iluminação solar/ofuscante direta.",
+        "sintonia_effect": "Sombra descola do chão como sobretudo de névoa abissal; passos tornam-se 100% silenciosos.",
+        "exemplary": {
+          "name": "Jonas \"Vulto\" Silveira",
+          "role": "Especialista, MDA 20%",
+          "alma": "O Vigia do Túnel",
+          "lore": "Sobreviveu quatro dias no escuro absoluto com O Eco nos túneis de Vilar."
+        }
+      }
+    ],
+    "elements": [
+      {
+        "id": "el_ferro",
+        "number": 1,
+        "name": "Ferro Frio & Correntes",
+        "virtues": [
+          "Disciplina",
+          "Justiça",
+          "Coragem"
+        ],
+        "visual": "Aço escuro fosco que absorve calor e tilinta como grilhões de tribunal.",
+        "effect": "Ignora 5 pontos de RD de Lendas Folclóricas e reduz deslocamento do alvo em -3m."
+      },
+      {
+        "id": "el_cinza",
+        "number": 2,
+        "name": "Cinza Litúrgica & Brasa",
+        "virtues": [
+          "Sabedoria",
+          "Compaixão",
+          "Fúria"
+        ],
+        "visual": "Fagulhas de incenso, carvão translúcido e fogo-fátuo azul ou rubro.",
+        "effect": "Queima diretamente a reserva de EA (+1d6 dano de EA) e cauteriza regeneração necrótica."
+      },
+      {
+        "id": "el_sangue",
+        "number": 3,
+        "name": "Sangue & Ossos",
+        "virtues": [
+          "Fúria",
+          "Orgulho",
+          "Compaixão"
+        ],
+        "visual": "Cristais de hemoglobina endurecida e placas osteodérmicas externas.",
+        "effect": "Converte PV próprios em +1d12 de dano brutal ou cria armaduras ósseas (+4 RD)."
+      },
+      {
+        "id": "el_prata",
+        "number": 4,
+        "name": "Prata & Juramento",
+        "virtues": [
+          "Justiça",
+          "Esperança",
+          "Coragem"
+        ],
+        "visual": "Fios de prata líquida luminosa gravados com escrituras e votos.",
+        "effect": "Dano dobrado contra Licantropos (Ciclo de Stumpp) e Mortos-Vivos; pune quebra de promessas."
+      },
+      {
+        "id": "el_sombra",
+        "number": 5,
+        "name": "Sombra, Névoa & Vazio",
+        "virtues": [
+          "Medo",
+          "Liberdade",
+          "Sabedoria"
+        ],
+        "visual": "Vapor frio que apaga fontes de luz e alonga silhuetas nas paredes.",
+        "effect": "+1d20 em Esquiva e Furtividade; ataques furtivos drenam 1d4 de EST além do dano."
+      },
+      {
+        "id": "el_peste",
+        "number": 6,
+        "name": "Peste, Seiva & Espinhos",
+        "virtues": [
+          "Sabedoria",
+          "Medo",
+          "Fúria"
+        ],
+        "visual": "Raízes negras espinhosas, esporos alucinógenos e miasma de floresta.",
+        "effect": "Cria terreno difícil instantâneo e aplica veneno espiritual contínuo (2d6/rodada)."
+      },
+      {
+        "id": "el_sal",
+        "number": 7,
+        "name": "Sal Abissal & Gelo Negro",
+        "virtues": [
+          "Ambição",
+          "Orgulho",
+          "Medo"
+        ],
+        "visual": "Cristais de sal marinho das fossas oceânicas e geada azul espectral.",
+        "effect": "Congela reações do oponente (-3 em Esquiva e Bloqueio) e eleva pressão barométrica."
+      },
+      {
+        "id": "el_pedra",
+        "number": 8,
+        "name": "Pedra & Termia Solar",
+        "virtues": [
+          "Disciplina",
+          "Esperança",
+          "Orgulho"
+        ],
+        "visual": "Basalto vulcânico rachado por veios de luz dourada superaquecida.",
+        "effect": "+6 em testes de Bloqueio e pulsos térmicos que cegam predadores subterrâneos."
+      },
+      {
+        "id": "el_ouro",
+        "number": 9,
+        "name": "Ouro & Relâmpago",
+        "virtues": [
+          "Esperança",
+          "Orgulho",
+          "Liberdade"
+        ],
+        "visual": "Arcos voltaicos dourados que viajam à velocidade do som.",
+        "effect": "Iniciativa +5 e permite Contra-Ataques contra disparos à distância."
+      },
+      {
+        "id": "el_vidro",
+        "number": 10,
+        "name": "Vidro, Espelho & Nácar",
+        "virtues": [
+          "Ambição",
+          "Justiça",
+          "Medo"
+        ],
+        "visual": "Lâminas refratoras de madrepérola ou estilhaços de espelho dimensional.",
+        "effect": "Reflete 50% de ataques espirituais no Bloqueio Perfeito e atravessa armaduras físicas."
+      }
+    ],
+    "races": [
+      {
+        "id": "race_humano",
+        "number": 1,
+        "name": "Humanos Despertos",
+        "origin": "Mundo Exterior & Bases da A.E.G.I.S.",
+        "biology": "Humanos que romperam os 5% de MDA por treinamento ou trauma no Véu.",
+        "traits": "+1 em dois Atributos à escolha; +5 EST máxima; acesso livre às 11 Virtudes."
+      },
+      {
+        "id": "race_nacar",
+        "number": 2,
+        "name": "Nobres Bioluminescentes de Nácar",
+        "origin": "Cidadela de Nácar (Triângulo / 4ª Zona Abissal)",
+        "biology": "Linhagem pós-humana de pele perolada, veias ciano luminosas, guelras retráteis e vida de 250 anos.",
+        "traits": "+1 INT, +1 PRE, -1 VIG terrestre; Respiração Aquática, Visão Abissal e RD 4 natural."
+      },
+      {
+        "id": "race_caronte",
+        "number": 3,
+        "name": "Sobreviventes Abissais de Nova Caronte",
+        "origin": "Povoado de Nova Caronte",
+        "biology": "Descendentes de náufragos adaptados à névoa de sal e pressão do Fosso.",
+        "traits": "+1 VIG, +1 AGI; +1d20 em Vontade contra a Fase 3 (Pavor) da Stalker AI."
+      },
+      {
+        "id": "race_sauriano",
+        "number": 4,
+        "name": "Castas Saurianas da Ilha Canibal",
+        "origin": "Ilha Canibal (Triângulo / 400 Anos)",
+        "biology": "Híbridos tribais de sangue quente com escamas osteodérmicas, pupilas verticais e garras.",
+        "traits": "+2 FOR ou AGI, -1 INT; Garras (1d8+FOR), Faro Aguçado (+5 Percepção) e RD 4."
+      },
+      {
+        "id": "race_marcado",
+        "number": 5,
+        "name": "Marcados pelo Pacto da Lenda",
+        "origin": "Escolhidos (0,05–0,1% / 1d1000=1) ou Ritual da Lua Nova (CD 25)",
+        "biology": "Humanos cuja Alma coabita com uma Lenda Folclórica; possuem estigmas físicos permanentes.",
+        "traits": "+15 EA base e poderes da Lenda (Segunda Árvore); sujeitos ao Paradoxo de EST e caça como Herege pela Ordem da Cinza."
+      },
+      {
+        "id": "race_coroa",
+        "number": 6,
+        "name": "Receptáculos da Coroa Branca",
+        "origin": "Desertos da Teocracia Térmica (Vídeo #01)",
+        "biology": "Resgatados da piscina de conversão; placas de basalto na pele com marcas ||O.",
+        "traits": "+2 VIG, -1 AGI; RD 6 contra corte/fogo e absorção térmica (+1d8 EA no calor)."
+      },
+      {
+        "id": "race_stumpp",
+        "number": 7,
+        "name": "Retornados da Linhagem de Stumpp",
+        "origin": "Europa Central & Diáspora (Vídeo #02)",
+        "biology": "Portadores cujo coração parou, mas o Espírito segue ancorado ao corpo pela maldição lupina.",
+        "traits": "+1 FOR, +1 VIG; imunes a venenos/doenças; +2 FOR/AGI sob a Lua Cheia (Vontade CD 22)."
+      }
+    ],
+    "pacts": [
+      {
+        "id": "pact_corposeco",
+        "name": "Pacto do Corpo-Seco",
+        "theme": "Necrose & Maldição",
+        "stigma": "Pele fria acinzentada nos antebraços, veias como raízes secas, odor de terra de cemitério.",
+        "power": "Casca do Rejeitado (5 EA + 1 EST): +6 RD por 3 rodadas, raízes enraízam inimigos a 6m e aplicam Necrose (impede cura por 2 rodadas)."
+      },
+      {
+        "id": "pact_boitata",
+        "name": "Pacto do Boitatá",
+        "theme": "Chama Espectral & Cegueira",
+        "stigma": "Pupilas ardem com fogo-fátuo azul-esverdeado no escuro; passos deixam brasas frias.",
+        "power": "Fogo-Fátuo Devorador (6 EA + 1 EST): +2d8 dano direto à Vitalidade e EA; alvo encara e testa Vontade (CD 20) ou fica Cego."
+      },
+      {
+        "id": "pact_curupira",
+        "name": "Pacto do Curupira",
+        "theme": "Distorção Espacial & Caça",
+        "stigma": "Rastros aparecem invertidos na lama; sussurros de folhas secas.",
+        "power": "Passo Invertido da Mata (5 EA + 1 EST): Reação/Ação bônus troca posição a até 12m, inverte ataque e deixa Desorientado (-4)."
+      },
+      {
+        "id": "pact_matinta",
+        "name": "Pacto da Matinta Perera",
+        "theme": "Horror Sônico & Éter",
+        "stigma": "Voz carrega eco duplo sibilante; penas negras de éter nos movimentos.",
+        "power": "Assobio da Meia-Noite (6 EA + 1 EST): Apaga luzes em 15m, 2d6 dano psíquico/sônico e teleporte em vulto de corvo entre sombras."
+      },
+      {
+        "id": "pact_mapinguari",
+        "name": "Pacto do Mapinguari",
+        "theme": "Titã de Osso & Pavor",
+        "stigma": "Cicatriz vertical pulsa sobre o abdômen; passos fazem pedras vibrar.",
+        "power": "Urro do Abismo Verde (7 EA + 2 EST): Placas ósseas (+8 RD) e urro em cone de 9m paralisa alvos (CD 20) +2d10 no próximo golpe pesado."
+      },
+      {
+        "id": "pact_capelobo",
+        "name": "Pacto do Capelobo",
+        "theme": "Fome de Sangue",
+        "stigma": "Caninos alongados, unhas escuras, ouve batimentos cardíacos através de paredes.",
+        "power": "Rastro de Hemorragia (5 EA + 1 EST): Detecta feridos a 100m, +4 ataque contra sangrando e drena 1d10 PV ao abater/morder."
+      }
+    ],
+    "mda_table": [
+      {
+        "mda": "5%",
+        "classif": "Humano Normal / Colono",
+        "pd": "15 PD",
+        "attr_pts": 4,
+        "ea_bonus": "0 (Alma Latente)",
+        "stage": "Comum ou Sensitivo"
+      },
+      {
+        "mda": "10%",
+        "classif": "Monstro Menor / Iniciado",
+        "pd": "20 PD",
+        "attr_pts": 5,
+        "ea_bonus": "+10 EA (+ PRE × 3)",
+        "stage": "1º Estágio: Despertar"
+      },
+      {
+        "mda": "20%",
+        "classif": "Monstro Médio / Bandeirante / Operador",
+        "pd": "30 PD",
+        "attr_pts": 6,
+        "ea_bonus": "+14 EA (+ PRE × 3)",
+        "stage": "2º Estágio: Manifestação"
+      },
+      {
+        "mda": "40%",
+        "classif": "Paranormal / Inquisidor Veterano",
+        "pd": "40 PD",
+        "attr_pts": 7,
+        "ea_bonus": "+18 EA (+ PRE × 3)",
+        "stage": "3º Estágio: Sintonia Plena"
+      },
+      {
+        "mda": "60%",
+        "classif": "Abençoados / Mestres de Caça",
+        "pd": "50 PD",
+        "attr_pts": 8,
+        "ea_bonus": "+22 EA (+ PRE × 3)",
+        "stage": "3º Estágio Avançado (Convergência)"
+      },
+      {
+        "mda": "80%",
+        "classif": "Entidades / Soberanos / Lendas Ancestrais",
+        "pd": "60 PD",
+        "attr_pts": 9,
+        "ea_bonus": "+28 EA (+ PRE × 3)",
+        "stage": "4º Estágio: Transcendência"
+      },
+      {
+        "mda": "99%",
+        "classif": "Dominadores (O Primogênito)",
+        "pd": "70 PD",
+        "attr_pts": 10,
+        "ea_bonus": "+35 EA (+ PRE × 3)",
+        "stage": "Transcendência Absoluta"
+      }
+    ],
+    "colonial_arsenal": [
+      {
+        "name": "Espada Bastarda, Montante e Alabarda de Ferro Frio",
+        "cat": "Corpo a Corpo Pesada (Dano de Força +2)",
+        "tactical": "Forjadas com prata e ferro consagrado; conduzem perfeitamente a Sintonia de Alma contra Lendas."
+      },
+      {
+        "name": "Foice de Guerra, Machado de Lenhador e Maça",
+        "cat": "Corpo a Corpo Média/Pesada (Força +1; ignora 2 RD)",
+        "tactical": "Decepam raízes do Corpo-Seco e racham placas calcificadas do Mapinguari."
+      },
+      {
+        "name": "Besta Pesada de Caça (Prata ou Fogo)",
+        "cat": "Distância Silenciosa (1d10; 25m)",
+        "tactical": "Não faz estrondo na mata; virotes com óleo bento causam +1d6 em criaturas do Véu."
+      },
+      {
+        "name": "Bacamarte e Pistola de Pederneira",
+        "cat": "Fogo Colonial (2d8 balístico; 12m)",
+        "tactical": "Quebra postura (-4 ataque no alvo), mas o estrondo atrai predadores em 200m."
+      },
+      {
+        "name": "Lamparina de Sebo / Tocha Consagrada",
+        "cat": "Iluminação (Raio 9m)",
+        "tactical": "Impede perda passiva de EST no escuro; tochas comuns apagam com o assobio da Matinta."
+      },
+      {
+        "name": "Armadilha de Urso com Runas de Cinza",
+        "cat": "Ferramenta Tática (1d8 + Imobilizado CD 18)",
+        "tactical": "Runas de cinza impedem teleporte sombrio enquanto a besta estiver presa."
+      },
+      {
+        "name": "Sal Grosso, Óleo Bento e Sinos de Alerta",
+        "cat": "Suporte & Contenção",
+        "tactical": "Círculos para Descanso Curto; sinos nas árvores anulam emboscada (+5 Percepção)."
+      }
+    ],
+    "pavor_rupture_table": [
+      "1–2 — Colapso e Apagão Anímico: desmaia por 1d4 rodadas; a Alma recolhe até Descanso Longo.",
+      "3–4 — Descontrole Autônomo / Frenesi: a Alma ou Lenda assume o corpo por 3 rodadas em seu extremo irracional.",
+      "5 — Vazamento e Cicatriz Somática: 2d6 de dano direto à Vitalidade e cicatriz espiritual permanente.",
+      "6 — Deformação da Alma: forma monstruosa (+1d6 dano nas técnicas), mas drena 2 PV próprios por uso até reconciliação."
+    ]
   },
   "maps": [
     {
@@ -1512,90 +2157,125 @@ class DataLoader {
       "description": "Planta arquitetônica da propriedade isolada na serra mineradora do México e do complexo subterrâneo dos Ecos."
     },
     {
-      "id": "map_artico",
-      "name": "Estação Criogênica Zero & Fenda Glacial (Groenlândia)",
-      "type": "local",
-      "campaign_id": "camp_003",
+      "id": "map_belvedere",
+      "name": "Mansão Belvedere & Redoma de Oeht (Genebra)",
+      "campaign_id": "camp_filantropo_oeht",
       "center": [
-        72,
-        -40
+        46.2044,
+        6.1432
       ],
-      "default_zoom": 9,
-      "bounds": [
-        [
-          71,
-          -42
-        ],
-        [
-          73,
-          -38
-        ]
-      ],
-      "description": "Base científica subterrânea escavada sob 3km de calota de gelo, onde o primeiro espécime com DNA Primordial foi preservado antes do colapso do Triângulo."
-    },
-    {
-      "id": "map_brasil",
-      "name": "Setor Selva: Bacia do Rio Tapajós & Cratera de Quartzo Negro (Brasil)",
-      "type": "local",
-      "campaign_id": "camp_004",
-      "center": [
-        -4.25,
-        -55.98
-      ],
-      "default_zoom": 10,
-      "bounds": [
-        [
-          -5.5,
-          -57.5
-        ],
-        [
-          -3,
-          -54.5
-        ]
-      ],
-      "description": "Setor florestal isolado no Pará, Brasil, onde formações subterrâneas de quartzo negro entraram em ressonância com a mente biológica do Arquiteto do Caos."
-    },
-    {
-      "id": "map_alemanha",
-      "name": "Setor Floresta Negra: Monastério dos Sem-Rosto (Alemanha)",
-      "type": "local",
-      "campaign_id": "camp_005",
-      "center": [
-        48.15,
-        8.2
-      ],
-      "default_zoom": 11,
-      "bounds": [
-        [
-          47.8,
-          7.8
-        ],
-        [
-          48.6,
-          8.6
-        ]
-      ],
-      "description": "Ruínas góticas e criptas subterrâneas do século XIV erguidas em Baden-Württemberg, Alemanha, sobre a Fenda Acústica do LIMIAR."
+      "zoom": 13
     }
   ],
   "campaigns": [
     {
+      "id": "camp_002",
+      "title": "Até o Amanhecer: O Limiar da Mansão Vilar",
+      "status": "concluída",
+      "status_museum": "concluída",
+      "category": "completed",
+      "year": "2024 // Finalizada",
+      "country_location": "México (Estação & Mansão Vilar)",
+      "continent_id": "cont_america_norte",
+      "country_id": "country_mexico",
+      "region_id": "reg_serra_mineradora",
+      "city_id": "city_san_lorenzo_vilar",
+      "map_id": "map_vilar",
+      "locations_list": [
+        "loc_vilar",
+        "loc_vilar_casarao",
+        "loc_vilar_minas"
+      ],
+      "theme": "Thriller Psicológico, Portais LIMIAR & Horror Subterrâneo",
+      "danger_rating": "GRAVE // MICROFENDA COLONIAL",
+      "coordinates": [
+        21.85,
+        -102.25
+      ],
+      "synopsis": "Cinco amigos separados há três anos — Rafael (o idealizador da farsa), Helena (testemunha silenciosa), Diego (guardião da prova em vídeo), Bia (o romance proibido) e Arthur (o conflito na mina) — são reunidos no expresso para a Estação Vilar com um sexto bilhete validado para o desaparecido Lucas Vilar. Na mansão isolada, Gabriel Vilar (\"Davi Reis\") usa o Projeto LIMIAR para forçar a confissão de todos, revelando a verdade em 8 Atos: ninguém matou Lucas; ele sobreviveu três anos nas profundezas caçado pelo predador cego e imitador de vozes O Eco.",
+      "outcome": "• Os 5 amigos enfrentam suas culpas e descobrem que Gabriel (\"Davi Reis\") operava os portais ZZZZT do LIMIAR.\n• Descida às minas coloniais: enfrentamento da criatura O Eco (imitações vocais) e reencontro com Lucas Vilar vivo como Sensitivo/Desperto.\n• Fuga desesperada, detonação explosiva das galerias subterrâneas, reconciliação da família Vilar e captação imediata do evento pelos radares da A.E.G.I.S.",
+      "participants": [
+        "char_rafael",
+        "char_helena",
+        "char_diego",
+        "char_bia",
+        "char_arthur",
+        "char_lucas",
+        "char_gabriel",
+        "char_camila_torres",
+        "char_mauro_azevedo",
+        "char_elias_rocha"
+      ],
+      "friends_secrets": [
+        {
+          "name": "Rafael Moreira",
+          "role": "O Idealizador da Farsa",
+          "secret": "Arquitetou a brincadeira humilhante contra Lucas e convenceu o grupo a abandoná-lo na mata e não procurá-lo."
+        },
+        {
+          "name": "Helena Castro",
+          "role": "A Testemunha Silenciosa",
+          "secret": "Avistou uma figura esguia seguindo Lucas entre as árvores (O Eco), mas calou-se por medo."
+        },
+        {
+          "name": "Diego Ramos",
+          "role": "O Guardião da Prova",
+          "secret": "Gravou o vídeo original da humilhação e do desaparecimento e mentiu que havia deletado o arquivo."
+        },
+        {
+          "name": "Beatriz \"Bia\" Albuquerque",
+          "role": "O Romance Proibido",
+          "secret": "Mantinha namoro secreto com Lucas e recebeu suas últimas mensagens de socorro da floresta, apagando tudo."
+        },
+        {
+          "name": "Arthur Valente",
+          "role": "O Conflito na Mina",
+          "secret": "Empurrou Lucas na briga física; depois encontrou manchas de sangue e a jaqueta rasgada na boca da mina e ocultou."
+        }
+      ],
+      "acts": [
+        "Ato I — O Trem e os Bilhetes: Encontro dos 5 no vagão, 6º assento validado e anúncio no alto-falante até a Estação Vilar.",
+        "Ato II — A Mansão e os Convidados: Chegada ao casarão frio; apresentação de Camila Torres, Mauro Azevedo, Elias Rocha e \"Davi Reis\".",
+        "Ato III — Pistas e Segredos: Evidências plantadas por Gabriel expõem o pacto de silêncio dos 5 amigos.",
+        "Ato IV — O Mascarado e o LIMIAR: Ataques por âncoras espaciais; identificação do ruído elétrico ZZZZT, ozônio e bateria.",
+        "Ato V — A Queda da Máscara: Davi Reis revela-se Gabriel Vilar; prova-se que ninguém assassinou Lucas.",
+        "Ato VI — Encontro com O Eco: Descida às galerias com lanternas sob mecânica de Pavor e Stalker AI contra imitações vocais.",
+        "Ato VII — A Descoberta nas Profundezas: Lucas Vilar encontrado vivo após 3 anos (perna quebrada, adaptado à escuridão, ainda humano).",
+        "Ato VIII — Fuga, Explosão e Epílogo: Colapso das minas contendo Os Ecos e alerta emitido para a A.E.G.I.S."
+      ]
+    },
+    {
       "id": "camp_001",
-      "title": "A Incursão: O Purgatório Genético",
+      "title": "A Incursão: Triângulo das Bermudas & Vera Cruz das Almas",
       "status": "futura campanha",
+      "status_museum": "(Futura Campanha)",
       "category": "future",
-      "theme": "Survival Horror Biológico",
+      "year": "1998 & Era das Navegações // Planejada",
+      "country_location": "Triângulo das Bermudas & Arquipélago de Vera Cruz das Almas",
+      "continent_id": "cont_atlantico",
+      "country_id": "country_atlantico_bermudas",
+      "region_id": "reg_fossa_caronte",
+      "city_id": "city_porto_caronte",
       "map_id": "map_triangulo",
-      "world_coordinates": [
+      "locations_list": [
+        "loc_caronte",
+        "loc_fosso_kraken",
+        "loc_cidadela_nacar",
+        "loc_ilha_sauriana",
+        "loc_campo_rosas",
+        "loc_veracruz_santacruz",
+        "loc_veracruz_manguezal",
+        "loc_veracruz_sertao",
+        "loc_veracruz_serra"
+      ],
+      "theme": "Survival Horror Biológico, Caça Folclórica & Despertar da Alma",
+      "danger_rating": "ÔMEGA // LEI DA ALUCINAÇÃO & QUEDA DO VÉU",
+      "coordinates": [
         25.5,
         -71.5
       ],
-      "gateway_name": "O Triângulo das Bermudas / A Incursão",
-      "danger_rating": "NÍVEL ÔMEGA // LEI DA ALUCINAÇÃO",
-      "country_location": "Triângulo das Bermudas (Oceano Atlântico Norte)",
-      "year": "1998 // Registro Histórico Inicial",
-      "description": "No coração do verdadeiro Triângulo das Bermudas, um buraco de minhoca no Atlântico engole navios. Lá, a magia não existe: apenas mutação biológica violenta sob a mente do Arquiteto do Caos.",
-      "synopsis": "Um grupo de sobreviventes é tragado pelo Triângulo das Bermudas, atravessando cinco estágios dimensionais brutais (borda infinita, repetição em loop, redemoinhos gravitacionais, dor craniana e êxtase de adaptação). Na Sessão 1, a manifestação da Verdadeira Magia do Primogênito — O Diabo do Mar congela as águas em azul-escuro e corrói metais em ferrugem brilhante; diante do letal Campo de Rosas, o Guia Temporário sacrifica a própria vida para salvar os recém-chegados. Na Sessão 2, o grupo explora o arquipélago hostil e descobre a Ilha Canibal, onde há 400 anos um humano náufrago ensinou práticas de canibalismo aos dinossauros nativos. A jornada por entre as carcaças de Nova Caronte, a opulência escravista da Cidadela de Nácar, os pulsos eletromagnéticos do Fosso do Kraken e o sonar destrutivo do Leviatã Branco culmina na quebra do bloqueio dimensional e no recrutamento dos sobreviventes pelo Diretor Kaelen da A.E.G.I.S.",
+      "synopsis": "A primeira grande frente de campanha abrange as duas metades da colossal ferida atlântica: ao norte, os cinco estágios da travessia pelo Triângulo das Bermudas (Borda Infinita, Repetição Espacial, Redemoinhos Abissais, Dor Mental e Êxtase Final com 0,05%–0,1% de chance de Escolhido de Nascença), Nova Caronte, A Goela do Cachalote, Cidadela de Nácar, Ilha Canibal e O Primogênito (Campo de Rosas). Ao sul, as quatro ilhas do Arquipélago de Vera Cruz das Almas: Santa Cruz das Cinzas (MDA 10–20%), Manguezal dos Afogados (MDA 20–40%), Sertão das Ossadas (MDA 40–60%) e Serra do Véu Rasgado (MDA 60–90%+), onde Bandeirantes e Ordem da Cinza encaram as Lendas Encarnadas.",
+      "outcome": "Campanha planejada / Futura — Na Sessão 1, o sacrifício do Guia Temporário diante do Campo de Rosas alerta sobre o Diabo do Mar; na Sessão 2, a rota pelas ilhas e Ilha Canibal culmina no recrutamento dos sobreviventes pelo Diretor Kaelen da A.E.G.I.S.",
       "participants": [
         "char_arquiteto",
         "char_guia_temporario",
@@ -1603,231 +2283,124 @@ class DataLoader {
         "char_iris_vento_solto",
         "char_valerius",
         "char_mateus_alencar",
-        "char_raissa_carnica"
+        "char_raissa_carnica",
+        "char_dom_sebastiao"
       ],
-      "locations_list": [
-        "loc_caronte",
-        "loc_kraken"
+      "crossing_stages": [
+        "1. Borda Aparentemente Infinita — horizonte perpétuo; bússolas e instrumentos falham.",
+        "2. Repetição Espacial — navegação em loop cruzando as mesmas caravelas e nuvens.",
+        "3. Redemoinhos Abissais — vórtices gravitacionais puxam navios ao centro da fenda.",
+        "4. Dor Mental Intensa — pressão craniana lancinante ao processar dimensões sobrepostas.",
+        "5. Sensação Final de Êxtase — euforia imediata anuncia entrada na prisão atemporal (0,05–0,1% Escolhido de Nascença)."
       ],
-      "continent_id": "cont_atlantico",
-      "country_id": "country_atlantico_bermudas",
-      "region_id": "reg_fossa_caronte",
-      "city_id": "city_porto_caronte",
-      "period_numeric": 2026,
-      "status_museum": "futura campanha",
-      "historical_context": "Em 2025, distúrbios magnéticos e biológicos severos começaram a ser registrados no corredor marítimo entre Miami, Bermudas e Porto Rico. O desaparecimento de uma embarcação de grande porte com milhares de passageiros deu início à formação do reduto isolado de Nova Caronte.",
-      "exhibition_narrative": {
-        "prior_context": "Durante anos, relatórios navais da Fundação A.E.G.I.S. apontavam anomalias hidrográficas e desaparecimentos de embarcações na Fossa de Porto Rico e no Triângulo das Bermudas. Experimentos genéticos clandestinos conduzidos na década anterior prepararam o terreno para a emergência da entidade conhecida como Cobaia Zero.",
-        "campaign_beginning": "A história tem início quando um navio transportando cerca de 5.000 almas é engolido por uma violenta tempestade elétrica no Atlântico Norte e arremessado às costas rochosas de Nova Caronte.",
-        "main_events": "Os sobreviventes do naufrágio precisaram estabelecer um perímetro costeiro em meio a recursos escassos, enquanto enfrentavam organismos marinhos com mutagênese acelerada (MDA) e infiltração de mímicos biológicos entre a própria tripulação.",
-        "turning_points": "A descoberta de que as leis biológicas locais estavam sendo ativamente manipuladas pelo 'Arquiteto do Caos' (também documentado nos registros marítimos como Diabo do Mar) mudou o objetivo da expedição de simples resgate para sobrevivência e envio de sinal à A.E.G.I.S.",
-        "conflicts": "Confrontos diretos nas docas destroçadas de Nova Caronte e no Fosso do Kraken contra o Soberano Abissal e os organismos de guarda do Arquiteto.",
-        "revelations": "Revelou-se que Nova Caronte funciona como um laboratório evolutivo fechado, onde a pressão extrema desperta adaptações celulares agressivas nos sobreviventes.",
-        "consequences": "Isolamento total do perímetro marítimo do Atlântico Norte pela A.E.G.I.S. e mobilização de frotas de observação oceânica.",
-        "outcome": "Futura Campanha — As expedições a Nova Caronte aguardam o desenrolar das próximas sessões de jogo."
-      },
-      "pending_documentation": [
-        "Nomes completos e biografias individuais dos demais tripulantes jogadores do navio de 5.000 almas (pendente de envio pelo curador).",
-        "Desfecho definitivo da campanha (atualmente em andamento)."
-      ],
-      "historical_identification": {
-        "name": "A Incursão: O Purgatório Genético",
-        "year": "Ano 2026 // Presente",
-        "period_numeric": 2026,
-        "status": "(Futura Campanha)",
-        "continent_id": "cont_atlantico",
-        "country_id": "country_atlantico_bermudas",
-        "region_id": "reg_fossa_caronte",
-        "city_id": "city_porto_caronte",
-        "geographic_location": "Oceano Atlântico Norte (Triângulo das Bermudas)",
-        "coordinates": [
-          25.5,
-          -71.5
-        ],
-        "genre_theme": "Survival Horror Biológico",
-        "synopsis": "Um navio com centenas de sobreviventes foi tragado pelo vórtice dimensional no Atlântico. Ao cruzarem a fenda para Nova Caronte, descobriram que leis biológicas foram distorcidas. O Arquiteto do Caos manipula mentes e corpos enquanto a A.E.G.I.S. tenta conter o colapso.",
-        "historical_context": "Em 2025, distúrbios magnéticos e biológicos severos começaram a ser registrados no corredor marítimo entre Miami, Bermudas e Porto Rico. O desaparecimento de uma embarcação de grande porte com milhares de passageiros deu início à formação do reduto isolado de Nova Caronte."
-      },
-      "canon_status": "in_world_report",
-      "sources": [
-        "Manuscrito da Incursão (Autor)",
-        "Arquivo Marítimo Nova Caronte",
-        "Dossiê A.E.G.I.S. Atlântico Norte"
-      ],
-      "curator_notes": "Registra a incursão massiva no Triângulo das Bermudas. Contém variantes de 5.000 passageiros no navio tragado, a hierarquia de classes ecológicas e a presença dos Soberanos territoriais.",
-      "variants": {
-        "ship_passengers": "5.000 pessoas (manuscrito principal) vs. 'centenas' (resumos de campo)",
-        "anomaly_origin": "Prisão natural milenar em colapso vs. Fissura acelerada por experimentos modernos",
-        "classes": [
-          "Classe Baixa (recém-chegados, comunidades frágeis)",
-          "Classe Média (rotas de troca)",
-          "Classe Alta (Cidadela de Nácar)",
-          "Soberanos (Kraken, Leviatã Branco, Povo Sauriano, Arquiteto)"
-        ]
-      },
-      "coordinates": [
-        25.5,
-        -71.5
-      ],
-      "name": "A Incursão: O Purgatório Genético",
-      "is_future": true,
-      "outcome": "Campanha planejada / Não iniciada — Os acontecimentos e o desfecho aguardam a realização das sessões."
-    },
-    {
-      "id": "camp_002",
-      "title": "Até o Amanhecer: O Limiar da Mansão Vilar",
-      "status": "concluída",
-      "category": "completed",
-      "theme": "Thriller Psicológico Investigativo",
-      "map_id": "map_vilar",
-      "world_coordinates": [
-        21.85,
-        -102.25
-      ],
-      "gateway_name": "Mansão Vilar: Até o Amanhecer (México)",
-      "danger_rating": "NÍVEL ALFA // ECOS SUBTERRÂNEOS & LIMIAR",
-      "country_location": "México (Sierra Madre / Sonora)",
-      "year": "Ano 2024 // Finalizada",
-      "description": "Na região montanhosa e mineradora do México, cinco amigos retornam à isolada Mansão Vilar, onde foram manipulados psicologicamente por uma figura mascarada armada com o LIMIAR.",
-      "synopsis": "Três anos após o desaparecimento de Lucas Vilar nas minas, cinco amigos (Rafael, Helena, Diego, Bia e Arthur) são atraídos para a isolada Estação e Mansão Vilar a bordo de um trem com um misterioso sexto bilhete validado para Lucas. Na propriedade, uma figura mascarada munida do Projeto LIMIAR — dispositivo de portais de curto alcance com cheiro de ozônio e som elétrico ZZZZT — aterroriza o grupo para forçar a confissão de seus segredos. Desmascarado como Gabriel Vilar, o irmão mais velho descobre que os amigos não mataram Lucas, e a busca move-se para as minas abandonadas. Enfrentando o horror biológico do predador cego O Eco (que atrai vítimas imitando vozes humanas perfeitamente), o grupo encontra Lucas Vilar vivo nas profundezas, adaptado à escuridão com a perna quebrada. A fuga culmina na explosão das galerias e na reconciliação da família.",
-      "outcome": "✓ Lucas Vilar foi resgatado com vida (cego e marcado pelas profundezas).\n✓ Gabriel Vilar foi desmascarado e desapareceu através de uma dobra do LIMIAR.\n✓ A Mansão Vilar e as entradas das minas foram detonadas com cargas explosivas para conter os Ecos.",
-      "participants": [
-        "char_lucas",
-        "char_gabriel",
-        "char_rafael",
-        "char_julia"
-      ],
-      "locations_list": [
-        "loc_vilar",
-        "loc_vilar_casarao",
-        "loc_vilar_minas"
-      ],
-      "continent_id": "cont_america_norte",
-      "country_id": "country_mexico",
-      "region_id": "reg_serra_mineradora",
-      "city_id": "city_san_lorenzo_vilar",
-      "period_numeric": 2024,
-      "status_museum": "concluída",
-      "historical_context": "Situada nas serras históricas de mineração de prata do México em 2024, esta campanha documenta o retorno de um grupo de amigos à isolada Mansão Vilar, exatamente três anos após o trágico desaparecimento de Lucas Vilar nas galerias subterrâneas da propriedade.",
-      "exhibition_narrative": {
-        "prior_context": "Três anos antes dos acontecimentos principais (em 2021), uma falha trágica durante uma exploração juvenil nas minas abaixo da Mansão Vilar resultou na queda e desaparecimento de Lucas Vilar. O grupo de amigos fragmentou-se sob o peso do segredo e da culpa.",
-        "campaign_beginning": "Em 2024, convocados para retornar à propriedade isolada durante uma tempestade severa na serra mexicana, Rafael Moreira, Júlia Drummond e seus companheiros veem-se trancados no perímetro da mansão com as vias de acesso bloqueadas.",
-        "main_events": "Ao longo de uma única madrugada ('Até o Amanhecer'), os visitantes foram submetidos a testes psicológicos, gravações de fita cassete e emboscadas conduzidas por uma figura mascarada que conhecia cada detalhe do passado do grupo.",
-        "turning_points": "A descoberta do laboratório clandestino no Casarão Principal e a revelação de que o Mascarado utilizava um protótipo tecnológico de deslocamento espacial denominado LIMIAR.",
-        "conflicts": "Perseguições tensas pelos corredores da Mansão Vilar e a descida decisiva às Minas Antigas, onde o grupo precisou conter os 'Ecos Subterrâneos' — predadores cegos que imitam vozes humanas na escuridão.",
-        "revelations": "O Mascarado foi desmascarado como Gabriel Vilar (atuando sob a identidade de Davi Reis), irmão de Lucas, que orquestrou a noite de confissão para punir os responsáveis pelo abandono do irmão. Mais surpreendente ainda foi encontrar Lucas Vilar vivo nas profundezas das minas, cego porém dotado de audição absoluta.",
-        "consequences": "A Mansão Vilar e os acessos principais às minas foram detonados com cargas explosivas para sepultar os Ecos Subterrâneos. Gabriel Vilar desapareceu ao ativar uma dobra instável do protótipo LIMIAR, deixando registros que mais tarde seriam estudados pela A.E.G.I.S.",
-        "outcome": "Campanha concluída com sucesso histórico: Lucas Vilar foi resgatado com vida ao amanhecer por Rafael Moreira e Júlia Drummond; o complexo minerador foi demolido e interditado."
-      },
-      "pending_documentation": [
-        "Registros biográficos detalhados dos outros dois amigos mencionados nos relatos da Mansão Vilar (pendente de envio pelo curador)."
-      ],
-      "historical_identification": {
-        "name": "Até o Amanhecer: O Limiar da Mansão Vilar",
-        "year": "Ano 2024 // Finalizada",
-        "period_numeric": 2024,
-        "status": "Concluída",
-        "continent_id": "cont_america_norte",
-        "country_id": "country_mexico",
-        "region_id": "reg_serra_mineradora",
-        "city_id": "city_san_lorenzo_vilar",
-        "geographic_location": "México (Serra Mineradora)",
-        "coordinates": [
-          21.85,
-          -102.25
-        ],
-        "genre_theme": "Thriller Psicológico Investigativo",
-        "synopsis": "Três anos após o desaparecimento trágico de Lucas Vilar nas minas mexicanas, o grupo de amigos reuniu-se na propriedade isolada. Gabriel Vilar assumiu o manto de 'O Mascarado', usando a arma de portais LIMIAR para encenar um jogo de terror psicológico para expor a culpa de cada um. No clímax subterrâneo, o grupo enfrentou os Ecos e explodiu o complexo.",
-        "historical_context": "Situada nas serras históricas de mineração de prata do México em 2024, esta campanha documenta o retorno de um grupo de amigos à isolada Mansão Vilar, exatamente três anos após o trágico desaparecimento de Lucas Vilar nas galerias subterrâneas da propriedade."
-      },
-      "canon_status": "confirmed",
-      "sources": [
-        "Roteiro de Até o Amanhecer (Autor)",
-        "Dossiê San Lorenzo A.E.G.I.S.",
-        "Depoimentos de Gabriel e Lucas Vilar"
-      ],
-      "curator_notes": "Relato da tragédia e resgate na Mansão Vilar. O elenco completo de sobreviventes adolescentes é composto por Rafael, Helena, Diego, Bia e Arthur, com Gabriel disfarçado de Davi Reis. Júlia Drummond é mantida como investigadora legada de arquivo.",
-      "variants": {
-        "dates": "Desaparecimento em 2021 e Clímax em 2024 (relatório principal) vs. 2023 (-3) e 2026 (cronologia estendida)",
-        "cast_protagonists": [
-          "Rafael",
-          "Helena",
-          "Diego",
-          "Bia",
-          "Arthur"
-        ],
-        "cast_npcs": [
-          "Gabriel Vilar (Davi Reis)",
-          "Camila Torres",
-          "Mauro Azevedo",
-          "Elias Rocha",
-          "Júlia Drummond (Arquivo)"
-        ]
-      },
-      "coordinates": [
-        21.85,
-        -102.25
-      ],
-      "name": "Até o Amanhecer: O Limiar da Mansão Vilar",
-      "is_future": false
+      "vera_cruz_islands": [
+        "Ilha 1: Santa Cruz das Cinzas (MDA 10–20%) — Fortaleza de São Lázaro, Mata da Neblina, Cemitério das Raízes (Corpo-Seco & Matinta).",
+        "Ilha 2: Manguezal dos Afogados (MDA 20–40%) — Pântano na cintura, capelas submersas (Boto, Iara Decaída & Boss Boitatá).",
+        "Ilha 3: Sertão das Ossadas (MDA 40–60%) — Cânions secos e altares de Lua Nova (Capelobo & Mula-Sem-Cabeça).",
+        "Ilha 4: Serra do Véu Rasgado (MDA 60–90%+) — Pedra negra, frio extremo, Mapinguari & Cratera da Queda do Véu (1500)."
+      ]
     },
     {
       "id": "camp_filantropo_oeht",
-      "title": "A Gala da Meia-Noite: A Falsa Filantropia de Oeht",
+      "title": "A Gala da Meia-Noite: O Filantropo & O Ritual de Redoma",
       "status": "futura campanha",
+      "status_museum": "(Futura Campanha)",
       "category": "future",
-      "theme": "Horror Institucional & Conspiração Corporativa",
+      "year": "2026 // Missão Cronometrada (22h00–00h00)",
+      "country_location": "Genebra, Suíça (Mansão Belvedere)",
+      "continent_id": "cont_europa",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "city_id": "city_genebra",
       "map_id": "map_belvedere",
-      "world_coordinates": [
-        46.2044,
-        6.1432
-      ],
-      "gateway_name": "Mansão Belvedere: Gala Oculta de Oeht",
-      "danger_rating": "NÍVEL ÉPSILON // REDOMA E O ANÁRQUICO",
-      "country_location": "Suíça (Alpes de Genebra / Mansão Belvedere)",
-      "year": "Ano 2026 // Operação Belvedere",
-      "description": "Oeht, aclamado publicamente como magnata filantropo e mecenas das artes, reuniu a elite global na suntuosa Mansão Belvedere para uma gala de aniversário secreta. Sob o pretexto de celebrar sua data natalícia, prepara o anúncio de uma megacorporação privada rival destinada a mercantilizar o paranormal e quebrar o monopólio de contenção da A.E.G.I.S. Porém, um lodo roxo escorre do cofre de seu gabinete privado e relâmpagos violetas silenciosos cortam o céu: a relíquia protegida por uma redoma blindada não é uma máquina de controle, mas um parasita extradimensional prestes a devorar todos à meia-noite.",
-      "synopsis": "Infiltração de agentes da A.E.G.I.S. sob comando do Diretor Kaelen. O relógio de dobra temporal de 6 segundos, o discurso arrogante das 23h, a desconfiança da elite em testes de DT 15 e o dilema de desativar a redoma antes que o colossal bolo de aniversário se converta em uma monstruosidade canibal.",
-      "outcome": "Desfecho com quarentena em vigor. A transcrição de campo foi corrompida no início da Zona B (Mesa de Poker VIP).",
-      "participants": [
-        "char_oeht",
-        "char_kaelen"
-      ],
       "locations_list": [
         "loc_mansao_belvedere",
         "loc_aegis_genebra"
       ],
-      "continent_id": "cont_europa",
-      "country_id": "country_suica",
-      "region_id": "reg_alpes_centrais",
-      "city_id": "city_genebra_distrito",
-      "period_numeric": 2026,
-      "status_museum": "futura campanha",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Transcrição Recuperada de Operação de Infiltração A.E.G.I.S.",
-        "Briefing de Missão do Diretor Kaelen"
-      ],
-      "curator_notes": "Aviso de Curadoria: O registro desta campanha provém de uma fonte conversacional desclassificada parcialmente. As cenas a partir do início da Zona B (A Mesa de Poker VIP: O Jogo de Memórias) permanecem truncadas e aguardam documentação adicional sem preenchimento artificial. A Mansão Belvedere não deve ser confundida com a Mansão Vilar.",
-      "historical_context": "A disputa geopolítica e financeira entre a A.E.G.I.S. e bilionários do setor privado que tentam transformar o Outro Lado em produto de consumo de luxo.",
-      "exhibition_narrative": {
-        "prior_context": "Oeht, figura pública ovacionada por doações filantrópicas astronômicas, descobriu a existência secreta da A.E.G.I.S. e da fenda do Outro Lado. Movido por vaidade desmedida e sede de poder absoluto, adquiriu no mercado clandestino uma caixa anômala ancestral e arquitetou a criação de uma corporação privada que comercializaria o paranormal para magnatas descontentes com a fiscalização estatal.",
-        "campaign_beginning": "A operação de campo é autorizada em uma sala de comando subterrânea da A.E.G.I.S. O Diretor Kaelen informa que sensores de baixa frequência captaram tempestade eletromagnética silenciosa sobre a Mansão Belvedere, com raios roxos intermitentes. A janela de intervenção se encerra às 23h59. Um dos agentes infiltrados recebe um relógio mecânico capaz de curvar o fluxo temporal ao redor de si por 6 segundos.",
-        "main_events": "Os agentes cruzam os salões de mármore e ouro da gala fingindo serem investidores internacionais. Convidados influentes colocam os novatos à prova com perguntas capciosas sobre quem representam (DT 15 Enganação/Diplomacia). Às 23h, Oeht sobe ao palanque central e profere um discurso inflamatório, denunciando a A.E.G.I.S. como 'Agência de Segurança Metafísica' e carcereira do progresso, prometendo que à meia-noite a caixa na redoma reescreverá a realidade nacional.",
-        "turning_points": "No escritório privativo do anfitrião, os agentes descobrem um rastro viscoso de lodo roxo escorrendo pelas fendas do cofre reforçado. Kaelen confirma via rádio que o artefato é um parasita com fome celular galopante; a promessa de 'controle' não passa de indução hipnótica do parasita sobre a mente de Oeht.",
-        "conflicts": "Dilema tático crucial: alertar Oeht sobre a armadilha ou tentar invasão armada direta. Caso convencido com evidências do lodo, Oeht entra em pânico ao perceber o engano e cede sua chave de acesso pessoal para abortar a tranca. Se os agentes falharem ou optarem pelo confronto, o bolo de aniversário monumental se transmuta em uma criatura horripilante armada de velas violetas e talheres flutuantes que explode violentamente.",
-        "revelations": "O Outro Lado não respeita contratos de confidencialidade nem investimentos de risco; o artefato manipulou o bilionário para reunir dezenas de alvos de alto valor em um único cômodo isolado.",
-        "consequences": "A Mansão Belvedere entrou em estado de isolamento tático sob cerco da A.E.G.I.S. O destino da fortuna de Oeht e das testemunhas de elite foi colocado sob sigilo federal nível 5.",
-        "outcome": "[CONTEÚDO TRUNCADO NA FONTE] A transmissão do registro de campo é interrompida no início da 'Zona B: A Mesa de Poker VIP (O Jogo de Memórias)'. Cenas posteriores permanecem sob sigilo documental até novas ordens do curador."
-      },
-      "pending_documentation": "Desfecho da Mesa de Poker VIP, identidade dos demais patrocinadores no cofre e confirmação de sobrevivência de Oeht.",
-      "historical_identification": "Operação Belvedere // A.E.G.I.S. Protocolo Filantropia Clandestina",
+      "theme": "Espionagem Tática, Contrabando do Véu & Contenção em Gala",
+      "danger_rating": "SEVERO // RITUAL DA REDOMA & ANÁRQUICO (MDA 80%)",
       "coordinates": [
         46.2044,
         6.1432
       ],
-      "name": "A Gala da Meia-Noite: A Falsa Filantropia de Oeht",
-      "is_future": true
+      "synopsis": "Instruídos pelo Diretor Kaelen, agentes Despertos da A.E.G.I.S. infiltram-se em trajes de gala na Mansão Belvedere entre 22h00 e 00h00 (8 turnos rígidos de 15 minutos). O bilionário arrogante Oeht planeja anunciar a privatização do paranormal com um artefato roubado do Véu, ocultando até mesmo o lodo roxo ácido vazando do cofre. Enquanto isso, Victor Kael (terno vinho, leiloeiro do oculto de relíquias da Ordem da Cinza e Nácar) sabota a segurança e protege a orquestra em transe para completar o ritual às 00h00, erguendo uma redoma púrpura com loop temporal de 10s e despertando O Anárquico (MDA 80%).",
+      "outcome": "Campanha planejada / Futura — Para conter a incursão antes ou durante a meia-noite, os agentes precisam vencer as 3 Travas da Redoma (Cartão Biométrico, Senha de 4 dígitos no escritório com lodo ácido, Selo de Energia 3d6) e destruir a Caixa de Música no palco para derrubar a defesa invulnerável d’O Anárquico e seus Zumbis de Sangue.",
+      "participants": [
+        "char_oeht",
+        "char_victor_kael",
+        "char_kaelen",
+        "char_clara_mendes",
+        "char_kenji_sato",
+        "char_helena_vargas",
+        "char_lorenzo_vane"
+      ],
+      "mission_clock": [
+        {
+          "time": "22h00–22h15 (Turnos 1–2)",
+          "stage": "Infiltração Inicial",
+          "desc": "Recepção na Entrada VIP sob disfarce em trajes de gala com armas e Almas recolhidas."
+        },
+        {
+          "time": "22h30 (Turno 3)",
+          "stage": "Dissonância Acústica",
+          "desc": "Orquestra no palco começa notas distorcidas de transe alimentando o selo inconscientemente."
+        },
+        {
+          "time": "23h00 (Turno 5)",
+          "stage": "Fechamento da Redoma",
+          "desc": "Discurso de Oeht contra a A.E.G.I.S.; luz púrpura fecha a propriedade e corta comunicações com Kaelen."
+        },
+        {
+          "time": "23h30 (Turno 7)",
+          "stage": "Colapso Temporal",
+          "desc": "Loop temporal de 10 segundos força testes de Sabedoria/Disciplina ou gasto de EA."
+        },
+        {
+          "time": "00h00 (Turno 8)",
+          "stage": "Despertar da Entidade",
+          "desc": "O bolo colossal de aniversário transmuta-se n’O Anárquico (MDA 80%) e garçons viram Zumbis de Sangue."
+        }
+      ],
+      "mansion_zones": [
+        {
+          "name": "Entrada VIP",
+          "desc": "Controle biométrico e recepção da elite global convidada por Oeht."
+        },
+        {
+          "name": "Salão Principal",
+          "desc": "Coração da gala onde repousa o bolo gigante e ocorre o discurso das 23h00."
+        },
+        {
+          "name": "Poker VIP",
+          "desc": "Mesa anômala de Victor Kael onde dinheiro não vale: perdedores têm mente e alma drenadas (perda permanente de perícia ou identidade)."
+        },
+        {
+          "name": "Escritório de Oeht",
+          "desc": "Andar superior com cofre vazando lodo roxo ácido onde repousa a senha numérica de 4 dígitos."
+        },
+        {
+          "name": "Galeria de Espelhos",
+          "desc": "Reflexos dos agentes ganham vida e emergem fisicamente dos espelhos para atacar os originais."
+        },
+        {
+          "name": "Cozinha",
+          "desc": "Setor dominado por confeiteiros hipnotizados trabalhando sem parar para nutrir o ritual."
+        },
+        {
+          "name": "Palco & Caixa de Música",
+          "desc": "Estrutura elevada com orquestra em transe e a Caixa de Música (ponto fraco vital d’O Anárquico)."
+        }
+      ],
+      "three_locks": [
+        "1ª Trava: Obter o Cartão Biométrico em posse do chefe de segurança privada (sabotado por Victor Kael).",
+        "2ª Trava: Descobrir a Senha de Quatro Dígitos no Escritório de Oeht inundado por lodo roxo ácido.",
+        "3ª Trava: Romper o Selo de Energia (3d6 de dano automático ao toque enquanto a orquestra tocar no palco)."
+      ],
+      "exhibition_narrative": {
+        "prior_context": "A.E.G.I.S. monitora o mercado negro de relíquias coloniais da Ordem da Cinza, Cidadela de Nácar e Vera Cruz conduzido por Victor Kael para Oeht.",
+        "climax_summary": "Entre 22h00 e 00h00, agentes precisam transpor Entrada VIP, Poker VIP (dreno de perícias), Escritório (lodo roxo), Galeria de Espelhos e Palco para romper as 3 Travas e silenciar a Caixa de Música ao despertar d’O Anárquico (MDA 80%).",
+        "outcome": "Campanha futura completa (Crônica III — Edição Integrada)."
+      }
     }
   ],
   "locations": [
@@ -2170,8 +2743,8 @@ class DataLoader {
       "campaign_id": "camp_filantropo_oeht",
       "related_campaigns": [
         "camp_filantropo_oeht",
-        "camp_003",
-        "camp_004"
+        "camp_001",
+        "camp_002"
       ],
       "illustration": "assets/ref_interior_tavern.jpg",
       "description": "Sede central de comando, arquivos históricos de anomalias e gabinetes dos diretores de contenção da Fundação A.E.G.I.S. Construído a 40 metros de profundidade sob rocha granítica dos Alpes.",
@@ -2185,6 +2758,74 @@ class DataLoader {
         "Registro Notarial de Genebra 1968",
         "Arquivos de Comando Kaelen"
       ]
+    },
+    {
+      "id": "loc_veracruz_santacruz",
+      "name": "Ilha 1: Santa Cruz das Cinzas & Fortaleza de São Lázaro",
+      "type": "Ilha Inicial / Bastião Colonial (MDA 10–20%)",
+      "zone": "Arquipélago de Vera Cruz das Almas (Atlântico Sul)",
+      "campaign_id": "camp_001",
+      "country_id": "country_brasil",
+      "continent_id": "cont_america_sul",
+      "lat": -16.4,
+      "lng": -38.9,
+      "coordinates": [
+        -16.4,
+        -38.9
+      ],
+      "danger_level": "Moderado-Alto (Iniciados & Bandeirantes)",
+      "description": "Ponto de partida da colonização da Coroa. Abriga a Fortaleza de São Lázaro (hub murado protegido por fogo e sal sob Dom Sebastião de Cinza), cercada pela Mata da Neblina, Vilarejo Queimado e Cemitério das Raízes — território do Corpo-Seco e da Matinta Perera."
+    },
+    {
+      "id": "loc_veracruz_manguezal",
+      "name": "Ilha 2: Manguezal dos Afogados (1ª Expansão)",
+      "type": "Pântano Submerso do Véu (MDA 20–40%)",
+      "zone": "Arquipélago de Vera Cruz das Almas",
+      "campaign_id": "camp_001",
+      "country_id": "country_brasil",
+      "continent_id": "cont_america_sul",
+      "lat": -17.3,
+      "lng": -37.9,
+      "coordinates": [
+        -17.3,
+        -37.9
+      ],
+      "danger_level": "Alto (Bandeirantes Veteranos)",
+      "description": "Pântanos profundos onde a água turva bate na cintura (reduzindo o deslocamento), capelas coloniais submersas e neblina perpétua. Território da Iara Decaída, do Boto Carniceiro e do World Boss noturno O Boitatá."
+    },
+    {
+      "id": "loc_veracruz_sertao",
+      "name": "Ilha 3: Sertão das Ossadas (2ª Expansão)",
+      "type": "Caatinga Gótica & Cânions (MDA 40–60%)",
+      "zone": "Arquipélago de Vera Cruz das Almas",
+      "campaign_id": "camp_001",
+      "country_id": "country_brasil",
+      "continent_id": "cont_america_sul",
+      "lat": -18.2,
+      "lng": -39.4,
+      "coordinates": [
+        -18.2,
+        -39.4
+      ],
+      "danger_level": "Crítico (Inquisidores & Mestres de Caça)",
+      "description": "Terra rachada, cânions secos, vegetação espinhosa e ruínas com altares de Lua Nova para o Ritual de Subjugação. Território do Capelobo, da Mula-Sem-Cabeça (Fornalha Viva) e bandoleiros espectrais."
+    },
+    {
+      "id": "loc_veracruz_serra",
+      "name": "Ilha 4: Serra do Véu Rasgado (Cratera Ancestral)",
+      "type": "Endgame /epicentro da Queda do Véu (MDA 60–90%+)",
+      "zone": "Arquipélago de Vera Cruz das Almas",
+      "campaign_id": "camp_001",
+      "country_id": "country_brasil",
+      "continent_id": "cont_america_sul",
+      "lat": -19.1,
+      "lng": -38.1,
+      "coordinates": [
+        -19.1,
+        -38.1
+      ],
+      "danger_level": "Extremo / Cataclísmico",
+      "description": "Montanhas colossais de pedra negra, frio congelante, florestas petrificadas, cavernas onde habita o Mapinguari ancestral e a cratera onde as primeiras árvores sagradas foram derrubadas em 1500, rasgando o Véu."
     }
   ],
   "characters": [
@@ -2198,7 +2839,7 @@ class DataLoader {
       "track": "Ecolocalizador",
       "nex": "45%",
       "mda": "35%",
-      "status": "Resgatado (Marcado)",
+      "status": "Resgatado — Vivo (Sensitivo/Desperto)",
       "life_status": "alive",
       "campaign_ids": [
         "camp_002"
@@ -2654,7 +3295,9 @@ class DataLoader {
           "Bandagens Improvisadas"
         ],
         "relics": []
-      }
+      },
+      "description": "Caiu nas minas após quebrar a perna e sobreviveu 3 anos na escuridão absoluta entre O Eco, adaptando-se fisicamente e despertando percepção sensível sem perder sua humanidade.",
+      "race": "Humano Desperto"
     },
     {
       "id": "char_gabriel",
@@ -3135,7 +3778,8 @@ class DataLoader {
         "relics": [
           "Arma de Portais: LIMIAR"
         ]
-      }
+      },
+      "race": "Humano Desperto"
     },
     {
       "id": "char_rafael",
@@ -3603,479 +4247,12 @@ class DataLoader {
           "Mochila Resistente com Rações"
         ],
         "relics": []
-      }
-    },
-    {
-      "id": "char_julia",
-      "name": "Júlia Drummond",
-      "codename": "A Chave da Mansão",
-      "player": "Jogador 6",
-      "origin": "Investigadora",
-      "class": "Especialista",
-      "track": "Infiltradora",
-      "nex": "35%",
-      "mda": "8%",
-      "status": "Veterana (Viva)",
-      "life_status": "alive",
-      "campaign_ids": [
-        "camp_002"
-      ],
-      "attributes": {
-        "Agilidade": 4,
-        "Força": 1,
-        "Intelecto": 3,
-        "Presença": 3,
-        "Vigor": 2
       },
-      "stats": {
-        "pv_current": 26,
-        "pv_max": 26,
-        "pe_current": 20,
-        "pe_max": 20,
-        "san_current": 30,
-        "san_max": 38,
-        "defesa": 18,
-        "protecao": "Jaqueta de Couro Reforçada (RD 1)"
-      },
-      "skills": {
-        "Acrobacia": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "AGI",
-          "total": 4
-        },
-        "Adestramento": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "PRE",
-          "total": 3
-        },
-        "Artes": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "PRE",
-          "total": 3
-        },
-        "Atletismo": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "FOR",
-          "total": 1
-        },
-        "Atualidades": {
-          "grau": "Treinado",
-          "bonus": 5,
-          "attr": "INT",
-          "total": 8
-        },
-        "Ciências": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Crime": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "AGI",
-          "total": 4
-        },
-        "Diplomacia": {
-          "grau": "Treinado",
-          "bonus": 5,
-          "attr": "PRE",
-          "total": 8
-        },
-        "Enganação": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "PRE",
-          "total": 3
-        },
-        "Fortitude": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "VIG",
-          "total": 2
-        },
-        "Furtividade": {
-          "grau": "Veterano",
-          "bonus": 10,
-          "attr": "AGI",
-          "total": 14
-        },
-        "Iniciativa": {
-          "grau": "Treinado",
-          "bonus": 5,
-          "attr": "AGI",
-          "total": 9
-        },
-        "Intimidação": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "PRE",
-          "total": 3
-        },
-        "Intuição": {
-          "grau": "Veterano",
-          "bonus": 10,
-          "attr": "PRE",
-          "total": 13
-        },
-        "Investigação": {
-          "grau": "Expert",
-          "bonus": 15,
-          "attr": "INT",
-          "total": 18
-        },
-        "Luta": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "FOR",
-          "total": 1
-        },
-        "Medicina": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Ocultismo": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Percepção": {
-          "grau": "Veterano",
-          "bonus": 10,
-          "attr": "PRE",
-          "total": 13
-        },
-        "Pilotagem": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "AGI",
-          "total": 4
-        },
-        "Pontaria": {
-          "grau": "Treinado",
-          "bonus": 5,
-          "attr": "AGI",
-          "total": 9
-        },
-        "Profissão": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Reflexos": {
-          "grau": "Treinado",
-          "bonus": 5,
-          "attr": "AGI",
-          "total": 9
-        },
-        "Religião": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "PRE",
-          "total": 3
-        },
-        "Sobrevivência": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Tática": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Tecnologia": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "INT",
-          "total": 3
-        },
-        "Vontade": {
-          "grau": "Destreinado",
-          "bonus": 0,
-          "attr": "PRE",
-          "total": 3
-        }
-      },
-      "abilities": [
-        "Perito em Pistas: Encontra conexões e pistas que outros investigadores deixam passar.",
-        "Gatuno Silencioso: Movimentação sem emissão de ruído auditivo.",
-        "Ataque Furtivo: Dano crítico quando a criatura ou alvo não percebe sua presença."
-      ],
-      "inventory": [
-        "Pistola 9mm com Silenciador",
-        "Kit de Gazua e Chaves Mestras",
-        "Caderno com Notas e Diagramas da Mansão",
-        "Gravador de Voz Digital"
-      ],
-      "relics": [],
-      "quote": "Gabriel calculou a reação de todos os que estavam no lago há 3 anos... mas ele não me conhecia. E essa foi a única falha no plano perfeito dele.",
-      "summary": "A mente analítica da Mansão Vilar. Por não fazer parte do núcleo original do incidente das minas, foi a única imune aos jogos mentais de Gabriel, desvendando os mecanismos da casa.",
-      "portrait": "assets/icon-192.png",
-      "historical_title": "Investigadora da Noite da Confissão",
-      "historical_status": "vivo",
-      "birth_place": "México / Brasil",
-      "biography_summary": "A mente analítica da Mansão Vilar. Por não fazer parte do núcleo original do incidente das minas, foi a única imune aos jogos mentais de Gabriel, desvendando os mecanismos da casa.",
-      "personal_history": "Investigadora meticulosa e analítica. Após o incidente de 2021 nas minas, dedicou-se a compreender o que havia acontecido na propriedade Vilar. Em 2024, sua capacidade dedutiva foi decisiva para decifrar os diários de Gabriel, localizar o laboratório do Casarão e planejar a detonação das galerias.",
-      "campaign_participations": [
-        {
-          "campaign_id": "camp_002",
-          "campaign_title": "Até o Amanhecer: O Limiar da Mansão Vilar",
-          "period": "2024",
-          "role": "Protagonista & Estrategista da Fuga",
-          "summary": "Reuniu as provas sobre a identidade do Mascarado, recuperou as fitas do Projeto LIMIAR e coordenou o uso de explosivos para selar as minas."
-        }
-      ],
-      "relationships": [
-        {
-          "character_id": "char_rafael",
-          "character_name": "Rafael Moreira",
-          "relation_type": "Aliado na Mansão Vilar",
-          "description": "Combinou investigação e força tática com Rafael para garantir a sobrevivência do grupo."
-        },
-        {
-          "character_id": "char_lucas",
-          "character_name": "Lucas Vilar",
-          "relation_type": "Amigo Resgatado",
-          "description": "Seguiu os sinais acústicos que levaram ao paradeiro de Lucas."
-        },
-        {
-          "character_id": "char_gabriel",
-          "character_name": "Gabriel Vilar",
-          "relation_type": "Alvo de Investigação",
-          "description": "Desmascarou a farsa de Davi Reis através dos documentos do laboratório."
-        }
-      ],
-      "important_events": [
-        "cron_vil_01",
-        "time_04"
-      ],
-      "visited_locations": [
-        "loc_vilar",
-        "loc_vilar_casarao",
-        "loc_vilar_minas"
-      ],
-      "known_fate": "Viva; preservou cópias das gravações e documentos da Mansão Vilar que hoje integram o acervo do Museu EVREN.",
-      "archival_technical_record": {
-        "origin": "Investigadora",
-        "class": "Especialista",
-        "track": "Infiltradora",
-        "nex": "35%",
-        "mda": "8%",
-        "attributes": {
-          "Agilidade": 4,
-          "Força": 1,
-          "Intelecto": 3,
-          "Presença": 3,
-          "Vigor": 2
-        },
-        "stats": {
-          "pv_current": 26,
-          "pv_max": 26,
-          "pe_current": 20,
-          "pe_max": 20,
-          "san_current": 30,
-          "san_max": 38,
-          "defesa": 18,
-          "protecao": "Jaqueta de Couro Reforçada (RD 1)"
-        },
-        "skills": {
-          "Acrobacia": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "AGI",
-            "total": 4
-          },
-          "Adestramento": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "PRE",
-            "total": 3
-          },
-          "Artes": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "PRE",
-            "total": 3
-          },
-          "Atletismo": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "FOR",
-            "total": 1
-          },
-          "Atualidades": {
-            "grau": "Treinado",
-            "bonus": 5,
-            "attr": "INT",
-            "total": 8
-          },
-          "Ciências": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Crime": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "AGI",
-            "total": 4
-          },
-          "Diplomacia": {
-            "grau": "Treinado",
-            "bonus": 5,
-            "attr": "PRE",
-            "total": 8
-          },
-          "Enganação": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "PRE",
-            "total": 3
-          },
-          "Fortitude": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "VIG",
-            "total": 2
-          },
-          "Furtividade": {
-            "grau": "Veterano",
-            "bonus": 10,
-            "attr": "AGI",
-            "total": 14
-          },
-          "Iniciativa": {
-            "grau": "Treinado",
-            "bonus": 5,
-            "attr": "AGI",
-            "total": 9
-          },
-          "Intimidação": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "PRE",
-            "total": 3
-          },
-          "Intuição": {
-            "grau": "Veterano",
-            "bonus": 10,
-            "attr": "PRE",
-            "total": 13
-          },
-          "Investigação": {
-            "grau": "Expert",
-            "bonus": 15,
-            "attr": "INT",
-            "total": 18
-          },
-          "Luta": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "FOR",
-            "total": 1
-          },
-          "Medicina": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Ocultismo": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Percepção": {
-            "grau": "Veterano",
-            "bonus": 10,
-            "attr": "PRE",
-            "total": 13
-          },
-          "Pilotagem": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "AGI",
-            "total": 4
-          },
-          "Pontaria": {
-            "grau": "Treinado",
-            "bonus": 5,
-            "attr": "AGI",
-            "total": 9
-          },
-          "Profissão": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Reflexos": {
-            "grau": "Treinado",
-            "bonus": 5,
-            "attr": "AGI",
-            "total": 9
-          },
-          "Religião": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "PRE",
-            "total": 3
-          },
-          "Sobrevivência": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Tática": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Tecnologia": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "INT",
-            "total": 3
-          },
-          "Vontade": {
-            "grau": "Destreinado",
-            "bonus": 0,
-            "attr": "PRE",
-            "total": 3
-          }
-        },
-        "abilities": [
-          "Perito em Pistas: Encontra conexões e pistas que outros investigadores deixam passar.",
-          "Gatuno Silencioso: Movimentação sem emissão de ruído auditivo.",
-          "Ataque Furtivo: Dano crítico quando a criatura ou alvo não percebe sua presença."
-        ],
-        "inventory": [
-          "Pistola 9mm com Silenciador",
-          "Kit de Gazua e Chaves Mestras",
-          "Caderno com Notas e Diagramas da Mansão",
-          "Gravador de Voz Digital"
-        ],
-        "relics": []
-      }
+      "race": "Humano Desperto"
     },
     {
       "id": "char_arquiteto",
-      "name": "O Arquiteto do Caos (Diabo do Mar)",
+      "name": "Primogênito (O Diabo do Mar)",
       "codename": "O Primogênito",
       "player": "Entidade / Ameaça Suprema",
       "origin": "Cobaia Zero (Experimento Proibido)",
@@ -4523,7 +4700,10 @@ class DataLoader {
           "Espécimes de Tecido Mimetizado"
         ],
         "relics": []
-      }
+      },
+      "short_name": "Primogênito",
+      "description": "Arthur Vilar / Entidade primordial detentora da Verdadeira Magia (MDA 99%). Origem dos mitos de Loki, Merlin e da Ilusão do Campo de Rosas.",
+      "race": "Humano Desperto"
     },
     {
       "id": "char_helena",
@@ -4605,7 +4785,8 @@ class DataLoader {
           "category": "Sociais",
           "training": "Treinado"
         }
-      ]
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_diego",
@@ -4677,7 +4858,8 @@ class DataLoader {
           "category": "Físicas",
           "training": "Treinado"
         }
-      ]
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_bia",
@@ -4749,7 +4931,8 @@ class DataLoader {
           "category": "Físicas",
           "training": "Treinado"
         }
-      ]
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_arthur",
@@ -4823,7 +5006,8 @@ class DataLoader {
           "category": "Mente",
           "training": "Treinado"
         }
-      ]
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_camila_torres",
@@ -4872,7 +5056,8 @@ class DataLoader {
       ],
       "historical_title": "Testemunha da Tragédia Vilar",
       "portrait": "assets/icon-192.png",
-      "relics": []
+      "relics": [],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_mauro_azevedo",
@@ -4921,7 +5106,8 @@ class DataLoader {
       ],
       "historical_title": "Vigia das Galerias Vilar",
       "portrait": "assets/icon-192.png",
-      "relics": []
+      "relics": [],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_elias_rocha",
@@ -4972,11 +5158,12 @@ class DataLoader {
       "portrait": "assets/icon-192.png",
       "relics": [
         "Chave Antiga da Galeria 4 das Minas"
-      ]
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_oeht",
-      "name": "Theo 'Oeht' Vanderberg",
+      "name": "Oeht (O Filantropo)",
       "codename": "O Falso Benfeitor / Magnata Oculto",
       "player": "Antagonista de Incursão (NPC)",
       "origin": "Herdeiro de Conglomerado Financeiro & Mecenas",
@@ -5056,7 +5243,9 @@ class DataLoader {
           "training": "Veterano"
         }
       ],
-      "curator_notes": "Arrogante, persuasivo e convencido de sua superioridade intelectual. Acreditava piamente ser capaz de controlar a caixa parasita comprada no mercado oculto."
+      "curator_notes": "Arrogante, persuasivo e convencido de sua superioridade intelectual. Acreditava piamente ser capaz de controlar a caixa parasita comprada no mercado oculto.",
+      "short_name": "Oeht",
+      "race": "Humano Desperto"
     },
     {
       "id": "char_kaelen",
@@ -5072,9 +5261,8 @@ class DataLoader {
       "life_status": "alive",
       "campaign_id": "camp_filantropo_oeht",
       "campaign_ids": [
-        "camp_filantropo_oeht",
-        "camp_003",
-        "camp_001"
+        "camp_001",
+        "camp_filantropo_oeht"
       ],
       "attributes": {
         "agi": 3,
@@ -5142,7 +5330,8 @@ class DataLoader {
           "training": "Expert"
         }
       ],
-      "curator_notes": "Voz firme, pragmática e inflexível. Coordena equipes de contenção através de canais criptografados."
+      "curator_notes": "Voz firme, pragmática e inflexível. Coordena equipes de contenção através de canais criptografados.",
+      "race": "Humano Desperto"
     },
     {
       "id": "char_marcos_valente",
@@ -5209,7 +5398,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Ex-mergulhador de resgate cujo navio foi tragado para o Triângulo das Bermudas. Perdeu metade da tripulação para tentáculos no Fosso do Kraken, mas permaneceu no convés atirando sinalizadores para salvar os botes."
+      "biography": "Ex-mergulhador de resgate cujo navio foi tragado para o Triângulo das Bermudas. Perdeu metade da tripulação para tentáculos no Fosso do Kraken, mas permaneceu no convés atirando sinalizadores para salvar os botes.",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_clara_mendes",
@@ -5276,7 +5469,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Médica legista recrutada pela A.E.G.I.S. após sobreviver a um ataque de Mímico Genético em um hospital, onde recusou abandonar pacientes infectados."
+      "biography": "Médica legista recrutada pela A.E.G.I.S. após sobreviver a um ataque de Mímico Genético em um hospital, onde recusou abandonar pacientes infectados.",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_kenji_sato",
@@ -5343,7 +5540,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Operador veterano da A.E.G.I.S. sob comando direto do Diretor Kaelen. Sobreviveu a um loop temporal de 48 horas mantendo a sanidade contando mentalmente cada segundo."
+      "biography": "Operador veterano da A.E.G.I.S. sob comando direto do Diretor Kaelen. Sobreviveu a um loop temporal de 48 horas mantendo a sanidade contando mentalmente cada segundo.",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_veronica_dias",
@@ -5410,7 +5611,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Criptógrafa e investigadora independente que ajudou a decifrar arquivos ocultos sobre as minas da região de Vilar. Despertou sua Alma ao encarar um espelho anômalo sem enlouquecer."
+      "biography": "Criptógrafa e investigadora independente que ajudou a decifrar arquivos ocultos sobre as minas da região de Vilar. Despertou sua Alma ao encarar um espelho anômalo sem enlouquecer.",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_mateus_alencar",
@@ -5477,7 +5682,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Capelão naval cujo navio foi tragado para o Triângulo das Bermudas. Em Nova Caronte, fundou um abrigo na carcaça de um barco pesqueiro para acolher recém-chegados."
+      "biography": "Capelão naval cujo navio foi tragado para o Triângulo das Bermudas. Em Nova Caronte, fundou um abrigo na carcaça de um barco pesqueiro para acolher recém-chegados.",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_helena_vargas",
@@ -5544,7 +5753,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Ex-promotora criminal que descobriu redes de tráfico humano voltadas a rituais da elite financeira. Ingressou na corregedoria interna da A.E.G.I.S."
+      "biography": "Ex-promotora criminal que descobriu redes de tráfico humano voltadas a rituais da elite financeira. Ingressou na corregedoria interna da A.E.G.I.S.",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_iris_vento_solto",
@@ -5611,7 +5824,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Ex-escrava capturada para os leilões de Nácar que liderou um motim vitorioso, quebrou as próprias algemas e roubou uma lancha rápida para navegar livre no Triângulo."
+      "biography": "Ex-escrava capturada para os leilões de Nácar que liderou um motim vitorioso, quebrou as próprias algemas e roubou uma lancha rápida para navegar livre no Triângulo.",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_lorenzo_vane",
@@ -5678,7 +5895,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Ex-sócio menor de Victor Kael no mercado negro de relíquias. Após ser traído e deixado para morrer em uma fenda, despertou sua Alma devorando a energia de um artefato quebrado."
+      "biography": "Ex-sócio menor de Victor Kael no mercado negro de relíquias. Após ser traído e deixado para morrer em uma fenda, despertou sua Alma devorando a energia de um artefato quebrado.",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_valerius",
@@ -5745,7 +5966,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Oficial de uma embarcação histórica absorvida pelo Triângulo. Recusou-se a ajoelhar diante dos Soberanos de Nácar e esculpiu um domínio independente."
+      "biography": "Oficial de uma embarcação histórica absorvida pelo Triângulo. Recusou-se a ajoelhar diante dos Soberanos de Nácar e esculpiu um domínio independente.",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_raissa_carnica",
@@ -5812,7 +6037,11 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Única sobrevivente de uma expedição dizimada nos templos da Ilha Canibal. Passou duas semanas caçando os sequestradores de sua irmã e despertou sua Alma no altar de sacrifício."
+      "biography": "Única sobrevivente de uma expedição dizimada nos templos da Ilha Canibal. Passou duas semanas caçando os sequestradores de sua irmã e despertou sua Alma no altar de sacrifício.",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_jonas_silveira",
@@ -5879,12 +6108,16 @@ class DataLoader {
           }
         ]
       },
-      "biography": "Ex-funcionário ferroviário que ficou quatro dias preso em um túnel desabado perto da Estação Vilar ouvindo as imitações do Eco. Tornou o terror sua arma defensiva."
+      "biography": "Ex-funcionário ferroviário que ficou quatro dias preso em um túnel desabado perto da Estação Vilar ouvindo as imitações do Eco. Tornou o terror sua arma defensiva.",
+      "campaign_ids": [
+        "camp_002"
+      ],
+      "race": "Humano Desperto"
     },
     {
       "id": "char_victor_kael",
       "name": "Victor Kael",
-      "codename": "O Leiloeiro do Oculto",
+      "codename": "Leiloeiro do Oculto (Terno Vinho)",
       "player": "NPC Antagonista Ocultista",
       "class": "Conjurador / Sabotador",
       "origin": "Mercador de Relíquias Negras",
@@ -5928,11 +6161,16 @@ class DataLoader {
         "Enganação": 10,
         "Furtividade": 10
       },
-      "biography": "Homem de terno vinho infiltrado na gala de Oeht. Sabotador ativo contra a A.E.G.I.S., trabalha para que o ritual da redoma e do Anárquico se concretize."
+      "biography": "Homem de terno vinho infiltrado na gala de Oeht. Sabotador ativo contra a A.E.G.I.S., trabalha para que o ritual da redoma e do Anárquico se concretize.",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "description": "Contrabandista de relíquias coloniais da Ordem da Cinza, Nácar e Lendas do Véu; sabotador da Gala Belvedere para completar o ritual à meia-noite.",
+      "race": "Humano Desperto"
     },
     {
       "id": "char_guia_temporario",
-      "name": "O Guia Temporário",
+      "name": "Guia Temporário do Triângulo",
       "codename": "O Alerta de Ferro",
       "player": "NPC Mártir Canônico",
       "class": "Combatente / Sobrevivente",
@@ -5977,7 +6215,53 @@ class DataLoader {
         "Luta": 10,
         "Vontade": 10
       },
-      "biography": "Primeiro aliado dos sobreviventes na Sessão 1 do Triângulo. Reconheceu a chegada do Primogênito ao ver a água congelar azul. Alvo do Campo de Rosas, sacrificou a própria vida para alertar os outros."
+      "biography": "Primeiro aliado dos sobreviventes na Sessão 1 do Triângulo. Reconheceu a chegada do Primogênito ao ver a água congelar azul. Alvo do Campo de Rosas, sacrificou a própria vida para alertar os outros.",
+      "short_name": "Guia Temporário",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "race": "Humano Desperto"
+    },
+    {
+      "id": "char_dom_sebastiao",
+      "name": "Dom Sebastião de Cinza",
+      "short_name": "Dom Sebastião",
+      "codename": "Inquisidor-Mor da Fortaleza de São Lázaro",
+      "player": "NPC // Ordem da Cinza",
+      "class": "Combatente / Inquisidor",
+      "origin": "Ordem da Cinza (Coroa)",
+      "track": "Justiça Inquisitorial",
+      "race": "Humano Desperto",
+      "virtue": "Justiça (Prata & Juramento)",
+      "mda": "60%",
+      "nex": "60%",
+      "life_status": "alive",
+      "status": "Ativo em São Lázaro",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "attributes": {
+        "Força": 4,
+        "Vigor": 4,
+        "Agilidade": 3,
+        "Presença": 5,
+        "Intelecto": 4
+      },
+      "stats": {
+        "pv_current": 68,
+        "pv_max": 68,
+        "pe_current": 50,
+        "pe_max": 50,
+        "ea_current": 37,
+        "ea_max": 37,
+        "est_current": 19,
+        "est_max": 19,
+        "san_current": 24,
+        "san_max": 24,
+        "defesa": 22,
+        "protecao": "RD 8 (Malha & Sal)"
+      },
+      "description": "Comandante fanático da guarnição da Ordem da Cinza na Ilha de Santa Cruz das Cinzas. Contrata Bandeirantes do Véu mas executa qualquer caçador suspeito de portar Pacto da Lenda."
     }
   ],
   "chronicles": [
@@ -6007,96 +6291,2104 @@ class DataLoader {
   ],
   "bestiary": [
     {
+      "id": "creature_t4_24",
+      "tomo4_num": 24,
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "O Verme-Receptáculo das Dunas (Transmutado da Coroa Branca)",
+      "biotype": "Aberração Transmutada (Humano Condensado em Pedra e Termia — Vídeo #01)",
+      "mda": "MDA 75%",
+      "nd": "ND 14",
+      "threat_level": "ND 14 • MDA 75%",
+      "origin": "Desertos da Teocracia Térmica (Registro Visual 19.53.28)",
+      "territory": "Dunas de Cinza, Piscinas de Conversão e Montanha Oca",
+      "virtue": "Elemento: Pedra, Areia & Termia Solar Roubada • Virtude Corrompida: Esperança/Devoção",
+      "element": "Pedra, Areia & Termia Solar Roubada",
+      "quote": "“Eles não devoram os escolhidos da coroa de flores. Eles SÃO os escolhidos do festival passado.”",
+      "description": "Originado da história do Vídeo #01: a cada festival, os aldeões colocam uma coroa de flores brancas num jovem ou criança e rezam de olhos fechados quando o chão treme. O colossal verme segmentado não mastiga a vítima — recolhe-a suavemente na boca circular e a leva até a piscina brilhante da Montanha Oca, onde o humano é transmutado em um novo Verme-Receptáculo. Carregam na carapaça cicatrizes entalhadas (como o símbolo '||O') feitas quando ainda eram humanos.",
+      "canon_status": "canonical_t4",
+      "pv": "480",
+      "pd": "55",
+      "ea": "140",
+      "est": "18 (Memória Humana Fragmentada)",
+      "rd": "16 (Placas de Basalto Segmentado)",
+      "reactions": "Esq. +8 (Colossal), Bloq. +20 (Enrolar Anéis de Pedra RD 24), C-Ataq. +17 (Chicote de Cauda Sísmica 3d12+12)",
+      "attributes": {
+        "FOR": 9,
+        "VIG": 8,
+        "AGI": 3,
+        "PRE": 5,
+        "INT": 3
+      },
+      "immunities": "Calor Extremo, Fogo, Sufocamento na areia, Venenos, Cegueira •",
+      "weakness": "Reconhecimento Afetivo / Marca '||O' (mostrar o símbolo entalhado, uma coroa de flores brancas ou chamar pelo nome humano faz a criatura hesitar por 2 rodadas, Diplomacia/Intuição CD 22; interior da boca tem RD 0)",
+      "offense": "Desloc.: 12 m (Escavação nas dunas 18 m) • Ataques: Abocanhamento Litúrgico +19 (3d12+14 contundente + Engolir Intacto CD 26) ou Avalanche de Placas +18 (4d10+12 em linha de 15m).",
+      "skills": "Atletismo +22, Percepção (Vibração Sísmica) +18, Fortitude +20",
+      "tactics": "Usados como força de trabalho pelos Sacerdotes do Olho Negro para drenar o calor solar do planeta. Fig. B01 — O Verme-Receptáculo emergindo das pedras com suas mandíbulas circulares.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Escavação nas dunas 18 m) • Ataques: Abocanhamento Litúrgico +19 (3d12+14 contundente + Engolir Intacto C...",
+          "damage": "PV 480 | RD 16 (Placas de Basalto Segmentado)",
+          "desc": "Desloc.: 12 m (Escavação nas dunas 18 m) • Ataques: Abocanhamento Litúrgico +19 (3d12+14 contundente + Engolir Intacto CD 26) ou Avalanche de Placas +18 (4d10+12 em linha de 15m)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Reconhecimento Afetivo / Marca '||O' (mostrar o símbolo entalhado, uma...",
+          "desc": "Forno de Pedra Solar: Regurgita um feixe térmico das pedras solares engolidas (Área 9m, 4d12 fogo solar, CD 25 Reflexos). Nunca ataca letalmente quem usa uma coroa de flores brancas."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_25",
+      "tomo4_num": 25,
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "Sumo Sacerdote do Olho Negro (Arconte da Teocracia Térmica)",
+      "biotype": "Entidade Extradimensional de Sangue Frio (Vídeo #01)",
+      "mda": "MDA 80%",
+      "nd": "ND 15",
+      "threat_level": "ND 15 • MDA 80%",
+      "origin": "Montanha Oca (Registro Visual 19.53.28)",
+      "territory": "Templos de Pedra Branca e Câmaras do Sol Roubado",
+      "virtue": "Elemento: Luz Fria, Prata & Termia Drenada • Virtude Corrompida: Disciplina/Submissão",
+      "element": "Luz Fria, Prata & Termia Drenada",
+      "quote": "“Fechem os olhos e rezem. A fé de vocês é o nosso combustível; os filhos de vocês são as nossas mãos.”",
+      "description": "Seres de sangue frio que governam aldeias isoladas através de terror religioso (Vídeo #01). Sob a máscara prateada de um único orifício não há rosto humano, mas uma massa escura com um único globo ocular negro flutuante. Empunham chicotes de luz sólida e usam os Vermes-Receptáculo para roubar a energia térmica do mundo, acumulando um sol artificial subterrâneo.",
+      "canon_status": "canonical_t4",
+      "pv": "340",
+      "pd": "60",
+      "ea": "210",
+      "est": "28",
+      "rd": "12 (Manto Refrator de Luz Dura)",
+      "reactions": "Esq. +17 (5d20), Bloq. +16 (Barreira de Luz Sólida RD 18), C-Ataq. +19 (Estalo do Chicote Fotônico 3d10+10 + Derrubar)",
+      "attributes": {
+        "FOR": 4,
+        "VIG": 5,
+        "AGI": 7,
+        "PRE": 8,
+        "INT": 8
+      },
+      "immunities": "Radiação Solar, Cegueira, Ilusões Ópticas, Calor •",
+      "weakness": "Frio Súbito & Quebra da Piscina Térmica (se exposto a gelo ou se o reservatório térmico for destruído, entra em hipotermia letal: -4 em todas as ações e perde 20 PV/rodada; o Olho Negro central sofre dano dobrado)",
+      "offense": "Desloc.: 12 m (Levitação silenciosa 15 m) • Ataques: Chicote de Luz Dura +20 (Alcance 6m, 3d12+10 fogo/luz + Agarrar/Eletrocutar CD 27) ou Pulso do Olho Abissal +19 (Distância 24m, 3d10 espiritual + perda de 1d4 EST).",
+      "skills": "Religião +22, Intimidação +22, Ocultismo +20, Enganação +21",
+      "tactics": "Mantêm a humanidade ajoelhada enquanto drenam o calor do mundo para sobreviver. Fig. B02 — Anatomia alienígena de sangue frio e olho único do Sacerdote da Montanha Oca.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Levitação silenciosa 15 m) • Ataques: Chicote de Luz Dura +20 (Alcance 6m, 3d12+10 fogo/luz + Agarrar/Ele...",
+          "damage": "PV 340 | RD 12 (Manto Refrator de Luz Dura)",
+          "desc": "Desloc.: 12 m (Levitação silenciosa 15 m) • Ataques: Chicote de Luz Dura +20 (Alcance 6m, 3d12+10 fogo/luz + Agarrar/Eletrocutar CD 27) ou Pulso do Olho Abissal +19 (Distância 24m, 3d10 espiritual + perda de 1d4 EST)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Frio Súbito & Quebra da Piscina Térmica (se exposto a gelo ou se o res...",
+          "desc": "Dogma dos Olhos Fechados (10 EA): Todos os humanos em 20m devem passar em Vontade CD 26 ou caem de joelhos de olhos fechados (Cego e Indefeso por 1 rodada)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_26",
+      "tomo4_num": 26,
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "Acólito da Luz Fria & Vigia do Festival (Guarda da Montanha Oca)",
+      "biotype": "Servitor Mascarado de Sangue Frio (Vídeo #01)",
+      "mda": "MDA 55%",
+      "nd": "ND 8",
+      "threat_level": "ND 8 • MDA 55%",
+      "origin": "Aldeias da Teocracia Térmica (Registro Visual 19.53.28)",
+      "territory": "Praças de Festival, Portões da Montanha Oca e Túneis Térmicos",
+      "virtue": "Elemento: Luz Dura & Prata Fria • Virtude Corrompida: Obediência",
+      "element": "Luz Dura & Prata Fria",
+      "quote": "“Aquele que abrir os olhos durante a subida do Verme será o próximo a usar a coroa.”",
+      "description": "Casta menor de vigias mascarados que patrulham as fileiras de aldeões ajoelhados durante os festivais de coleta no Vídeo #01. Carregam lanças e açoites de luz sólida e vigiam qualquer sinal de rebelião ou tentativa de seguir o rastro dos Vermes até a Montanha Oca.",
+      "canon_status": "canonical_t4",
+      "pv": "210",
+      "pd": "35",
+      "ea": "95",
+      "est": "18",
+      "rd": "10 (Máscara de Prata e Túnica Térmica)",
+      "reactions": "Esq. +15, Bloq. +15, C-Ataq. +16 (Açoite de Luz 2d10+8)",
+      "attributes": {
+        "FOR": 5,
+        "VIG": 5,
+        "AGI": 6,
+        "PRE": 5,
+        "INT": 5
+      },
+      "immunities": "Calor, Clarões luminosos •",
+      "weakness": "Arrancar a Máscara de Um Olho (manobra CD 20 expõe sua face sensível à poeira e ao frio, deixando-o Atordoado por 1 rodada)",
+      "offense": "Desloc.: 12 m • Ataques: Lança de Luz Fria +16 (2d12+8 perfurante/luz) e Laço Fotônico +15 (Imobiliza alvo que abriu os olhos CD 21).",
+      "skills": "Percepção +19, Intimidação +18, Luta +16, Furtividade +15",
+      "tactics": "Atuam em patrulhas de 3 a 5 indivíduos sob comando de um Sumo Sacerdote do Olho Negro. Fig. B03 — Vigia armado da Teocracia que pune quem abre os olhos durante a oração.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m • Ataques: Lança de Luz Fria +16 (2d12+8 perfurante/luz) e Laço Fotônico +15 (Imobiliza alvo que abriu os ...",
+          "damage": "PV 210 | RD 10 (Máscara de Prata e Túnica Térmica)",
+          "desc": "Desloc.: 12 m • Ataques: Lança de Luz Fria +16 (2d12+8 perfurante/luz) e Laço Fotônico +15 (Imobiliza alvo que abriu os olhos CD 21)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Arrancar a Máscara de Um Olho (manobra CD 20 expõe sua face sensível à...",
+          "desc": "Caçador de Olhos Abertos: Recebe +4 de ataque e +2d6 de dano contra qualquer personagem que não esteja de olhos vendados/fechados durante a subida do Verme."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_27",
+      "tomo4_num": 27,
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "O Ciclo Lupino — Carniçal da Lua Cheia (Maldição de Peter Stumpp)",
+      "biotype": "Entidade Amaldiçoada Necrótica / Licantropia Pós-Morte (Vídeo #02)",
+      "mda": "MDA 78%",
+      "nd": "ND 14",
+      "threat_level": "ND 14 • MDA 78%",
+      "origin": "Bedburg (Alemanha, 1589) / Registro Visual #02 (Vídeo 19.53.26)",
+      "territory": "Florestas Temperadas, Quartos Trancados e Cidades sob Lua Cheia",
+      "virtue": "Elemento: Sangue & Ossos Necróticos • Virtude Corrompida: Fúria/Medo",
+      "element": "Sangue & Ossos Necróticos",
+      "quote": "“Eu dei um tiro no meu próprio peito semanas atrás para salvar minha esposa. Mas a maldição não precisava que eu estivesse vivo.”",
+      "description": "Originada do pacto de Peter Stumpp (1589) e revelada no Vídeo #02. Ao contrário do lobisomem comum, esta maldição é um Espírito Parasita Autônomo que não depende da vida do hospedeiro. Mesmo semanas após o portador cometer suicídio para encerrar o ciclo, a Lua Cheia derrete lâmpadas, estilhaça o vidro dos relógios e regenera o cadáver putrefato apenas o suficiente para erguer a besta lupina e devorar a família.",
+      "canon_status": "canonical_t4",
+      "pv": "420 (Regeneração Lunar 25/rodada)",
+      "pd": "50",
+      "ea": "160",
+      "est": "0 (Cadáver Comandado pela Maldição)",
+      "rd": "15 (Ignora dor e órgãos vitais)",
+      "reactions": "Esq. +18 (6d20), Bloq. +17 (RD 18), C-Ataq. +21 (Bote de Mandíbula Deslocada 3d12+14 + Sangramento 2d6)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 6,
+        "INT": 2
+      },
+      "immunities": "Morte do Hospedeiro, Tiros comuns, Veneno, Doença, Dor, Medo, Sufocamento, Dano de EST •",
+      "weakness": "Prata Litúrgica Consagrada & Incineração Medular Diurna (apenas decapitação com prata banhada em cinza ou cremação total do cadáver durante o dia impede a ressurreição na Lua Cheia seguinte)",
+      "offense": "Desloc.: 18 m (Salto 9 m, escala paredes 12 m) • Ataques: Mordida Necrótica de Stumpp +21 (3d12+14 + Transmissão da Maldição CD 27) e 2 Garras Descarnadas +20 (2d12+12 cada).",
+      "skills": "Furtividade +20, Atletismo +22, Percepção (Faro de Sangue) +24, Luta +21",
+      "tactics": "Ao amanhecer, reverte instantaneamente para um cadáver com semanas de decomposição ao lado das vítimas. Fig. B04 — A forma lupina voraz assumida pelo cadáver regenerado sob a Lua Cheia.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m (Salto 9 m, escala paredes 12 m) • Ataques: Mordida Necrótica de Stumpp +21 (3d12+14 + Transmissão da Mald...",
+          "damage": "PV 420 (Regeneração Lunar 25/rodada) | RD 15 (Ignora dor e órgãos vitais)",
+          "desc": "Desloc.: 18 m (Salto 9 m, escala paredes 12 m) • Ataques: Mordida Necrótica de Stumpp +21 (3d12+14 + Transmissão da Maldição CD 27) e 2 Garras Descarnadas +20 (2d12+12 cada)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Prata Litúrgica Consagrada & Incineração Medular Diurna (apenas decapi...",
+          "desc": "Campo de Sobrecarga Barométrica (Aura 15m): Estoura lâmpadas, vidros e aparelhos eletrônicos ao despertar, mergulhando o local na escuridão total (Fase 3 e 4 da Stalker AI: -2 EST por rodada)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_28",
+      "tomo4_num": 28,
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "O Hospedeiro Cadavérico de Stumpp (Vaso Putrefato Diurno)",
+      "biotype": "Morto-Vivo Latente (Estágio Intermediário da Maldição Lupina — Vídeo #02)",
+      "mda": "MDA 58%",
+      "nd": "ND 9",
+      "threat_level": "ND 9 • MDA 58%",
+      "origin": "Cenas de Crime Inexplicáveis / Necrotérios Policiais (Vídeo 19.53.26)",
+      "territory": "Quartos Trancados, Necrotérios e Covas Rasas nas Vésperas da Lua Cheia",
+      "virtue": "Elemento: Osso, Carne Morta & Sangue Coagulado • Virtude Corrompida: Medo",
+      "element": "Osso, Carne Morta & Sangue Coagulado",
+      "quote": "“O legista jurou que o homem estava morto há vinte dias. Então os ossos da mandíbula dele começaram a estalar na mesa de aço.”",
+      "description": "Nas horas que antecedem a subida da Lua Cheia, o cadáver morto há semanas (Vídeo #02) entra num estado intermediário grotesco: tendões negros e ossos lupinos começam a rasgar a carne em decomposição de dentro para fora. Se médicos legistas, policiais ou agentes da A.E.G.I.S. tentarem autopsiar ou conter o corpo nessa janela, o cadáver ataca ainda meio humano e meio esqueleto lupino.",
+      "canon_status": "canonical_t4",
+      "pv": "240",
+      "pd": "35",
+      "ea": "90",
+      "est": "0",
+      "rd": "12 (Carne Morta Insensível)",
+      "reactions": "Esq. +14, Bloq. +16, C-Ataq. +17 (Espasmo de Costelas Expostas 3d10+10)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 6,
+        "AGI": 6,
+        "PRE": 5,
+        "INT": 1
+      },
+      "immunities": "Dor, Veneno, Asfixia, Frio de necrotério, Armas perfurantes comuns •",
+      "weakness": "Fogo & Correntes de Prata antes do Nascer da Lua (se cremado antes das 21h, não atinge a forma completa do Ciclo Lupino)",
+      "offense": "Desloc.: 12 m • Ataques: Mordida de Mandíbula Partida +17 (3d10+10) e Chicote de Coluna Espinhal +16 (2d12+9).",
+      "skills": "Atletismo +18, Intimidação +20, Furtividade (Fingir ser Cadáver Inerte) +28",
+      "tactics": "Gera os famosos relatórios policiais impossíveis arquivados pela A.E.G.I.S. Fig. B05 — O cadáver de semanas quando perturbado no necrotério horas antes do nascer da Lua. B. SOBERANOS ABISSAIS, DOMINADORES E BESTIÁRIO CANÔNICO (VERA CRUZ & MANSÃO VILAR)",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m • Ataques: Mordida de Mandíbula Partida +17 (3d10+10) e Chicote de Coluna Espinhal +16 (2d12+9).",
+          "damage": "PV 240 | RD 12 (Carne Morta Insensível)",
+          "desc": "Desloc.: 12 m • Ataques: Mordida de Mandíbula Partida +17 (3d10+10) e Chicote de Coluna Espinhal +16 (2d12+9)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Fogo & Correntes de Prata antes do Nascer da Lua (se cremado antes das...",
+          "desc": "Metamorfose Inevitável: Ao final da 3ª rodada de combate, caso a lua já esteja no céu, evolui instantaneamente para a ficha #27 (*O Ciclo Lupino*) com PV cheios."
+        }
+      ]
+    },
+    {
       "id": "creature_primogenito_arquiteto",
+      "tomo4_num": 29,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
       "name": "O Primogênito — O Diabo do Mar",
-      "classification": "Dominador / Detentor da Verdadeira Magia",
-      "mda_level": "MDA 99%",
-      "danger_tier": "CATASTRÓFICO // REALIDADE ALTERADA",
-      "origin": "Campanha I: O Triângulo das Bermudas (Sessão 1)",
-      "appearance": "Forma física verdadeira atrofiada e debilitada. Projeção flutuante sob um manto que absorve toda a luz, envolto em aura azul-escura e máscara de madeira e osso com sorriso cínico (relíquia ancestral associada ao mito de Loki).",
-      "behavior": "Reescrita das leis físicas, temporais e genéticas da realidade (Verdadeira Magia). Sua presença é anunciada por água congelada em azul-escuro, ferrugem reluzente e névoa azulada.",
-      "signature_ability": "Campo de Rosas (Mar de Rosas): Ilusão neurológica suprema que invade diretamente o córtex cerebral, desligando as funções vitais ao ser presenciada. Provocou a morte heróica do Guia na Sessão 1.",
-      "weakness": "Almas no estágio de Sintonia Plena ou Transcendência ancoram a identidade mortal e oferecem resistência crucial contra a desintegração mental.",
-      "lore_notes": "Primeiro humano a encontrar a anomalia dimensional há milênios. Moldou os mitos de Loki, as lendas sobre Merlin e os rituais de sacrifício da magia humana."
+      "biotype": "Dominador Primordial / Rei Abissal do Triângulo das Bermudas",
+      "mda": "MDA 99%",
+      "nd": "ND 20",
+      "threat_level": "ND 20 • MDA 99%",
+      "origin": "Cidadela de Nácar & Mansão Vilar (Crônicas I e II / Tomo II)",
+      "territory": "O Fosso Abissal, Costa da Morte e Salão Submerso de Vera Cruz",
+      "virtue": "Ambição/Orgulho Transcendente",
+      "element": "Sal Abissal, Gelo Negro & Sombra",
+      "quote": "“Eu sou a primeira prece que os afogados rezaram no escuro. E eu voltei para responder.”",
+      "description": "A entidade mais poderosa em atividade no presente do universo. Nascido da fusão entre o herdeiro renegado Arthur Vilar (banido da Cidadela de Nácar na infância) e a entidade abissal primordial que provocou a Queda do Véu em 1500. Veste um manto escuro encharcado que desafia a gravidade e uma máscara sorridente de madeira náutica e osso. Onde ele flutua, o oceano congela em rosas de gelo azul espectral.",
+      "canon_status": "canonical_t4",
+      "pv": "950 (Regeneração Abissal 30/rodada na água ou névoa)",
+      "pd": "70",
+      "ea": "400",
+      "est": "40",
+      "rd": "22 (Manto do Fosso)",
+      "reactions": "Esq. +24 (8d20 — Dobra Espacial), Bloq. +26 (Muralha de Maré Congelada RD 30), C-Ataq. +27 (Rosa de Sal Perfura-Alma — 5d12+20 espiritual, ignora armadura)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 9,
+        "AGI": 9,
+        "PRE": 10,
+        "INT": 10
+      },
+      "immunities": "Afogamento, Frio, Pressão Abissal, Controle Mental, Paralisia, Armas de fogo mundanas •",
+      "weakness": "A Caixa de Música da Mãe (Clarice Vilar) & O Relicário da Mansão Vilar (ouvir a melodia original da caixa de música reduz sua RD pela metade e exige Vontade CD 32 para não hesitar)",
+      "offense": "Desloc.: 15 m (Voo / Levitação Abissal 24 m, Natação 36 m) • Ataques: Lança de Coral Negro e Gelo +27 (5d12+20 + Congelamento de Alma CD 34) ou Sinfonia dos Afogados (Área 30m, 4d20 espiritual + Dreno de 2d4 EST, CD 33 Vontade).",
+      "skills": "Ocultismo +30, Vontade +30, Intimidação +30, Luta +26, Percepção +28",
+      "tactics": "Reina no Fosso Abissal entre as quatro ilhas de Vera Cruz das Almas. Fig. B06 — O Primogênito levitando em seu manto de abismo e geada azul espectral.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m (Voo / Levitação Abissal 24 m, Natação 36 m) • Ataques: Lança de Coral Negro e Gelo +27 (5d12+20 + Congela...",
+          "damage": "PV 950 (Regeneração Abissal 30/rodada na água ou névoa) | RD 22 (Manto do Fosso)",
+          "desc": "Desloc.: 15 m (Voo / Levitação Abissal 24 m, Natação 36 m) • Ataques: Lança de Coral Negro e Gelo +27 (5d12+20 + Congelamento de Alma CD 34) ou Sinfonia dos Afogados (Área 30m, 4d20 espiritual + Dreno de 2d4 EST, CD 33 Vontade)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: A Caixa de Música da Mãe (Clarice Vilar) & O Relicário da Mansão Vilar...",
+          "desc": "Domínio Anímico — O Mar Acima do Céu (Raio 500m): Inverte o horizonte; a chuva cai para cima, o ar torna-se denso como água salgada e os mortos do mar levantam-se sob seu comando."
+        }
+      ]
     },
     {
       "id": "creature_kraken",
-      "name": "O Kraken do Fosso",
-      "classification": "Soberano Biológico — Classe Alta",
-      "mda_level": "MDA 80%–99%",
-      "danger_tier": "TITÂNICO / TERRITORIAL",
-      "origin": "Campanha I: O Triângulo das Bermudas",
-      "appearance": "Cefalópode colossal cujo manto e epiderme fundiram-se simbioticamente com rocha vulcânica abissal e crostas de magma resfriado.",
-      "behavior": "Guardião do Fosso. Não usa magia, operando por bioeletrogênese levada ao ápice evolutivo pela Lei da Alucinação.",
-      "signature_ability": "Pulsos Eletromagnéticos (PEM): Seus tentáculos disparam ondas de alta voltagem que apagam sistemas elétricos, inutilizam maquinários navais e fritam os tecidos nervosos da tripulação.",
-      "weakness": "Aberturas sensoriais nas junções entre as placas de basalto de sua couraça.",
-      "lore_notes": "Soberano territorial que inspirou as lendas marítimas sobre devoradores de frotas e monstros abissais."
+      "tomo4_num": 30,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Kraken do Fosso — O Carcereiro das Caravelas",
+      "biotype": "Lenda Abissal Colossal (Cefalópode Primordial)",
+      "mda": "MDA 85%",
+      "nd": "ND 17",
+      "threat_level": "ND 17 • MDA 85%",
+      "origin": "Triângulo das Bermudas / Fosso de Vera Cruz (Crônica I / Tomo II)",
+      "territory": "Águas Profundas ao redor de Nova Caronte e Costa da Morte",
+      "virtue": "Elemento: Sal, Ferro Oxidado & Relâmpago • Virtude Ressonante: Fúria/Medo",
+      "element": "Sal, Ferro Oxidado & Relâmpago",
+      "quote": "“Cinco séculos de navios desaparecidos não afundaram sozinhos.”",
+      "description": "Titã cefalópode de cem metros de envergadura cujo manto encouraçado carrega âncoras de galeões espanhóis do século XVI e hélices de submarinos da Guerra Fria. Atua como o guardião físico da fronteira do Arquipélago de Vera Cruz das Almas, puxando navios e aeronaves que voam baixo para dentro do Véu.",
+      "canon_status": "canonical_t4",
+      "pv": "780",
+      "pd": "65",
+      "ea": "220",
+      "est": "28",
+      "rd": "18 (Cracas Calcificadas e Cascos Fundidos)",
+      "reactions": "Esq. +10, Bloq. +25 (Barreira de Oito Tentáculos RD 26), C-Ataq. +23 (Esmagamento de Constritor 4d12+18)",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 10,
+        "AGI": 4,
+        "PRE": 7,
+        "INT": 4
+      },
+      "immunities": "Pressão Abissal, Eletricidade, Frio, Venenos, Sangramento menor •",
+      "weakness": "Olho Central Bioluminescente (ataques mirados no olho com -4 acertam ponto vital ignorando RD)",
+      "offense": "Desloc.: 6 m em terra, Natação 30 m (Jato abissal 45 m) • Ataques: 4 Tentáculos Colossais +24 (4d12+16 contundente + Agarrar/Esmagar Navio CD 32) e Bico de Queratina Abissal +23 (5d12+20 perfurante).",
+      "skills": "Atletismo +28, Fortitude +26, Percepção +20, Furtividade (Abismo) +18",
+      "tactics": "Desperta sempre que o sino de bronze de um navio toca ou quando invocado pelo Primogênito. Fig. B07 — O Kraken do Fosso emergindo das trincheiras abissais do Triângulo.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 6 m em terra, Natação 30 m (Jato abissal 45 m) • Ataques: 4 Tentáculos Colossais +24 (4d12+16 contundente + Aga...",
+          "damage": "PV 780 | RD 18 (Cracas Calcificadas e Cascos Fundidos)",
+          "desc": "Desloc.: 6 m em terra, Natação 30 m (Jato abissal 45 m) • Ataques: 4 Tentáculos Colossais +24 (4d12+16 contundente + Agarrar/Esmagar Navio CD 32) e Bico de Queratina Abissal +23 (5d12+20 perfurante)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Olho Central Bioluminescente (ataques mirados no olho com -4 acertam p...",
+          "desc": "Tinta de Escuridão Líquida: Nuvem de 60m na água ou névoa de 30m no ar que bloqueia toda luz e drena 1d6 EST por rodada."
+        }
+      ]
     },
     {
       "id": "creature_leviata_branco",
+      "tomo4_num": 31,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
       "name": "Moby Dick — O Leviatã Branco",
-      "classification": "Soberano Biológico — Classe Alta",
-      "mda_level": "MDA 80%–99%",
-      "danger_tier": "TITÂNICO / ANCESTRAL",
-      "origin": "Campanha I: O Triângulo das Bermudas",
-      "appearance": "Cachalote pré-histórico colossal revestido por uma armadura natural impenetrável de tumores calcificados acumulados ao longo de milênios.",
-      "behavior": "Predador ancestral de mar aberto que inspirou a lenda de Melville. Patrulha águas profundas destruindo cascos que vibram em frequências hostis.",
-      "signature_ability": "Sonar Destrutivo: Clique bioacústico de pressão extrema capaz de estilhaçar cascos de madeira maciça instantaneamente e infligir danos neurológicos agudos e hemorragias.",
-      "weakness": "Abertura respiratória dorsal durante a emersão para oxigenação.",
-      "lore_notes": "A lendária baleia branca de Melville existe e patrulha as águas abertas da anomalia marítima."
+      "biotype": "Lenda Oceânica Encarnada (Leviatã Albino Cravejado de Arpões)",
+      "mda": "MDA 85%",
+      "nd": "ND 17",
+      "threat_level": "ND 17 • MDA 85%",
+      "origin": "Atlântico Norte & Mar Interior de Vera Cruz (Crônica I / Tomo II)",
+      "territory": "Rotas Baleeiras Ocultas e Águas de Fronteira do Véu",
+      "virtue": "Elemento: Sal, Osso Branco & Cinza • Virtude Ressonante: Obsessão/Vingança",
+      "element": "Sal, Osso Branco & Cinza",
+      "quote": "“Todo arpão cravado em seu dorso carrega a alma do capitão que jurou matá-lo.”",
+      "description": "Alimentado por séculos de terror e obsessão dos baleeiros do século XIX, o Leviatã Branco transcendeu a biologia marinha para tornar-se um purgatório ambulante. Sua pele cor de giz é cravejada de arpões enferrujados e correntes que se movem sozinhas, puxando os esqueletos conscientes de antigos capitães presos ao seu flanco.",
+      "canon_status": "canonical_t4",
+      "pv": "820",
+      "pd": "65",
+      "ea": "200",
+      "est": "30",
+      "rd": "20 (Espermacete Calcificado)",
+      "reactions": "Esq. +12, Bloq. +24 (Investida Frontal RD 28), C-Ataq. +24 (Quebra-Quilha — 5d12+18)",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 10,
+        "AGI": 5,
+        "PRE": 8,
+        "INT": 5
+      },
+      "immunities": "Frio, Pressão, Armas perfurantes comuns, Medo, Fadiga •",
+      "weakness": "O Arpão de Sangue do Capitão Ahab (cravado junto à nadadeira dorsal; escalar o dorso e cravá-lo até o coração com Força CD 28 causa 150 de dano verdadeiro)",
+      "offense": "Desloc.: Natação 36 m (Salto fora d'água 15 m) • Ataques: Investida de Fronte Branca +25 (6d12+20 contundente; dobra contra navios) e Coro dos Arpoados (+20, 3d10+12 + Puxar para o mar).",
+      "skills": "Atletismo +28, Fortitude +27, Intimidação +24, Percepção +22",
+      "tactics": "Rival ancestral do Kraken do Fosso; suas batalhas jogam destroços históricos nas praias de Nova Caronte. Fig. B08 — O Leviatã Branco das Almas agitando as águas do Mar Interior.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: Natação 36 m (Salto fora d'água 15 m) • Ataques: Investida de Fronte Branca +25 (6d12+20 contundente; dobra con...",
+          "damage": "PV 820 | RD 20 (Espermacete Calcificado)",
+          "desc": "Desloc.: Natação 36 m (Salto fora d'água 15 m) • Ataques: Investida de Fronte Branca +25 (6d12+20 contundente; dobra contra navios) e Coro dos Arpoados (+20, 3d10+12 + Puxar para o mar)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: O Arpão de Sangue do Capitão Ahab (cravado junto à nadadeira dorsal; e...",
+          "desc": "Canto de Obsessão: Quem fita o olho do Leviatã deve passar em Vontade CD 28 ou fica obcecado em caçá-lo, recusando-se a abandonar o convés."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_32",
+      "tomo4_num": 32,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Mapinguari — O Titã Ciclópico da Floresta Negra",
+      "biotype": "Lenda Folclórica Primordial (Titã Couraçado de Um Olho e Boca Abdominal)",
+      "mda": "MDA 90%",
+      "nd": "ND 18",
+      "threat_level": "ND 18 • MDA 90%",
+      "origin": "Amazônia Profunda & Ilha da Floresta Negra (Crônica I / Tomo II)",
+      "territory": "Interior Intocado da Floresta Negra (Vera Cruz das Almas)",
+      "virtue": "Elemento: Sangue, Osso & Terra Podre • Virtude Ressonante: Fúria/Medo Primitivo",
+      "element": "Sangue, Osso & Terra Podre",
+      "quote": "“A mata inteira cala quando o segundo estômago dele tem fome.”",
+      "description": "O predador alfa absoluto da Ilha da Floresta Negra. Uma monstruosidade bípede de quatro metros coberta por placas ósseas subdérmicas recobertas de musgo negro. Possui um único olho amarelado no centro da testa e uma segunda bocarra vertical rasgada no abdômen, capaz de triturar aço, osso e Energia de Alma.",
+      "canon_status": "canonical_t4",
+      "pv": "750",
+      "pd": "65",
+      "ea": "190",
+      "est": "28",
+      "rd": "22 (Carapaça Osteodérmica — Imune a calibre leve/médio)",
+      "reactions": "Esq. +11, Bloq. +25 (Braços de Pedra RD 28), C-Ataq. +24 (Agarrão para a Boca Abdominal — 4d12+18)",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 10,
+        "AGI": 4,
+        "PRE": 8,
+        "INT": 3
+      },
+      "immunities": "Armas de fogo convencionais, Venenos, Doenças, Terreno difícil, Sangramento •",
+      "weakness": "O Único Olho Frontal dilatado após o Urro (disparo de Alma mirado no olho CD 26 ignora a RD 22 e o atordoa por 1 rodada)",
+      "offense": "Desloc.: 12 m (Atropela árvores sem perder deslocamento) • Ataques: 2 Garras Escavadoras +24 (4d12+16 cortante) e Mordida Abdominal Trituradora +25 (5d12+20 + Dreno de 15 EA).",
+      "skills": "Atletismo +27, Fortitude +27, Intimidação +26, Sobrevivência +22",
+      "tactics": "Dorme enterrado sob raízes seculares durante o dia; à noite patrulha a Floresta Negra pela Stalker AI. Fig. B09 — O Titã Ciclópico Mapinguari erguendo-se entre as árvores da Floresta Negra.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Atropela árvores sem perder deslocamento) • Ataques: 2 Garras Escavadoras +24 (4d12+16 cortante) e Mordid...",
+          "damage": "PV 750 | RD 22 (Carapaça Osteodérmica — Imune a calibre leve/médio)",
+          "desc": "Desloc.: 12 m (Atropela árvores sem perder deslocamento) • Ataques: 2 Garras Escavadoras +24 (4d12+16 cortante) e Mordida Abdominal Trituradora +25 (5d12+20 + Dreno de 15 EA)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: O Único Olho Frontal dilatado após o Urro (disparo de Alma mirado no o...",
+          "desc": "Urro que Desorienta a Bússola (Área 60m): Causa 4d10 sônico, 1d6 EST e deixa alvos Confusos/Surdos por 2 rodadas (Fortitude CD 30 reduz)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_33",
+      "tomo4_num": 33,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Boitatá — A Serpente dos Mil Olhos Devorados",
+      "biotype": "Lenda Folclórica Primordial (Serpente de Fogo-Fátuo e Madeira Calcinada)",
+      "mda": "MDA 85%",
+      "nd": "ND 16",
+      "threat_level": "ND 16 • MDA 85%",
+      "origin": "Matas Sul-Americanas & Ilha da Floresta Negra (Tomo II)",
+      "territory": "Clareiras Queimadas, Pântanos e Fronteiras da Floresta Negra",
+      "virtue": "Elemento: Cinza, Brasa & Fogo Cadavérico • Virtude Ressonante: Justiça/Fúria da Terra",
+      "element": "Cinza, Brasa & Fogo Cadavérico",
+      "quote": "“Ele não come a carne dos que queimam a floresta. Ele come a luz dos olhos deles.”",
+      "description": "Sobrevivente do grande dilúvio primordial, alimentou-se dos olhos das criaturas mortas para absorver a luz do sol. Seu corpo colossal de quinze metros mistura carvão translúcido e fogo- fátuo azul-esverdeado que não queima as árvores vivas, mas incinera instantaneamente o espírito e as retinas de invasores.",
+      "canon_status": "canonical_t4",
+      "pv": "560",
+      "pd": "60",
+      "ea": "260",
+      "est": "30",
+      "rd": "16 (Escamas de Brasa Espiritual)",
+      "reactions": "Esq. +19 (6d20), Bloq. +18 (Espiral de Chamas RD 20), C-Ataq. +22 (Bote Devora-Olhos — 4d12+14 + Cegueira CD 29)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 8,
+        "AGI": 8,
+        "PRE": 9,
+        "INT": 5
+      },
+      "immunities": "Fogo, Calor, Cegueira, Ilusões, Escuridão, Venenos •",
+      "weakness": "Imobilidade de Olhos Fechados & Ferro Frio Submerso (quem permanece imóvel de olhos fechados sem respirar fumaça/pólvora torna-se invisível para o Boitatá)",
+      "offense": "Desloc.: 18 m (Escalada 15 m) • Ataques: Bote de Presas de Fogo-Fátuo +22 (4d12+14 fogo espiritual) e Constrição de Cinza Viva +21 (3d12+14 + queima 10 EA/rodada).",
+      "skills": "Percepção +28 (Visão 360°), Furtividade +20, Ocultismo +22, Iniciativa +24",
+      "tactics": "Caça qualquer grupo que utilize armas incendiárias ou desmate áreas sagradas do Véu. Fig. B10 — A colossal serpente luminosa Boitatá erguendo-se em fogo-fátuo azul.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m (Escalada 15 m) • Ataques: Bote de Presas de Fogo-Fátuo +22 (4d12+14 fogo espiritual) e Constrição de Cinz...",
+          "damage": "PV 560 | RD 16 (Escamas de Brasa Espiritual)",
+          "desc": "Desloc.: 18 m (Escalada 15 m) • Ataques: Bote de Presas de Fogo-Fátuo +22 (4d12+14 fogo espiritual) e Constrição de Cinza Viva +21 (3d12+14 + queima 10 EA/rodada)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Imobilidade de Olhos Fechados & Ferro Frio Submerso (quem permanece im...",
+          "desc": "Olhar dos Mil Sóis Mortos: Encarar o corpo do Boitatá exige Vontade CD 28 ou causa 3d10 luminoso/psíquico e Cegueira por 1d4 rodadas."
+        }
+      ]
     },
     {
       "id": "creature_parasita_redoma_oeht",
-      "name": "O Anárquico",
-      "classification": "Entidade de Ritual",
-      "mda_level": "MDA 80%",
-      "danger_tier": "GRAVE / COLAPSO URBANO",
-      "origin": "Campanha III: A Gala da Meia-Noite de Oeht",
+      "tomo4_num": 34,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Anárquico (Despertar da Gala)",
+      "biotype": "Anomalia Biológica Aristocrática (Massacre da Mansão Vilar, Anos 1990)",
+      "mda": "MDA 80%",
+      "nd": "ND 15",
+      "threat_level": "ND 15 • MDA 80%",
+      "origin": "Mansão Vilar (Crônica II)",
+      "territory": "Salão de Baile em Ruínas e Ala Leste da Mansão Vilar",
+      "virtue": "Elemento: Sangue, Osso & Música Dissonante • Virtude Corrompida: Orgulho/Caos",
+      "element": "Sangue, Osso & Música Dissonante",
+      "quote": "“A valsa de aniversário de Arthur nunca terminou. Sentem-se à mesa e cortem o bolo.”",
+      "description": "A abominação central nascida na noite do massacre da família Vilar nos anos 1990. Um ser esguio de quase três metros de altura, com musculatura cinzenta exposta e costelas abertas, que carrega uma caixa de música de latão e protege um macabro bolo de festa feito de carne e velas de osso no salão principal.",
       "canon_status": "in_world_report",
-      "appearance": "Monstruosidade colossal despertada à meia-noite a partir da transmutação do bolo gigante de aniversário de Oeht, alimentada pelo artefato do cofre e pelo lodo roxo.",
-      "behavior": "Manifesta-se sob a redoma hermética de Belvedere, convertendo servos e garçons em Zumbis de Sangue e fazendo reflexos saírem dos espelhos.",
-      "signature_ability": "Vínculo Acústico de Invulnerabilidade: Defesa e resistência física colossais enquanto a caixa de música estiver ativa no palco; desativar a caixa reduz drasticamente sua proteção.",
-      "weakness": "Destruir ou interromper o mecanismo da caixa de música retira seu escudo ritual.",
-      "lore_notes": "Entidade concebida para coroar a privatização do paranormal proclamada no discurso das 23h00 do bilionário Theo Vanderberg."
-    },
-    {
-      "id": "creature_mimico",
-      "name": "Mímico Genético",
-      "classification": "Predador Furtivo Metamórfico",
-      "mda_level": "MDA 20%–40%",
-      "danger_tier": "INFILTRAÇÃO / LETAL",
-      "origin": "Campanha I: O Triângulo das Bermudas",
-      "appearance": "Massa celular adaptativa capaz de mimetizar qualquer corpo humano recém-morto com fidelidade absoluta de voz e maneirismos.",
-      "behavior": "Infiltra-se entre tripulantes e sobreviventes absorvendo o DNA de cadáveres para caçar por dentro e alimentar paranoia constante.",
-      "signature_ability": "Mimetismo Genético de Cadáveres: Copia DNA, cicatrizes e memórias superficiais da vítima.",
-      "weakness": "Jamais consegue replicar a Virtude de Alma de um Desperto — sendo essa a metodologia mais infalível usada pela A.E.G.I.S. para desmascará-los.",
-      "lore_notes": "Origem real das lendas urbanas de 'pessoas trocadas por sósias' nas grandes cidades."
+      "pv": "450",
+      "pd": "55",
+      "ea": "185",
+      "est": "22",
+      "rd": "14 (Costelas Entrelaçadas)",
+      "reactions": "Esq. +19 (7d20 — Passo de Valsa Distorcida), Bloq. +17, C-Ataq. +21 (Reverência Cortante — 3d12+14 + Sangramento)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 7,
+        "INT": 6
+      },
+      "immunities": "Medo, Dor, Sangramento, Efeitos Mentais de confusão •",
+      "weakness": "O Bolo de Carne & A Caixa de Música (destruir o bolo central causa 80 de dano psíquico imediato ao Anárquico; tocar a melodia invertida trava seus movimentos por 1 rodada)",
+      "offense": "Desloc.: 15 m • Ataques: Garras de Maestro +21 (3d12+14 cortante) e Espeto de Candelabro +20 (3d10+12 perfurante + 2d6 fogo).",
+      "skills": "Acrobacia +22, Luta +21, Intimidação +23, Atuação +25",
+      "tactics": "Preso ao perímetro da Mansão Vilar; reconstrói obsessivamente a festa de gala usando invasores. Fig. B11 — O Anárquico exibindo sua caixa torácica aberta no salão da Mansão Vilar.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m • Ataques: Garras de Maestro +21 (3d12+14 cortante) e Espeto de Candelabro +20 (3d10+12 perfurante + 2d6 f...",
+          "damage": "PV 450 | RD 14 (Costelas Entrelaçadas)",
+          "desc": "Desloc.: 15 m • Ataques: Garras de Maestro +21 (3d12+14 cortante) e Espeto de Candelabro +20 (3d10+12 perfurante + 2d6 fogo)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: O Bolo de Carne & A Caixa de Música (destruir o bolo central causa 80 ...",
+          "desc": "A Valsa Obrigatória da Meia-Noite: Enquanto a caixa de música toca, todos no salão devem passar em Vontade CD 26 ou gastam sua ação de movimento dançando até o Anárquico."
+        }
+      ]
     },
     {
       "id": "creature_eco",
-      "name": "O Eco",
-      "classification": "Predador Cavernoso Subterrâneo",
-      "mda_level": "MDA 25%–35%",
-      "danger_tier": "SUBTERRÂNEO / EMBOSCADA",
-      "origin": "Campanha II: O Mistério da Mansão Vilar",
-      "appearance": "Humanoide esguio, pálido por séculos sem luz solar, quase totalmente cego, com audição sobre-humana e garras escavadoras.",
-      "behavior": "Caça no escuro das minas da família Vilar. Grava com fidelidade absoluta vozes de humanos e as reproduz para atrair vítimas para emboscadas.",
-      "signature_ability": "Mimetismo Fonador Perfeito: Reproduz vozes de familiares (como a esposa de Elias Rocha ou gritos de socorro dos cinco amigos).",
-      "weakness": "Sensibilidade extrema a frequências sonoras agudas e descargas elétricas de portais LIMIAR.",
-      "lore_notes": "A criatura que assombrava as minas de Vilar e que caçou os cinco amigos durante o resgate de Lucas."
+      "tomo4_num": 35,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Eco — O Predador Acústico das Minas Vilar",
+      "biotype": "Anomalia Cavernícola Cega (Mineiro Transmutado pelo Véu)",
+      "mda": "MDA 70%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 70%",
+      "origin": "Minas Subterrâneas da Família Vilar (Crônica II)",
+      "territory": "Túneis de Mineração, Cavernas Alagadas e Subsolos da Mansão",
+      "virtue": "Elemento: Sombra, Rocha & Ressonância Acústica • Virtude Corrompida: Medo",
+      "element": "Sombra, Rocha & Ressonância Acústica",
+      "quote": "“Se você ouviu sua mãe te chamando no escuro da mina... não responda. Ele acabou de aprender o timbre da sua voz.”",
+      "description": "Criatura pálida, cega e esguia originada dos antigos trabalhadores soterrados nas minas de minério de ressonância abaixo da propriedade Vilar. Possui audição radar perfeita e um saco vocal capaz de gravar e reproduzir os últimos pedidos de socorro de suas vítimas para atrair grupos para emboscadas no escuro.",
+      "canon_status": "canonical_t4",
+      "pv": "310",
+      "pd": "45",
+      "ea": "120",
+      "est": "16",
+      "rd": "10 (Pele Calcificada de Quartzo)",
+      "reactions": "Esq. +20 (7d20 no escuro total), Bloq. +14, C-Ataq. +19 (Salto na Jugular — 3d10+12)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 5,
+        "AGI": 8,
+        "PRE": 5,
+        "INT": 4
+      },
+      "immunities": "Cegueira, Escuridão Total, Ilusões Visuais, Gases de mina •",
+      "weakness": "Sobrecarga Sônica / Sinos de Bronze e Granadas Acústicas (qualquer estrondo acima de 120 dB causa 4d12 de dano direto ao Eco e o deixa Atordoado por 2 rodadas)",
+      "offense": "Desloc.: 12 m (Escalada em tetos de caverna 15 m) • Ataques: Mordida Laringeal +19 (3d10+10 + Silenciar por 2 rodadas) e 2 Garras de Sílex +18 (2d10+10).",
+      "skills": "Percepção (Audição) +28, Furtividade +24, Enganação (Imitar Voz) +24, Acrobacia +20",
+      "tactics": "Caça estritamente pela Stalker AI nas galerias subterrâneas. Fig. B12 — O Eco espreitando nas galerias escuras das Minas Vilar.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Escalada em tetos de caverna 15 m) • Ataques: Mordida Laringeal +19 (3d10+10 + Silenciar por 2 rodadas) e...",
+          "damage": "PV 310 | RD 10 (Pele Calcificada de Quartzo)",
+          "desc": "Desloc.: 12 m (Escalada em tetos de caverna 15 m) • Ataques: Mordida Laringeal +19 (3d10+10 + Silenciar por 2 rodadas) e 2 Garras de Sílex +18 (2d10+10)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Sobrecarga Sônica / Sinos de Bronze e Granadas Acústicas (qualquer est...",
+          "desc": "Mimetismo Vocal Perfeito: Reproduz a voz exata de um aliado separado do grupo (Intuição CD 26)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_36",
+      "tomo4_num": 36,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Corpo-Seco — O Rejeitado pelo Céu e pela Terra",
+      "biotype": "Cadáver Incorrupto Amaldiçoado (Folclore Brasileiro & Vera Cruz)",
+      "mda": "MDA 72%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 72%",
+      "origin": "Cemitérios Coloniais & Floresta Negra (Tomo II)",
+      "territory": "Troncos Secos, Estradas Abandonadas e Taperas",
+      "virtue": "Elemento: Cinza, Terra Seca & Peste • Virtude Corrompida: Crueldade/Egoísmo",
+      "element": "Cinza, Terra Seca & Peste",
+      "quote": "“Nem Deus o quis no alto, nem o Diabo o aceitou no fogo, e até os vermes da terra vomitaram sua carne.”",
+      "description": "Homem que em vida espancou a própria mãe e cometeu tamanha ruindade que a própria terra o expeliu da cova. Seu corpo mumificado agarra-se aos troncos à beira das trilhas; quando um viajante passa, salta para as costas da vítima, cravando unhas de madeira petrificada para secar todo o sangue e a umidade vital.",
+      "canon_status": "canonical_t4",
+      "pv": "340",
+      "pd": "45",
+      "ea": "130",
+      "est": "20",
+      "rd": "15 (Carne Mumificada Imune a Perfuração)",
+      "reactions": "Esq. +16, Bloq. +18, C-Ataq. +19 (Abraço Desidratante 3d10+10)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 6,
+        "PRE": 5,
+        "INT": 4
+      },
+      "immunities": "Necrose, Veneno, Doença, Sufocamento, Armas perfurantes (balas e flechas atravessam sem efeito) •",
+      "weakness": "Fogo Bento & Três Estacas de Aroeira Benzida (chamas sagradas ignoram sua RD; pregado ao chão com aroeira benzida, não consegue se levantar)",
+      "offense": "Desloc.: 9 m (Escalada em árvores 15 m) • Ataques: Unhas de Casca Seca +19 (2d12+10 cortante) e Parasitismo Dorsal +20 (Agarra nas costas; drena 3d10 PV e 5 EA por rodada).",
+      "skills": "Furtividade (Camuflagem em Troncos) +24, Atletismo +20, Fortitude +21",
+      "tactics": "Permanece imóvel por meses fingindo ser um galho morto até sentir o calor de sangue humano. Fig. B13 — O Corpo-Seco expelido da cova, de epiderme ressecada como casca de árvore.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 9 m (Escalada em árvores 15 m) • Ataques: Unhas de Casca Seca +19 (2d12+10 cortante) e Parasitismo Dorsal +20 (...",
+          "damage": "PV 340 | RD 15 (Carne Mumificada Imune a Perfuração)",
+          "desc": "Desloc.: 9 m (Escalada em árvores 15 m) • Ataques: Unhas de Casca Seca +19 (2d12+10 cortante) e Parasitismo Dorsal +20 (Agarra nas costas; drena 3d10 PV e 5 EA por rodada)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Fogo Bento & Três Estacas de Aroeira Benzida (chamas sagradas ignoram ...",
+          "desc": "Aura de Seca Mortal (Raio 6m): Evapora água em cantis e impõe -2 em Fortitude por desidratação severa."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_37",
+      "tomo4_num": 37,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "A Matinta Perera — A Bruxa do Assobio da Meia- Noite",
+      "biotype": "Entidade Folclórica Metamórfica (Bruxa Aviária Noturna)",
+      "mda": "MDA 68%",
+      "nd": "ND 11",
+      "threat_level": "ND 11 • MDA 68%",
+      "origin": "Amazônia & Povoado de Nova Caronte (Tomo II)",
+      "territory": "Telhados de Vilas, Manguezais e Copas da Floresta Negra",
+      "virtue": "Elemento: Sombra, Névoa & Sangue • Virtude Corrompida: Medo/Ambição",
+      "element": "Sombra, Névoa & Sangue",
+      "quote": "“Quem prometeu fumo e café para ela à meia-noite, é bom estar de pé na porta às seis da manhã.”",
+      "description": "Anciã amaldiçoada que à noite transmuta-se num corvo-rasga-mortalha gigante ou bruxa alada de asas esfarrapadas. Pousa sobre os telhados emitindo um assobio estridente que paralisa famílias inteiras de pavor até que alguém grite uma promessa de oferenda para o amanhecer.",
+      "canon_status": "canonical_t4",
+      "pv": "275",
+      "pd": "40",
+      "ea": "165",
+      "est": "22",
+      "rd": "10 (Penas de Sombra)",
+      "reactions": "Esq. +21 (7d20 em voo), Bloq. +12, C-Ataq. +18 (Rasgo de Mortalha — 3d10+8 + 1d4 EST)",
+      "attributes": {
+        "FOR": 4,
+        "VIG": 5,
+        "AGI": 8,
+        "PRE": 7,
+        "INT": 6
+      },
+      "immunities": "Medo, Queda, Escuridão •",
+      "weakness": "A Promessa da Manhã & Tesoura de Ferro Aberta em Cruz (prometer café/tabaco obriga-a a cessar o ataque e voltar ao amanhecer na forma de uma velha com RD 0 e metade dos PV)",
+      "offense": "Desloc.: 9 m, Voo 24 m • Ataques: Garras de Rasga-Mortalha +19 (3d10+9 cortante) e Assobio que Rasga o Véu (Raio 30m, Vontade CD 25 ou 3d8 espiritual + 3 de perda de EST).",
+      "skills": "Furtividade +22, Ocultismo +20, Intimidação +22, Enganação +20",
+      "tactics": "Vive infiltrada entre moradores comuns durante o dia; à noite caça nos limites de Nova Caronte. Fig. B14 — A Matinta Perera em sua forma noturna sobre os telhados de Nova Caronte.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 9 m, Voo 24 m • Ataques: Garras de Rasga-Mortalha +19 (3d10+9 cortante) e Assobio que Rasga o Véu (Raio 30m, Vo...",
+          "damage": "PV 275 | RD 10 (Penas de Sombra)",
+          "desc": "Desloc.: 9 m, Voo 24 m • Ataques: Garras de Rasga-Mortalha +19 (3d10+9 cortante) e Assobio que Rasga o Véu (Raio 30m, Vontade CD 25 ou 3d8 espiritual + 3 de perda de EST)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: A Promessa da Manhã & Tesoura de Ferro Aberta em Cruz (prometer café/t...",
+          "desc": "Transmissão do Fardo: Quando está à beira da morte, pergunta 'Quem quer?'; quem responder 'Eu quero' recebe a maldição."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_38",
+      "tomo4_num": 38,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Capelobo — O Híbrido Sugador de Cérebros",
+      "biotype": "Besta Híbrida Folclórica (Maranhão/Pará & Floresta Negra)",
+      "mda": "MDA 70%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 70%",
+      "origin": "Norte do Brasil & Ilha da Floresta Negra (Tomo II)",
+      "territory": "Trilhas de Caçadores e Acampamentos Noturnos",
+      "virtue": "Elemento: Sangue & Osso • Virtude Ressonante: Fúria/Fome",
+      "element": "Sangue & Osso",
+      "quote": "“Nenhum osso quebrado do pescoço para baixo. Só um furo limpo no topo do crânio, completamente vazio por dentro.”",
+      "description": "Monstruosidade noturna com torso humanoide musculoso, patas de cascos redondos e cabeça alongada de tamanduá-bandeira descomunal. Abraça suas vítimas com força esmagadora e introduz sua língua cilíndrica e óssea pelo ouvido ou fontanela para sugar o cérebro e a Energia de Alma em segundos.",
+      "canon_status": "canonical_t4",
+      "pv": "360",
+      "pd": "45",
+      "ea": "110",
+      "est": "16",
+      "rd": "12 (Couro Espesso de Cerdas Duras)",
+      "reactions": "Esq. +15, Bloq. +19 (Abraço de Tamanduá RD 20), C-Ataq. +20 (Agarrão Esmagador 3d12+12)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 7,
+        "AGI": 6,
+        "PRE": 5,
+        "INT": 2
+      },
+      "immunities": "Faro Cego (enxerga pelo cheiro de Energia de Alma e massa encefálica) •",
+      "weakness": "O Umbigo Exposto (ataques mirados na região umbilical com -3 de penalidade ignoram toda a RD e causam Crítico automático)",
+      "offense": "Desloc.: 15 m • Ataques: 2 Garras Curvas de Tamanduá +20 (3d10+12 cortante + Agarrar automático se ambas acertarem) e Sonda Craniana (+22 em alvo agarrado, 4d12 perfurante + Dreno de 2 INT e 15 EA).",
+      "skills": "Atletismo +22, Furtividade +19, Percepção +21, Luta +20",
+      "tactics": "Atrai cães de caça para longe dos acampamentos antes de emboscar os humanos. Fig. B15 — O Capelobo exibindo suas garras curvas de tamanduá- gigante e focinho alongado.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m • Ataques: 2 Garras Curvas de Tamanduá +20 (3d10+12 cortante + Agarrar automático se ambas acertarem) e So...",
+          "damage": "PV 360 | RD 12 (Couro Espesso de Cerdas Duras)",
+          "desc": "Desloc.: 15 m • Ataques: 2 Garras Curvas de Tamanduá +20 (3d10+12 cortante + Agarrar automático se ambas acertarem) e Sonda Craniana (+22 em alvo agarrado, 4d12 perfurante + Dreno de 2 INT e 15 EA)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: O Umbigo Exposto (ataques mirados na região umbilical com -3 de penali...",
+          "desc": "Silêncio de Casco Redondo: Seus rastros parecem fundos de garrafa na lama (+8 na CD de Sobrevivência para rastreá-lo)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_39",
+      "tomo4_num": 39,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Curupira Ancestral — O Senhor dos Calcanhares Invertidos",
+      "biotype": "Lenda Folclórica Soberana (Espírito Guardião da Floresta)",
+      "mda": "MDA 78%",
+      "nd": "ND 15",
+      "threat_level": "ND 15 • MDA 78%",
+      "origin": "Florestas Tropicais do Brasil & Vera Cruz das Almas (Tomo II)",
+      "territory": "Interior Profundo da Floresta Negra",
+      "virtue": "Justiça/Fúria Natural",
+      "element": "Brasa, Madeira & Sangue Selvagem",
+      "quote": "“Quanto mais você segue as pegadas dele para sair da mata, mais fundo você entra na barriga dela.”",
+      "description": "Guerreiro silvestre feroz de cabelos de brasa crepitante, dentes tingidos de clorofila e sangue, e pés voltados para trás que distorcem a geometria da floresta. Bate nos troncos de sapopema para testar a resistência da mata antes das tempestades e enlouquece caçadores predatórios.",
+      "canon_status": "canonical_t4",
+      "pv": "430",
+      "pd": "60",
+      "ea": "210",
+      "est": "28",
+      "rd": "14",
+      "reactions": "Esq. +22 (8d20 — Labirinto Vivo), Bloq. +18, C-Ataq. +22 (Lança de Tucumã — 3d12+14)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 9,
+        "PRE": 8,
+        "INT": 6
+      },
+      "immunities": "Labirintos, Terreno difícil, Fogo, Venenos naturais, Armadilhas •",
+      "weakness": "Nó de Cipó Cego & Oferenda de Fumo de Rolo (encontrar um cipó amarrado com a ponta escondida obriga-o a gastar 1d4 rodadas tentando desatar o nó)",
+      "offense": "Desloc.: 18 m • Ataques: Azagaia de Osso e Brasa +22 (3d12+14 perfurante/fogo) e Toque no Tronco de Sapopema (Onda sônica em cone de 15m: 4d10 + Derrubar CD 27).",
+      "skills": "Sobrevivência +28, Furtividade +25, Enganação +24, Luta +22",
+      "tactics": "Monta queixadas gigantes encouraçados; pune com a morte quem mata fêmeas prenhes ou filhotes. Fig. B16 — O Curupira Ancestral espreitando entre as raízes de sapopema.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m • Ataques: Azagaia de Osso e Brasa +22 (3d12+14 perfurante/fogo) e Toque no Tronco de Sapopema (Onda sônic...",
+          "damage": "PV 430 | RD 14",
+          "desc": "Desloc.: 18 m • Ataques: Azagaia de Osso e Brasa +22 (3d12+14 perfurante/fogo) e Toque no Tronco de Sapopema (Onda sônica em cone de 15m: 4d10 + Derrubar CD 27)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Nó de Cipó Cego & Oferenda de Fumo de Rolo (encontrar um cipó amarrado...",
+          "desc": "Geometria dos Pés Invertidos: Quem tenta fugir sem passar em Sobrevivência/Vontade CD 28 corre na direção oposta, terminando o turno adjacente a ele."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_40",
+      "tomo4_num": 40,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Boto Carniceiro — O Galanteador das Águas Turvas",
+      "biotype": "Lenda Metamórfica Fluvial/Costeira",
+      "mda": "MDA 65%",
+      "nd": "ND 10",
+      "threat_level": "ND 10 • MDA 65%",
+      "origin": "Bacia Amazônica & Porto de Nova Caronte (Tomo II)",
+      "territory": "Cais, Festas Portuárias e Canais de Nova Caronte",
+      "virtue": "Elemento: Sal, Sangue & Ilusão • Virtude Corrompida: Ambição/Sedução",
+      "element": "Sal, Sangue & Ilusão",
+      "quote": "“Nunca dance com um estranho de terno branco que não tira o chapéu nem dentro da igreja.”",
+      "description": "Predador anfíbio que assume a forma de um homem elegante vestido de linho branco nas noites de festa portuária. Usa um chapéu panamá para esconder o espiráculo pulsante no topo do crânio. Atrai vítimas isoladas para a beira do cais antes de revelar oitenta dentes cônicos e arrastá-las para o fundo.",
+      "canon_status": "canonical_t4",
+      "pv": "260",
+      "pd": "40",
+      "ea": "135",
+      "est": "20",
+      "rd": "10",
+      "reactions": "Esq. +18, Bloq. +15, C-Ataq. +18 (Arrasto para o Cais — 3d10+10 + Submersão)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 6,
+        "AGI": 7,
+        "PRE": 8,
+        "INT": 5
+      },
+      "immunities": "Afogamento, Charme, Frio aquático •",
+      "weakness": "Arrancar o Chapéu (manobra CD 22 que arranque seu chapéu expõe o espiráculo craniano, quebrando seu glamour ilusório e deixando-o vulnerável a críticos em 16-20)",
+      "offense": "Desloc.: 12 m, Natação 24 m • Ataques: Mordida Cetácea +18 (3d10+10 perfurante + Agarrar) e Estocada de Bengala-Estoque +18 (2d10+8).",
+      "skills": "Enganação +24, Diplomacia +22, Furtividade +18, Atletismo +19",
+      "tactics": "Frequenta tavernas de Nova Caronte e bailes de navios; alimenta-se de sangue e memórias afetivas. Fig. B17 — A verdadeira anatomia anfíbia do Boto Carniceiro após perder o disfarce humano.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m, Natação 24 m • Ataques: Mordida Cetácea +18 (3d10+10 perfurante + Agarrar) e Estocada de Bengala-Estoque ...",
+          "damage": "PV 260 | RD 10",
+          "desc": "Desloc.: 12 m, Natação 24 m • Ataques: Mordida Cetácea +18 (3d10+10 perfurante + Agarrar) e Estocada de Bengala-Estoque +18 (2d10+8)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Arrancar o Chapéu (manobra CD 22 que arranque seu chapéu expõe o espir...",
+          "desc": "Valsa Hipnótica do Porto: Alvo que dance com ele por 1 minuto deve passar em Vontade CD 24 ou segue-o voluntariamente até a água."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_41",
+      "tomo4_num": 41,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "A Iara Decaída — A Sereia das Mandíbulas Abissais",
+      "biotype": "Lenda Aquática Corrompida",
+      "mda": "MDA 70%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 70%",
+      "origin": "Rios Brasileiros & Lagoas de Vera Cruz das Almas (Tomo II)",
+      "territory": "Cachoeiras, Recifes Costeiros e Galeria Submersa",
+      "virtue": "Elemento: Água, Espelho & Som • Virtude Corrompida: Orgulho/Sedução",
+      "element": "Água, Espelho & Som",
+      "quote": "“O canto dela não promete amor. Promete que a água no seu pulmão vai parecer ar puro.”",
+      "description": "Acima da superfície da água, projeta o reflexo de uma mulher de beleza hipnótica penteando cabelos negros com espinhas de peixe douradas. Sob a linha d'água, sua verdadeira anatomia revela uma cauda couraçada de escamas vermelhas e uma mandíbula bipartida de peixe-víbora abissal.",
+      "canon_status": "canonical_t4",
+      "pv": "310",
+      "pd": "45",
+      "ea": "175",
+      "est": "24",
+      "rd": "12 (Escamas de Pirarucu Anímico)",
+      "reactions": "Esq. +19 (na água +23), Bloq. +15, C-Ataq. +19 (Cabelos Constritores 3d10+10)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 6,
+        "AGI": 8,
+        "PRE": 9,
+        "INT": 6
+      },
+      "immunities": "Afogamento, Sônico, Encantamento •",
+      "weakness": "Quebrar o Espelho d'Água & Combate em Terra Seca (fora d'água seu deslocamento cai para 3m e perde 4 de Esquiva)",
+      "offense": "Desloc.: 3 m em terra, Natação 27 m • Ataques: Cabelos de Anzol +19 (Alcance 6m, 2d12+10 + Puxar 6m para a água) e Mordida Abissal +20 (3d12+12 em alvo submerso).",
+      "skills": "Atuação (Canto) +26, Enganação +22, Atletismo (Natação) +24, Ocultismo +19",
+      "tactics": "Guarda entradas submersas para templos antigos e coleciona joias dos afogados. Fig. B18 — A Iara Decaída revelando suas garras e feições predatórias subaquáticas.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 3 m em terra, Natação 27 m • Ataques: Cabelos de Anzol +19 (Alcance 6m, 2d12+10 + Puxar 6m para a água) e Mordi...",
+          "damage": "PV 310 | RD 12 (Escamas de Pirarucu Anímico)",
+          "desc": "Desloc.: 3 m em terra, Natação 27 m • Ataques: Cabelos de Anzol +19 (Alcance 6m, 2d12+10 + Puxar 6m para a água) e Mordida Abissal +20 (3d12+12 em alvo submerso)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Quebrar o Espelho d'Água & Combate em Terra Seca (fora d'água seu desl...",
+          "desc": "Canto da Submersão Voluntária (Raio 45m): Vontade CD 26 ou a vítima caminha para o fundo da água e inspira líquido voluntariamente."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_42",
+      "tomo4_num": 42,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "A Mula-Sem-Cabeça — A Fornalha Viva do Galope",
+      "biotype": "Maldição Folclórica Ígnea",
+      "mda": "MDA 74%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 74%",
+      "origin": "Interior Colonial Brasileiro & Vera Cruz (Tomo II)",
+      "territory": "Encruzilhadas, Sete Freguesias e Estradas de Terra à Noite",
+      "virtue": "Elemento: Brasa, Cinza & Ferro em Brasa • Virtude Corrompida: Culpa/Fúria",
+      "element": "Brasa, Cinza & Ferro em Brasa",
+      "quote": "“O relincho dela vem de uma garganta que não existe, mas faz chorar quem ouve.”",
+      "description": "Nascida da quebra de votos sagrados nas noites de quinta para sexta-feira, esta besta negra de porte colossal galopa pelas estradas com ferraduras de prata e aço em brasa. Onde deveria estar a cabeça, jorra uma coluna vulcânica de labaredas presa por um freio de ferro espiritual invisível.",
+      "canon_status": "canonical_t4",
+      "pv": "390",
+      "pd": "50",
+      "ea": "160",
+      "est": "18",
+      "rd": "14 (Pelo de Carvão Incandescente)",
+      "reactions": "Esq. +17, Bloq. +18, C-Ataq. +21 (Coice de Ferradura de Prata — 4d10+14)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 8,
+        "AGI": 7,
+        "PRE": 6,
+        "INT": 3
+      },
+      "immunities": "Fogo, Medo, Decapitação, Cegueira •",
+      "weakness": "Tirar o Freio de Ferro ou Sangrar com Agulha Virgem (Luta/Acrobacia CD 25 para puxar o freio invisível ou espetá-la com ferro virgem tirando uma gota de sangue quebra a maldição)",
+      "offense": "Desloc.: 24 m • Ataques: Atropelamento de Cascos de Prata +21 (4d10+14 contundente/fogo) e Jato da Garganta Vulcânica (Cone 9m, 4d12 fogo espiritual, CD 26 Reflexos).",
+      "skills": "Atletismo +24, Percepção +20, Intimidação +22, Fortitude +22",
+      "tactics": "Corre sete freguesias antes do cantar do galo; na forma humana diurna não se lembra do que matou. Fig. B19 — O galope flamejante da Mula-Sem-Cabeça com cascos de prata em brasa.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 24 m • Ataques: Atropelamento de Cascos de Prata +21 (4d10+14 contundente/fogo) e Jato da Garganta Vulcânica (C...",
+          "damage": "PV 390 | RD 14 (Pelo de Carvão Incandescente)",
+          "desc": "Desloc.: 24 m • Ataques: Atropelamento de Cascos de Prata +21 (4d10+14 contundente/fogo) e Jato da Garganta Vulcânica (Cone 9m, 4d12 fogo espiritual, CD 26 Reflexos)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Tirar o Freio de Ferro ou Sangrar com Agulha Virgem (Luta/Acrobacia CD...",
+          "desc": "Faro por Unhas e Dentes Brancos: Enxerga no escuro pelo brilho de unhas, dentes ou metais expostos; quem se esconde de bruços ganha +10 em Furtividade."
+        }
+      ]
+    },
+    {
+      "id": "creature_mimico",
+      "tomo4_num": 43,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Mímico Genético — O Duplo de Carne de Nova Caronte",
+      "biotype": "Anomalia Metamórfica (Experimento Descartado de Nácar)",
+      "mda": "MDA 65%",
+      "nd": "ND 11",
+      "threat_level": "ND 11 • MDA 65%",
+      "origin": "Cidadela de Nácar & Povoado de Nova Caronte (Crônica I / Tomo II)",
+      "territory": "Ruas de Nova Caronte, Abrigos de Sobreviventes e Navios",
+      "virtue": "Elemento: Sangue, Carne & Memória Celular • Virtude Corrompida: Engano",
+      "element": "Sangue, Carne & Memória Celular",
+      "quote": "“Ele tinha a voz do piloto, a aliança do piloto e a cicatriz no queixo. Só não sabia para que servia um garfo.”",
+      "description": "Subproduto dos experimentos de clonagem da Cidadela de Nácar jogado nas águas de Nova Caronte. Ao consumir sangue ou tecido de uma vítima, remodela seus ossos e cordas vocais para assumir a aparência exata da pessoa, infiltrando-se em grupos de sobreviventes para devorá-los um a um.",
+      "canon_status": "canonical_t4",
+      "pv": "290",
+      "pd": "45",
+      "ea": "120",
+      "est": "18",
+      "rd": "10 (Carne Maleável)",
+      "reactions": "Esq. +18, Bloq. +16 (Endurecimento Ósseo RD 16), C-Ataq. +19 (Lâmina de Osso Exposto 3d10+11)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 7,
+        "AGI": 7,
+        "PRE": 6,
+        "INT": 5
+      },
+      "immunities": "Acerto Crítico convencional (órgãos móveis), Venenos •",
+      "weakness": "Fogo, Eletricidade & Falha Comportamental (+50% dano de fogo/choque; não absorve memórias antigas de infância, podendo ser desmascarado com Investigação/Intuição CD 20)",
+      "offense": "Desloc.: 12 m (Escalada 9 m) • Ataques: Tentáculo de Biomassa +19 (3d10+11 + Assimilar DNA) e Mordida Peitoral +19 (4d10+10 em alvo surpreendido).",
+      "skills": "Enganação +25, Furtividade +21, Luta +19, Acrobacia +18",
+      "tactics": "Caça em Nova Caronte fingindo ser passageiros sobreviventes de voos recém-caídos. Fig. B20 — O Mímico Genético em colapso celular ao ser exposto ao fogo.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Escalada 9 m) • Ataques: Tentáculo de Biomassa +19 (3d10+11 + Assimilar DNA) e Mordida Peitoral +19 (4d10...",
+          "damage": "PV 290 | RD 10 (Carne Maleável)",
+          "desc": "Desloc.: 12 m (Escalada 9 m) • Ataques: Tentáculo de Biomassa +19 (3d10+11 + Assimilar DNA) e Mordida Peitoral +19 (4d10+10 em alvo surpreendido)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Fogo, Eletricidade & Falha Comportamental (+50% dano de fogo/choque; n...",
+          "desc": "Cópia Celular Instantânea: Após causar dano de mordida, assume a face e o cheiro exato do alvo atingido."
+        }
+      ]
     },
     {
       "id": "creature_povo_sauriano",
-      "name": "Dinossauros e Tribais da Ilha Canibal",
-      "classification": "Ecossistema Simbiótico Mutante",
-      "mda_level": "MDA 15%–60%",
-      "danger_tier": "SELVA MORTAL / HIERARQUIA",
-      "origin": "Campanha I: O Triângulo das Bermudas (Sessão 2)",
-      "appearance": "Répteis pré-históricos e humanos mutantes em simbiose com placas dérmicas e pinturas rituais de sangue.",
-      "behavior": "Sociedade predatória iniciada há 400 anos quando um náufrago solitário ensinou canibalismo às feras da ilha. Dividida em Classe Baixa, Média e Governantes.",
-      "signature_ability": "Ataque Sincronizado de Emboscada em Templos de Pedra.",
-      "weakness": "Desorganização rápida na ausência dos líderes de casta média.",
-      "lore_notes": "Estudo canônico de como a Lei da Alucinação funde faunas extintas a ritos de sangue humanos."
+      "tomo4_num": 44,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Predadores & Tribais da Ilha Canibal",
+      "biotype": "Híbrido Reptiliano-Humano / Terópode Evoluído pelo Véu",
+      "mda": "MDA 62%",
+      "nd": "ND 10",
+      "threat_level": "ND 10 • MDA 62%",
+      "origin": "Ilha Canibal / Arquipélago de Vera Cruz das Almas (Crônica I)",
+      "territory": "Selvas Vulcânicas e Aldeias de Ossos da Ilha Canibal",
+      "virtue": "Elemento: Sangue Quente & Osso • Virtude Ressonante: Fúria/Sobrevivência",
+      "element": "Sangue Quente & Osso",
+      "quote": "“Na terceira ilha, a evolução não escolheu os mamíferos.”",
+      "description": "Na Ilha Canibal, a fauna pré- histórica preservada pelo Véu fundiu-se a náufragos ao longo dos séculos, originando uma sociedade tribal de castas híbridas entre humanos e terópodes escamosos. Caçam em matilhas coordenadas usando armadilhas de fosso e rituais antropofágicos para absorver a Energia de Alma de forasteiros.",
+      "canon_status": "canonical_t4",
+      "pv": "250",
+      "pd": "35",
+      "ea": "90",
+      "est": "16",
+      "rd": "10 (Escamas Osteodérmicas)",
+      "reactions": "Esq. +19 (6d20), Bloq. +15, C-Ataq. +18 (Garra falciforme traseira 3d10+10)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 6,
+        "AGI": 8,
+        "PRE": 4,
+        "INT": 4
+      },
+      "immunities": "Medo quando em bando (3+ indivíduos) •",
+      "weakness": "Frio Intenso & Morte do Alfa da Casta (frio reduz AGI em -2; se o Xamã-Alfa cai, os demais testam Vontade CD 20 ou recuam)",
+      "offense": "Desloc.: 18 m (Salto 9 m) • Ataques: Lança Serrilhada de Osso +18 (2d12+10) e Garra de Raptor +19 (3d10+10 + Sangramento 1d8).",
+      "skills": "Sobrevivência +20, Furtividade +20, Atletismo +21, Luta +18",
+      "tactics": "Operam em bandos de 4 a 8 batedores nas fronteiras da Ilha Canibal. Fig. B21 — Predador veloz de garras falciformes da Ilha Canibal.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m (Salto 9 m) • Ataques: Lança Serrilhada de Osso +18 (2d12+10) e Garra de Raptor +19 (3d10+10 + Sangramento...",
+          "damage": "PV 250 | RD 10 (Escamas Osteodérmicas)",
+          "desc": "Desloc.: 18 m (Salto 9 m) • Ataques: Lança Serrilhada de Osso +18 (2d12+10) e Garra de Raptor +19 (3d10+10 + Sangramento 1d8)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Frio Intenso & Morte do Alfa da Casta (frio reduz AGI em -2; se o Xamã...",
+          "desc": "Tática de Matilha Coordenada: Recebe +3 de ataque e +2d6 de dano quando flanqueia o mesmo alvo com outro membro da casta."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_45",
+      "tomo4_num": 45,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Tirano-Rei da Ilha Canibal — O Colosso Sauriano do Véu",
+      "biotype": "Besta Colossal Mutada pelo Véu (Deus Vivo das Castas Canibais)",
+      "mda": "MDA 82%",
+      "nd": "ND 16",
+      "threat_level": "ND 16 • MDA 82%",
+      "origin": "Cratera Central da Ilha Canibal (Crônica I)",
+      "territory": "Vale Vulcânico da Ilha Canibal",
+      "virtue": "Elemento: Osso, Sangue & Cinza Vulcânica • Virtude Ressonante: Fúria Bruta",
+      "element": "Osso, Sangue & Cinza Vulcânica",
+      "quote": "“Eles tocam os tambores de fêmur humano não para nos assustar, mas para chamar o que mora na cratera.”",
+      "description": "O topo da cadeia alimentar da Ilha Canibal: um predador sauriano encouraçado de doze metros de comprimento, mutado por séculos de exposição direta às fendas de Energia de Alma do vulcão central. As castas híbridas da ilha o veneram como encarnação divina da fome, oferecendo-lhe prisioneiros em altares de pedra.",
+      "canon_status": "canonical_t4",
+      "pv": "690",
+      "pd": "60",
+      "ea": "150",
+      "est": "24",
+      "rd": "20 (Carapaça Dorsal de Espinhos Ósseos)",
+      "reactions": "Esq. +10, Bloq. +23, C-Ataq. +23 (Abocanhar e Sacudir — 5d12+18)",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 10,
+        "AGI": 4,
+        "PRE": 7,
+        "INT": 2
+      },
+      "immunities": "Medo, Armas leves, Venenos, Terreno vulcânico •",
+      "weakness": "Foco pelo Movimento e Cheiro de Sangue (granadas de fumaça química misturadas com amônia cegam seu olfato por 2 rodadas)",
+      "offense": "Desloc.: 15 m • Ataques: Mordida de Tirano +24 (5d12+18 perfurante/contundente + Engolir CD 30) e Varredura de Cauda +22 (4d10+16 em cone traseiro de 9m).",
+      "skills": "Atletismo +27, Percepção +22, Intimidação +26, Fortitude +27",
+      "tactics": "Soberano territorial da terceira ilha de Vera Cruz das Almas. Fig. B22 — O Colosso Sauriano venerado pelas tribos da Ilha Canibal.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m • Ataques: Mordida de Tirano +24 (5d12+18 perfurante/contundente + Engolir CD 30) e Varredura de Cauda +22...",
+          "damage": "PV 690 | RD 20 (Carapaça Dorsal de Espinhos Ósseos)",
+          "desc": "Desloc.: 15 m • Ataques: Mordida de Tirano +24 (5d12+18 perfurante/contundente + Engolir CD 30) e Varredura de Cauda +22 (4d10+16 em cone traseiro de 9m)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Foco pelo Movimento e Cheiro de Sangue (granadas de fumaça química mis...",
+          "desc": "Rugido Sísmico da Cratera: Derruba todos os alvos a 15m que falharem em Fortitude CD 28."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_46",
+      "tomo4_num": 46,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Nobre Bioluminescente — Patrulheiro da Cidadela de Nácar",
+      "biotype": "Humano Hiper-Evoluído (Aristocracia Genética de Nácar)",
+      "mda": "MDA 70%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 70%",
+      "origin": "Cidadela de Nácar / Arquipélago de Vera Cruz (Crônica I)",
+      "territory": "Torres de Pérola, Fronteiras de Nácar e Expedições de Coleta",
+      "virtue": "Ambição/Orgulho",
+      "element": "Vidro, Pérola & Bioeletricidade",
+      "quote": "“Vocês do mundo exterior ainda envelhecem, apodrecem e morrem no escuro. Que existência pitoresca.”",
+      "description": "Descendentes dos cientistas e nobres que se isolaram na Cidadela de Nácar após 1500. Através de séculos de eugenia anímica e enxertos de fauna abissal, possuem pele perolada com veias bioluminescentes, guelras retráteis e armaduras simbióticas de madrepérola viva.",
+      "canon_status": "canonical_t4",
+      "pv": "320",
+      "pd": "55",
+      "ea": "190",
+      "est": "26",
+      "rd": "16 (Couraça Simbiótica de Madrepérola)",
+      "reactions": "Esq. +19, Bloq. +20 (Escudo Bioelétrico RD 20), C-Ataq. +20 (Lança de Coral Voltaico 3d12+12)",
+      "attributes": {
+        "FOR": 5,
+        "VIG": 6,
+        "AGI": 8,
+        "PRE": 7,
+        "INT": 8
+      },
+      "immunities": "Pressão Abissal, Eletricidade, Afogamento, Doenças mundanas •",
+      "weakness": "Vírus Necróticos da Floresta Negra (sua genética hiper-refinada sofre dano dobrado de toxinas folclóricas e do Corpo-Seco)",
+      "offense": "Desloc.: 12 m, Natação 18 m • Ataques: Alabarda de Nácar Voltaica +20 (3d12+12 elétrico/espiritual) ou Feixe de Sinapse (Distância 30m, +20, 3d10 + Paralisia CD 26).",
+      "skills": "Ocultismo/Ciência +23, Pontaria +20, Luta +20, Intimidação +21",
+      "tactics": "Raptam Despertos de Nova Caronte para extrair suas Virtudes de Alma em laboratório. Fig. B23 — Patrulheiro aristocrata de Nácar com armadura viva e tridente bioelétrico.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m, Natação 18 m • Ataques: Alabarda de Nácar Voltaica +20 (3d12+12 elétrico/espiritual) ou Feixe de Sinapse ...",
+          "damage": "PV 320 | RD 16 (Couraça Simbiótica de Madrepérola)",
+          "desc": "Desloc.: 12 m, Natação 18 m • Ataques: Alabarda de Nácar Voltaica +20 (3d12+12 elétrico/espiritual) ou Feixe de Sinapse (Distância 30m, +20, 3d10 + Paralisia CD 26)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Vírus Necróticos da Floresta Negra (sua genética hiper-refinada sofre ...",
+          "desc": "Sobrecarga de Bioluminescência: Cega inimigos a 6m por 1 rodada (Reflexos CD 25) e restaura 20 PV da própria armadura viva."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_47",
+      "tomo4_num": 47,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Reflexo da Galeria & os Zumbis de Sangue Vilar",
+      "biotype": "Anomalias Residenciais (Ecos de Espelho e Cadáveres Coagulados)",
+      "mda": "MDA 50%",
+      "nd": "ND 7",
+      "threat_level": "ND 7 • MDA 50%",
+      "origin": "Mansão Vilar (Crônica II)",
+      "territory": "Galeria de Espelhos, Porões e Corredores da Mansão Vilar",
+      "virtue": "Elemento: Vidro, Espelho & Sangue Coagulado • Virtude Corrompida: Medo/Culpa",
+      "element": "Vidro, Espelho & Sangue Coagulado",
+      "quote": "“Seu reflexo no espelho piscou meio segundo depois de você.”",
+      "description": "Na Mansão Vilar, os convidados assassinados nos anos 1990 levantaram-se como Zumbis de Sangue — cadáveres em trajes de gala cujas feridas jorram chicotes de sangue coagulado — enquanto os espelhos da galeria aprisionaram os espíritos em Ruptura, criando Reflexos capazes de puxar os vivos para dentro do vidro.",
+      "canon_status": "canonical_t4",
+      "pv": "175",
+      "pd": "25",
+      "ea": "80",
+      "est": "12",
+      "rd": "8 (Vidro/Coágulo)",
+      "reactions": "Esq. +15, Bloq. +14, C-Ataq. +15 (Estilhaço de Espelho 2d10+8)",
+      "attributes": {
+        "FOR": 5,
+        "VIG": 5,
+        "AGI": 6,
+        "PRE": 5,
+        "INT": 3
+      },
+      "immunities": "Sangramento, Medo, Exaustão •",
+      "weakness": "Cobrir ou Despedaçar Espelhos com Ferro Frio (Reflexos) / Fogo e Sal Grosso (Zumbis de Sangue)",
+      "offense": "Desloc.: 12 m (Teleporte entre espelhos da mesma sala) • Ataques: Garra de Vidro Espelhado / Chicote de Coágulo +15 (2d10+8 cortante + Puxar para o Espelho CD 21).",
+      "skills": "Furtividade +18, Luta +15, Percepção +14",
+      "tactics": "Encontrados em grupos de 3 a 6 indivíduos nos corredores da Mansão Vilar. Fig. B24 — O Reflexo emergindo da moldura espelhada na galeria da Mansão Vilar.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Teleporte entre espelhos da mesma sala) • Ataques: Garra de Vidro Espelhado / Chicote de Coágulo +15 (2d1...",
+          "damage": "PV 175 | RD 8 (Vidro/Coágulo)",
+          "desc": "Desloc.: 12 m (Teleporte entre espelhos da mesma sala) • Ataques: Garra de Vidro Espelhado / Chicote de Coágulo +15 (2d10+8 cortante + Puxar para o Espelho CD 21)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Cobrir ou Despedaçar Espelhos com Ferro Frio (Reflexos) / Fogo e Sal G...",
+          "desc": "Troca de Lado no Espelho: Se um personagem falhar em Vontade CD 21 ao ser agarrado junto a uma moldura, fica preso dentro do espelho enquanto o Reflexo assume seu corpo."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_48",
+      "tomo4_num": 48,
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Anhangá de Cinza & o Bradador dos Campos",
+      "biotype": "Lenda Folclórica Indígena e Sulista (Espírito de Fogo-Fátuo e Brado Mortal)",
+      "mda": "MDA 72%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 72%",
+      "origin": "Sertões, Campos Gerais e Matas do Brasil (Tomo II Expandido)",
+      "territory": "Cerrados, Pampas Nebulosos e Fronteiras Rurais do Véu",
+      "virtue": "Elemento: Cinza, Fogo & Vento Cortante • Virtude Ressonante: Tormento/Justiça",
+      "element": "Cinza, Fogo & Vento Cortante",
+      "quote": "“Ao pôr do sol das sextas-feiras, o grito do Bradador rasga o capim e o espírito de brasa traz a febre da morte.”",
+      "description": "Duas manifestações registradas pelos Bandeirantes do Véu: o Anhangá surge envolto em fogo-fátuo induzindo febre delirante e alucinações mortais em quem fere a fauna; já o Bradador é o espírito seco de um homem enterrado sem absolvição que corre pelos campos às sextas-feiras emitindo sete brados capazes de estourar os tímpanos e o espírito.",
+      "canon_status": "canonical_t4",
+      "pv": "350",
+      "pd": "50",
+      "ea": "170",
+      "est": "24",
+      "rd": "13",
+      "reactions": "Esq. +19, Bloq. +16, C-Ataq. +19 (Investida de Brasa 3d12+12)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 8,
+        "INT": 5
+      },
+      "immunities": "Medo, Fogo, Ilusões, Desorientação •",
+      "weakness": "Respeito ao Tabu de Caça (Anhangá) / Cortar a Sétima Camisa de Vento com Adaga Benzida (Bradador)",
+      "offense": "Desloc.: 21 m • Ataques: Investida de Brasa Espiritual +20 (3d12+12 fogo) e O Sétimo Brado do Campo (Raio 24m, 4d10 sônico/espiritual + perda de 1d4 EST, CD 26 Vontade).",
+      "skills": "Percepção +22, Intimidação +24, Sobrevivência +22, Atletismo +21",
+      "tactics": "Surgem nas zonas rurais onde o Véu se adelgaça após queimadas. Fig. B25 — Manifestação espectral luminosa do Anhangá nos campos queimados. C. LENDAS DESCONHECIDAS E OBSCURAS DE TODOS OS PAÍSES (ARQUIVOS GLOBAIS DA A.E.G.I.S.)",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 21 m • Ataques: Investida de Brasa Espiritual +20 (3d12+12 fogo) e O Sétimo Brado do Campo (Raio 24m, 4d10 sôni...",
+          "damage": "PV 350 | RD 13",
+          "desc": "Desloc.: 21 m • Ataques: Investida de Brasa Espiritual +20 (3d12+12 fogo) e O Sétimo Brado do Campo (Raio 24m, 4d10 sônico/espiritual + perda de 1d4 EST, CD 26 Vontade)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Respeito ao Tabu de Caça (Anhangá) / Cortar a Sétima Camisa de Vento c...",
+          "desc": "Febre do Anhangá: Quem o fere com arma letal deve passar em Vontade CD 26 ou enxerga seus aliados como monstros famintos por 2 rodadas."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_49",
+      "tomo4_num": 49,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Nuckelavee — O Demônio Sem Pele do Mar do Norte",
+      "biotype": "Lenda Abissal Escocesa/Orcadiana (Cavalo-e-Cavaleiro Fundidos)",
+      "mda": "MDA 88%",
+      "nd": "ND 17",
+      "threat_level": "ND 17 • MDA 88%",
+      "origin": "Ilhas Órcades (Escócia) / Atlântico Norte",
+      "territory": "Praias Rochosas, Pântanos Costeiros e Tempestades de Sal",
+      "virtue": "Elemento: Sal Negro, Peste & Sangue Exposto • Virtude Corrompida: Fúria/Pestilência",
+      "element": "Sal Negro, Peste & Sangue Exposto",
+      "quote": "“Seu hálito murcha as colheitas, apodrece o gado no pasto e faz o mar ferver em sangue negro.”",
+      "description": "O demônio folclórico mais letal das Ilhas do Norte. Cavalo e cavaleiro formam uma única abominação fundida na carne viva, desprovida de pele: músculos vermelhos pulsantes, tendões amarelados e veias de sangue negro correm à mostra. O torso humanoide brota diretamente do dorso equino com braços longos que arrastam no chão.",
+      "canon_status": "canonical_t4",
+      "pv": "640",
+      "pd": "65",
+      "ea": "210",
+      "est": "28",
+      "rd": "18 (Musculatura Abissal Densa)",
+      "reactions": "Esq. +16, Bloq. +22, C-Ataq. +24 (Arrastão de Garras Longas — 4d12+16 + Infecção Negra)",
+      "attributes": {
+        "FOR": 9,
+        "VIG": 9,
+        "AGI": 6,
+        "PRE": 8,
+        "INT": 4
+      },
+      "immunities": "Água Salgada, Frio Polar, Venenos, Doenças, Dor, Sangramento •",
+      "weakness": "Água Doce Corrente & Chuva Forte (tem pavor absoluto de água doce pura; não pode atravessar um riacho e jatos de água doce queimam sua carne sem pele causando 4d10 de dano e anulando sua RD)",
+      "offense": "Desloc.: 18 m, Natação no mar 24 m • Ataques: 2 Garras que Arrastam no Chão +24 (Alcance 4,5m, 4d12+16 cortante) e Mordida Ciclópica Equina +23 (4d10+15).",
+      "skills": "Atletismo +26, Intimidação +26, Luta +24, Fortitude +25",
+      "tactics": "Solta-se nas tempestades de inverno do Atlântico Norte. Fig. B26 — A monstruosidade equino-humanoide Nuckelavee em investida costeira.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m, Natação no mar 24 m • Ataques: 2 Garras que Arrastam no Chão +24 (Alcance 4,5m, 4d12+16 cortante) e Mordi...",
+          "damage": "PV 640 | RD 18 (Musculatura Abissal Densa)",
+          "desc": "Desloc.: 18 m, Natação no mar 24 m • Ataques: 2 Garras que Arrastam no Chão +24 (Alcance 4,5m, 4d12+16 cortante) e Mordida Ciclópica Equina +23 (4d10+15)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Água Doce Corrente & Chuva Forte (tem pavor absoluto de água doce pura...",
+          "desc": "Sopro de Mortandade (Cone 18m): Vapor negro pestilento que causa 5d10 necrótico/venenoso e reduz o VIG dos alvos em -2 (Fortitude CD 30)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_50",
+      "tomo4_num": 50,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Gashadokuro — O Colosso dos Ossos Famintos",
+      "biotype": "Yokai Colossal Japonês (Esqueleto Gigante de Mortos sem Sepultura)",
+      "mda": "MDA 86%",
+      "nd": "ND 16",
+      "threat_level": "ND 16 • MDA 86%",
+      "origin": "Campos de Batalha Feudais & Florestas do Japão",
+      "territory": "Vales de Fome, Campos de Batalha Abandonados e Ruínas Rurais",
+      "virtue": "Elemento: Osso, Sangue Seco & Rancor • Virtude Corrompida: Fúria/Fome Coletiva",
+      "element": "Osso, Sangue Seco & Rancor",
+      "quote": "“Primeiro você ouve um zumbido de sino dentro do próprio ouvido: Gachi-gachi. Depois o céu inteiro vira costela.”",
+      "description": "Quando centenas de soldados ou camponeses morrem de fome ou guerra sem ritos funerários, suas almas em Ruptura Espiritual fundem todos os esqueletos num único titã de quinze metros de altura. Move-se em silêncio absoluto na calada da noite até agarrar viajantes solitários.",
+      "canon_status": "canonical_t4",
+      "pv": "680",
+      "pd": "60",
+      "ea": "200",
+      "est": "30",
+      "rd": "20 (Ossos Calcificados Imunes a Corte/Perfuração)",
+      "reactions": "Esq. +12, Bloq. +24 (Gaiola Torácica RD 26), C-Ataq. +22 (Pisoteio de Crânios 5d12+18)",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 9,
+        "AGI": 5,
+        "PRE": 8,
+        "INT": 3
+      },
+      "immunities": "Invisibilidade Noturna (até atacar), Frio, Veneno, Perfuração, Corte comum, Medo •",
+      "weakness": "Amuletos Xintoístas de Apaziguamento (Ofuda) & Exorcismo da Fome (colar talismãs sagrados no crânio principal ou saciar ritualmente os nomes dos mortos desfaz os fios que unem a estrutura)",
+      "offense": "Desloc.: 15 m • Ataques: Mão Esquelética Colossal +23 (4d12+18 contundente + Agarrar) e Varredura Óssea (Área 9m, 4d10).",
+      "skills": "Furtividade (Noturna) +24, Atletismo +26, Intimidação +26, Percepção +20",
+      "tactics": "Só se desfaz completamente quando o sol nasce ou quando a energia de rancor (EA) do coletivo se esgota. Fig. B27 — O colosso esquelético Gashadokuro erguendo-se na noite.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m • Ataques: Mão Esquelética Colossal +23 (4d12+18 contundente + Agarrar) e Varredura Óssea (Área 9m, 4d10).",
+          "damage": "PV 680 | RD 20 (Ossos Calcificados Imunes a Corte/Perfuração)",
+          "desc": "Desloc.: 15 m • Ataques: Mão Esquelética Colossal +23 (4d12+18 contundente + Agarrar) e Varredura Óssea (Área 9m, 4d10)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Amuletos Xintoístas de Apaziguamento (Ofuda) & Exorcismo da Fome (cola...",
+          "desc": "O Zumbido do Sino ('Gachi-Gachi'): Faz os ouvidos das vítimas zumbirem e seus dentes baterem sozinhos (Vontade CD 27 ou perde 1d4 EST e fica Paralisado no 1º turno)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_51",
+      "tomo4_num": 51,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "El Silbón — O Assobiador do Saco de Ossos",
+      "biotype": "Espectro Parricida Amaldiçoado (Folclore da Venezuela e Colômbia)",
+      "mda": "MDA 76%",
+      "nd": "ND 14",
+      "threat_level": "ND 14 • MDA 76%",
+      "origin": "Planícies de Los Llanos (Venezuela / Colômbia, Séc. XVIII)",
+      "territory": "Planícies Abertas, Fazendas Isoladas e Estradas Chuvosas",
+      "virtue": "Elemento: Osso, Cinza & Som Invertido • Virtude Corrompida: Fúria/Medo",
+      "element": "Osso, Cinza & Som Invertido",
+      "quote": "“Se o assobio soar alto e perto, ele está longe. Se o assobio soar baixinho, lá no horizonte... não olhe para trás. Ele já está nas suas costas.”",
+      "description": "Espírito esquelético que assassinou o próprio pai em vida; amaldiçoado pelo avô com chicotadas, pimenta nas feridas e os dentes do cão Tureco, caminha eternamente carregando um saco cheio de ossos que chocalham na noite. Entoa as sete notas musicais (Dó, Ré, Mi, Fá, Sol, Lá, Si) numa escala que inverte a percepção de distância.",
+      "canon_status": "canonical_t4",
+      "pv": "380",
+      "pd": "55",
+      "ea": "180",
+      "est": "24",
+      "rd": "14",
+      "reactions": "Esq. +20 (7d20), Bloq. +16, C-Ataq. +21 (Desossamento Instantâneo — 4d10+14)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 8,
+        "INT": 5
+      },
+      "immunities": "Medo, Armas comuns à distância (distância acústica invertida), Escuridão •",
+      "weakness": "O Latido de um Cão, Pimenta Malagueta & O Estalo de um Chicote (ouvir o latido de um cachorro, o estalo de um chicote ou ser atingido por pimenta reaviva seu trauma original, forçando-o a fugir por 1d4 rodadas)",
+      "offense": "Desloc.: 18 m • Ataques: Garras Desossadoras +21 (3d12+12 + fratura óssea) e Golpe com o Saco de Ossos +20 (4d10+14 contundente/espiritual).",
+      "skills": "Furtividade +26, Intimidação +25, Percepção +22, Enganação +24",
+      "tactics": "Caça nas noites chuvosas das planícies sul-americanas. Fig. B28 — A figura esquelética amaldiçoada de El Silbón caminhando na névoa.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m • Ataques: Garras Desossadoras +21 (3d12+12 + fratura óssea) e Golpe com o Saco de Ossos +20 (4d10+14 cont...",
+          "damage": "PV 380 | RD 14",
+          "desc": "Desloc.: 18 m • Ataques: Garras Desossadoras +21 (3d12+12 + fratura óssea) e Golpe com o Saco de Ossos +20 (4d10+14 contundente/espiritual)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: O Latido de um Cão, Pimenta Malagueta & O Estalo de um Chicote (ouvir ...",
+          "desc": "Paradoxo Acústico das Sete Notas: Enquanto assobia, qualquer inimigo adjacente sofre -5 de penalidade por achar que ele está distante."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_52",
+      "tomo4_num": 52,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Chonchon (Tué-Tué) — A Cabeça Alada dos Kalku",
+      "biotype": "Bruxo Mapuche em Projeção Corporal (Folclore do Chile e Andes)",
+      "mda": "MDA 64%",
+      "nd": "ND 10",
+      "threat_level": "ND 10 • MDA 64%",
+      "origin": "Araucanía & Ilha de Chiloé (Sul do Chile)",
+      "territory": "Florestas Austrais, Telhados Rurais e Rotas Andinas",
+      "virtue": "Elemento: Sangue, Vento & Sombra • Virtude Corrompida: Ambição/Sabedoria Negra",
+      "element": "Sangue, Vento & Sombra",
+      "quote": "“Tué, tué, tué... Nunca amaldiçoe o pássaro invisível que canta sobre o seu telhado.”",
+      "description": "Quando um Kalku (feiticeiro sombrio andino) unge a própria garganta com unguento mágico à noite, sua cabeça desprende-se do pescoço; as orelhas crescem em enormes asas com garras nas pontas, voando pela noite enquanto o corpo sem cabeça permanece dormindo em casa.",
+      "canon_status": "canonical_t4",
+      "pv": "230",
+      "pd": "45",
+      "ea": "175",
+      "est": "24",
+      "rd": "10 (Invisível a Pessoas Comuns com MDA ≤ 5%)",
+      "reactions": "Esq. +22 (8d20), Bloq. +10, C-Ataq. +18 (Mergulho Rasante 3d8+10)",
+      "attributes": {
+        "FOR": 3,
+        "VIG": 5,
+        "AGI": 9,
+        "PRE": 7,
+        "INT": 8
+      },
+      "immunities": "Queda, Terreno difícil, Visão mundana •",
+      "weakness": "Selo de Salomão Desenhado no Chão & Virar o Corpo sem Cabeça de Bruços (desenhar uma estrela de seis pontas no chão faz o Chonchon cair do céu com 0 de Esquiva)",
+      "offense": "Desloc.: 3 m, Voo 24 m • Ataques: Garras Auriculares +19 (2d10+8) e Sifão de Sangue e Alma +18 (3d10 necrótico + cura 15 PV).",
+      "skills": "Ocultismo +23, Furtividade +24, Acrobacia (Voo) +24, Percepção +20",
+      "tactics": "Guardam suas cavernas rituais utilizando o Imbunche como sentinela. Fig. B29 — A cabeça alada noturna do Chonchon em voo rasante.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 3 m, Voo 24 m • Ataques: Garras Auriculares +19 (2d10+8) e Sifão de Sangue e Alma +18 (3d10 necrótico + cura 15...",
+          "damage": "PV 230 | RD 10 (Invisível a Pessoas Comuns com MDA ≤ 5%)",
+          "desc": "Desloc.: 3 m, Voo 24 m • Ataques: Garras Auriculares +19 (2d10+8) e Sifão de Sangue e Alma +18 (3d10 necrótico + cura 15 PV)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Selo de Salomão Desenhado no Chão & Virar o Corpo sem Cabeça de Bruços...",
+          "desc": "O Convite da Manhã: Pode ser atraído para revelar sua identidade humana no dia seguinte quando chega pedindo sal ou chá."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_53",
+      "tomo4_num": 53,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "O Imbunche — O Sentinela Costurado da Caverna",
+      "biotype": "Humano Ritualisticamente Deformado (Folclore de Chiloé, Chile)",
+      "mda": "MDA 68%",
+      "nd": "ND 11",
+      "threat_level": "ND 11 • MDA 68%",
+      "origin": "Arquipélago de Chiloé (Chile)",
+      "territory": "Cavernas de Bruxos (Cueva de Quicaví) e Cofres Subterrâneos",
+      "virtue": "Elemento: Carne Costurada, Osso & Sombra • Virtude Corrompida: Obediência/Medo",
+      "element": "Carne Costurada, Osso & Sombra",
+      "quote": "“Tiraram-lhe a língua, viraram-lhe a cabeça para trás e costuraram cada abertura do seu corpo para que nenhum segredo jamais saísse dali.”",
+      "description": "Primogênito roubado no berço por seitas ocultas de Chiloé: seus ossos foram remodelados para que a perna direita ficasse colada à nuca, a cabeça torcida em 180 graus para trás e todos os orifícios costurados. Locomove-se em três apoios com velocidade aterradora e guarda os arquivos proibidos das cavernas do Véu.",
+      "canon_status": "canonical_t4",
+      "pv": "340",
+      "pd": "45",
+      "ea": "130",
+      "est": "20",
+      "rd": "14 (Pele Coberta de Pelos Grossos e Cicatrizes Rituais)",
+      "reactions": "Esq. +18, Bloq. +18, C-Ataq. +19 (Bote Tripedal 3d12+11)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 7,
+        "PRE": 6,
+        "INT": 4
+      },
+      "immunities": "Gases inalados, Venenos ingeridos, Interrogatório Mental •",
+      "weakness": "Romper as Costuras Rituais com Prata (golpe preciso CD 24 que corte os fios negros de sua boca libera o grito reprimido de décadas, atordoando-o por 2 rodadas)",
+      "offense": "Desloc.: 15 m • Ataques: Garras e Mordida Invertida +19 (3d12+11) e Grito Gutural de Cabra (CD 25 Vontade ou congela os pés do alvo no chão por 1 rodada).",
+      "skills": "Percepção +24, Luta +19, Atletismo +20, Intimidação +21",
+      "tactics": "Nunca abandona a entrada do santuário subterrâneo que lhe foi designado. Fig. B30 — Anatomia retorcida do Imbunche guardando a entrada da caverna ritual.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m • Ataques: Garras e Mordida Invertida +19 (3d12+11) e Grito Gutural de Cabra (CD 25 Vontade ou congela os ...",
+          "damage": "PV 340 | RD 14 (Pele Coberta de Pelos Grossos e Cicatrizes Rituais)",
+          "desc": "Desloc.: 15 m • Ataques: Garras e Mordida Invertida +19 (3d12+11) e Grito Gutural de Cabra (CD 25 Vontade ou congela os pés do alvo no chão por 1 rodada)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Romper as Costuras Rituais com Prata (golpe preciso CD 24 que corte os...",
+          "desc": "Previsão de Cego: Pressente qualquer invasor a 100 metros do covil e avisa seu mestre mentalmente."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_54",
+      "tomo4_num": 54,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Qalupalik — A Raptoressa sob o Gelo Ártico",
+      "biotype": "Entidade Anfíbia do Gelo (Mitologia Inuit — Ártico Canadense/Groenlândia)",
+      "mda": "MDA 70%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 70%",
+      "origin": "Mar de Baffin, Nunavut & Groenlândia",
+      "territory": "Banquisas de Gelo, Fendas Glaciais e Costas Congeladas",
+      "virtue": "Elemento: Gelo, Sal & Sombra Abissal • Virtude Corrompida: Ambição/Eternidade",
+      "element": "Gelo, Sal & Sombra Abissal",
+      "quote": "“Ouça o gelo bater de baixo para cima: Tut-tut-tut. Se você chegar perto da borda, já está dentro do capuz dela.”",
+      "description": "Criatura humanoide de pele verde-acinzentada viscosa e unhas compridas de marfim negro. Veste um amauti (casaco tradicional com grande capuz dorsal de pele de foca) onde guarda as vítimas que puxa através de fendas no gelo, drenando sua juventude e Energia de Alma.",
+      "canon_status": "canonical_t4",
+      "pv": "330",
+      "pd": "45",
+      "ea": "150",
+      "est": "22",
+      "rd": "13 (Gordura Térmica Abissal)",
+      "reactions": "Esq. +18 (na água gelada +22), Bloq. +16, C-Ataq. +19 (Quebrar o Gelo sob os Pés)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 7,
+        "PRE": 6,
+        "INT": 5
+      },
+      "immunities": "Frio Absoluto, Afogamento, Pressão sob o gelo •",
+      "weakness": "Fogo de Óleo de Baleia & Cortar a Tira do Capuz Amauti (fogo reduz sua RD a 0; cortar o capuz dorsal liberta os prisioneiros em estase)",
+      "offense": "Desloc.: 9 m no gelo, Natação 24 m • Ataques: Unhas de Marfim Negro +19 (3d10+10 cortante/frio) e Tragar para o Amauti +20 (Alvo agarrado entra em coma hipotérmico CD 26 Fortitude).",
+      "skills": "Furtividade (Sob o Gelo) +24, Atletismo +22, Percepção +20",
+      "tactics": "Mantém câmaras de ar submersas sob icebergs onde preserva vítimas adormecidas. Fig. B31 — A entidade anfíbia Qalupalik emergindo das águas glaciais.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 9 m no gelo, Natação 24 m • Ataques: Unhas de Marfim Negro +19 (3d10+10 cortante/frio) e Tragar para o Amauti +...",
+          "damage": "PV 330 | RD 13 (Gordura Térmica Abissal)",
+          "desc": "Desloc.: 9 m no gelo, Natação 24 m • Ataques: Unhas de Marfim Negro +19 (3d10+10 cortante/frio) e Tragar para o Amauti +20 (Alvo agarrado entra em coma hipotérmico CD 26 Fortitude)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Fogo de Óleo de Baleia & Cortar a Tira do Capuz Amauti (fogo reduz sua...",
+          "desc": "Batida Hipnótica sob o Gelo: Bate sob a camada de gelo criando ressonância subgrave que racha o piso num raio de 6m."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_55",
+      "tomo4_num": 55,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Grootslang — O Primordial da Caverna dos Diamantes",
+      "biotype": "Lenda Primordial Sul-Africana (Serpente Primordial das Profundezas)",
+      "mda": "MDA 88%",
+      "nd": "ND 17",
+      "threat_level": "ND 17 • MDA 88%",
+      "origin": "Richtersveld (África do Sul)",
+      "territory": "O Poço sem Fundo de Richtersveld e Rios Subterrâneos",
+      "virtue": "Elemento: Pedra, Diamante & Água Abissal • Virtude Ressonante: Sabedoria/Ambição",
+      "element": "Pedra, Diamante & Água Abissal",
+      "quote": "“Os deuses eram jovens quando criaram o Grootslang e perceberam que haviam lhe dado força demais e astúcia demais.”",
+      "description": "Segundo os registros mais antigos da A.E.G.I.S. na África Austral, o Grootslang é um colosso primordial de vinte metros coberto de escamas de basalto, presas de marfim e poeira de diamante. Habita uma caverna profunda em Richtersveld que se conecta diretamente ao oceano através do Véu.",
+      "canon_status": "canonical_t4",
+      "pv": "720",
+      "pd": "65",
+      "ea": "220",
+      "est": "32",
+      "rd": "20 (Escamas Incrustadas de Diamante)",
+      "reactions": "Esq. +13, Bloq. +24 (Fronte de Marfim RD 26), C-Ataq. +23 (Empalar nas Presas 4d12+18)",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 9,
+        "AGI": 5,
+        "PRE": 8,
+        "INT": 8
+      },
+      "immunities": "Venenos, Esmagamento, Fogo, Lasers/Luz (refratada pelos diamantes) •",
+      "weakness": "Negociação por Gemas de Alma Pura (teste de Diplomacia/Enganação CD 28 acompanhado da entrega de uma relíquia cristalina faz o Grootslang poupar o grupo)",
+      "offense": "Desloc.: 15 m, Escavação 12 m, Natação 18 m • Ataques: Presas de Marfim Primordial +24 (5d12+18 perfurante) e Constrição Sísmica +23 (4d12+16 contundente).",
+      "skills": "Intuição +24, Percepção +24, Atletismo +26, História Antiga +24",
+      "tactics": "Guarda o maior depósito natural de diamantes de ressonância do hemisfério sul. Fig. B32 — O colossal Grootslang guardando os veios de diamantes de ressonância.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m, Escavação 12 m, Natação 18 m • Ataques: Presas de Marfim Primordial +24 (5d12+18 perfurante) e Constrição...",
+          "damage": "PV 720 | RD 20 (Escamas Incrustadas de Diamante)",
+          "desc": "Desloc.: 15 m, Escavação 12 m, Natação 18 m • Ataques: Presas de Marfim Primordial +24 (5d12+18 perfurante) e Constrição Sísmica +23 (4d12+16 contundente)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Negociação por Gemas de Alma Pura (teste de Diplomacia/Enganação CD 28...",
+          "desc": "Refração de Diamante Anímico: Disparo de Energia de Alma contra ele tem 50% de chance de ser refletido em cone de luz cortante."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_56",
+      "tomo4_num": 56,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Penanggalan & Manananggal — As Predadoras de Vísceras",
+      "biotype": "Vampiras Viscerais Desmembradas (Folclore da Malásia, Indonésia e Filipinas)",
+      "mda": "MDA 72%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 72%",
+      "origin": "Sudeste Asiático (Península Malaia e Arquipélago Filipino)",
+      "territory": "Aldeias Costeiras, Maternidades e Selvas Tropicais",
+      "virtue": "Elemento: Sangue Ácido, Vinagre & Sombra • Virtude Corrompida: Fome/Medo",
+      "element": "Sangue Ácido, Vinagre & Sombra",
+      "quote": "“O cheiro de vinagre azedo no vento significa que ela está passando por cima da sua janela.”",
+      "description": "A Penanggalan malaia destaca a cabeça com órgãos pendurados brilhando como fogo-fátuo na escuridão; a Manananggal filipina destaca todo o torso superior com imensas asas de couro de morcego. Durante o dia, mergulham suas vísceras em vinagre para que caibam de volta no corpo inferior oculto.",
+      "canon_status": "canonical_t4",
+      "pv": "320",
+      "pd": "45",
+      "ea": "160",
+      "est": "21",
+      "rd": "12",
+      "reactions": "Esq. +20, Bloq. +14, C-Ataq. +19 (Chicote Visceral Ácido 3d10+10)",
+      "attributes": {
+        "FOR": 5,
+        "VIG": 6,
+        "AGI": 8,
+        "PRE": 7,
+        "INT": 6
+      },
+      "immunities": "Queda, Terreno difícil, Sangramento •",
+      "weakness": "Cinza, Sal Grosso e Cacos de Vidro no Torso Inferior (espalhar sal ou cinza sobre o tronco sem cabeça escondido impede a reintegração ao nascer do sol, matando-a)",
+      "offense": "Desloc.: Voo 21 m • Ataques: Língua Protrátil Tubular +20 (Alcance 4,5m, 3d12+10 + Dreno de 15 PV) e Garras/Tentáculos Viscerais +19 (2d12+10 ácido/necrótico).",
+      "skills": "Furtividade +23, Acrobacia +21, Percepção (Faro de Sangue) +24, Enganação +20",
+      "tactics": "Infiltram-se em vilas costeiras durante o dia como curandeiras antes de caçar à noite. Fig. B33 — Predadora alada noturna do Sudeste Asiático em caçada sobre os telhados.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: Voo 21 m • Ataques: Língua Protrátil Tubular +20 (Alcance 4,5m, 3d12+10 + Dreno de 15 PV) e Garras/Tentáculos V...",
+          "damage": "PV 320 | RD 12",
+          "desc": "Desloc.: Voo 21 m • Ataques: Língua Protrátil Tubular +20 (Alcance 4,5m, 3d12+10 + Dreno de 15 PV) e Garras/Tentáculos Viscerais +19 (2d12+10 ácido/necrótico)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Cinza, Sal Grosso e Cacos de Vidro no Torso Inferior (espalhar sal ou ...",
+          "desc": "Gotejamento de Bile Corrosiva: Causa 2d8 de dano ácido contínuo e febre delirante em quem está abaixo de seu voo."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_57",
+      "tomo4_num": 57,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Psoglav & Drekavac — Os Demônios Cinosféricos dos Bálcãs",
+      "biotype": "Demônio Cinocéfalo de Dentes de Ferro & Gritador da Névoa (Sérvia/Bósnia)",
+      "mda": "MDA 74%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 74%",
+      "origin": "Montanhas Dináricas & Bálcãs (Leste Europeu)",
+      "territory": "Cavernas de Minério, Cemitérios Ortodoxos e Florestas de Pinheiros",
+      "virtue": "Elemento: Ferro Frio, Osso & Sombra • Virtude Corrompida: Fúria/Agonia",
+      "element": "Ferro Frio, Osso & Sombra",
+      "quote": "“Debaixo das montanhas da Bósnia vive o cão de um olho só que mastiga ferro como pão e desenterra os mortos.”",
+      "description": "O Psoglav ('Cabeça-de-Cão') possui corpo musculoso, cabeça de mastim gigante com presas de ferro maciço e olho ardente na testa, vivendo em cavernas escuras. Já o Drekavac ('O Gritador') é uma criatura esquelética envolta em mortalha cujo grito na névoa destrói a Estabilidade e cuja sombra adoece quem ela toca.",
+      "canon_status": "canonical_t4",
+      "pv": "390",
+      "pd": "50",
+      "ea": "140",
+      "est": "20",
+      "rd": "15 (Dentes e Ossos de Ferro Ctoniano)",
+      "reactions": "Esq. +16, Bloq. +19, C-Ataq. +20 (Mordida Quebra-Armadura — reduz a RD da armadura do alvo em -2)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 8,
+        "AGI": 6,
+        "PRE": 6,
+        "INT": 4
+      },
+      "immunities": "Escuridão, Frio, Medo, Venenos minerais •",
+      "weakness": "Luz Solar / Clarões de Magnésio (sofre Cegueira e -4 em todas as rolagens sob luz forte)",
+      "offense": "Desloc.: 15 m, Escavação 6 m • Ataques: Mordida de Dentes de Ferro +21 (4d10+14 perfurante, ignora 10 de RD) e Garras Subterrâneas +19 (3d10+12).",
+      "skills": "Atletismo +22, Percepção +20, Intimidação +22, Furtividade +19",
+      "tactics": "Habitam minas abandonadas da Primeira e Segunda Guerra Mundial nos Bálcãs. Fig. B34 — A besta demoníaca de mandíbula de ferro das cavernas balcânicas.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m, Escavação 6 m • Ataques: Mordida de Dentes de Ferro +21 (4d10+14 perfurante, ignora 10 de RD) e Garras Su...",
+          "damage": "PV 390 | RD 15 (Dentes e Ossos de Ferro Ctoniano)",
+          "desc": "Desloc.: 15 m, Escavação 6 m • Ataques: Mordida de Dentes de Ferro +21 (4d10+14 perfurante, ignora 10 de RD) e Garras Subterrâneas +19 (3d10+12)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Luz Solar / Clarões de Magnésio (sofre Cegueira e -4 em todas as rolag...",
+          "desc": "Grito do Drekavac na Névoa: Raio 20m, Vontade CD 25 ou perde 1d6 EST. Pode atacar a sombra projetada de um inimigo a até 9m."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_58",
+      "tomo4_num": 58,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Umibozu & Nuppeppo — O Monge do Mar Negro & a Carne Sem Rosto",
+      "biotype": "Yokai Marinho Colossal & Aberração de Carne Enrugada (Japão)",
+      "mda": "MDA 82%",
+      "nd": "ND 15",
+      "threat_level": "ND 15 • MDA 82%",
+      "origin": "Mar Interior de Seto & Templos Abandonados de Kyoto (Japão)",
+      "territory": "Mares Subitamente Calmos e Santuários em Ruínas",
+      "virtue": "Elemento: Sal Negro, Água & Carne Podre • Virtude Corrompida: Vazio/Medo",
+      "element": "Sal Negro, Água & Carne Podre",
+      "quote": "“Se ele pedir um barril para você, entregue um barril sem fundo. Caso contrário, ele vai afundar seu navio com uma única concha d'água.”",
+      "description": "Quando um mar tempestuoso fica subitamente liso como um espelho negro, o Umibozu emerge: um titã de água negra solidificada que exige um barril da tripulação para inundar o convés. Em terra, nos templos arruinados, vaga o Nuppeppo: uma massa ambulante de carne enrugada cuja carne concede longevidade eterna a quem a consome.",
+      "canon_status": "canonical_t4",
+      "pv": "540",
+      "pd": "60",
+      "ea": "210",
+      "est": "28",
+      "rd": "16 (Corpo Líquido/Amorfo — Imune a corte comum)",
+      "reactions": "Esq. +14, Bloq. +21, C-Ataq. +20 (Vagalhão Monástico 4d12+15)",
+      "attributes": {
+        "FOR": 9,
+        "VIG": 9,
+        "AGI": 4,
+        "PRE": 8,
+        "INT": 5
+      },
+      "immunities": "Corte, Perfuração comum, Afogamento, Frio, Medo •",
+      "weakness": "O Barril sem Fundo (Hishaku) & Fumaça de Tabaco (entregar um barril com o fundo arrancado confunde a lei ritual do Umibozu por 3 rodadas)",
+      "offense": "Desloc.: Natação 24 m (Umibozu) / 6 m em terra (Nuppeppo) • Ataques: Mão de Maré Negra +22 (4d12+16 contundente + Inundar Convés) e Miasma Rançoso (Raio 9m, Fortitude CD 25 ou Náusea).",
+      "skills": "Intimidação +25, Ocultismo +22, Percepção +20, Fortitude +25",
+      "tactics": "A Ordem da Cinza caça espécimes de Nuppeppo para produzir elixires de longevidade para o Filantropo. Fig. B35 — O titã líquido Umibozu erguendo-se das águas escuras sobre uma embarcação.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: Natação 24 m (Umibozu) / 6 m em terra (Nuppeppo) • Ataques: Mão de Maré Negra +22 (4d12+16 contundente + Inunda...",
+          "damage": "PV 540 | RD 16 (Corpo Líquido/Amorfo — Imune a corte comum)",
+          "desc": "Desloc.: Natação 24 m (Umibozu) / 6 m em terra (Nuppeppo) • Ataques: Mão de Maré Negra +22 (4d12+16 contundente + Inundar Convés) e Miasma Rançoso (Raio 9m, Fortitude CD 25 ou Náusea)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: O Barril sem Fundo (Hishaku) & Fumaça de Tabaco (entregar um barril co...",
+          "desc": "Calmaria Pressaga: Anula todo vento natural e desliga motores marítimos num raio de 300 metros."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_59",
+      "tomo4_num": 59,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Popobawa & Adze — Os Parasitas de Sombra e Vagalume",
+      "biotype": "Demônio Ciclópico Alado de Zanzibar & Vampiro-Vagalume Ewe (África)",
+      "mda": "MDA 70%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 70%",
+      "origin": "Arquipélago de Zanzibar (Tanzânia) & Gana/Togo",
+      "territory": "Cidades Costeiras, Telhados e Plantações de Dendê",
+      "virtue": "Elemento: Sombra, Fumaça Sulfúrica & Sangue • Virtude Corrompida: Medo/Histeria Coletiva",
+      "element": "Sombra, Fumaça Sulfúrica & Sangue",
+      "quote": "“Se você não contar a todos os vizinhos na manhã seguinte que ele te atacou... ele volta na noite seguinte com o dobro da força.”",
+      "description": "O Popobawa de Zanzibar é um metamorfo ciclópico de asas de sombra e cheiro de enxofre que esmaga o peito de vítimas adormecidas, exigindo que espalhem o pânico pela rua no dia seguinte; já o Adze do povo Ewe voa como um vagalume bioluminescente que atravessa portas trancadas para beber óleo de dendê e Energia de Alma.",
+      "canon_status": "canonical_t4",
+      "pv": "295",
+      "pd": "45",
+      "ea": "175",
+      "est": "24",
+      "rd": "12 (Corpo de Fumaça Sulfúrica)",
+      "reactions": "Esq. +21 (7d20), Bloq. +14, C-Ataq. +19 (Garra de Paralisia do Sono 3d10+10)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 6,
+        "AGI": 8,
+        "PRE": 8,
+        "INT": 6
+      },
+      "immunities": "Portas e Paredes Trancadas (na forma de vagalume/fumaça), Medo •",
+      "weakness": "Recusar o Pânico Coletivo & Potes de Óleo de Dendê (Popobawa perde metade dos atributos se ninguém ceder ao medo; Adze é atraído por óleo de dendê deixado fora de casa)",
+      "offense": "Desloc.: 12 m, Voo 21 m • Ataques: Esmagamento Torácico Noturno +19 (3d12+10 + Paralisia CD 25) e Possessão de Hospedeiro (Adze) (Vontade CD 25).",
+      "skills": "Furtividade +24, Intimidação +25, Enganação +22, Ocultismo +20",
+      "tactics": "Surtos documentados pela A.E.G.I.S. em Zanzibar levaram cidades inteiras a dormir em volta de fogueiras. Fig. B36 — O demônio de fumaça e sombra Popobawa projetando-se na escuridão.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m, Voo 21 m • Ataques: Esmagamento Torácico Noturno +19 (3d12+10 + Paralisia CD 25) e Possessão de Hospedeir...",
+          "damage": "PV 295 | RD 12 (Corpo de Fumaça Sulfúrica)",
+          "desc": "Desloc.: 12 m, Voo 21 m • Ataques: Esmagamento Torácico Noturno +19 (3d12+10 + Paralisia CD 25) e Possessão de Hospedeiro (Adze) (Vontade CD 25)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Recusar o Pânico Coletivo & Potes de Óleo de Dendê (Popobawa perde met...",
+          "desc": "Multiplicador de Histeria: Para cada pessoa na área com menos de 50% de EST, ganha +1 em todas as rolagens e +3 de RD."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_60",
+      "tomo4_num": 60,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Vetala (Baital) — O Oráculo nos Cadáveres Pendurados",
+      "biotype": "Espírito Necromântico Suspenso (Mitologia Indiana / Sânscrita)",
+      "mda": "MDA 73%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 73%",
+      "origin": "Campos de Cremação (Smashana) da Índia Antiga",
+      "territory": "Árvores de Cemitério, Criptas e Locais de Execução",
+      "virtue": "Sabedoria/Julgamento",
+      "element": "Cinza de Pira, Osso & Conhecimento",
+      "quote": "“Se você souber a resposta para o meu enigma e calar, sua cabeça se partirá em cem pedaços. Se falar, eu volto para a minha árvore.”",
+      "description": "Espírito do Véu que anima cadáveres não cremados pendurados de cabeça para baixo em árvores na Índia. Possui presciência temporal completa do passado e do presente de qualquer ser vivo, testando agentes da A.E.G.I.S. com dilemas morais mortais.",
+      "canon_status": "canonical_t4",
+      "pv": "340",
+      "pd": "55",
+      "ea": "220",
+      "est": "30",
+      "rd": "14",
+      "reactions": "Esq. +19, Bloq. +17, C-Ataq. +20 (Paradoxo do Rei Vikram — devolve o ataque se o agressor falou no turno)",
+      "attributes": {
+        "FOR": 5,
+        "VIG": 6,
+        "AGI": 7,
+        "PRE": 8,
+        "INT": 10
+      },
+      "immunities": "Necrose, Morte, Tempo, Adivinhação, Medo •",
+      "weakness": "Voto de Silêncio Absoluto com Mente Vazia (quem o enfrenta sem pronunciar uma sílaba pode prendê-lo e obrigá-lo a responder qualquer segredo do universo)",
+      "offense": "Desloc.: 12 m, Voo 15 m • Ataques: Garras Cadavéricas +19 (3d10+10) e O Enigma que Parte o Crânio (INT + Vontade CD 27; falha causa 5d10 psíquico puro).",
+      "skills": "Ocultismo +26, História +28, Intuição +26, Enganação +24",
+      "tactics": "Interrogado por agentes seniores da A.E.G.I.S. que buscam descobrir os planos futuros do Filantropo. Fig. B37 — O cadáver possuído pelo espírito oracular Vetala.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m, Voo 15 m • Ataques: Garras Cadavéricas +19 (3d10+10) e O Enigma que Parte o Crânio (INT + Vontade CD 27; ...",
+          "damage": "PV 340 | RD 14",
+          "desc": "Desloc.: 12 m, Voo 15 m • Ataques: Garras Cadavéricas +19 (3d10+10) e O Enigma que Parte o Crânio (INT + Vontade CD 27; falha causa 5d10 psíquico puro)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Voto de Silêncio Absoluto com Mente Vazia (quem o enfrenta sem pronunc...",
+          "desc": "Retorno Instantâneo à Árvore: Se o alvo quebrar o silêncio ao responder o enigma, o Vetala reaparece em sua árvore de origem com PV cheios."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_61",
+      "tomo4_num": 61,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Yara-Ma-Yha-Who — O Vampiro-Rã das Figueiras Vermelhas",
+      "biotype": "Anfíbio Drenador de Sangue (Mitologia Aborígene Australiana)",
+      "mda": "MDA 66%",
+      "nd": "ND 11",
+      "threat_level": "ND 11 • MDA 66%",
+      "origin": "Outback & Florestas de Figueiras (Austrália)",
+      "territory": "Grandes Figueiras Silvestres e Cursos d'Água",
+      "virtue": "Elemento: Sangue, Seiva & Água • Virtude Corrompida: Fome/Assimilação",
+      "element": "Sangue, Seiva & Água",
+      "quote": "“Nunca durma debaixo da figueira ao meio-dia: ele não tem dentes, mas seus dedos têm bocas.”",
+      "description": "Criatura anfíbia avermelhada de cabeça enorme sem dentes e ventosas de polvo nas pontas de cada dedo das mãos e pés. Salta do alto das figueiras sobre viajantes, drena seu sangue pelas ventosas digitais, engole a vítima inteira, bebe água e a regurgita viva — mas progressivamente transformada em outro Yara-ma-yha-who.",
+      "canon_status": "canonical_t4",
+      "pv": "290",
+      "pd": "40",
+      "ea": "130",
+      "est": "19",
+      "rd": "11 (Pele Anfíbia Elástica)",
+      "reactions": "Esq. +19, Bloq. +15, C-Ataq. +18 (Salto de Ventosas 3d10+9)",
+      "attributes": {
+        "FOR": 6,
+        "VIG": 6,
+        "AGI": 8,
+        "PRE": 5,
+        "INT": 4
+      },
+      "immunities": "Queda de árvores, Dano contundente menor •",
+      "weakness": "Fingir-se de Morto até o Pôr do Sol (só ataca presas que se debatem e fica completamente cego e inativo após o pôr do sol)",
+      "offense": "Desloc.: 12 m, Escalada 15 m • Ataques: 10 Ventosas Digitais Drenadoras +19 (3d10+9 + Dreno de 2 FOR) e Engolir e Regurgitar (CD 24 Fortitude ou ganha 1 nível de mutação).",
+      "skills": "Furtividade +22, Acrobacia +21, Escalada +24, Percepção +19",
+      "tactics": "Emboscador diurno que habita as copas de figueiras seculares na Oceania. Fig. B38 — O predador anfíbio Yara-ma-yha-who pronto para saltar da copa da figueira.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m, Escalada 15 m • Ataques: 10 Ventosas Digitais Drenadoras +19 (3d10+9 + Dreno de 2 FOR) e Engolir e Regurg...",
+          "damage": "PV 290 | RD 11 (Pele Anfíbia Elástica)",
+          "desc": "Desloc.: 12 m, Escalada 15 m • Ataques: 10 Ventosas Digitais Drenadoras +19 (3d10+9 + Dreno de 2 FOR) e Engolir e Regurgitar (CD 24 Fortitude ou ganha 1 nível de mutação)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Fingir-se de Morto até o Pôr do Sol (só ataca presas que se debatem e ...",
+          "desc": "Transmutação Regurgitada: Uma vítima engolida e regurgitada três vezes converte-se permanentemente num novo Yara-ma-yha-who."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_62",
+      "tomo4_num": 62,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Tikbalang — O Guardião Equino das Trilhas Perdidas",
+      "biotype": "Gigante Equino-Humanoide (Folclore das Filipinas)",
+      "mda": "MDA 68%",
+      "nd": "ND 11",
+      "threat_level": "ND 11 • MDA 68%",
+      "origin": "Montanhas e Florestas de Luzon (Filipinas)",
+      "territory": "Bambuzais, Pontes Antigas e Passagens de Montanha Nebulosas",
+      "virtue": "Liberdade/Trapaça",
+      "element": "Espinhos Dourados, Fumaça & Espaço",
+      "quote": "“Se você está andando há três horas e voltou para a mesma pedra, vista sua camisa do avesso.”",
+      "description": "Gigante esguio de membros compridos com a cabeça e os cascos de um cavalo selvagem; quando se senta nos calcanhares, seus joelhos ultrapassam a altura da própria cabeça. Fuma grandes charutos de ervas do Véu e possui três espinhos grossos de ouro na crina que lhe conferem domínio sobre os caminhos da floresta.",
+      "canon_status": "canonical_t4",
+      "pv": "330",
+      "pd": "45",
+      "ea": "155",
+      "est": "22",
+      "rd": "13",
+      "reactions": "Esq. +19, Bloq. +18, C-Ataq. +19 (Coice de Casco Pesado 3d12+12)",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 7,
+        "INT": 6
+      },
+      "immunities": "Labirintos, Ilusões espaciais, Terreno difícil •",
+      "weakness": "Virar a Camisa do Avesso (anula instantaneamente seu labirinto espacial) & Arrancar um dos 3 Espinhos Dourados da Crina enquanto o cavalga (Atletismo/Luta CD 26 doma o Tikbalang como servo leal)",
+      "offense": "Desloc.: 18 m (Salto 12 m) • Ataques: Cascos de Pedra +19 (3d12+12 contundente) e Arremesso de Espinho da Crina +20 (Distância 24m, 3d10+10 perfurante).",
+      "skills": "Sobrevivência +24, Enganação +23, Atletismo +23, Furtividade +20",
+      "tactics": "Domado por antigos agentes filipinos da A.E.G.I.S. como montaria capaz de atravessar o Véu. Fig. B39 — O imponente guardião de cascos e crina espinhosa das trilhas de montanha.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 18 m (Salto 12 m) • Ataques: Cascos de Pedra +19 (3d12+12 contundente) e Arremesso de Espinho da Crina +20 (Dis...",
+          "damage": "PV 330 | RD 13",
+          "desc": "Desloc.: 18 m (Salto 12 m) • Ataques: Cascos de Pedra +19 (3d12+12 contundente) e Arremesso de Espinho da Crina +20 (Distância 24m, 3d10+10 perfurante)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Virar a Camisa do Avesso (anula instantaneamente seu labirinto espacia...",
+          "desc": "Loop Espacial da Chuva com Sol: Prende o grupo num círculo infinito na mata até que alguém vista a roupa do avesso ou peça permissão formal."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_63",
+      "tomo4_num": 63,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Alicanto — A Ave Metálica Devoradora de Ouro e Prata",
+      "biotype": "Ave Celestial Mineradora (Folclore do Deserto do Atacama, Chile)",
+      "mda": "MDA 71%",
+      "nd": "ND 12",
+      "threat_level": "ND 12 • MDA 71%",
+      "origin": "Deserto do Atacama & Cordilheira (Chile)",
+      "territory": "Minas Abandonadas, Penhascos Desérticos e Veios de Ressonância",
+      "virtue": "Elemento: Ouro Solar & Prata Lunar • Virtude Ressonante: Justiça/Julgamento da Ganância",
+      "element": "Ouro Solar & Prata Lunar",
+      "quote": "“As asas do Alicanto brilham em ouro ou prata conforme o minério que ele acabou de comer na montanha.”",
+      "description": "Ave majestosa do deserto chileno que se alimenta exclusivamente de minério puro de ouro ou prata carregado de Energia de Alma. Suas asas brilham intensamente no escuro da caverna (douradas se comeu ouro, prateadas se comeu prata), mas o peso metálico em seu estômago a impede de voar quando está saciada.",
+      "canon_status": "canonical_t4",
+      "pv": "340",
+      "pd": "50",
+      "ea": "170",
+      "est": "26",
+      "rd": "16 (Plumas Metálicas de Ouro e Prata)",
+      "reactions": "Esq. +17 (Vazia) / +11 (Cheia de minério), Bloq. +21 (Asas de Metal RD 22), C-Ataq. +19 (Clarão Cegante das Asas + Bico 3d10+11)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 7,
+        "PRE": 8,
+        "INT": 6
+      },
+      "immunities": "Fogo, Calor, Cegueira, Venenos minerais •",
+      "weakness": "Pureza de Intenção sem Ganância (jamais ataca quem não tenta roubar seu minério; contra garimpeiros gananciosos, apaga subitamente o brilho das asas à beira de abismos mortais)",
+      "offense": "Desloc.: 15 m em terra, Voo 24 m (apenas quando não ingeriu minério nas últimas 2 horas) • Ataques: Bico de Mithril e Ouro +19 (3d12+11 perfurante, ignora RD) e Tempestade de Penas Metálicas (Cone 12m, 4d10 cortante/radiante).",
+      "skills": "Percepção +24, Intuição (Detectar Ganância) +26, Atletismo +20",
+      "tactics": "Onde há um ninho de Alicanto, há minério puro para forjar Armas Anímicas de Grau Mestre. Fig. B40 — O Alicanto de asas incandescentes de ouro fundido nos penhascos do Atacama.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m em terra, Voo 24 m (apenas quando não ingeriu minério nas últimas 2 horas) • Ataques: Bico de Mithril e Ou...",
+          "damage": "PV 340 | RD 16 (Plumas Metálicas de Ouro e Prata)",
+          "desc": "Desloc.: 15 m em terra, Voo 24 m (apenas quando não ingeriu minério nas últimas 2 horas) • Ataques: Bico de Mithril e Ouro +19 (3d12+11 perfurante, ignora RD) e Tempestade de Penas Metálicas (Cone 12m, 4d10 cortante/radiante)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Pureza de Intenção sem Ganância (jamais ataca quem não tenta roubar se...",
+          "desc": "Blecaute do Precipício: Apaga todas as fontes de luz num raio de 30m instantaneamente quando perseguido em desfiladeiros."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_64",
+      "tomo4_num": 64,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Tatzelwurm — O Dragão-Gato Venenoso dos Alpes",
+      "biotype": "Réptil Felino Peçonhento (Folclore da Suíça, Áustria e Baviera)",
+      "mda": "MDA 69%",
+      "nd": "ND 11",
+      "threat_level": "ND 11 • MDA 69%",
+      "origin": "Alpes Europeus (Suíça, Áustria, Itália e Alemanha)",
+      "territory": "Geleiras Alpinas, Fendas de Rocha e Passagens de Montanha",
+      "virtue": "Elemento: Veneno Ácido, Gelo & Rocha • Virtude Corrompida: Fúria Territorial",
+      "element": "Veneno Ácido, Gelo & Rocha",
+      "quote": "“Tem o rosto de um lince gigante, o corpo de uma serpente grossa como um tronco e um assobio que derrete o pulmão.”",
+      "description": "Predador criptídico e folclórico das altas montanhas alpinas: possui corpo serpentino blindado de três metros, patas dianteiras com garras de lince e face felina eriçada de presas. Hiberna em fendas glaciais e cospe uma névoa ácida sulfúrica que corrói armaduras e congela os pulmões.",
+      "canon_status": "canonical_t4",
+      "pv": "325",
+      "pd": "45",
+      "ea": "125",
+      "est": "18",
+      "rd": "14 (Escamas Alpinas)",
+      "reactions": "Esq. +18, Bloq. +17, C-Ataq. +19 (Salto de Lince 3d10+12 + Veneno)",
+      "attributes": {
+        "FOR": 7,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 5,
+        "INT": 3
+      },
+      "immunities": "Frio Alpino, Ácido, Veneno, Terreno de gelo •",
+      "weakness": "Calor Seco Intenso (chamas reduzem sua RD pela metade e o forçam a recuar para a toca)",
+      "offense": "Desloc.: 15 m, Escalada 15 m, Escavação na neve 12 m • Ataques: Mordida Peçonhenta Felina +19 (3d10+12 + Veneno Paralítico CD 25) e 2 Garras Dianteiras +18 (2d10+10).",
+      "skills": "Furtividade (Neve/Rocha) +23, Acrobacia +20, Atletismo +21, Percepção +20",
+      "tactics": "Protege antigos bunkers ocultos da Ordem da Cinza escavados nos Alpes. Fig. B41 — O predador serpentino-felino Tatzelwurm nas rochas alpinas.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 15 m, Escalada 15 m, Escavação na neve 12 m • Ataques: Mordida Peçonhenta Felina +19 (3d10+12 + Veneno Paralíti...",
+          "damage": "PV 325 | RD 14 (Escamas Alpinas)",
+          "desc": "Desloc.: 15 m, Escalada 15 m, Escavação na neve 12 m • Ataques: Mordida Peçonhenta Felina +19 (3d10+12 + Veneno Paralítico CD 25) e 2 Garras Dianteiras +18 (2d10+10)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Calor Seco Intenso (chamas reduzem sua RD pela metade e o forçam a rec...",
+          "desc": "Assobio de Vapor Tóxica (Cone 9m): Causa 4d10 de dano ácido/venenoso e corrói 2 pontos de RD das armaduras atingidas (Reflexos CD 25)."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_65",
+      "tomo4_num": 65,
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Draugr de Sal (Gjenganger) — O Morto-Vivo de Dez Toneladas",
+      "biotype": "Morto-Vivo Corpóreo Nórdico (Sagas Islandesas e Folclore Escandinavo)",
+      "mda": "MDA 75%",
+      "nd": "ND 14",
+      "threat_level": "ND 14 • MDA 75%",
+      "origin": "Islândia, Noruega & Mar do Norte",
+      "territory": "Túmulos Costeiros (Haugr), Drakkares Afogados e Praias de Inverno",
+      "virtue": "Elemento: Sal Congelado, Ferro Oxidado & Gravidade • Virtude Corrompida: Avareza/Orgulho",
+      "element": "Sal Congelado, Ferro Oxidado & Gravidade",
+      "quote": "“Ele não é um fantasma sem peso. Ele tem o peso de todo o mar que o afogou.”",
+      "description": "Diferente de espíritos incorpóreos, o Draugr escandinavo (*Hel-blár*, 'azul-morte' ou inchado como um boi afogado) é um cadáver físico reanimado pela própria Alma orgulhosa e avarenta que se recusa a deixar seu ouro e seu navio. Cheira a salmoura podre, navega em meio-barcos que cortam contra o vento e pode aumentar a própria massa corporal até pesar dez toneladas.",
+      "canon_status": "canonical_t4",
+      "pv": "440",
+      "pd": "50",
+      "ea": "155",
+      "est": "24",
+      "rd": "16 (Carne Inchada Imune a Armas sem Alma)",
+      "reactions": "Esq. +13, Bloq. +22 (Escudo de Tábua de Drakkar RD 24), C- Ataq. +21 (Esmagamento de Dez Toneladas — 4d12+16)",
+      "attributes": {
+        "FOR": 9,
+        "VIG": 9,
+        "AGI": 5,
+        "PRE": 7,
+        "INT": 5
+      },
+      "immunities": "Frio, Afogamento, Medo, Necrose, Armas mundanas •",
+      "weakness": "Decapitação, Queima do Corpo até Virar Cinza & Colocar a Cabeça Junto às Nádegas (segundo as sagas islandesas, apenas cortar a cabeça com a própria espada do túmulo e queimar o corpo em fogo de turfa impede que ele se levante na noite seguinte)",
+      "offense": "Desloc.: 12 m (Atravessa rocha e terra como se nadasse), Natação 18 m • Ataques: Espada Viking de Ferro Salgado +21 (3d12+15 cortante) e Abraço de Massa Abissal +22 (4d12+16 contundente + Imobilizar no chão com 10 toneladas CD 28 Força).",
+      "skills": "Atletismo +25, Luta +22, Intimidação +24, Fortitude +25",
+      "tactics": "Guarda túmulos vikings e relíquias do Soberano Harald Sangue-de-Cinza. Fig. B42 — O Draugr de Sal inchado e azul-escuro guardando seu túmulo costeiro.",
+      "attacks": [
+        {
+          "name": "Ofensiva Principal (Tomo IV)",
+          "type": "Desloc.: 12 m (Atravessa rocha e terra como se nadasse), Natação 18 m • Ataques: Espada Viking de Ferro Salgado +21 (3d1...",
+          "damage": "PV 440 | RD 16 (Carne Inchada Imune a Armas sem Alma)",
+          "desc": "Desloc.: 12 m (Atravessa rocha e terra como se nadasse), Natação 18 m • Ataques: Espada Viking de Ferro Salgado +21 (3d12+15 cortante) e Abraço de Massa Abissal +22 (4d12+16 contundente + Imobilizar no chão com 10 toneladas CD 28 Força)."
+        },
+        {
+          "name": "Habilidades & Domínio",
+          "type": "Especial",
+          "damage": "Fraqueza: Decapitação, Queima do Corpo até Virar Cinza & Colocar a Cabeça Junto ...",
+          "desc": "Multiplicação de Peso (Hel-Massa): Como ação livre, aumenta seu peso em até 20 vezes, afundando embarcações pequenas ou esmagando o assoalho de edifícios."
+        }
+      ]
     },
     {
       "id": "creature_sentinela",
@@ -6110,32 +8402,6 @@ class DataLoader {
       "signature_ability": "Estabilização de Fenda e Disparo de Choque em ZZZZT.",
       "weakness": "Esgotamento da bateria após 3 ciclos de salto dimensional.",
       "lore_notes": "Mecanismo patenteado por Gabriel para patrulhar os corredores da Mansão Vilar."
-    },
-    {
-      "id": "creature_mao_rosas",
-      "name": "Mão de Rosas (Manifestação do Campo de Rosas)",
-      "classification": "Projeção da Verdadeira Magia",
-      "mda_level": "MDA 99%",
-      "danger_tier": "MENTAL / ILUSÃO",
-      "origin": "Campanha I: O Triângulo das Bermudas",
-      "appearance": "Mãos etéreas azuladas envoltas em pétalas de gelo negro e ferrugem cintilante que brotam da água.",
-      "behavior": "Extensão direta da vontade do Primogênito para sufocar sinapses cerebrais à distância.",
-      "signature_ability": "Toque Sináptico de Paralisia Cerebral.",
-      "weakness": "Interrupção pelo choque de morte heroica voluntária (como o tiro do Guia).",
-      "lore_notes": "A emanação direta que precedeu o sacrifício do Guia na Sessão 1."
-    },
-    {
-      "id": "creature_leviathan",
-      "name": "Parasita Glacial Primordial",
-      "classification": "Bio-Anomalia Criogênica",
-      "mda_level": "MDA 50%",
-      "danger_tier": "CRIOGÊNICO / ABISSAL",
-      "origin": "Arquivos Árticos A.E.G.I.S.",
-      "appearance": "Organismo filamentoso de gelo negro e silício vivo preservado no permafrost.",
-      "behavior": "Infesta sistemas nervosos de criaturas expostas ao frio profundo.",
-      "signature_ability": "Criostase Nervosa Instantânea.",
-      "weakness": "Calor extremo e técnicas anímicas da Virtude da Coragem (Brasa da Última Trincheira).",
-      "lore_notes": "Registrado nos dossiês de contenção do Diretor Kaelen."
     }
   ],
   "relics": [
@@ -6206,50 +8472,6 @@ class DataLoader {
       "description": "Uma bússola esférica de latão cujo ponteiro é uma agulha de meteorito negro suspensa em fluido amniótico bioluminescente."
     },
     {
-      "id": "relic_criostase",
-      "name": "Injetor de Criostase Inversa",
-      "owner": "Dra. Evelyn Shaw",
-      "type": "Bio-Estabilizador Térmico",
-      "rarity": "Grau Científico AEGIS",
-      "pd_cost": 3,
-      "ability": "Retardamento Metabólico",
-      "effect": "Reduz o MDA em -10% temporariamente e neutraliza condições de queimadura, sangramento ou choque térmico por 3 rodadas.",
-      "description": "Dispositivo cilíndrico de titânio preenchido com nitrogênio líquido ionizado capaz de retardar mutações celulares caóticas."
-    },
-    {
-      "id": "relic_gelo_negro",
-      "name": "Lâmina de Gelo Negro",
-      "owner": "Comandante Miller",
-      "type": "Arma Biomecânica",
-      "rarity": "Grau Primordial",
-      "pd_cost": 4,
-      "ability": "Corte Criogênico",
-      "effect": "Ataques ignoram Sacrifício de Armadura convencional; causa 2d10 de dano frio e reduz a Agilidade do alvo em -2.",
-      "description": "Fragmento cortante do monólito ártico que nunca derrete, emanando uma fumaça gélida que absorve a luz ao redor."
-    },
-    {
-      "id": "relic_quartzo_negro",
-      "name": "Nódulo de Quartzo Mutagênico",
-      "owner": "Dra. Camila Neves",
-      "type": "Relíquia Mineral Biológica",
-      "rarity": "Rara / Grau Alfa",
-      "pd_cost": 3,
-      "ability": "Pulso de Adaptação Celular",
-      "effect": "Cura 2d8 PV de um aliado orgânico instantaneamente ao acelerar o metabolismo, concedendo +2 em testes de Fortitude por 2 rodadas.",
-      "description": "Um fragmento cristalino negro extraído da caverna do Tapajós. Quando exposto a calor corpóreo, emite um brilho verde esmeralda e acelera a regeneração de tecidos vivos."
-    },
-    {
-      "id": "relic_diapasao_eco",
-      "name": "Diapasão de Prata Sem-Rosto",
-      "owner": "Hans Richter",
-      "type": "Relíquia Acústica Oculta",
-      "rarity": "Rara / Grau Alfa",
-      "pd_cost": 2,
-      "ability": "Onda de Silenciamento Dimensional",
-      "effect": "Cria uma zona de 6 metros de silêncio absoluto onde nenhuma habilidade mística oral ou efeito sonoro hostil pode ser executado.",
-      "description": "Um diapasão forjado pelos monges da Floresta Negra com prata esterlina e inscrições heréticas. Vibra em uma frequência inaudível aos ouvidos humanos que desarma vórtices acústicos do LIMIAR."
-    },
-    {
       "id": "relic_relogio_temporal",
       "name": "Relógio de Dobra Temporal de 6 Segundos",
       "origin": "Laboratório de Pesquisa Metafísica A.E.G.I.S.",
@@ -6273,99 +8495,141 @@ class DataLoader {
       "sources": [
         "Dossiê Operação Belvedere A.E.G.I.S."
       ]
+    },
+    {
+      "id": "relic_caixa_musica_belvedere",
+      "name": "Caixa de Música da Redoma (Gala de Oeht)",
+      "type": "Relíquia Acústica & Âncora de Ritual",
+      "origin": "Contrabandeada por Victor Kael (Mansão Belvedere / Crônica III)",
+      "cost": "Ritual (Palco)",
+      "provenance_campaign": "camp_filantropo_oeht",
+      "description": "Artefato contrabandeado no mercado negro que sincroniza a orquestra em transe às 22h30 e sustenta a redoma púrpura e a armadura invulnerável d’O Anárquico até ser destruído no palco.",
+      "abilities": {
+        "active": "Enquanto ativa no palco, o Selo de Energia causa 3d6 ao toque e O Anárquico mantém RD colossal."
+      }
+    },
+    {
+      "id": "relic_espada_ferro_frio",
+      "name": "Espada Bastarda de Ferro Frio (Bandeirantes do Véu)",
+      "type": "Armamento Consagrado da Mata Fechada",
+      "origin": "Forjas da Fortaleza de São Lázaro (Vera Cruz das Almas)",
+      "cost": "Força +2 / PD",
+      "provenance_campaign": "camp_001",
+      "description": "Lâmina forjada com limalha de prata e ferro consagrado pela Ordem da Cinza e pelos Bandeirantes do Véu.",
+      "abilities": {
+        "active": "Conduz perfeitamente Sintonia de Alma para ferir Lendas Ancestrais e ignora 5 RD folclórica."
+      }
     }
   ],
   "timeline": [
     {
-      "id": "time_antiguidade",
-      "year": "Antiguidade Remota",
-      "chronological_year": 0,
-      "era_badge": "Gênese Primordial",
-      "title": "O Primeiro Cruzamento da Fenda // Gênese do Primogênito",
-      "location": "Oceano Atlântico Norte / Fenda Temporal",
-      "category": "Gênese Dimensional",
+      "id": "time_primordial",
+      "chronological_year": -5000,
+      "year_numeric": -5000,
+      "year_label": "+5.000 Anos Atrás",
+      "title": "O Primogênito & A Armadura Hallucigenia (Era Primordial)",
       "campaign_id": "camp_001",
-      "threat_stars": 5,
-      "threat_level": "Nível 5 - Cataclísmico",
-      "status": "(Futura Campanha)",
-      "canon_status": "open_mystery",
-      "sources": [
-        "Manuscrito da Incursão (Autor)"
+      "location": "Atlântico / Abismo Primordial",
+      "location_id": "loc_campo_rosas",
+      "country_id": "country_atlantico_bermudas",
+      "region_id": "reg_fossa_caronte",
+      "characters_involved": [
+        "char_arquiteto"
       ],
-      "description": "Segundo manuscritos do Triângulo, o primeiro ser humano adentra a anomalia marítima e aprende a moldar leis físicas locais. A data e a identidade objetiva permanecem sem confirmação científica.",
-      "is_future": true
+      "threat_stars": "★★★★★ Cataclísmico",
+      "status": "Cânone Base",
+      "description": "O primeiro humano encontra a anomalia do mar e desperta a Verdadeira Magia; civilizações ancestrais forjam a biotecnológica Armadura Hallucigenia."
     },
     {
-      "id": "time_sec_xvi",
-      "year": "Século XVI (~1542-1620)",
-      "chronological_year": 1542,
-      "era_badge": "Era dos Navegadores",
-      "title": "Náufrago Humano e a Sociedade Sauriana // O Mar das Rosas",
-      "location": "Oceano Atlântico Norte (Triângulo das Bermudas)",
-      "category": "Contato Antropológico Anômalo",
+      "id": "time_mitica",
+      "chronological_year": 900,
+      "year_numeric": 900,
+      "year_label": "Era Mítica & Medieval",
+      "title": "Loki, Merlin, Excalibur & Fundação da Ordem da Cinza",
       "campaign_id": "camp_001",
-      "threat_stars": 4,
-      "threat_level": "Nível 4 - Crítico",
+      "location": "Europa / Escandinávia & Bretanha",
+      "location_id": "loc_aegis_genebra",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "characters_involved": [
+        "char_arquiteto",
+        "char_dom_sebastiao"
+      ],
+      "threat_stars": "★★★★☆ Sombrio",
+      "status": "Cânone Base",
+      "description": "O Primogênito molda mitos europeus com sua máscara de osso e madeira (Loki/Merlin). Diante do terror do Campo de Rosas, a Coroa e o clero fundam a Ordem da Cinza."
+    },
+    {
+      "id": "time_queda_veu",
+      "chronological_year": 1500,
+      "year_numeric": 1500,
+      "year_label": "Séc. XVI–XVII (~1500+)",
+      "title": "A Queda do Véu, Vera Cruz das Almas & Ilha Canibal",
+      "campaign_id": "camp_001",
+      "location": "Arquipélago de Vera Cruz das Almas & Triângulo",
+      "location_id": "loc_veracruz_serra",
+      "country_id": "country_brasil",
+      "region_id": "reg_vera_cruz",
+      "characters_involved": [
+        "char_dom_sebastiao",
+        "char_marcos_valente",
+        "char_raissa_carnica"
+      ],
+      "threat_stars": "★★★★★ Nível 5 — Ruptura",
+      "status": "Cânone Histórico",
+      "description": "Degredados da Ordem da Cinza derrubam árvores sagradas em Vera Cruz rasgando o Véu; Lendas encarnam na mata (Mapinguari, Boitatá, Corpo-Seco, Curupira) e surgem os Bandeirantes do Véu. No Triângulo, um náufrago origina a Ilha Canibal há 400 anos."
+    },
+    {
+      "id": "time_videos",
+      "chronological_year": 1975,
+      "year_numeric": 1975,
+      "year_label": "Século XX (Fitas A.E.G.I.S.)",
+      "title": "Vídeos #01 & #02: Coroa Branca nas Dunas & Ciclo de Peter Stumpp",
+      "campaign_id": "camp_001",
+      "location": "Deserto Térmico & Europa Central",
+      "location_id": "loc_aegis_genebra",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "characters_involved": [
+        "char_heitor",
+        "char_kaelen"
+      ],
+      "threat_stars": "★★★★☆ Severo",
+      "status": "Arquivo Confidencial",
+      "description": "Registros visuais catalogados pela A.E.G.I.S. revelando os Verme-Receptáculos do Olho Negro e a transmissão da maldição lupina do Ciclo de Stumpp."
+    },
+    {
+      "id": "time_03",
+      "chronological_year": 1998,
+      "year_numeric": 1998,
+      "year_label": "1998 // A Incursão",
+      "title": "Desaparecimento do Navio de 5.000 Almas & Sacrifício do Guia",
+      "campaign_id": "camp_001",
+      "location": "Triângulo das Bermudas (Campo de Rosas)",
+      "location_id": "loc_caronte",
+      "country_id": "country_atlantico_bermudas",
+      "region_id": "reg_fossa_caronte",
+      "characters_involved": [
+        "char_arquiteto",
+        "char_guia_temporario",
+        "char_kaelen"
+      ],
+      "threat_stars": "★★★★★ Ômega",
       "status": "(Futura Campanha)",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Diários de Bordo Espanhóis e Portugueses"
-      ],
-      "description": "Diários de caravelas relatam manchas de mar azul escuro com rosas flutuantes no Atlântico e a chegada de um humano que ensinou ritos canibais à sociedade reptiliana do Arquipélago dos Ossos.",
-      "is_future": true
-    },
-    {
-      "id": "time_1892_vilar",
-      "year": "Ano 1892",
-      "chronological_year": 1892,
-      "era_badge": "Revolução Mineral",
-      "title": "Fundação do Consórcio Mineral Vilar",
-      "location": "San Lorenzo (México)",
-      "category": "Fundação Histórica",
-      "campaign_id": "camp_002",
-      "threat_stars": 3,
-      "threat_level": "Nível 3 - Severo",
-      "status": "Documento Cartorial",
-      "canon_status": "confirmed",
-      "sources": [
-        "Cartório de San Lorenzo",
-        "Ministério da Mineração"
-      ],
-      "description": "A família Vilar inicia a perfuração de minas profundas de prata em San Lorenzo, perfurando acidentalmente galerias onde Ecos Subterrâneos repousavam dormentes."
-    },
-    {
-      "id": "time_1968_aegis",
-      "year": "Ano 1968",
-      "chronological_year": 1968,
-      "era_badge": "Pós-Guerra Fria",
-      "title": "Fundação Notarial da A.E.G.I.S. em Genebra",
-      "location": "Genebra (Suíça)",
-      "category": "Institucional",
-      "campaign_id": "camp_filantropo_oeht",
-      "threat_stars": 2,
-      "threat_level": "Nível 2 - Moderado",
-      "status": "Institucional",
-      "canon_status": "confirmed",
-      "sources": [
-        "Registro Notarial de Genebra 1968"
-      ],
-      "description": "Registrada formalmente na Suíça a Fundação A.E.G.I.S. / C.R.I.S. para monitorar vazamentos anômalos da Guerra Fria e catalogar incursões pelo planeta."
+      "description": "\"Incursão acontecendo, é o fim do...\" — Falha massiva na contenção do Triângulo e manifestação do Campo de Rosas do Primogênito; sobreviventes cruzam Nova Caronte e Fosso do Kraken até serem recrutados por Kaelen."
     },
     {
       "id": "time_01",
-      "year": "Ano 2023 (-3) [Variante Out/2021]",
-      "chronological_year": 2023.5,
-      "era_badge": "Incidente das Minas (2021/2023)",
-      "title": "O Desaparecimento nas Minas",
-      "location": "Mansão Vilar & Minas (México)",
-      "category": "Incidente Inicial",
+      "chronological_year": 2021,
+      "year_numeric": 2021,
+      "year_label": "2021 // O Sumiço",
+      "title": "Queda de Lucas Vilar nas Minas Coloniais (Pacto de Silêncio)",
       "campaign_id": "camp_002",
-      "threat_level": "Nível 3 - Severo",
-      "threat_stars": 3,
-      "status": "Investigação Suspensa",
-      "survivors": "Lucas Vilar (Isolado no subterrâneo)",
-      "casualties": "Nenhuma confirmada (Desaparecimento arquivado)",
-      "characters": [
+      "location": "Mansão Vilar & Minas Antigas (México)",
+      "location_id": "loc_vilar_minas",
+      "country_id": "country_mexico",
+      "region_id": "reg_serra_mineradora",
+      "characters_involved": [
         "char_lucas",
         "char_gabriel",
         "char_rafael",
@@ -6374,649 +8638,449 @@ class DataLoader {
         "char_bia",
         "char_arthur"
       ],
-      "canon_status": "disputed",
-      "sources": [
-        "Dossiê Até o Amanhecer (2021) vs. Linha Tática (-3 anos de 2026)"
-      ],
-      "description": "Durante uma expedição juvenil de amigos nas proximidades da Mansão Vilar no México, Lucas Vilar entra nos túneis abandonados da ferrovia e desaparece na escuridão. O grupo esconde segredos da noite."
-    },
-    {
-      "id": "time_02",
-      "year": "Ano 2024 (-2)",
-      "chronological_year": 2024,
-      "era_badge": "Engenharia Dimensional (2024)",
-      "title": "Nascimento do Projeto LIMIAR",
-      "location": "O Casarão Vilar (México)",
-      "category": "Investigação & Engenharia Oculta",
-      "campaign_id": "camp_002",
-      "threat_level": "Nível 3 - Severo",
-      "threat_stars": 3,
-      "status": "Concluído",
-      "survivors": "Gabriel Vilar",
-      "casualties": "Nenhuma direta",
-      "characters": [
-        "char_gabriel"
-      ],
-      "canon_status": "confirmed",
-      "sources": [
-        "Esquemas Técnicos Gabriel Vilar"
-      ],
-      "description": "Recusando-se a aceitar a perda do irmão, Gabriel Vilar tranca-se no casarão. Ele descobre fontes de energia anômala nas rochas da serra e inicia a construção da arma de portais dimensionais: o LIMIAR."
-    },
-    {
-      "id": "time_03",
-      "year": "Ano 2025 (-1)",
-      "chronological_year": 2025,
-      "era_badge": "Ruptura Abissal (2025)",
-      "title": "A Ruptura do Triângulo das Bermudas",
-      "location": "Oceano Atlântico Norte",
-      "category": "Cataclismo Anômalo",
-      "campaign_id": "camp_001",
-      "threat_level": "Nível 5 - Cataclísmico",
-      "threat_stars": 5,
-      "status": "(Futura Campanha)",
-      "survivors": "Arquiteto do Caos (Transcendido 99% MDA)",
-      "casualties": "Flotilha costeira e tripulações civis",
-      "characters": [
-        "char_arquiteto"
-      ],
-      "canon_status": "confirmed",
-      "sources": [
-        "Manuscrito da Incursão",
-        "Dossiê A.E.G.I.S."
-      ],
-      "description": "No Oceano Atlântico, experimentos com bio-ressonância culminam na ascensão do Arquiteto do Caos (99% MDA). Um buraco de minhoca abre-se no mar, engolindo flotilhas, aviões e submarinos, criando a anomalia permanente do Triângulo.",
-      "is_future": true
+      "threat_stars": "★★★☆☆ Oculto",
+      "status": "Concluída",
+      "description": "Após brincadeira arquitetada por Rafael e empurrão de Arthur na orla da mata, Lucas Vilar cai na mina com a perna quebrada; Helena vê o vulto d’O Eco e o grupo sela o silêncio."
     },
     {
       "id": "time_04",
-      "year": "Ano 2026 (Ano 0) [Variante Out/2024]",
-      "chronological_year": 2026,
-      "era_badge": "Clímax da Mansão Vilar (2024/2026)",
-      "title": "A Noite da Confissão & O Resgate",
-      "location": "Mansão Vilar & Minas (México)",
-      "category": "Clímax de Campanha",
+      "chronological_year": 2024,
+      "year_numeric": 2024,
+      "year_label": "2024 // Crônica II",
+      "title": "O Expresso do 6º Bilhete, Projeto LIMIAR & O Resgate de Lucas",
       "campaign_id": "camp_002",
-      "threat_level": "Nível 4 - Crítico",
-      "threat_stars": 4,
-      "status": "Concluído com Sobreviventes",
-      "survivors": "Lucas Vilar, Gabriel Vilar, Rafael Montes, Helena Castro, Diego Ramos, Bia Albuquerque, Arthur Valente, Júlia Drummond",
-      "casualties": "Criaturas das Minas exterminadas",
-      "characters": [
+      "location": "Estação & Mansão Vilar (México)",
+      "location_id": "loc_vilar",
+      "country_id": "country_mexico",
+      "region_id": "reg_serra_mineradora",
+      "characters_involved": [
         "char_lucas",
         "char_gabriel",
         "char_rafael",
         "char_helena",
         "char_diego",
         "char_bia",
-        "char_arthur",
-        "char_julia"
+        "char_arthur"
       ],
-      "canon_status": "confirmed",
-      "sources": [
-        "Roteiro de Até o Amanhecer",
-        "Relatório San Lorenzo A.E.G.I.S."
-      ],
-      "description": "Gabriel atrai os antigos amigos de volta com bilhetes de trem anônimos. Sob a máscara de Davi Reis e empunhando o LIMIAR, força as confissões. No subsolo, enfrentam os Ecos e resgatam Lucas com vida após anos de sobrevivência."
-    },
-    {
-      "id": "time_05",
-      "year": "Ano 2026 (Presente)",
-      "chronological_year": 2026.3,
-      "era_badge": "Guerra do Triângulo (Presente)",
-      "title": "A Incursão de Nova Caronte",
-      "location": "Cidadela Flutuante (Triângulo das Bermudas)",
-      "category": "Campanha Ativa",
-      "campaign_id": "camp_001",
-      "threat_level": "Nível 5 - Cataclísmico",
-      "threat_stars": 5,
-      "status": "(Futura Campanha)",
-      "survivors": "Sargento Miller, Dra. Evelyn Reed, civis de Nova Caronte",
-      "casualties": "Baixas contínuas na carcaça do cargueiro",
-      "characters": [
-        "char_miller",
-        "char_evelyn",
-        "char_arquiteto"
-      ],
-      "canon_status": "confirmed",
-      "sources": [
-        "Manuscrito da Incursão (Autor)"
-      ],
-      "description": "O navio de 5.000 almas é tragado pela fenda no Atlântico. Os sobreviventes fundam a cidadela caótica de Nova Caronte, onde precisam lidar com mutações forçadas, os ataques do Mímico e as profecias do Arquiteto do Caos.",
-      "is_future": true
-    },
-    {
-      "id": "time_oeht_belvedere",
-      "year": "Ano 2026 [Data Reservada]",
-      "chronological_year": 2026.7,
-      "era_badge": "Conspiração Corporativa (2026)",
-      "title": "A Gala da Meia-Noite // Operação Belvedere",
-      "location": "Mansão Belvedere (Europa Central)",
-      "category": "Infiltração Tática A.E.G.I.S.",
-      "campaign_id": "camp_filantropo_oeht",
-      "threat_stars": 4,
-      "threat_level": "Nível 4 - Crítico",
-      "status": "Sob Quarentena Tática // Registro Parcial",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Briefing Kaelen",
-        "Transcrição de Infiltração A.E.G.I.S."
-      ],
-      "characters": [
-        "char_oeht",
-        "char_kaelen"
-      ],
-      "description": "Operação de infiltração da A.E.G.I.S. sob direção de Kaelen para conter a ativação da relíquia parasita durante a gala de magnatas organizada pelo bilionário Oeht."
+      "threat_stars": "★★★★☆ Psicológico",
+      "status": "Concluída",
+      "description": "Gabriel Vilar (\"Davi Reis\") reúne os 5 amigos na mansão usando portais LIMIAR. Após a queda da máscara, o grupo desce às minas contra O Eco, resgata Lucas vivo e explode o complexo."
     },
     {
       "id": "time_bel_01",
-      "year": "2026",
-      "date": "Ano 2026",
-      "title": "Operação Belvedere // A Gala de Oeht",
-      "location": "Genebra, Suíça",
-      "description": "A.E.G.I.S. intercepta planos de Oeht para mercantilização do paranormal na Mansão Belvedere.",
-      "threat_stars": 4,
-      "status": "(Futura Campanha)",
+      "chronological_year": 2026,
+      "year_numeric": 2026,
+      "year_label": "2026 // 22h00–00h00",
+      "title": "Operação Belvedere: Gala de Oeht, As 3 Travas & O Anárquico",
       "campaign_id": "camp_filantropo_oeht",
-      "is_future": true
+      "location": "Mansão Belvedere (Genebra, Suíça)",
+      "location_id": "loc_mansao_belvedere",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "characters_involved": [
+        "char_oeht",
+        "char_victor_kael",
+        "char_kaelen",
+        "char_clara_mendes",
+        "char_kenji_sato",
+        "char_helena_vargas",
+        "char_lorenzo_vane"
+      ],
+      "threat_stars": "★★★★★ Severo",
+      "status": "(Futura Campanha)",
+      "description": "Oeht exibe artefato do mercado negro (lodo roxo no cofre) e desafia a A.E.G.I.S. às 23h00; Victor Kael fecha a redoma e engasga o tempo em loops de 10s até despertar O Anárquico à meia-noite."
     }
   ],
   "battlemap_tokens": [
     {
       "id": "tok_lucas",
-      "character_id": "char_lucas",
       "name": "Lucas Vilar",
-      "role": "Sobrevivente Marcado",
+      "type": "survivor",
       "map_id": "map_vilar",
-      "initial_coords": [
-        21.84,
-        -102.26
-      ],
-      "svg_x": 720,
-      "svg_y": 510,
-      "color": "#00e5ff",
-      "icon": "👤",
-      "pd": 12,
-      "max_pd": 20,
-      "mda": 25,
-      "has_armor": false,
-      "vision_radius": 60,
-      "conditions": [
-        "Hipersensibilidade Auditiva",
-        "Cego"
-      ]
+      "x": 18,
+      "y": 74,
+      "icon": "🦯",
+      "hp": 26,
+      "max_hp": 26,
+      "color": "#00e5ff"
     },
     {
       "id": "tok_gabriel",
-      "character_id": "char_gabriel",
-      "name": "Gabriel Vilar (Mascarado)",
-      "role": "Especialista Oculto",
+      "name": "Gabriel (LIMIAR)",
+      "type": "antagonist",
       "map_id": "map_vilar",
-      "initial_coords": [
-        21.88,
-        -102.19
-      ],
-      "svg_x": 1360,
-      "svg_y": 810,
-      "color": "#ffd700",
+      "x": 48,
+      "y": 38,
       "icon": "🎭",
-      "pd": 24,
-      "max_pd": 24,
-      "mda": 15,
-      "has_armor": true,
-      "vision_radius": 80,
-      "conditions": [
-        "Portador do LIMIAR",
-        "Determinado"
-      ]
+      "hp": 85,
+      "max_hp": 85,
+      "color": "#ffd700"
     },
     {
       "id": "tok_rafael",
-      "character_id": "char_rafael",
       "name": "Rafael Moreira",
-      "role": "Combatente Líder",
+      "type": "player",
       "map_id": "map_vilar",
-      "initial_coords": [
-        21.87,
-        -102.21
-      ],
-      "svg_x": 980,
-      "svg_y": 320,
-      "color": "#e74c3c",
-      "icon": "⚔️",
-      "pd": 28,
-      "max_pd": 30,
-      "mda": 8,
-      "has_armor": true,
-      "vision_radius": 75,
-      "conditions": [
-        "Postura Ofensiva"
-      ]
+      "x": 32,
+      "y": 62,
+      "icon": "🕵️",
+      "hp": 28,
+      "max_hp": 28,
+      "color": "#38bdf8"
     },
     {
-      "id": "tok_julia",
-      "character_id": "char_julia",
-      "name": "Júlia",
-      "role": "Investigadora Ocultista",
+      "id": "tok_helena",
+      "name": "Helena Castro",
+      "type": "player",
       "map_id": "map_vilar",
-      "initial_coords": [
-        21.85,
-        -102.24
-      ],
-      "svg_x": 840,
-      "svg_y": 480,
-      "color": "#9c27b0",
-      "icon": "🔮",
-      "pd": 22,
-      "max_pd": 22,
-      "mda": 10,
-      "has_armor": false,
-      "vision_radius": 70,
-      "conditions": [
-        "Variável Imprevista"
-      ]
+      "x": 38,
+      "y": 66,
+      "icon": "🔦",
+      "hp": 26,
+      "max_hp": 26,
+      "color": "#22c55e"
+    },
+    {
+      "id": "tok_diego",
+      "name": "Diego Ramos",
+      "type": "player",
+      "map_id": "map_vilar",
+      "x": 26,
+      "y": 58,
+      "icon": "📹",
+      "hp": 24,
+      "max_hp": 24,
+      "color": "#a855f7"
+    },
+    {
+      "id": "tok_bia",
+      "name": "Bia Albuquerque",
+      "type": "player",
+      "map_id": "map_vilar",
+      "x": 42,
+      "y": 60,
+      "icon": "💔",
+      "hp": 25,
+      "max_hp": 25,
+      "color": "#f472b6"
+    },
+    {
+      "id": "tok_arthur",
+      "name": "Arthur Valente",
+      "type": "player",
+      "map_id": "map_vilar",
+      "x": 46,
+      "y": 68,
+      "icon": "⛏️",
+      "hp": 32,
+      "max_hp": 32,
+      "color": "#fb923c"
     },
     {
       "id": "tok_eco",
-      "character_id": "creature_eco",
-      "name": "Eco Alfa",
-      "role": "Criatura das Minas",
+      "name": "O Eco",
+      "type": "monster",
       "map_id": "map_vilar",
-      "initial_coords": [
-        21.82,
-        -102.29
-      ],
-      "svg_x": 220,
-      "svg_y": 720,
-      "color": "#39ff14",
-      "icon": "👾",
-      "pd": 18,
-      "max_pd": 18,
-      "mda": 45,
-      "has_armor": false,
-      "vision_radius": 45,
-      "conditions": [
-        "Ecolocalização Ativa"
-      ]
+      "x": 75,
+      "y": 82,
+      "icon": "🔊",
+      "hp": 290,
+      "max_hp": 290,
+      "color": "#ef4444"
     },
     {
       "id": "tok_arquiteto",
-      "character_id": "char_arquiteto",
-      "name": "O Arquiteto do Caos",
-      "role": "Primogênito",
+      "name": "O Primogênito",
+      "type": "boss",
       "map_id": "map_triangulo",
-      "initial_coords": [
-        25.2,
-        -72
-      ],
-      "svg_x": 780,
-      "svg_y": 420,
-      "color": "#00e5ff",
+      "x": 52,
+      "y": 45,
       "icon": "👁️",
-      "pd": 100,
-      "max_pd": 100,
-      "mda": 99,
-      "has_armor": false,
-      "vision_radius": 120,
-      "conditions": [
-        "Hackeando a Realidade",
-        "Aura Congelante"
-      ]
+      "hp": 950,
+      "max_hp": 950,
+      "color": "#e11d48"
     },
     {
       "id": "tok_kraken",
-      "character_id": "creature_kraken",
-      "name": "Tentáculo Colossal",
-      "role": "Colosso Abissal",
+      "name": "Kraken do Fosso",
+      "type": "boss",
       "map_id": "map_triangulo",
-      "initial_coords": [
-        23.8,
-        -69.5
-      ],
-      "svg_x": 1080,
-      "svg_y": 520,
-      "color": "#e91e63",
+      "x": 70,
+      "y": 65,
       "icon": "🐙",
-      "pd": 80,
-      "max_pd": 80,
-      "mda": 95,
-      "has_armor": true,
-      "vision_radius": 90,
-      "conditions": [
-        "Couraça Basáltica"
-      ]
+      "hp": 720,
+      "max_hp": 720,
+      "color": "#a855f7"
     },
     {
-      "id": "tok_evelyn",
-      "character_id": "char_evelyn",
-      "name": "Dra. Evelyn Shaw",
-      "role": "Especialista em Genética",
-      "map_id": "map_artico",
-      "initial_coords": [
-        72.16,
-        -40.18
-      ],
-      "svg_x": 480,
-      "svg_y": 320,
-      "color": "#00e5ff",
-      "icon": "🧬",
-      "pd": 16,
-      "max_pd": 20,
-      "mda": 22,
-      "has_armor": false,
-      "vision_radius": 60,
-      "conditions": [
-        "Quarentena Nível 4"
-      ]
+      "id": "tok_oeht",
+      "name": "Oeht & Anárquico",
+      "type": "boss",
+      "map_id": "map_belvedere",
+      "x": 50,
+      "y": 50,
+      "icon": "🎂",
+      "hp": 520,
+      "max_hp": 520,
+      "color": "#9333ea"
     },
     {
-      "id": "tok_miller",
-      "character_id": "char_miller",
-      "name": "Comandante Miller",
-      "role": "Combatente Tático",
-      "map_id": "map_artico",
-      "initial_coords": [
-        72.14,
-        -40.22
-      ],
-      "svg_x": 620,
-      "svg_y": 420,
-      "color": "#ff2a4b",
-      "icon": "🛡️",
-      "pd": 22,
-      "max_pd": 22,
-      "mda": 12,
-      "has_armor": true,
-      "vision_radius": 75,
-      "conditions": [
-        "Exoesqueleto Ativo"
-      ]
-    },
-    {
-      "id": "tok_parasita",
-      "character_id": "creature_leviathan",
-      "name": "Parasita Glacial Primordial",
-      "role": "Aberração Criogênica",
-      "map_id": "map_artico",
-      "initial_coords": [
-        71.86,
-        -39.82
-      ],
-      "svg_x": 1050,
-      "svg_y": 550,
-      "color": "#b432ff",
-      "icon": "❄️",
-      "pd": 38,
-      "max_pd": 38,
-      "mda": 88,
-      "has_armor": true,
-      "vision_radius": 95,
-      "conditions": [
-        "Criogênico",
-        "Espinhos de Gelo"
-      ]
+      "id": "tok_kael",
+      "name": "Victor Kael",
+      "type": "antagonist",
+      "map_id": "map_belvedere",
+      "x": 64,
+      "y": 42,
+      "icon": "🃏",
+      "hp": 160,
+      "max_hp": 160,
+      "color": "#dc2626"
     }
   ],
   "relations_graph": {
     "nodes": [
       {
         "id": "camp_001",
-        "label": "A Incursão (Bermudas)",
+        "label": "Triângulo & Vera Cruz",
         "type": "campaign",
-        "color": "#00e5ff",
-        "radius": 26
+        "color": "#00e5ff"
       },
       {
         "id": "camp_002",
-        "label": "Mansão Vilar (México)",
+        "label": "Mansão Vilar",
         "type": "campaign",
-        "color": "#ffd700",
-        "radius": 26
-      },
-      {
-        "id": "char_lucas",
-        "label": "Lucas Vilar",
-        "type": "character",
-        "campaign_id": "camp_002",
-        "color": "#ffd700",
-        "radius": 18
-      },
-      {
-        "id": "char_gabriel",
-        "label": "Gabriel Vilar",
-        "type": "character",
-        "campaign_id": "camp_002",
-        "color": "#ffd700",
-        "radius": 18
-      },
-      {
-        "id": "char_rafael",
-        "label": "Rafael Montes",
-        "type": "character",
-        "campaign_id": "camp_002",
-        "color": "#ffd700",
-        "radius": 16
-      },
-      {
-        "id": "char_julia",
-        "label": "Júlia Prado",
-        "type": "character",
-        "campaign_id": "camp_002",
-        "color": "#ffd700",
-        "radius": 16
-      },
-      {
-        "id": "char_arquiteto",
-        "label": "O Arquiteto",
-        "type": "character",
-        "campaign_id": "camp_001",
-        "color": "#e74c3c",
-        "radius": 20
-      },
-      {
-        "id": "rel_limiar",
-        "label": "O LIMIAR",
-        "type": "relic",
-        "color": "#f39c12",
-        "radius": 15
-      },
-      {
-        "id": "rel_nucleo_abismo",
-        "label": "Núcleo do Abismo",
-        "type": "relic",
-        "color": "#e74c3c",
-        "radius": 15
-      },
-      {
-        "id": "rel_esporo_dourado",
-        "label": "Quartzo Negro",
-        "type": "relic",
-        "color": "#27ae60",
-        "radius": 15
-      },
-      {
-        "id": "rel_manuscrito_friburgo",
-        "label": "Códice Sem-Rosto",
-        "type": "relic",
-        "color": "#8e44ad",
-        "radius": 15
-      },
-      {
-        "id": "rel_lanterna_criogenica",
-        "label": "Lanterna de Éter",
-        "type": "relic",
-        "color": "#3498db",
-        "radius": 15
-      },
-      {
-        "id": "cri_ecos",
-        "label": "Ecos das Minas",
-        "type": "threat",
-        "color": "#ff4444",
-        "radius": 15
-      },
-      {
-        "id": "cri_mimico",
-        "label": "O Mímico",
-        "type": "threat",
-        "color": "#ff4444",
-        "radius": 15
-      },
-      {
-        "id": "cri_polimorfo",
-        "label": "Polimorfo Glacial",
-        "type": "threat",
-        "color": "#ff4444",
-        "radius": 15
-      },
-      {
-        "id": "cri_esporos",
-        "label": "Parasita Floral",
-        "type": "threat",
-        "color": "#ff4444",
-        "radius": 15
-      },
-      {
-        "id": "cri_sem_rosto",
-        "label": "Culto Sem-Rosto",
-        "type": "threat",
-        "color": "#ff4444",
-        "radius": 15
+        "color": "#ffd700"
       },
       {
         "id": "camp_filantropo_oeht",
-        "label": "Gala Belvedere (Suíça)",
+        "label": "Gala Belvedere (Oeht)",
         "type": "campaign",
-        "color": "#a855f7",
-        "radius": 26
+        "color": "#c084fc"
       },
       {
-        "id": "char_oeht",
-        "label": "Theo Oeht",
-        "type": "character",
-        "campaign_id": "camp_filantropo_oeht",
-        "color": "#a855f7",
-        "radius": 18
+        "id": "char_arquiteto",
+        "label": "O Primogênito (Arthur Vilar)",
+        "type": "entity",
+        "color": "#ef4444"
       },
       {
         "id": "char_kaelen",
-        "label": "Diretor Kaelen",
+        "label": "Diretor Kaelen (A.E.G.I.S.)",
         "type": "character",
-        "campaign_id": "camp_filantropo_oeht",
-        "color": "#00e5ff",
-        "radius": 18
+        "color": "#38bdf8"
+      },
+      {
+        "id": "char_heitor",
+        "label": "Marechal Heitor Vasconcelos",
+        "type": "character",
+        "color": "#38bdf8"
+      },
+      {
+        "id": "char_dom_sebastiao",
+        "label": "Dom Sebastião (Ordem Cinza)",
+        "type": "character",
+        "color": "#f59e0b"
+      },
+      {
+        "id": "char_lucas",
+        "label": "Lucas Vilar (Sensitivo)",
+        "type": "character",
+        "color": "#22c55e"
+      },
+      {
+        "id": "char_gabriel",
+        "label": "Gabriel Vilar (Davi Reis)",
+        "type": "character",
+        "color": "#fbbf24"
+      },
+      {
+        "id": "char_rafael",
+        "label": "Rafael & Os 5 Amigos",
+        "type": "character",
+        "color": "#60a5fa"
+      },
+      {
+        "id": "char_oeht",
+        "label": "Oeht (Bilionário)",
+        "type": "character",
+        "color": "#a855f7"
+      },
+      {
+        "id": "char_victor_kael",
+        "label": "Victor Kael (Leiloeiro)",
+        "type": "character",
+        "color": "#f43f5e"
+      },
+      {
+        "id": "rel_hallucigenia",
+        "label": "Armadura Hallucigenia",
+        "type": "relic",
+        "color": "#ec4899"
+      },
+      {
+        "id": "rel_limiar",
+        "label": "Projeto LIMIAR",
+        "type": "relic",
+        "color": "#eab308"
+      },
+      {
+        "id": "rel_caixa_musica",
+        "label": "Caixa de Música / Redoma",
+        "type": "relic",
+        "color": "#a855f7"
+      },
+      {
+        "id": "loc_vera_cruz",
+        "label": "Ilhas de Vera Cruz (Queda do Véu)",
+        "type": "location",
+        "color": "#10b981"
+      },
+      {
+        "id": "loc_nova_caronte",
+        "label": "Nova Caronte & Nácar",
+        "type": "location",
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cri_ecos",
+        "label": "O Eco (Minas)",
+        "type": "creature",
+        "color": "#f87171"
+      },
+      {
+        "id": "cri_lendas",
+        "label": "Lendas (Mapinguari / Boitatá)",
+        "type": "creature",
+        "color": "#fb923c"
+      },
+      {
+        "id": "cri_anarquico",
+        "label": "O Anárquico (MDA 80%)",
+        "type": "creature",
+        "color": "#c084fc"
+      },
+      {
+        "id": "cri_mimico",
+        "label": "Mímico Genético & Kraken",
+        "type": "creature",
+        "color": "#fb7185"
       }
     ],
     "links": [
       {
-        "source": "camp_002",
-        "target": "char_lucas",
-        "label": "Protagonista Sobrevivente"
-      },
-      {
-        "source": "camp_002",
-        "target": "char_gabriel",
-        "label": "Engenheiro Ocultista"
-      },
-      {
-        "source": "camp_002",
-        "target": "char_rafael",
-        "label": "Investigador"
-      },
-      {
-        "source": "camp_002",
-        "target": "char_julia",
-        "label": "Investigadora"
-      },
-      {
-        "source": "char_gabriel",
-        "target": "char_lucas",
-        "label": "Irmãos / Obsessão de Resgate"
-      },
-      {
-        "source": "char_gabriel",
-        "target": "rel_limiar",
-        "label": "Criador & Disparador"
-      },
-      {
-        "source": "char_lucas",
-        "target": "cri_ecos",
-        "label": "Sobreviveu 3 Anos Cego"
-      },
-      {
-        "source": "char_rafael",
-        "target": "char_lucas",
-        "label": "Culpa do Desaparecimento"
-      },
-      {
-        "source": "char_julia",
-        "target": "char_gabriel",
-        "label": "Desmascarou o Justiceiro"
-      },
-      {
-        "source": "camp_001",
-        "target": "char_arquiteto",
-        "label": "Entidade Primordial"
+        "source": "char_arquiteto",
+        "target": "camp_001",
+        "label": "Domina via Campo de Rosas"
       },
       {
         "source": "char_arquiteto",
-        "target": "rel_nucleo_abismo",
-        "label": "Canalizador da Fenda"
+        "target": "loc_vera_cruz",
+        "label": "Rasgou o Véu em 1500"
       },
       {
-        "source": "camp_001",
-        "target": "cri_mimico",
-        "label": "Ameaça Infiltrada"
+        "source": "char_arquiteto",
+        "target": "rel_hallucigenia",
+        "label": "Vestígio Primordial"
       },
       {
-        "source": "camp_filantropo_oeht",
-        "target": "char_oeht",
-        "label": "Anfitrião da Gala"
+        "source": "loc_nova_caronte",
+        "target": "camp_001",
+        "label": "Sub-domínio do Triângulo"
       },
       {
-        "source": "camp_filantropo_oeht",
-        "target": "char_kaelen",
-        "label": "Diretor de Infiltração"
+        "source": "loc_vera_cruz",
+        "target": "camp_001",
+        "label": "Arquipélago do Degredo"
       },
       {
-        "source": "char_kaelen",
-        "target": "char_oeht",
-        "label": "Investigação Tática A.E.G.I.S."
+        "source": "char_dom_sebastiao",
+        "target": "loc_vera_cruz",
+        "label": "Inquisição em São Lázaro"
+      },
+      {
+        "source": "cri_lendas",
+        "target": "loc_vera_cruz",
+        "label": "Encarnaram na Queda do Véu"
+      },
+      {
+        "source": "cri_mimico",
+        "target": "loc_nova_caronte",
+        "label": "Infiltra navios & fossas"
       },
       {
         "source": "char_kaelen",
         "target": "camp_001",
-        "label": "Monitoramento de Contenção"
+        "label": "Recruta sobreviventes"
       },
       {
         "source": "char_kaelen",
+        "target": "camp_filantropo_oeht",
+        "label": "Envia equipe à Gala"
+      },
+      {
+        "source": "char_heitor",
+        "target": "char_kaelen",
+        "label": "Alto Comando A.E.G.I.S."
+      },
+      {
+        "source": "char_gabriel",
         "target": "camp_002",
-        "label": "Relatório San Lorenzo"
+        "label": "Infiltra-se como Davi Reis"
       },
       {
-        "source": "camp_001",
-        "target": "cri_ecos",
-        "label": "Ressonância Biológica"
-      },
-      {
-        "source": "char_lucas",
+        "source": "char_gabriel",
         "target": "rel_limiar",
-        "label": "Resgatado pela Fenda"
+        "label": "Construiu portais ZZZZT"
+      },
+      {
+        "source": "char_gabriel",
+        "target": "char_lucas",
+        "label": "Buscou vingança pelo irmão"
       },
       {
         "source": "char_rafael",
-        "target": "char_gabriel",
-        "label": "Confronto na Mansão"
+        "target": "camp_002",
+        "label": "5 Amigos & 6º Bilhete"
+      },
+      {
+        "source": "char_lucas",
+        "target": "cri_ecos",
+        "label": "Sobreviveu 3 anos nas minas"
+      },
+      {
+        "source": "cri_ecos",
+        "target": "camp_002",
+        "label": "Predador vocal do subsolo"
       },
       {
         "source": "char_oeht",
-        "target": "rel_nucleo_abismo",
-        "label": "Tentativa de Compra Clandestina"
+        "target": "camp_filantropo_oeht",
+        "label": "Anfitrião da Gala (Lodo Roxo)"
+      },
+      {
+        "source": "char_victor_kael",
+        "target": "camp_filantropo_oeht",
+        "label": "Sabotador de Terno Vinho"
+      },
+      {
+        "source": "char_victor_kael",
+        "target": "rel_caixa_musica",
+        "label": "Contrabandeou relíquia"
+      },
+      {
+        "source": "rel_caixa_musica",
+        "target": "cri_anarquico",
+        "label": "Sustenta a Redoma às 00h00"
+      },
+      {
+        "source": "char_victor_kael",
+        "target": "char_dom_sebastiao",
+        "label": "Traficou relíquias da Cinza"
       }
     ]
   },
-  "schema_version": "3.0.0-museum",
-  "last_updated": "2026-11-01",
+  "schema_version": "3.0.0-canon-unificado",
+  "last_updated": "2026-11-12",
   "planet": {
     "id": "planet_evren",
     "name": "Planeta Evren",
@@ -7089,18 +9153,6 @@ class DataLoader {
         "description": "Cadeia montanhosa rica em veios de prata e quartzo onde foi erguida a Mansão Vilar."
       },
       {
-        "id": "mtn_alpes_schwarzwald",
-        "name": "Maciço da Floresta Negra (Schwarzwald)",
-        "continent_id": "cont_europa",
-        "country_id": "country_alemanha",
-        "coordinates": [
-          48.15,
-          8.2
-        ],
-        "elevation": "1.493m",
-        "description": "Formação montanhosa densamente arborizada no sudoeste da Alemanha, sede do Monastério de Santo Agostinho."
-      },
-      {
         "id": "mtn_inuit_glacial",
         "name": "Cordilheira Glacial Inlandsis",
         "continent_id": "cont_artico",
@@ -7135,68 +9187,75 @@ class DataLoader {
         ],
         "elevation": "8.848m",
         "description": "Cadeia montanhosa asiática (Região ainda não documentada com campanhas no acervo)."
+      },
+      {
+        "id": "mt_serra_veu_rasgado",
+        "name": "Serra do Véu Rasgado (Vera Cruz)",
+        "elevation_max": "3.120 m (Pico da Cratera Ancestral)",
+        "coordinates": [
+          -19,
+          -38.1
+        ],
+        "continent_id": "cont_america_sul",
+        "description": "Cadeia de pedra negra e frio congelante onde as primeiras árvores sagradas foram derrubadas em 1500, rasgando o Véu."
+      },
+      {
+        "id": "mt_serra_veu_rasgado",
+        "name": "Serra do Véu Rasgado (Vera Cruz)",
+        "elevation_max": "3.120 m (Pico da Cratera Ancestral)",
+        "coordinates": [
+          -19,
+          -38.1
+        ],
+        "continent_id": "cont_america_sul",
+        "description": "Cadeia de pedra negra e frio congelante onde as primeiras árvores sagradas foram derrubadas em 1500, rasgando o Véu."
+      },
+      {
+        "id": "mt_serra_veu_rasgado",
+        "name": "Serra do Véu Rasgado (Vera Cruz)",
+        "elevation_max": "3.120 m (Pico da Cratera Ancestral)",
+        "coordinates": [
+          -19,
+          -38.1
+        ],
+        "continent_id": "cont_america_sul",
+        "description": "Cadeia de pedra negra e frio congelante onde as primeiras árvores sagradas foram derrubadas em 1500, rasgando o Véu."
       }
     ],
     "forests": [
       {
-        "id": "for_amazonia",
-        "name": "Floresta Amazônica & Vale do Tapajós",
+        "id": "for_santa_cruz",
+        "name": "Mata da Neblina (Vera Cruz das Almas)",
         "continent_id": "cont_america_sul",
-        "country_id": "country_brasil",
         "coordinates": [
-          -4.25,
-          -55.98
+          -16.5,
+          -38.7
         ],
-        "area_km2": "5.500.000 km²",
-        "description": "A maior floresta tropical pluvial do planeta, cenário da operação histórica Protocolo Selva."
-      },
-      {
-        "id": "for_floresta_negra",
-        "name": "Floresta Negra (Schwarzwald)",
-        "continent_id": "cont_europa",
-        "country_id": "country_alemanha",
-        "coordinates": [
-          48.15,
-          8.2
-        ],
-        "area_km2": "6.009 km²",
-        "description": "Floresta fechada de coníferas escuras e neblina perene onde ocorreu o incidente do Monastério dos Sem-Rosto."
-      },
-      {
-        "id": "for_serra_pinheiros",
-        "name": "Bosque Nebuloso da Serra Mexicana",
-        "continent_id": "cont_america_norte",
-        "country_id": "country_mexico",
-        "coordinates": [
-          21.88,
-          -102.22
-        ],
-        "area_km2": "1.450 km²",
-        "description": "Cinturão de pinheiros e carvalhos de altitude que isola a propriedade da família Vilar."
+        "description": "Mata fechada ancestral sob cerco de Lendas Encarnadas, patrulhada pelos Bandeirantes do Véu."
       }
     ],
     "rivers_lakes": [
       {
-        "id": "riv_tapajos",
-        "name": "Rio Tapajós & Afluentes Amazônicos",
+        "id": "riv_mar_veracruz",
+        "name": "Canal de São Lázaro & Manguezais das Almas",
         "continent_id": "cont_america_sul",
         "country_id": "country_brasil",
         "coordinates": [
-          -4.22,
-          -55.95
+          -17.3,
+          -38.1
         ],
-        "description": "Importante via hidrográfica de águas escuras que serviu de eixo para a expedição científica de 2025."
+        "description": "Correntes de maré escura que ligam Santa Cruz das Cinzas ao Manguezal dos Afogados, habitadas pelo Boitatá e pela Iara Decaída."
       },
       {
-        "id": "riv_reno_schwarzwald",
-        "name": "Vale Superior do Rio Reno",
+        "id": "riv_lago_genebra",
+        "name": "Lago Léman & Bacia de Genebra",
         "continent_id": "cont_europa",
-        "country_id": "country_alemanha",
+        "country_id": "country_suica",
         "coordinates": [
-          48.1,
-          7.95
+          46.23,
+          6.18
         ],
-        "description": "Bacia fluvial que contorna as encostas ocidentais da Floresta Negra."
+        "description": "Bacia alpina que margeia a Mansão Belvedere de Oeht e os túneis de acesso do QG Europeu da A.E.G.I.S."
       },
       {
         "id": "riv_aquifero_vilar",
@@ -7207,7 +9266,7 @@ class DataLoader {
           21.82,
           -102.3
         ],
-        "description": "Rede de galerias inundadas abaixo da Serra Mineradora do México."
+        "description": "Rede de galerias inundadas abaixo da Serra Mineradora do México onde Lucas Vilar sobreviveu por três anos."
       }
     ],
     "deserts": [
@@ -7265,7 +9324,8 @@ class DataLoader {
         "status": "Não Documentada",
         "note": "Território físico mapeado, sem registros históricos catalogados."
       }
-    ]
+    ],
+    "rivers_and_lakes": []
   },
   "continents": [
     {
@@ -7282,7 +9342,8 @@ class DataLoader {
       "campaigns": [
         "camp_002"
       ],
-      "summary": "Continente marcado pelas serras mineradoras históricas do México, onde se desenrolou a tragédia e o resgate na Mansão Vilar em 2024."
+      "summary": "Continente marcado pelas serras mineradoras históricas do México, onde se desenrolou a tragédia e o resgate na Mansão Vilar em 2024.",
+      "campaign_ids": []
     },
     {
       "id": "cont_america_sul",
@@ -7296,9 +9357,12 @@ class DataLoader {
         "country_brasil"
       ],
       "campaigns": [
-        "camp_004"
+        "camp_001"
       ],
-      "summary": "Continente dominado pela Bacia Amazônica e pelo Rio Tapajós, cenário da expedição científica e militar 'Protocolo Selva' em 2025."
+      "summary": "Continente atlântico ligado diretamente ao Arquipélago de Vera Cruz das Almas, berço colonial dos Bandeirantes do Véu e da Queda do Véu.",
+      "campaign_ids": [
+        "camp_001"
+      ]
     },
     {
       "id": "cont_europa",
@@ -7312,9 +9376,12 @@ class DataLoader {
         "country_alemanha"
       ],
       "campaigns": [
-        "camp_005"
+        "camp_filantropo_oeht"
       ],
-      "summary": "Berço de antigas fundações monásticas e arquivos históricos, onde ocorreu a investigação de 2023 na Floresta Negra (Baden-Württemberg)."
+      "summary": "Sede da Fundação A.E.G.I.S. em Genebra, cenário da Gala da Meia-Noite na Mansão Belvedere (Crônica III) e das ocorrências ancestrais ligadas à Ordem da Cinza e ao Ciclo de Stumpp.",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ]
     },
     {
       "id": "cont_artico",
@@ -7327,10 +9394,9 @@ class DataLoader {
       "countries": [
         "country_groenlandia"
       ],
-      "campaigns": [
-        "camp_003"
-      ],
-      "summary": "Fronteira extrema de gelo perpétuo na Groenlândia, onde a Fundação A.E.G.I.S. mantém a Estação Criogênica Zero desde 2026."
+      "campaigns": [],
+      "summary": "Região polar monitorada por satélites da A.E.G.I.S. quanto a flutuações magnéticas do eixo atlântico.",
+      "campaign_ids": []
     },
     {
       "id": "cont_atlantico",
@@ -7346,7 +9412,8 @@ class DataLoader {
       "campaigns": [
         "camp_001"
       ],
-      "summary": "Região oceânica e arquipélago isolado entre a Flórida, Bermudas e Porto Rico, onde naufrágios históricos convergiram para Nova Caronte."
+      "summary": "Região oceânica e arquipélago isolado entre a Flórida, Bermudas e Porto Rico, onde naufrágios históricos convergiram para Nova Caronte.",
+      "campaign_ids": []
     },
     {
       "id": "cont_africa_asia_oceania",
@@ -7358,94 +9425,62 @@ class DataLoader {
       "zoom_level": 2,
       "countries": [],
       "campaigns": [],
-      "summary": "Continentes físicos presentes na cartografia planetária de Evren cujos arquivos de campanhas ainda não foram abertos ou permanecem pendentes de documentação."
+      "summary": "Continentes físicos presentes na cartografia planetária de Evren cujos arquivos de campanhas ainda não foram abertos ou permanecem pendentes de documentação.",
+      "campaign_ids": []
     }
   ],
   "countries": [
     {
       "id": "country_mexico",
       "name": "México",
-      "geojson_name": "Mexico",
       "continent_id": "cont_america_norte",
       "coordinates": [
         21.85,
         -102.25
       ],
-      "regions": [
-        "reg_serra_mineradora"
-      ],
-      "campaigns": [
+      "campaign_ids": [
         "camp_002"
       ],
-      "historical_summary": "País norte-americano cuja região serrana abrigou o complexo minerador da família Vilar e os acontecimentos de 'Até o Amanhecer' (2021–2024)."
+      "summary": "Serras mineradoras de Sonora / San Lorenzo de Vilar; palco da Crônica II (Mansão Vilar e Projeto LIMIAR)."
     },
     {
       "id": "country_brasil",
-      "name": "Brasil",
-      "geojson_name": "Brazil",
+      "name": "Brasil & Arquipélago de Vera Cruz das Almas",
       "continent_id": "cont_america_sul",
       "coordinates": [
-        -4.25,
-        -55.98
+        -16.4,
+        -38.9
       ],
-      "regions": [
-        "reg_bacia_tapajos"
+      "campaign_ids": [
+        "camp_001"
       ],
-      "campaigns": [
-        "camp_004"
-      ],
-      "historical_summary": "Nação sul-americana onde uma expedição conjunta investigou o garimpo abandonado e a Cratera de Quartzo Negro no Rio Tapajós em 2025."
-    },
-    {
-      "id": "country_alemanha",
-      "name": "Alemanha",
-      "geojson_name": "Germany",
-      "continent_id": "cont_europa",
-      "coordinates": [
-        48.15,
-        8.2
-      ],
-      "regions": [
-        "reg_floresta_negra"
-      ],
-      "campaigns": [
-        "camp_005"
-      ],
-      "historical_summary": "País europeu onde investigadores registraram um dos primeiros casos modernos documentados do arquivo em 2023, no Monastério de Santo Agostinho."
-    },
-    {
-      "id": "country_groenlandia",
-      "name": "Groenlândia",
-      "geojson_name": "Greenland",
-      "continent_id": "cont_artico",
-      "coordinates": [
-        72,
-        -40
-      ],
-      "regions": [
-        "reg_calota_artica"
-      ],
-      "campaigns": [
-        "camp_003"
-      ],
-      "historical_summary": "Território ártico autónomo coberto pela calota polar, sede das escavações profundas da Estação Criogênica Zero em 2026."
+      "summary": "Costa atlântica e as Quatro Ilhas de Vera Cruz das Almas (Santa Cruz das Cinzas, Manguezal dos Afogados, Sertão das Ossadas, Serra do Véu Rasgado), onde ocorreu A Queda do Véu."
     },
     {
       "id": "country_atlantico_bermudas",
-      "name": "Região Marítima do Triângulo das Bermudas",
-      "geojson_name": "Bermuda Triangle",
-      "continent_id": "cont_atlantico",
+      "name": "Triângulo das Bermudas",
+      "continent_id": "cont_america_norte",
       "coordinates": [
         25.5,
         -71.5
       ],
-      "regions": [
-        "reg_fossa_caronte"
-      ],
-      "campaigns": [
+      "campaign_ids": [
         "camp_001"
       ],
-      "historical_summary": "Zona marítima internacional e formação insular isolada no Atlântico Norte, palco da campanha em andamento 'A Incursão: O Purgatório Genético'."
+      "summary": "Fenda marítima e prisão atemporal regida pela Lei da Alucinação, lar de Nova Caronte, Cidadela de Nácar, Ilha Canibal e O Primogênito."
+    },
+    {
+      "id": "country_suica",
+      "name": "Suíça (Genebra — Mansão Belvedere)",
+      "continent_id": "cont_europa",
+      "coordinates": [
+        46.2044,
+        6.1432
+      ],
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "summary": "Território europeu da Gala Belvedere (Crônica III — O Filantropo, Oeht, Victor Kael e O Anárquico) e bunker central da A.E.G.I.S."
     }
   ],
   "regions": [
@@ -7458,107 +9493,52 @@ class DataLoader {
         21.85,
         -102.25
       ],
-      "biome": "Montanhas Rochosas & Bosque Nebuloso de Altitude",
-      "cities": [
-        "city_san_lorenzo_vilar"
-      ],
-      "locations": [
-        "loc_vilar",
-        "loc_vilar_casarao",
-        "loc_vilar_minas"
-      ],
-      "campaigns": [
+      "campaign_ids": [
         "camp_002"
       ],
-      "description": "Região montanhosa de difícil acesso no interior do México, historicamente explorada pela extração de prata e quartzo profundo."
-    },
-    {
-      "id": "reg_bacia_tapajos",
-      "name": "Bacia do Rio Tapajós (Amazônia)",
-      "country_id": "country_brasil",
-      "continent_id": "cont_america_sul",
-      "coordinates": [
-        -4.25,
-        -55.98
-      ],
-      "biome": "Floresta Tropical Pluvial Densa & Várzea Fluvial",
-      "cities": [
-        "city_itaituba_tapajos"
-      ],
-      "locations": [
-        "loc_tapajos",
-        "loc_quartzo"
-      ],
-      "campaigns": [
-        "camp_004"
-      ],
-      "description": "Região hidrográfica amazônica cercada por selva primária fechada, onde afloramentos geológicos anômalos contaminaram o subsolo."
-    },
-    {
-      "id": "reg_floresta_negra",
-      "name": "Floresta Negra (Baden-Württemberg)",
-      "country_id": "country_alemanha",
-      "continent_id": "cont_europa",
-      "coordinates": [
-        48.15,
-        8.2
-      ],
-      "biome": "Floresta Temperada Densa de Coníferas & Vales Alpinos",
-      "cities": [
-        "city_friburgo_agostinho"
-      ],
-      "locations": [
-        "loc_monasterio",
-        "loc_cripta"
-      ],
-      "campaigns": [
-        "camp_005"
-      ],
-      "description": "Cordilheira florestal histórica no sudoeste alemão, conhecida por seus vales profundos, nevoeiros constantes e arquitetura monástica medieval."
-    },
-    {
-      "id": "reg_calota_artica",
-      "name": "Calota Polar Ártica (Setor Inlandsis)",
-      "country_id": "country_groenlandia",
-      "continent_id": "cont_artico",
-      "coordinates": [
-        72,
-        -40
-      ],
-      "biome": "Deserto Polar de Gelo Perpétuo & Fendas Glaciais",
-      "cities": [
-        "city_outpost_zero"
-      ],
-      "locations": [
-        "loc_estacao_zero",
-        "loc_monolito_gelo"
-      ],
-      "campaigns": [
-        "camp_003"
-      ],
-      "description": "Planalto congelado a mais de 2.500 metros de altitude sobre o nível do mar, onde o degelo revelou formações geológicas e biológicas pré-históricas."
+      "summary": "Serras mexicanas onde antigas galerias coloniais cruzaram uma microfenda do Véu."
     },
     {
       "id": "reg_fossa_caronte",
       "name": "Arquipélago & Fosso de Nova Caronte",
       "country_id": "country_atlantico_bermudas",
-      "continent_id": "cont_atlantico",
+      "continent_id": "cont_america_norte",
       "coordinates": [
         25.5,
         -71.5
       ],
-      "biome": "Recifes Abissais, Ilhas Rochosas & Fossa Oceânica",
-      "cities": [
-        "city_porto_caronte"
-      ],
-      "locations": [
-        "loc_caronte",
-        "loc_kraken"
-      ],
-      "campaigns": [
+      "campaign_ids": [
         "camp_001"
       ],
-      "description": "Região marítima isolada no coração do Triângulo das Bermudas, caracterizada por tempestades elétricas severas e fossas abissais."
+      "summary": "Águas abissais e zonas estratificadas do Triângulo das Bermudas."
+    },
+    {
+      "id": "reg_vera_cruz",
+      "name": "Arquipélago de Vera Cruz das Almas (4 Ilhas)",
+      "country_id": "country_brasil",
+      "continent_id": "cont_america_sul",
+      "coordinates": [
+        -17.5,
+        -38.5
+      ],
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "summary": "Continente insular onde colonos da Ordem da Cinza rasgaram o Véu, libertando o Folclore Encarnado."
+    },
+    {
+      "id": "reg_genebra_belvedere",
+      "name": "Distrito Alpino de Belvedere (Genebra)",
+      "country_id": "country_suica",
+      "continent_id": "cont_europa",
+      "coordinates": [
+        46.2044,
+        6.1432
+      ],
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "summary": "Zona de isolamento diplomático e corporativo onde Oeht tentou inaugurar a privatização do paranormal."
     }
   ],
   "cities": [
@@ -7572,351 +9552,303 @@ class DataLoader {
         21.85,
         -102.25
       ],
-      "population_status": "Desabitado após as detonações de 2024",
-      "locations": [
-        "loc_vilar",
-        "loc_vilar_casarao",
-        "loc_vilar_minas"
+      "campaign_ids": [
+        "camp_002"
       ],
-      "description": "Antigo núcleo residencial e complexo de mineração erguido pela família Vilar nas encostas da serra mexicana."
-    },
-    {
-      "id": "city_itaituba_tapajos",
-      "name": "Entreposto Fluvial do Alto Tapajós",
-      "region_id": "reg_bacia_tapajos",
-      "country_id": "country_brasil",
-      "continent_id": "cont_america_sul",
-      "coordinates": [
-        -4.22,
-        -55.95
-      ],
-      "population_status": "Sob interdição sanitária e ambiental desde 2025",
-      "locations": [
-        "loc_tapajos",
-        "loc_quartzo"
-      ],
-      "description": "Assentamento ribeirinho e posto de apoio logístico utilizado por garimpeiros e posteriormente pela força-tarefa científica brasileira."
-    },
-    {
-      "id": "city_friburgo_agostinho",
-      "name": "Vale de Santo Agostinho (Arredores de Friburgo)",
-      "region_id": "reg_floresta_negra",
-      "country_id": "country_alemanha",
-      "continent_id": "cont_europa",
-      "coordinates": [
-        48.15,
-        8.2
-      ],
-      "population_status": "Restrito ao patrimônio histórico sob custódia",
-      "locations": [
-        "loc_monasterio",
-        "loc_cripta"
-      ],
-      "description": "Vilarejo histórico e complexo abacial do século XIV encravado nas montanhas da Floresta Negra."
-    },
-    {
-      "id": "city_outpost_zero",
-      "name": "Perímetro Científico Estação Zero",
-      "region_id": "reg_calota_artica",
-      "country_id": "country_groenlandia",
-      "continent_id": "cont_artico",
-      "coordinates": [
-        72.15,
-        -40.2
-      ],
-      "population_status": "Guarnição científica e militar em alerta (32 residentes)",
-      "locations": [
-        "loc_estacao_zero",
-        "loc_monolito_gelo"
-      ],
-      "description": "Base modular pressurizada construída sobre a geleira central da Groenlândia para perfuração criogênica."
+      "description": "Estação ferroviária isolada, casarão Vilar e minas antigas seladas."
     },
     {
       "id": "city_porto_caronte",
       "name": "Colônia de Sobreviventes de Nova Caronte",
       "region_id": "reg_fossa_caronte",
       "country_id": "country_atlantico_bermudas",
-      "continent_id": "cont_atlantico",
+      "continent_id": "cont_america_norte",
       "coordinates": [
-        25.5,
-        -73.2
+        25.3,
+        -71.4
       ],
-      "population_status": "Assentamento de sobreviventes em conflito (Em andamento)",
-      "locations": [
-        "loc_caronte",
-        "loc_kraken"
+      "campaign_ids": [
+        "camp_001"
       ],
-      "description": "Reduto costeiro formado por carcaças de embarcações e estruturas de contenção genética no Atlântico Norte."
+      "description": "Cidade flutuante construída sobre carcaças navais de várias eras; abriga o bar A Goela do Cachalote."
+    },
+    {
+      "id": "city_sao_lazaro",
+      "name": "Fortaleza de São Lázaro (Ilha de Santa Cruz)",
+      "region_id": "reg_vera_cruz",
+      "country_id": "country_brasil",
+      "continent_id": "cont_america_sul",
+      "coordinates": [
+        -16.4,
+        -38.9
+      ],
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "description": "Bastião amuralhado iluminado por fogo e sal grosso, comandado pela Ordem da Cinza."
+    },
+    {
+      "id": "city_genebra",
+      "name": "Genebra / Complexo Belvedere",
+      "region_id": "reg_genebra_belvedere",
+      "country_id": "country_suica",
+      "continent_id": "cont_europa",
+      "coordinates": [
+        46.2044,
+        6.1432
+      ],
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "description": "Metrópole europeia sob a qual a A.E.G.I.S. opera em sigilo diante da incursão de Oeht e Victor Kael."
     }
   ],
   "historical_events": [
     {
-      "id": "evt_1348_abadia",
-      "date": "Ano 1348 (Século XIV)",
-      "year_numeric": 1348,
-      "title": "Isolamento Medieval do Monastério de Santo Agostinho",
-      "description": "Durante a Peste Negra na Europa, monges beneditinos na Floresta Negra selam a cripta inferior após registrarem o primeiro fenômeno acústico do Sino Sem-Rosto.",
-      "campaign_id": "camp_005",
-      "continent_id": "cont_europa",
-      "country_id": "country_alemanha",
-      "region_id": "reg_floresta_negra",
-      "location_id": "loc_monasterio",
-      "characters_involved": [],
-      "consequences": "Os manuscritos originais permanecem ocultos por quase sete séculos na biblioteca abacial.",
-      "images": [
-        "assets/ref_interior_tavern.jpg"
-      ]
-    },
-    {
-      "id": "time_01",
-      "date": "Outubro de 2021",
-      "year_numeric": 2021,
-      "title": "O Desaparecimento de Lucas Vilar nas Minas Mexicanas",
-      "description": "Durante uma incursão noturna nas galerias desativadas sob a Mansão Vilar, no México, um desmoronamento separa Lucas Vilar do restante do grupo. Dado como morto, Lucas permanece preso no subsolo.",
-      "campaign_id": "camp_002",
-      "continent_id": "cont_america_norte",
-      "country_id": "country_mexico",
-      "region_id": "reg_serra_mineradora",
-      "location_id": "loc_vilar_minas",
+      "id": "time_primordial",
+      "title": "O Primogênito & A Armadura Hallucigenia (Era Primordial)",
+      "chronological_year": -5000,
+      "year_numeric": -5000,
+      "year_label": "+5.000 Anos Atrás",
+      "campaign_id": "camp_001",
+      "location_id": "loc_campo_rosas",
+      "country_id": "country_atlantico_bermudas",
+      "region_id": "reg_fossa_caronte",
+      "location_name": "Atlântico / Abismo Primordial",
       "characters_involved": [
-        "char_lucas",
-        "char_gabriel",
-        "char_rafael",
-        "char_julia"
+        "char_arquiteto"
       ],
-      "consequences": "Fratura emocional no grupo de amigos; início da obsessão científica de Gabriel Vilar.",
-      "images": [
-        "assets/ref_outdoor_waterfall.jpg"
-      ]
+      "threat_level": "★★★★★ Cataclísmico",
+      "status": "Cânone Base",
+      "description": "O primeiro humano encontra a anomalia do mar e desperta a Verdadeira Magia; civilizações ancestrais forjam a biotecnológica Armadura Hallucigenia.",
+      "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
     },
     {
-      "id": "time_ale_01",
-      "date": "Novembro de 2023",
-      "year_numeric": 2023,
-      "title": "Investigação e Selamento da Abadia de Friburgo (Floresta Negra)",
-      "description": "A inspetora Greta Falk e o arquivista Hans Richter adentram o Monastério de Santo Agostinho na Alemanha, decifram os códices de 1348 e destroem o Sino Sem-Rosto na cripta subterrânea.",
-      "campaign_id": "camp_005",
-      "continent_id": "cont_europa",
-      "country_id": "country_alemanha",
-      "region_id": "reg_floresta_negra",
-      "location_id": "loc_cripta",
+      "id": "time_mitica",
+      "title": "Loki, Merlin, Excalibur & Fundação da Ordem da Cinza",
+      "chronological_year": 900,
+      "year_numeric": 900,
+      "year_label": "Era Mítica & Medieval",
+      "campaign_id": "camp_001",
+      "location_id": "loc_aegis_genebra",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "location_name": "Europa / Escandinávia & Bretanha",
       "characters_involved": [
-        "char_greta",
-        "char_hans"
+        "char_arquiteto",
+        "char_dom_sebastiao"
       ],
-      "consequences": "Encerramento da ameaça acústica na Floresta Negra; integração de Hans Richter ao Arquivo Histórico.",
-      "images": [
-        "assets/ref_interior_tavern.jpg"
-      ]
+      "threat_level": "★★★★☆ Sombrio",
+      "status": "Cânone Base",
+      "description": "O Primogênito molda mitos europeus com sua máscara de osso e madeira (Loki/Merlin). Diante do terror do Campo de Rosas, a Coroa e o clero fundam a Ordem da Cinza.",
+      "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
     },
     {
-      "id": "time_02",
-      "date": "Fevereiro de 2024",
-      "year_numeric": 2024,
-      "title": "Conclusão do Protótipo LIMIAR no Casarão Vilar",
-      "description": "No laboratório oculto da Mansão Vilar, Gabriel Vilar finaliza a montagem da arma de dobras espaciais LIMIAR e grava as fitas cassete do Projeto Limiar.",
-      "campaign_id": "camp_002",
-      "continent_id": "cont_america_norte",
-      "country_id": "country_mexico",
-      "region_id": "reg_serra_mineradora",
-      "location_id": "loc_vilar_casarao",
-      "characters_involved": [
-        "char_gabriel"
-      ],
-      "consequences": "Primeiras distorções espaciais localizadas registradas na Serra Mineradora do México.",
-      "images": [
-        "assets/ref_interior_tavern.jpg"
-      ]
-    },
-    {
-      "id": "time_04",
-      "date": "Outubro de 2024",
-      "year_numeric": 2024,
-      "title": "A Noite da Confissão & O Resgate de Lucas Vilar",
-      "description": "Cinco amigos retornam à Mansão Vilar no México. Após sobreviverem aos jogos psicológicos do Mascarado (Gabriel Vilar) e aos Ecos nas minas, Rafael Moreira e Júlia Drummond resgatam Lucas Vilar com vida e detonam o complexo.",
-      "campaign_id": "camp_002",
-      "continent_id": "cont_america_norte",
-      "country_id": "country_mexico",
-      "region_id": "reg_serra_mineradora",
-      "location_id": "loc_vilar",
-      "characters_involved": [
-        "char_lucas",
-        "char_gabriel",
-        "char_rafael",
-        "char_julia"
-      ],
-      "consequences": "Demolição da Mansão Vilar; resgate de Lucas Vilar; desaparecimento de Gabriel Vilar através do LIMIAR.",
-      "images": [
-        "assets/ref_interior_tavern.jpg"
-      ]
-    },
-    {
-      "id": "time_bra_01",
-      "date": "Julho de 2025",
-      "year_numeric": 2025,
-      "title": "Operação Protocolo Selva na Bacia do Rio Tapajós",
-      "description": "O Capitão Thiago Santos e a Dra. Camila Neves lideram a expedição na Amazônia brasileira, contendo a propagação do Ouro Negro e cauterizando a Cratera de Quartzo Negro antes que o Rio Tapajós fosse contaminado.",
-      "campaign_id": "camp_004",
-      "continent_id": "cont_america_sul",
+      "id": "time_queda_veu",
+      "title": "A Queda do Véu, Vera Cruz das Almas & Ilha Canibal",
+      "chronological_year": 1500,
+      "year_numeric": 1500,
+      "year_label": "Séc. XVI–XVII (~1500+)",
+      "campaign_id": "camp_001",
+      "location_id": "loc_veracruz_serra",
       "country_id": "country_brasil",
-      "region_id": "reg_bacia_tapajos",
-      "location_id": "loc_quartzo",
+      "region_id": "reg_vera_cruz",
+      "location_name": "Arquipélago de Vera Cruz das Almas & Triângulo",
       "characters_involved": [
-        "char_thiago",
-        "char_camila"
+        "char_dom_sebastiao",
+        "char_marcos_valente",
+        "char_raissa_carnica"
       ],
-      "consequences": "Preservação da bacia hidrográfica amazônica; quarentena médica da Dra. Camila Neves.",
-      "images": [
-        "assets/ref_outdoor_waterfall.jpg"
-      ]
+      "threat_level": "★★★★★ Nível 5 — Ruptura",
+      "status": "Cânone Histórico",
+      "description": "Degredados da Ordem da Cinza derrubam árvores sagradas em Vera Cruz rasgando o Véu; Lendas encarnam na mata (Mapinguari, Boitatá, Corpo-Seco, Curupira) e surgem os Bandeirantes do Véu. No Triângulo, um náufrago origina a Ilha Canibal há 400 anos.",
+      "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
+    },
+    {
+      "id": "time_videos",
+      "title": "Vídeos #01 & #02: Coroa Branca nas Dunas & Ciclo de Peter Stumpp",
+      "chronological_year": 1975,
+      "year_numeric": 1975,
+      "year_label": "Século XX (Fitas A.E.G.I.S.)",
+      "campaign_id": "camp_001",
+      "location_id": "loc_aegis_genebra",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "location_name": "Deserto Térmico & Europa Central",
+      "characters_involved": [
+        "char_heitor",
+        "char_kaelen"
+      ],
+      "threat_level": "★★★★☆ Severo",
+      "status": "Arquivo Confidencial",
+      "description": "Registros visuais catalogados pela A.E.G.I.S. revelando os Verme-Receptáculos do Olho Negro e a transmissão da maldição lupina do Ciclo de Stumpp.",
+      "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
     },
     {
       "id": "time_03",
-      "date": "Dezembro de 2025",
-      "year_numeric": 2025,
-      "title": "A Tempestade Atlântica & Naufrágio rumo a Nova Caronte",
-      "description": "Um navio com milhares de passageiros é tragado por uma perturbação severa no Triângulo das Bermudas, aportando nas costas isoladas de Nova Caronte.",
+      "title": "Desaparecimento do Navio de 5.000 Almas & Sacrifício do Guia",
+      "chronological_year": 1998,
+      "year_numeric": 1998,
+      "year_label": "1998 // A Incursão",
       "campaign_id": "camp_001",
-      "continent_id": "cont_atlantico",
-      "country_id": "country_atlantico_bermudas",
-      "region_id": "reg_fossa_caronte",
       "location_id": "loc_caronte",
-      "characters_involved": [
-        "char_arquiteto"
-      ],
-      "consequences": "Estabelecimento da colônia de sobreviventes em Nova Caronte sob vigilância do Arquiteto do Caos.",
-      "images": [
-        "assets/ref_fantasy_world_map.jpg"
-      ]
-    },
-    {
-      "id": "time_05",
-      "date": "Março de 2026",
-      "year_numeric": 2026,
-      "title": "Confrontos Biológicos em Nova Caronte & Fosso do Kraken",
-      "description": "Os sobreviventes do navio enfrentam a mutagênese acelerada (MDA) e as investidas do Soberano Abissal no Fosso do Kraken enquanto buscam estabelecer contato com a A.E.G.I.S.",
-      "campaign_id": "camp_001",
-      "continent_id": "cont_atlantico",
       "country_id": "country_atlantico_bermudas",
       "region_id": "reg_fossa_caronte",
-      "location_id": "loc_kraken",
+      "location_name": "Triângulo das Bermudas (Campo de Rosas)",
       "characters_involved": [
-        "char_arquiteto"
+        "char_arquiteto",
+        "char_guia_temporario",
+        "char_kaelen"
       ],
-      "consequences": "Campanha em andamento no Atlântico Norte.",
-      "images": [
-        "assets/ref_outdoor_waterfall.jpg"
-      ]
+      "threat_level": "★★★★★ Ômega",
+      "status": "(Futura Campanha)",
+      "description": "\"Incursão acontecendo, é o fim do...\" — Falha massiva na contenção do Triângulo e manifestação do Campo de Rosas do Primogênito; sobreviventes cruzam Nova Caronte e Fosso do Kraken até serem recrutados por Kaelen.",
+      "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
     },
     {
-      "id": "time_06",
-      "date": "Agosto de 2026",
-      "year_numeric": 2026,
-      "title": "Descida à Fenda do Monólito na Estação Criogênica Zero",
-      "description": "Na Calota Polar da Groenlândia, a Dra. Evelyn Shaw e o Comandante Marcus Miller investigam o despertar do parasita glacial junto ao fóssil do Leviatã a 800 metros sob o gelo.",
-      "campaign_id": "camp_003",
-      "continent_id": "cont_artico",
-      "country_id": "country_groenlandia",
-      "region_id": "reg_calota_artica",
-      "location_id": "loc_estacao_zero",
+      "id": "time_01",
+      "title": "Queda de Lucas Vilar nas Minas Coloniais (Pacto de Silêncio)",
+      "chronological_year": 2021,
+      "year_numeric": 2021,
+      "year_label": "2021 // O Sumiço",
+      "campaign_id": "camp_002",
+      "location_id": "loc_vilar_minas",
+      "country_id": "country_mexico",
+      "region_id": "reg_serra_mineradora",
+      "location_name": "Mansão Vilar & Minas Antigas (México)",
       "characters_involved": [
-        "char_evelyn",
-        "char_miller",
-        "char_hans"
+        "char_lucas",
+        "char_gabriel",
+        "char_rafael",
+        "char_helena",
+        "char_diego",
+        "char_bia",
+        "char_arthur"
       ],
-      "consequences": "Quarentena polar decretada na Estação Zero; expedição em andamento.",
-      "images": [
-        "assets/ref_fantasy_world_map.jpg"
-      ]
+      "threat_level": "★★★☆☆ Oculto",
+      "status": "Concluída",
+      "description": "Após brincadeira arquitetada por Rafael e empurrão de Arthur na orla da mata, Lucas Vilar cai na mina com a perna quebrada; Helena vê o vulto d’O Eco e o grupo sela o silêncio.",
+      "consequences": "Lucas resgatado; Gabriel desapareceu pelo LIMIAR; minas detonadas e monitoradas pela A.E.G.I.S."
+    },
+    {
+      "id": "time_04",
+      "title": "O Expresso do 6º Bilhete, Projeto LIMIAR & O Resgate de Lucas",
+      "chronological_year": 2024,
+      "year_numeric": 2024,
+      "year_label": "2024 // Crônica II",
+      "campaign_id": "camp_002",
+      "location_id": "loc_vilar",
+      "country_id": "country_mexico",
+      "region_id": "reg_serra_mineradora",
+      "location_name": "Estação & Mansão Vilar (México)",
+      "characters_involved": [
+        "char_lucas",
+        "char_gabriel",
+        "char_rafael",
+        "char_helena",
+        "char_diego",
+        "char_bia",
+        "char_arthur"
+      ],
+      "threat_level": "★★★★☆ Psicológico",
+      "status": "Concluída",
+      "description": "Gabriel Vilar (\"Davi Reis\") reúne os 5 amigos na mansão usando portais LIMIAR. Após a queda da máscara, o grupo desce às minas contra O Eco, resgata Lucas vivo e explode o complexo.",
+      "consequences": "Lucas resgatado; Gabriel desapareceu pelo LIMIAR; minas detonadas e monitoradas pela A.E.G.I.S."
+    },
+    {
+      "id": "time_bel_01",
+      "title": "Operação Belvedere: Gala de Oeht, As 3 Travas & O Anárquico",
+      "chronological_year": 2026,
+      "year_numeric": 2026,
+      "year_label": "2026 // 22h00–00h00",
+      "campaign_id": "camp_filantropo_oeht",
+      "location_id": "loc_mansao_belvedere",
+      "country_id": "country_suica",
+      "region_id": "reg_genebra_belvedere",
+      "location_name": "Mansão Belvedere (Genebra, Suíça)",
+      "characters_involved": [
+        "char_oeht",
+        "char_victor_kael",
+        "char_kaelen",
+        "char_clara_mendes",
+        "char_kenji_sato",
+        "char_helena_vargas",
+        "char_lorenzo_vane"
+      ],
+      "threat_level": "★★★★★ Severo",
+      "status": "(Futura Campanha)",
+      "description": "Oeht exibe artefato do mercado negro (lodo roxo no cofre) e desafia a A.E.G.I.S. às 23h00; Victor Kael fecha a redoma e engasga o tempo em loops de 10s até despertar O Anárquico à meia-noite.",
+      "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
     }
   ],
   "organizations": [
     {
       "id": "org_aegis",
-      "name": "Fundação A.E.G.I.S. / C.R.I.S.",
-      "type": "Organização Internacional de Pesquisa, Contenção e Registro Histórico",
-      "founded": "1968",
-      "headquarters": "Genebra / Bases Operacionais Globais",
-      "related_campaigns": [
+      "name": "Fundação A.E.G.I.S. & Sistema C.R.I.S.",
+      "type": "Agência Governamental Oculta",
+      "territory": "Genebra / Global",
+      "leader": "Diretor Kaelen & Marechal Heitor Vasconcelos",
+      "campaign_ids": [
         "camp_001",
         "camp_002",
-        "camp_003",
-        "camp_004",
-        "camp_005"
+        "camp_filantropo_oeht"
       ],
-      "members": [
-        "char_miller",
-        "char_evelyn",
-        "char_thiago",
-        "char_camila",
-        "char_hans",
-        "char_greta"
+      "description": "Herdeira moderna dos tratados seculares de contenção. Recruta sobreviventes de alta MDA (como os escapados do Triângulo) e envia agentes infiltrados para conter incursões."
+    },
+    {
+      "id": "org_ordem_cinza",
+      "name": "Inquisição da Ordem da Cinza",
+      "type": "Ordem Eclesiástica & Caça às Bruxas",
+      "territory": "Fortaleza de São Lázaro / Vera Cruz das Almas",
+      "leader": "Inquisidor-Mor Dom Sebastião de Cinza",
+      "campaign_ids": [
+        "camp_001"
       ],
-      "description": "Instituição responsável pelo monitoramento de anomalias biológicas e físicas no planeta Evren, bem como pela manutenção do Arquivo Histórico Global.",
-      "name_variants": [
-        "Fundação A.E.G.I.S. / C.R.I.S. (Registro de Fachada Genebra 1968)",
-        "Agência de Exploração e Gerenciamento de Incursões Secretas (Designação Operacional Triângulo)",
-        "Agência de Segurança Metafísica (Denominação Pública de Oeht na Gala Belvedere)"
+      "description": "Fundada pela Coroa e alto clero na Europa medieval diante do terror do Primogênito. Colonizou Vera Cruz das Almas e executa na fogueira qualquer suspeito de Pacto da Lenda."
+    },
+    {
+      "id": "org_bandeirantes",
+      "name": "Bandeirantes do Véu",
+      "type": "Irmandade de Caçadores Despertos",
+      "territory": "Quatro Ilhas de Vera Cruz das Almas",
+      "leader": "Mestres de Caça das Ilhas",
+      "campaign_ids": [
+        "camp_001"
       ],
-      "canon_status": "confirmed",
-      "curator_notes": "A organização opera sob sigilo e compartimentação de células; os nomes refletem o nível de acesso e o teatro de operações."
+      "description": "Homens e mulheres que despertaram suas Virtudes de Alma sob o pavor da mata fechada, lutando com espadas de ferro frio, bestas e lamparinas de sebo."
     },
     {
       "id": "org_familia_vilar",
       "name": "Família & Consórcio Minerador Vilar",
-      "type": "Dinastia Familiar & Mineradora Histórica",
-      "founded": "1892",
-      "headquarters": "Serra Mineradora, México",
-      "related_campaigns": [
+      "type": "Concessão Histórica de Mineração",
+      "territory": "Serra Mineradora (México)",
+      "leader": "Gabriel Vilar (\"Davi Reis\")",
+      "campaign_ids": [
         "camp_002"
       ],
-      "members": [
-        "char_lucas",
-        "char_gabriel"
-      ],
-      "description": "Tradicional família proprietária das minas de prata e da Mansão Vilar nas montanhas do México."
-    },
-    {
-      "id": "org_ordem_agostinho",
-      "name": "Ordem Monástica de Santo Agostinho da Floresta Negra",
-      "type": "Ordem Religiosa e Arquivística Medieval",
-      "founded": "1320",
-      "headquarters": "Baden-Württemberg, Alemanha",
-      "related_campaigns": [
-        "camp_005"
-      ],
-      "members": [],
-      "description": "Comunidade monástica que custodiou a Cripta do Eco Silencioso por sete séculos nas montanhas alemãs."
+      "description": "Proprietária de antigas minas coloniais ligadas à Ordem da Cinza, onde Gabriel desenvolveu o Projeto LIMIAR após o sumiço de Lucas Vilar."
     },
     {
       "id": "org_oeht_corp",
-      "name": "Consórcio Oculto de Oeht // Iniciativa Belvedere",
-      "type": "Megacorporação Privada Paranormal Clandestina",
-      "headquarters": "Genebra / Zurique / Mansão Belvedere",
-      "founded": "2025 // Em fundação clandestina",
-      "status": "Sob Cerco e Desmantelamento Tático",
-      "scope": "Global / Comercialização do Paranormal e Venda de Relíquias a Bilionários",
-      "description": "Cartel clandestino de investidores de alto escalão, CEOs de tecnologia e magnatas do submundo financeiro, liderados por Theo 'Oeht' Vanderberg, que buscavam privatizar o Outro Lado e invalidar as ordens de quarentena da A.E.G.I.S.",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Documentos Apreendidos no Cofre de Oeht",
-        "Briefing de Kaelen"
-      ]
+      "name": "Iniciativa Privada Oeht & Leilão do Oculto",
+      "type": "Conglomerado / Mercado Negro Paranormal",
+      "territory": "Mansão Belvedere (Genebra) & Triângulo",
+      "leader": "Oeht & Victor Kael",
+      "campaign_ids": [
+        "camp_filantropo_oeht"
+      ],
+      "description": "Frente corporativa de Oeht para privatizar anomalias, sabotada internamente pelo traficante de relíquias Victor Kael durante a gala da meia-noite."
     },
     {
       "id": "org_sauriana",
-      "name": "Sociedade Sauriana do Arquipélago dos Ossos",
-      "type": "Sociedade Tribal Anômala com Agência e Costumes Próprios",
-      "headquarters": "Ilha dos Répteis Primordiais (Triângulo das Bermudas)",
-      "founded": "Aproximadamente 1620 (Introdução do canibalismo por marinheiro humano)",
-      "status": "Ativa // Soberania Territorial",
-      "scope": "Regional (Triângulo das Bermudas)",
-      "description": "Comunidade de répteis humanoides com inteligência tática, domínio de armas de pedra e ferro recuperadas de naufrágios, e língua de cliques acústicos. Possui tabus invioláveis, ritos funerários e capacidade de negociação diplomática quando honrados seus limites territoriais.",
-      "canon_status": "in_world_report",
-      "sources": [
-        "Diários de Bordo de 1542 e 1620",
-        "Relatos de Náufragos de Nova Caronte"
-      ]
+      "name": "Sociedade Tribal da Ilha Canibal",
+      "type": "Civilização Sauriana Simbiótica",
+      "territory": "Ilha Canibal (Triângulo das Bermudas)",
+      "leader": "Tirano-Rei & Castas dos Templos",
+      "campaign_ids": [
+        "camp_001"
+      ],
+      "description": "Descendentes evolutivos de répteis pré-históricos e de um náufrago humano há 400 anos, divididos em três castas de sangue."
     }
   ],
   "museum_collections": {
@@ -7930,9 +9862,7 @@ class DataLoader {
         "pd_cost": 4,
         "ability": "Salto de Fenda Dimensional",
         "effect": "Permite ao portador ou ao alvo escolhido teleportar-se instantaneamente até 15 metros para qualquer ponto visível no battlemap, ignorando obstáculos sólidos e ataques de oportunidade.",
-        "description": "Um aparato portátil com câmara de contenção de plasma de fenda e bobinas de tungstênio. Gabriel gastou três anos nas oficinas das minas para criar o único dispositivo capaz de furar as barreiras do espaço no universo Evren.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_002"
+        "description": "Um aparato portátil com câmara de contenção de plasma de fenda e bobinas de tungstênio. Gabriel gastou três anos nas oficinas das minas para criar o único dispositivo capaz de furar as barreiras do espaço no universo Evren."
       },
       {
         "id": "relic_hallucigenia",
@@ -7943,9 +9873,7 @@ class DataLoader {
         "pd_cost": 0,
         "ability": "Sacrifício de Armadura Supremo",
         "effect": "Quando o usuário for sofrer um ataque fatal ou Hitkill, a armadura se estilhaça em espinhos calcários, anulando 100% do dano mortal e concedendo +5m de fuga imediata. A peça fica inoperante até restauração biológica.",
-        "description": "Peitoral orgânico petrificado forjado a partir de carapaças fósseis encontradas nas galerias mais profundas das minas mexicanas. Os espinhos dorsais absorvem a força cinética de impactos mortais.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_001"
+        "description": "Peitoral orgânico petrificado forjado a partir de carapaças fósseis encontradas nas galerias mais profundas das minas mexicanas. Os espinhos dorsais absorvem a força cinética de impactos mortais."
       },
       {
         "id": "relic_patitre",
@@ -7956,9 +9884,7 @@ class DataLoader {
         "pd_cost": 2,
         "ability": "Drenagem Medular",
         "effect": "Causa 3d8+6 de perfuração biológica e rouba 5 PD do alvo atingido, canalizando-os para o portador. Em contrapartida, cada ativação aumenta o MDA do usuário em +3%.",
-        "description": "Lança esculpida com o espigão dorsal de um parasita das fossas oceânicas. A empunhadura tem veias vivas que se conectam aos tendões da mão de quem a empunha.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_001"
+        "description": "Lança esculpida com o espigão dorsal de um parasita das fossas oceânicas. A empunhadura tem veias vivas que se conectam aos tendões da mão de quem a empunha."
       },
       {
         "id": "relic_gravador",
@@ -7969,9 +9895,7 @@ class DataLoader {
         "pd_cost": 1,
         "ability": "Frequência Anti-Eco",
         "effect": "Emite ondas ultrassônicas ressonantes em um raio de 12 metros, desorientando criaturas com audição aguçada (como os Ecos) e cancelando ataques furtivos por 2 rodadas.",
-        "description": "Um gravador de bobina analógico modificado com transistores de alta frequência. Contém as gravações das fitas secretas das sessões de interrogatório e o som original do eco que aprisionou Lucas.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_002"
+        "description": "Um gravador de bobina analógico modificado com transistores de alta frequência. Contém as gravações das fitas secretas das sessões de interrogatório e o som original do eco que aprisionou Lucas."
       },
       {
         "id": "relic_retrovirus",
@@ -7982,9 +9906,7 @@ class DataLoader {
         "pd_cost": 0,
         "ability": "Estabilização Celular",
         "effect": "Restaura imediatamente +15 Pontos de Determinação (PD) e reduz temporariamente o MDA do personagem em -10%, evitando colapsos de Overload.",
-        "description": "Seringa pneumática de titânio contendo um soro sintético azul-cobalto desenvolvido pela agência para reverter os primeiros estágios da anomalia genética.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_001"
+        "description": "Seringa pneumática de titânio contendo um soro sintético azul-cobalto desenvolvido pela agência para reverter os primeiros estágios da anomalia genética."
       },
       {
         "id": "relic_bussola_fenda",
@@ -7995,61 +9917,56 @@ class DataLoader {
         "pd_cost": 0,
         "ability": "Navegação Anômala",
         "effect": "Aponta consistentemente para o epicentro das fendas e vórtices gravitacionais, permitindo navegar em meio a neblinas densas e tempestades sem perder a orientação.",
-        "description": "Uma bússola esférica de latão cujo ponteiro é uma agulha de meteorito negro suspensa em fluido amniótico bioluminescente.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_001"
+        "description": "Uma bússola esférica de latão cujo ponteiro é uma agulha de meteorito negro suspensa em fluido amniótico bioluminescente."
       },
       {
-        "id": "relic_criostase",
-        "name": "Injetor de Criostase Inversa",
-        "owner": "Dra. Evelyn Shaw",
-        "type": "Bio-Estabilizador Térmico",
-        "rarity": "Grau Científico AEGIS",
-        "pd_cost": 3,
-        "ability": "Retardamento Metabólico",
-        "effect": "Reduz o MDA em -10% temporariamente e neutraliza condições de queimadura, sangramento ou choque térmico por 3 rodadas.",
-        "description": "Dispositivo cilíndrico de titânio preenchido com nitrogênio líquido ionizado capaz de retardar mutações celulares caóticas.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_003"
+        "id": "relic_relogio_temporal",
+        "name": "Relógio de Dobra Temporal de 6 Segundos",
+        "origin": "Laboratório de Pesquisa Metafísica A.E.G.I.S.",
+        "effect": "Acelera o fluxo temporal subjetivo do portador por 6 segundos de tempo local, permitindo ações sem reação imediata do ambiente.",
+        "mda_risk": "Baixo (1% de MDA por uso excessivo)",
+        "description": "Relógio de bolso em latão e cristal fosco com engrenagens que giram no sentido anti-horário ao puxar o pino superior. Entregue ao agente infiltrado na Mansão Belvedere.",
+        "canon_status": "in_world_report",
+        "sources": [
+          "Briefing Diretor Kaelen",
+          "Laboratório Metafísico A.E.G.I.S."
+        ]
       },
       {
-        "id": "relic_gelo_negro",
-        "name": "Lâmina de Gelo Negro",
-        "owner": "Comandante Miller",
-        "type": "Arma Biomecânica",
-        "rarity": "Grau Primordial",
-        "pd_cost": 4,
-        "ability": "Corte Criogênico",
-        "effect": "Ataques ignoram Sacrifício de Armadura convencional; causa 2d10 de dano frio e reduz a Agilidade do alvo em -2.",
-        "description": "Fragmento cortante do monólito ártico que nunca derrete, emanando uma fumaça gélida que absorve a luz ao redor.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_003"
+        "id": "relic_parasita_redoma",
+        "name": "A Relíquia Parasita da Redoma Belvedere",
+        "origin": "Origem Extradimensional // Adquirida no Mercado Oculto por Oeht",
+        "effect": "Promete reescrever leis locais à meia-noite, mas consome a matéria biológica de todos em raio de 100 metros ao despertar.",
+        "mda_risk": "Extremo // 99% de MDA em caso de contato com o lodo roxo",
+        "description": "Caixa metálica hexagonal escura com filigranas que vertem secreção violeta luminescente constante.",
+        "canon_status": "in_world_report",
+        "sources": [
+          "Dossiê Operação Belvedere A.E.G.I.S."
+        ]
       },
       {
-        "id": "relic_quartzo_negro",
-        "name": "Nódulo de Quartzo Mutagênico",
-        "owner": "Dra. Camila Neves",
-        "type": "Relíquia Mineral Biológica",
-        "rarity": "Rara / Grau Alfa",
-        "pd_cost": 3,
-        "ability": "Pulso de Adaptação Celular",
-        "effect": "Cura 2d8 PV de um aliado orgânico instantaneamente ao acelerar o metabolismo, concedendo +2 em testes de Fortitude por 2 rodadas.",
-        "description": "Um fragmento cristalino negro extraído da caverna do Tapajós. Quando exposto a calor corpóreo, emite um brilho verde esmeralda e acelera a regeneração de tecidos vivos.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_004"
+        "id": "relic_caixa_musica_belvedere",
+        "name": "Caixa de Música da Redoma (Gala de Oeht)",
+        "type": "Relíquia Acústica & Âncora de Ritual",
+        "origin": "Contrabandeada por Victor Kael (Mansão Belvedere / Crônica III)",
+        "cost": "Ritual (Palco)",
+        "provenance_campaign": "camp_filantropo_oeht",
+        "description": "Artefato contrabandeado no mercado negro que sincroniza a orquestra em transe às 22h30 e sustenta a redoma púrpura e a armadura invulnerável d’O Anárquico até ser destruído no palco.",
+        "abilities": {
+          "active": "Enquanto ativa no palco, o Selo de Energia causa 3d6 ao toque e O Anárquico mantém RD colossal."
+        }
       },
       {
-        "id": "relic_diapasao_eco",
-        "name": "Diapasão de Prata Sem-Rosto",
-        "owner": "Hans Richter",
-        "type": "Relíquia Acústica Oculta",
-        "rarity": "Rara / Grau Alfa",
-        "pd_cost": 2,
-        "ability": "Onda de Silenciamento Dimensional",
-        "effect": "Cria uma zona de 6 metros de silêncio absoluto onde nenhuma habilidade mística oral ou efeito sonoro hostil pode ser executado.",
-        "description": "Um diapasão forjado pelos monges da Floresta Negra com prata esterlina e inscrições heréticas. Vibra em uma frequência inaudível aos ouvidos humanos que desarma vórtices acústicos do LIMIAR.",
-        "collection_category": "Objeto Histórico / Artefato Catalogado",
-        "provenance_campaign": "camp_005"
+        "id": "relic_espada_ferro_frio",
+        "name": "Espada Bastarda de Ferro Frio (Bandeirantes do Véu)",
+        "type": "Armamento Consagrado da Mata Fechada",
+        "origin": "Forjas da Fortaleza de São Lázaro (Vera Cruz das Almas)",
+        "cost": "Força +2 / PD",
+        "provenance_campaign": "camp_001",
+        "description": "Lâmina forjada com limalha de prata e ferro consagrado pela Ordem da Cinza e pelos Bandeirantes do Véu.",
+        "abilities": {
+          "active": "Conduz perfeitamente Sintonia de Alma para ferir Lendas Ancestrais e ignora 5 RD folclórica."
+        }
       }
     ],
     "biological_specimens": [
@@ -8223,25 +10140,13 @@ class DataLoader {
         "lore": "Após o colapso do mundo exterior, um navio foi sugado para o buraco de minhoca no verdadeiro Triângulo das Bermudas. Sobrevivendo à dor lancinante da travessia e às manipulações do Mímico Genético a bordo, a tripulação despertou em Nova Caronte. Lá, a magia não existe: apenas mutação biológica violenta. Os recém-chegados precisam entender as leis da hiper-evolução e sobreviver aos ataques do Diabo do Mar para chamar a atenção da A.E.G.I.S."
       },
       {
-        "id": "cron_arc_01",
-        "campaign_id": "camp_003",
-        "location_id": "loc_estacao_zero",
-        "title": "O Descongelamento do Primeiro Espécime",
-        "lore": "Durante uma perfuração a 3.200 metros na calota da Groenlândia, a equipe da Dra. Evelyn Shaw extraiu um cilindro de gelo negro contendo biomassa viva pulsante. Ao romper a câmara criogênica, o organismo se fundiu aos sistemas de ventilação, liberando esporos de hiper-mutação que transformaram o esquadrão de segurança em sentinelas simbióticas cegas."
-      },
-      {
-        "id": "cron_bra_01",
-        "campaign_id": "camp_004",
-        "location_id": "loc_tapajos",
-        "title": "A Invasão das Raízes Mutagênicas",
-        "lore": "Em outubro de 2025, o esquadrão Curupira descobriu que a cratera de quartzo negro no Tapajós não era uma formação mineral, mas um nodo de sinapse geológica conectado à fenda do Atlântico. Ao detonarem as cargas de contenção, o Capitão Santos e a Dra. Camila Neves conseguiram salvar os registros de biometria antes do colapso completo da caverna."
-      },
-      {
-        "id": "cron_ale_01",
-        "campaign_id": "camp_005",
-        "location_id": "loc_monasterio",
-        "title": "O Silêncio dos Monges de Friburgo",
-        "lore": "Nas profundezas da Floresta Negra alemã, as ruínas da abadia guardavam um sino sem badalo forjado com ligas de meteorito. Quando Greta Falk tocou a campana durante a invasão, a frequência mística devorou a voz física de todos os presentes, silenciando o culto dos Sem-Rosto e permitindo que Hans Richter selasse os portões com concreto de chumbo."
+        "id": "cron_bel_01",
+        "title": "A Infiltração da Meia-Noite",
+        "location_id": "loc_mansao_belvedere",
+        "date": "2026",
+        "author": "Equipe Tática A.E.G.I.S.",
+        "text": "Briefing de infiltração na Mansão Belvedere durante a gala do magnata Oeht. Monitoramento da relíquia da redoma e detecção de anomalias espaciais.",
+        "campaign_id": "camp_filantropo_oeht"
       }
     ]
   },
@@ -8468,18 +10373,6 @@ class DataLoader {
       "cultural_note": "Trata-se de patrimônio folclórico documentado do povo galês; a narrativa de Evren a utiliza como inspiração temática, sem desrespeitar o significado cultural e histórico da comunidade local."
     },
     {
-      "id": "folk_sinos_floresta_negra",
-      "name": "Os Sinos Submersos da Floresta Negra (Alemanha)",
-      "real_location": "Schwarzwald, Baden-Württemberg, Alemanha",
-      "origin_culture": "Tradição Monástica Medieval e Lendas Germânicas do Século XIV",
-      "bibliographic_source": "Crônicas da Abadia de Santo Agostinho (1348) & Registros de Epidemias da Peste Negra.",
-      "folklore_variations": "Camponeses relatavam ouvir o badalar de sinos de bronze vindos de lagos e ravinas em noites sem vento, prenunciando figuras encapuzadas que roubavam as vozes de aldeões isolados.",
-      "evren_evidence": "A cripta selada da abadia contém condutos acústicos de calcário e restos fossilizados de espécimes preliminares de Ecos Subterrâneos.",
-      "aegis_interpretation": "Precedente histórico europeu de infecção anômala auditiva. O 'Sem-Rosto' medieval era uma manifestação embrionária de Ecos em ambiente cárstico.",
-      "confirmation_level": "in_world_report",
-      "cultural_note": "Registrado nos anais medievais germânicos como sinal da peste; preservada a separação entre registro religioso histórico e análise biopunk contemporânea."
-    },
-    {
       "id": "folk_minas_san_lorenzo",
       "name": "O Poço dos Sussurros de San Lorenzo (México)",
       "real_location": "Serra de Aguascalientes / Zacatecas, México",
@@ -8502,6 +10395,13 @@ class DataLoader {
       "aegis_interpretation": "Marcador territorial direto do Primogênito / Arquiteto do Caos. Atua como anestésico neurológico que induz euforia e apatia nas tripulações prestes a serem engolidas.",
       "confirmation_level": "in_world_report",
       "cultural_note": "Inspirado em lendas náuticas do Atlântico e nos mistérios cartográficos do Mar dos Sargaços."
+    },
+    {
+      "id": "folk_veracruz_lendas",
+      "name": "O Folclore Encarnado de Vera Cruz das Almas",
+      "real_location": "Arquipélago de Vera Cruz das Almas (Atlântico Sul)",
+      "manifestation": "Mapinguari, Boitatá, Corpo-Seco, Matinta Perera, Capelobo, Curupira, Iara e Mula-Sem-Cabeça encarnados após a Queda do Véu (1500).",
+      "mechanical_note": "Operam em Stalker AI (Rastreamento -> Assombração -> Pavor -> Emboscada). Seu Coração Espiritual (drop 1–5%) permite o proibido Ritual de Subjugação na Lua Nova."
     }
   ],
   "glossary": [
@@ -8597,801 +10497,2825 @@ class DataLoader {
     }
   ],
   "teia_do_tempo": {
-    "title": "Teia do Tempo: Tapeçaria Cósmica de Evren",
-    "subtitle": "História Oculta, Vertentes Temporais Conectadas & Apocalipse Dimensional",
-    "description": "Módulo interativo que mapeia todas as conexões causais, lendas históricas e linhas do tempo paralelas do universo EVREN.",
     "eras": [
       {
         "id": "era_primordial",
         "name": "Era Primordial (+5.000 Anos)",
-        "badge": "🌌 ERA PRIMORDIAL",
-        "color": "#38bdf8",
-        "summary": "A biotecnologia Cambriana esquecida e o despertar da Verdadeira Magia pelo Primogênito na aurora dos tempos."
+        "color": "#ff2a85",
+        "years": "+5.000a"
       },
       {
         "id": "era_mitica",
-        "name": "Era Mítica & Folclórica",
-        "badge": "⚔️ ERA MÍTICA",
-        "color": "#eab308",
-        "summary": "O Diabo do Mar caminhando entre os homens: as origens do mito de Loki, o ciclo arturiano e as primeiras ordens de sacrifício."
+        "name": "Era Mítica & Ordem da Cinza",
+        "color": "#a855f7",
+        "years": "Antiguidade–Séc. XV"
       },
       {
         "id": "era_navegacoes",
-        "name": "Grandes Navegações (~400 Anos)",
-        "badge": "⚓ GRANDES NAVEGAÇÕES",
-        "color": "#10b981",
-        "summary": "Galeões tragados para o Triângulo, a origem da sociedade canibal e os primeiros avistamentos do Kraken e Leviatã Branco."
+        "name": "Queda do Véu & Vera Cruz (1500+)",
+        "color": "#fb923c",
+        "years": "1500–Séc. XVII"
       },
       {
         "id": "era_moderna",
-        "name": "Século XX & Lendas Urbanas",
-        "badge": "🏭 SÉCULO XX // GUERRAS",
-        "color": "#f97316",
-        "summary": "A Guerra Fria, submarinos em Nova Caronte, o surgimento dos Mímicos e a fundação clandestina da A.E.G.I.S."
+        "name": "Vídeos #01/#02 & Fundação A.E.G.I.S.",
+        "color": "#38bdf8",
+        "years": "Séc. XX"
       },
       {
         "id": "vertente_triangulo",
-        "name": "Vertente 1: O Triângulo (1998)",
-        "badge": "⚡ VERTENTE I",
-        "color": "#c084fc",
-        "status_label": "(Futura Campanha)",
-        "summary": "A travessia dos cinco estágios, o Campo de Rosas, a Ilha Canibal e a rota de fuga rumo à A.E.G.I.S."
+        "name": "Vertente 1: Triângulo & Vera Cruz",
+        "color": "#00e5ff",
+        "years": "1998"
       },
       {
         "id": "vertente_vilar",
-        "name": "Vertente 2: Mansão Vilar (2024)",
-        "badge": "🏰 VERTENTE II",
-        "color": "#22c55e",
-        "status_label": "Concluída",
-        "summary": "O Expresso, o sexto bilhete, os portais LIMIAR, a teia de mentiras, O Eco e o resgate de Lucas vivo."
+        "name": "Vertente 2: Mansão Vilar (Concluída)",
+        "color": "#ffd700",
+        "years": "2021–2024"
       },
       {
         "id": "vertente_oeht",
-        "name": "Vertente 3: Gala Belvedere (2026)",
-        "badge": "🎭 VERTENTE III",
-        "color": "#a855f7",
-        "status_label": "(Futura Campanha)",
-        "summary": "A conspiração de Oeht, o leilão de Victor Kael, o lodo roxo e o despertar do Anárquico sob a redoma à meia-noite."
+        "name": "Vertente 3: Gala Belvedere",
+        "color": "#c084fc",
+        "years": "2026"
       },
       {
         "id": "vertente_colapso",
         "name": "O Colapso da Realidade Exterior",
-        "badge": "💥 HORIZONTE CRÍTICO",
         "color": "#ef4444",
-        "status_label": "Ponto de Convergência",
-        "summary": "A fenda global aberta: 5.000 pessoas desaparecidas em transmissão ao vivo e a fusão dimensional sob a Lei da Alucinação."
+        "years": "Convergência"
       }
     ],
     "nodes": [
       {
-        "id": "node_hallucigenia",
-        "title": "Biotecnologia Cambriana & Armadura Hallucigenia",
-        "era_id": "era_primordial",
-        "vertente_id": "era_primordial",
-        "year_display": "+5.000 Anos Atrás",
-        "importance": "Fundacional",
-        "summary": "Civilizações ancestrais desenvolvem tecnologia orgânica consciente fundida à medula espinhal, rompendo a barreira entre biologia e engenharia.",
-        "quote": "Sua existência prova que a fronteira entre tecnologia avançada e simbiose biológica já havia sido rompida na pré-história.",
-        "characters": [
-          "char_iris_vento_solto",
-          "char_mateus_alencar"
-        ],
-        "relics": [
-          "relic_hallucigenia"
-        ],
-        "caused_by": [],
-        "leads_to": [
-          "node_primogenito_fenda"
-        ]
+        "id": "teia_hallucigenia",
+        "era": "era_primordial",
+        "label": "Armadura Hallucigenia & Bio-Tecnologia Cambriana",
+        "year": "+5.000 Anos",
+        "summary": "Relíquia orgânica consciente de 5.000 anos capaz de fundir-se à medula espinhal de portadores movidos por Liberdade e futuro.",
+        "quote": "“Uma couraça viva antes do primeiro império humano.”",
+        "impact": "Alta sinergia com Virtude da Liberdade; testemunho tecnológico anterior à história escrita.",
+        "x_hint": 0.08,
+        "y_hint": 0.25
       },
       {
-        "id": "node_primogenito_fenda",
-        "title": "Gênese do Primogênito // Despertar da Verdadeira Magia",
-        "era_id": "era_primordial",
-        "vertente_id": "era_primordial",
-        "year_display": "Aurora da Humanidade",
-        "importance": "Cataclísmico",
-        "summary": "O primeiro humano encontra a fenda primordial no oceano. Em vez de ser destruído, expande sua mente além dos limites mortais e compreende o código-fonte da realidade.",
-        "quote": "Ele sobreviveu, compreendeu o código-fonte do cosmos e despertou a Verdadeira Magia, tornando-se O Primogênito — O Diabo do Mar.",
-        "characters": [
-          "char_arquiteto",
-          "char_guia_temporario"
-        ],
-        "bestiary": [
-          "creature_primogenito_arquiteto"
-        ],
-        "relics": [
-          "relic_loki_mask"
-        ],
-        "caused_by": [
-          "node_hallucigenia"
-        ],
-        "leads_to": [
-          "node_loki_mito",
-          "node_merlin_excalibur",
-          "node_campo_de_rosas"
-        ]
+        "id": "teia_primogenito_genese",
+        "era": "era_primordial",
+        "label": "Despertar do Primogênito (Verdadeira Magia)",
+        "year": "+5.000 Anos",
+        "summary": "Arthur Vilar / Primeiro humano fundido à anomalia primordial do mar adquire autoridade sobre o código-fonte físico e genético da realidade.",
+        "quote": "“Não é mutação nem virtude: é a própria Regra reescrita.”",
+        "impact": "Criação da Verdadeira Magia e gênese de toda a prisão dimensional atlântica.",
+        "x_hint": 0.08,
+        "y_hint": 0.65
       },
       {
-        "id": "node_loki_mito",
-        "title": "A Sombra Nórdica: O Mito de Loki",
-        "era_id": "era_mitica",
-        "vertente_id": "era_mitica",
-        "year_display": "Século IX // Era Viking",
-        "importance": "Folclore Explicado",
-        "summary": "Avistamentos do Primogênito usando sua máscara de osso e madeira, manipulando percepções e cinismo, são registrados pelos escaldos nórdicos como os feitos do deus da trapaça.",
-        "quote": "A própria máscara de madeira e osso utilizada pelo Primogênito é a relíquia ancestral que deu origem aos mitos escandinavos sobre Loki.",
-        "characters": [
-          "char_arquiteto"
-        ],
-        "bestiary": [
-          "creature_primogenito_arquiteto"
-        ],
-        "relics": [
-          "relic_loki_mask"
-        ],
-        "caused_by": [
-          "node_primogenito_fenda"
-        ],
-        "leads_to": [
-          "node_folclore_maritimo"
-        ]
+        "id": "teia_mitos_europa",
+        "era": "era_mitica",
+        "label": "Máscara de Loki, Merlin & Excalibur",
+        "year": "Era Mítica / Medieval",
+        "summary": "Projeções do Primogênito na Europa geram os mitos nórdicos de Loki e o ciclo arturiano de Merlin/Excalibur; a Coroa funda a Ordem da Cinza após ver o Campo de Rosas.",
+        "quote": "“A água congelou azul e o ferro enferrujou brilhando sob o manto sem luz.”",
+        "impact": "Criação da Inquisição da Ordem da Cinza contra bruxos e anomalias.",
+        "x_hint": 0.21,
+        "y_hint": 0.45
       },
       {
-        "id": "node_merlin_excalibur",
-        "title": "O Ciclo Arturiano & As Lâminas da Bretanha",
-        "era_id": "era_mitica",
-        "vertente_id": "era_mitica",
-        "year_display": "Século V-VI // Bretanha",
-        "importance": "Folclore Explicado",
-        "summary": "O Primogênito caminha entre cortes medievais sob o disfarce do conselheiro Merlin, entregando relíquias de corte anômalo como Excalibur para testar a soberania dos reis mortais.",
-        "quote": "A lâmina e os prodígios atribuídos a Merlin são vestígios diretos da manipulação histórica do Primogênito.",
-        "characters": [
-          "char_valerius"
-        ],
-        "relics": [
-          "relic_excalibur"
-        ],
-        "caused_by": [
-          "node_primogenito_fenda"
-        ],
-        "leads_to": [
-          "node_ordens_sacrificio"
-        ]
+        "id": "teia_queda_veu",
+        "era": "era_navegacoes",
+        "label": "A Queda do Véu — Vera Cruz das Almas (1500)",
+        "year": "~1500 (Séc. XVI)",
+        "summary": "Degredados e inquisidores derrubam árvores sagradas na 4ª Ilha (Serra do Véu Rasgado), despedaçando a membrana espiritual e encarnando Mapinguari, Boitatá, Corpo-Seco e Curupira.",
+        "quote": "“O céu escureceu em cinzas; os mitos da mata ganharam carne e fome.”",
+        "impact": "Colonização das 4 Ilhas de Vera Cruz, surgimento dos Bandeirantes do Véu e da heresia dos Marcados pelas Lendas.",
+        "x_hint": 0.34,
+        "y_hint": 0.3,
+        "linked_location": "loc_veracruz_serra",
+        "linked_campaign": "camp_001"
       },
       {
-        "id": "node_ordens_sacrificio",
-        "title": "Nascimento das Ordens Ocultistas Humanas",
-        "era_id": "era_mitica",
-        "vertente_id": "era_mitica",
-        "year_display": "Idade Média Tardia",
-        "importance": "Metafísica Oculta",
-        "summary": "Conjuradores mortais aprendem que o sacrifício de memórias e sangue força brechas nas regras físicas do mundo, criando a base para rituais humanos.",
-        "quote": "Conjuradores aprenderam que o sacrifício de coisas genuinamente valiosas cria uma ressonância espiritual capaz de dobrar a matéria.",
-        "characters": [
-          "char_victor_kael",
-          "char_clara_mendes"
-        ],
-        "caused_by": [
-          "node_merlin_excalibur"
-        ],
-        "leads_to": [
-          "node_gala_oeht_plano"
-        ]
+        "id": "teia_ilha_canibal",
+        "era": "era_navegacoes",
+        "label": "Náufrago da Ilha Canibal & Cidadela de Nácar",
+        "year": "~1600 (~400 Anos)",
+        "summary": "Um náufrago no Triângulo ensina canibalismo a dinossauros preservados pela Lei da Alucinação, fundando três castas tribais; nobres bioluminescentes erguem Nácar.",
+        "quote": "“Quatro séculos de templos de basalto e sacrifícios de sangue.”",
+        "impact": "Consolidação das Castas Saurianas e Nobres de Nácar como linhagens jogáveis.",
+        "x_hint": 0.34,
+        "y_hint": 0.72,
+        "linked_location": "loc_ilha_sauriana",
+        "linked_campaign": "camp_001"
       },
       {
-        "id": "node_ilha_canibal_origem",
-        "title": "Origem da Sociedade da Ilha Canibal",
-        "era_id": "era_navegacoes",
-        "vertente_id": "era_navegacoes",
-        "year_display": "Século XVI (~1542 / Há 400 Anos)",
-        "importance": "Horror Evolutivo",
-        "summary": "Um humano náufrago solitário atinge uma ilha habitada por dinossauros preservados no Triângulo e ensina canibalismo às feras pré-históricas, criando uma cultura tribal de 400 anos.",
-        "quote": "Em vez de ser devorado, esse indivíduo ensinou práticas de canibalismo às próprias feras, evoluindo para templos e rituais de sangue.",
-        "characters": [
-          "char_raissa_carnica"
-        ],
-        "bestiary": [
-          "creature_povo_sauriano"
-        ],
-        "caused_by": [
-          "node_primogenito_fenda"
-        ],
-        "leads_to": [
-          "node_sessao_2_triangulo"
-        ]
+        "id": "teia_videos_aegis",
+        "era": "era_moderna",
+        "label": "Vídeos #01 (Coroa Branca) & #02 (Ciclo de Stumpp)",
+        "year": "Século XX",
+        "summary": "Gravações confidenciais da A.E.G.I.S. documentam a Teocracia Térmica no deserto (marcas ||O) e a linhagem licantrópica retornada de Peter Stumpp.",
+        "quote": "“Dois arquivos visuais mantidos sob sigilo grau-zero pelo Marechal Heitor.”",
+        "impact": "Descoberta das linhagens Receptáculos da Coroa Branca e Retornados de Stumpp.",
+        "x_hint": 0.48,
+        "y_hint": 0.25
       },
       {
-        "id": "node_folclore_maritimo",
-        "title": "Vazamento da Barreira & Lendas do Kraken e Leviatã",
-        "era_id": "era_navegacoes",
-        "vertente_id": "era_navegacoes",
-        "year_display": "Século XVII-XVIII",
-        "importance": "Lendas Históricas",
-        "summary": "Navegadores que escaparam das bordas da anomalia levam para a Europa relatos apavorantes sobre lulas de rocha com descargas elétricas e baleias gigantes encouraçadas.",
-        "quote": "Marinheiros que sobreviveram às bordas da anomalia trouxeram para os portos europeus os relatos do Kraken e de Moby Dick.",
-        "characters": [
-          "char_marcos_valente",
-          "char_iris_vento_solto"
-        ],
-        "bestiary": [
-          "creature_kraken",
-          "creature_leviata_branco"
-        ],
-        "relics": [
-          "relic_patitre"
-        ],
-        "caused_by": [
-          "node_primogenito_fenda"
-        ],
-        "leads_to": [
-          "node_nova_caronte_fundacao"
-        ]
+        "id": "teia_fundacao_aegis",
+        "era": "era_moderna",
+        "label": "Fundação da A.E.G.I.S. (Herdeira da Ordem da Cinza)",
+        "year": "Século XX",
+        "summary": "Arquivos seculares da Ordem da Cinza fundem-se a tratados globais sob comando do Diretor Kaelen e Marechal Heitor Vasconcelos para catalogar Despertos em MDA/C.R.I.S.",
+        "quote": "“Catalogar a Virtude de cada Desperto antes que a fenda se abra na metrópole.”",
+        "impact": "Estruturação das 11 Virtudes Oficiais e forças especiais de contenção.",
+        "x_hint": 0.48,
+        "y_hint": 0.68
       },
       {
-        "id": "node_nova_caronte_fundacao",
-        "title": "Expansão de Nova Caronte & A Goela do Cachalote",
-        "era_id": "era_moderna",
-        "vertente_id": "era_moderna",
-        "year_display": "Século XX // Guerra Fria",
-        "importance": "Geografia Anômala",
-        "summary": "Submarinos soviéticos e navios cargueiros desaparecidos no Atlântico fundem-se em Nova Caronte. A Goela do Cachalote vira o epicentro de comércio de relíquias.",
-        "quote": "Cidade flutuante erguida sobre o emaranhado de carcaças navais de várias eras: galeões espanhóis e submarinos soviéticos.",
-        "characters": [
-          "char_iris_vento_solto",
-          "char_mateus_alencar"
-        ],
-        "caused_by": [
-          "node_folclore_maritimo"
-        ],
-        "leads_to": [
-          "node_cinco_estagios"
-        ]
+        "id": "teia_incursao_5000",
+        "era": "vertente_triangulo",
+        "label": "A Incursão dos 5.000 & O Guia no Campo de Rosas",
+        "year": "1998 (Futura Campanha)",
+        "summary": "Cinco estágios da passagem engolem viajantes; o Primogênito manifesta o Campo de Rosas causando o sacrifício do Guia Temporário. Sobreviventes navegam entre Nova Caronte, Fosso do Kraken e Vera Cruz até recrutamento por Kaelen.",
+        "quote": "“Incursão acontecendo, é o fim do...”",
+        "impact": "Fusão da frente marítima do Triângulo com os Bandeirantes de Vera Cruz e entrada na A.E.G.I.S.",
+        "x_hint": 0.62,
+        "y_hint": 0.22,
+        "linked_campaign": "camp_001",
+        "linked_location": "loc_campo_rosas"
       },
       {
-        "id": "node_lendas_urbanas_mimetismo",
-        "title": "Microfendas Terrestres: Mímicos e O Eco",
-        "era_id": "era_moderna",
-        "vertente_id": "era_moderna",
-        "year_display": "Décadas de 1970-1990",
-        "importance": "Transição para o Continente",
-        "summary": "Com a barreira enfraquecida, anomalias biológicas infiltram-se no continente: Mímicos Genéticos substituem pessoas e criaturas como O Eco aninham-se em minas profundas.",
-        "quote": "Relatos de pessoas substituídas por impostores e vozes de parentes falecidos chamando em túneis nasceram de vazamentos reais.",
-        "characters": [
-          "char_elias_rocha"
-        ],
-        "bestiary": [
-          "creature_mimico",
-          "creature_eco"
-        ],
-        "caused_by": [
-          "node_folclore_maritimo"
-        ],
-        "leads_to": [
-          "node_fundacao_aegis",
-          "node_sumico_lucas"
-        ]
+        "id": "teia_vilar_sumico",
+        "era": "vertente_vilar",
+        "label": "O Sumiço de Lucas Vilar & O Pacto dos 5 Amigos",
+        "year": "2021 (México)",
+        "summary": "Brincadeira de Rafael, fuga pela floresta onde Helena vê O Eco, vídeo ocultado por Diego, mensagens apagadas por Bia e briga com Arthur levam Lucas a cair na mina colonial.",
+        "quote": "“Três anos. Cinco mentirosos.”",
+        "impact": "Cicatrizes psíquicas da culpa e início de 3 anos de sobrevivência cega nas galerias.",
+        "x_hint": 0.62,
+        "y_hint": 0.5,
+        "linked_campaign": "camp_002",
+        "linked_location": "loc_vilar_minas",
+        "linked_character": "char_lucas"
       },
       {
-        "id": "node_fundacao_aegis",
-        "title": "Fundação da A.E.G.I.S. & Doutrina Kaelen",
-        "era_id": "era_moderna",
-        "vertente_id": "era_moderna",
-        "year_display": "1968 // Notariado em Genebra",
-        "importance": "Ordem Tática Global",
-        "summary": "A Agência de Exploração e Gerenciamento de Incursões Secretas é fundada sob o Diretor Kaelen, combinando Sensitivos forenses e Agentes Despertos armados.",
-        "quote": "Câmeras comuns gravam apenas móveis voando; apenas lentes tratadas com cristais anômalos da A.E.G.I.S. registram o contorno de uma Alma.",
-        "characters": [
-          "char_kaelen",
-          "char_kenji_sato",
-          "char_helena_vargas"
-        ],
-        "relics": [
-          "relic_retrovirus"
-        ],
-        "caused_by": [
-          "node_lendas_urbanas_mimetismo"
-        ],
-        "leads_to": [
-          "node_resgate_triangulo_aegis",
-          "node_gala_oeht_plano"
-        ]
+        "id": "teia_vilar_limiar",
+        "era": "vertente_vilar",
+        "label": "Expresso do 6º Bilhete, LIMIAR & Resgate de Lucas",
+        "year": "2024 (Concluída)",
+        "summary": "Gabriel (\"Davi Reis\") testa portais ZZZZT de ozônio; após desmascaramento e combate contra O Eco, o grupo resgata Lucas vivo e explode as minas.",
+        "quote": "“Ele sobreviveu no escuro… ainda é o nosso Lucas.”",
+        "impact": "Selo definitivo das minas mexicanas e alerta máximo na rede da A.E.G.I.S.",
+        "x_hint": 0.76,
+        "y_hint": 0.5,
+        "linked_campaign": "camp_002",
+        "linked_location": "loc_vilar",
+        "linked_character": "char_gabriel"
       },
       {
-        "id": "node_cinco_estagios",
-        "title": "A Travessia dos Cinco Estágios Sensoriais",
-        "era_id": "vertente_triangulo",
-        "vertente_id": "vertente_triangulo",
-        "year_display": "1998 // Início da Campanha I",
-        "importance": "Ruptura Dimensional",
-        "summary": "A embarcação cruza o horizonte: borda infinita, repetição em loop, redemoinhos gravitacionais, dor craniana pela Lei da Alucinação e o êxtase final.",
-        "quote": "No instante exato da passagem, a dor cessa abruptamente e dá lugar a uma euforia sobrenatural.",
-        "characters": [
-          "char_guia_temporario"
-        ],
-        "caused_by": [
-          "node_nova_caronte_fundacao"
-        ],
-        "leads_to": [
-          "node_campo_de_rosas"
-        ]
+        "id": "teia_oeht_gala",
+        "era": "vertente_oeht",
+        "label": "Gala de Oeht (22h–00h), Três Travas & O Anárquico",
+        "year": "2026 (Futura Campanha)",
+        "summary": "Oeht tenta privatizar relíquias da Ordem da Cinza com lodo roxo vazando no escritório; Victor Kael trava o salão sob redoma púrpura, loops de 10s, reflexos vivos nos espelhos e o despertar d’O Anárquico.",
+        "quote": "“Às 23h00, Oeht chama a A.E.G.I.S. de carcereira; à meia-noite, o bolo acorda.”",
+        "impact": "Ruptura de segurança em plena Europa e roubo/uso aberto de artefatos do Véu.",
+        "x_hint": 0.76,
+        "y_hint": 0.78,
+        "linked_campaign": "camp_filantropo_oeht",
+        "linked_location": "loc_mansao_belvedere",
+        "linked_character": "char_oeht"
       },
       {
-        "id": "node_campo_de_rosas",
-        "title": "Sessão 1: O Campo de Rosas & O Sacrifício do Guia",
-        "era_id": "vertente_triangulo",
-        "vertente_id": "vertente_triangulo",
-        "year_display": "1998 // Sessão 1",
-        "importance": "Clímax de Horror",
-        "summary": "O mar congela azul e surge o Diabo do Mar. Diante do colapso neurológico iminente pelo Campo de Rosas, o Guia dispara para o alto e se sacrifica para que os sobreviventes fujam.",
-        "quote": "O impacto traumático desse sacrifício estabelece o Diabo do Mar como o predador supremo da realidade.",
-        "characters": [
-          "char_guia_temporario",
-          "char_arquiteto"
-        ],
-        "bestiary": [
-          "creature_primogenito_arquiteto"
-        ],
-        "caused_by": [
-          "node_cinco_estagios",
-          "node_primogenito_fenda"
-        ],
-        "leads_to": [
-          "node_sessao_2_triangulo"
-        ]
-      },
-      {
-        "id": "node_sessao_2_triangulo",
-        "title": "Sessão 2: Travessia do Arquipélago & A Ilha Canibal",
-        "era_id": "vertente_triangulo",
-        "vertente_id": "vertente_triangulo",
-        "year_display": "1998 // Sessão 2",
-        "importance": "Sobrevivência Selvagem",
-        "summary": "Sem guia, o grupo navega entre postos de contrabandistas até aportar na Ilha Canibal, enfrentando castas baixas armadas de osso e feras de 400 anos.",
-        "quote": "O próprio ambiente mutagênico força os sobreviventes a desenvolverem pequenas adaptações biológicas para não perecerem.",
-        "characters": [
-          "char_raissa_carnica"
-        ],
-        "bestiary": [
-          "creature_povo_sauriano"
-        ],
-        "caused_by": [
-          "node_campo_de_rosas",
-          "node_ilha_canibal_origem"
-        ],
-        "leads_to": [
-          "node_cidadela_nacar_conflito"
-        ]
-      },
-      {
-        "id": "node_cidadela_nacar_conflito",
-        "title": "Os Leilões da Cidadela de Nácar & O Fosso",
-        "era_id": "vertente_triangulo",
-        "vertente_id": "vertente_triangulo",
-        "year_display": "1998 // Sessão 3",
-        "importance": "Rebelião & Fuga",
-        "summary": "O grupo evita a captura escravista em Nácar, sobrevive aos pulsos de PEM no Fosso do Kraken e escapa das ondas acústicas do Leviatã Branco.",
-        "quote": "Sociedade rigidamente estratificada notória por organizar leilões de recém-chegados capturados nas águas externas.",
-        "characters": [
-          "char_iris_vento_solto",
-          "char_valerius"
-        ],
-        "bestiary": [
-          "creature_kraken",
-          "creature_leviata_branco"
-        ],
-        "caused_by": [
-          "node_sessao_2_triangulo"
-        ],
-        "leads_to": [
-          "node_resgate_triangulo_aegis"
-        ]
-      },
-      {
-        "id": "node_resgate_triangulo_aegis",
-        "title": "Rompimento do Bloqueio & Recrutamento A.E.G.I.S.",
-        "era_id": "vertente_triangulo",
-        "vertente_id": "vertente_triangulo",
-        "year_display": "1998 // Desfecho",
-        "importance": "Integração Canônica",
-        "summary": "Os sobreviventes abrem brecha dimensional e são interceptados pela frota da A.E.G.I.S. O Diretor Kaelen recruta o grupo devido ao alto MDA e resistência mental.",
-        "quote": "Estabelecendo a ponte direta entre o horror marítimo da Campanha I e as operações de contenção urbana das campanhas seguintes.",
-        "characters": [
-          "char_kaelen",
-          "char_marcos_valente"
-        ],
-        "caused_by": [
-          "node_cidadela_nacar_conflito",
-          "node_fundacao_aegis"
-        ],
-        "leads_to": [
-          "node_colapso_iminente"
-        ]
-      },
-      {
-        "id": "node_sumico_lucas",
-        "title": "A Noite da Farsa & O Desaparecimento de Lucas",
-        "era_id": "vertente_vilar",
-        "vertente_id": "vertente_vilar",
-        "year_display": "2021 (-3 Anos) // Incidente Inicial",
-        "importance": "Gênese do Conflito",
-        "summary": "Uma brincadeira humilhante orquestrada por Rafael e uma briga com Arthur fazem Lucas fugir na mata, cair nas galerias da mina e quebrar a perna no escuro.",
-        "quote": "Nenhum dos cinco amigos assassinou Lucas, mas cada um deles carrega uma fração direta de culpa pelo desaparecimento.",
-        "characters": [
-          "char_lucas",
-          "char_rafael",
-          "char_arthur",
-          "char_bia",
-          "char_helena",
-          "char_diego"
-        ],
-        "caused_by": [
-          "node_lendas_urbanas_mimetismo"
-        ],
-        "leads_to": [
-          "node_criacao_limiar"
-        ]
-      },
-      {
-        "id": "node_criacao_limiar",
-        "title": "O Luto de Gabriel & Criação do Projeto LIMIAR",
-        "era_id": "vertente_vilar",
-        "vertente_id": "vertente_vilar",
-        "year_display": "2022-2023 // Projeto Secreto",
-        "importance": "Tecnologia Experimental",
-        "summary": "Gabriel Vilar, convencido de que o irmão caçula foi assassinado pelos amigos, desenvolve portais de curta distância com som ZZZZT e âncoras na mansão.",
-        "quote": "Diferente da magia, o Projeto LIMIAR opera sob limitações de física: exige âncoras espaciais prévias e tem bateria restrita.",
-        "characters": [
-          "char_gabriel"
-        ],
-        "relics": [
-          "relic_limiar"
-        ],
-        "caused_by": [
-          "node_sumico_lucas"
-        ],
-        "leads_to": [
-          "node_expresso_vilar"
-        ]
-      },
-      {
-        "id": "node_expresso_vilar",
-        "title": "Atos I-II: O Expresso, o Sexto Bilhete & Davi Reis",
-        "era_id": "vertente_vilar",
-        "vertente_id": "vertente_vilar",
-        "year_display": "2024 // Atos I-II",
-        "importance": "Início do Thriller",
-        "summary": "Os 5 amigos voltam à serra; o fiscal valida 6 bilhetes; a gravação promete julgamento. Na mansão isolada, encontram os NPCs e o suposto eletricista Davi Reis.",
-        "quote": "'Três anos. Cinco mentirosos. Hoje nós vamos descobrir o que vocês fizeram com Lucas.'",
-        "characters": [
-          "char_rafael",
-          "char_gabriel",
-          "char_camila_torres",
-          "char_mauro_azevedo",
-          "char_elias_rocha"
-        ],
-        "caused_by": [
-          "node_criacao_limiar"
-        ],
-        "leads_to": [
-          "node_limiar_ataques"
-        ]
-      },
-      {
-        "id": "node_limiar_ataques",
-        "title": "Atos III-V: Ataques do Mascarado & A Queda da Máscara",
-        "era_id": "vertente_vilar",
-        "vertente_id": "vertente_vilar",
-        "year_display": "2024 // Atos III-V",
-        "importance": "Revelação Psicológica",
-        "summary": "Ataques com portais de ozônio forçam os cinco a revelarem suas culpas. Gabriel é desmascarado; ao saber que não houve homicídio, a busca volta-se às minas.",
-        "quote": "A revelação dos segredos dos cinco amigos prova que ninguém matou Lucas, redirecionando a investigação para as minas.",
-        "characters": [
-          "char_gabriel",
-          "char_helena",
-          "char_diego",
-          "char_bia"
-        ],
-        "relics": [
-          "relic_limiar"
-        ],
-        "caused_by": [
-          "node_expresso_vilar"
-        ],
-        "leads_to": [
-          "node_minas_eco_resgate"
-        ]
-      },
-      {
-        "id": "node_minas_eco_resgate",
-        "title": "Atos VI-VIII: A Caçada do Eco, Lucas Vivo & Explosão",
-        "era_id": "vertente_vilar",
-        "vertente_id": "vertente_vilar",
-        "year_display": "2024 // Desfecho Concluído",
-        "importance": "Resolução Heróica",
-        "summary": "Descida às galerias sob perseguição do Eco; encontro de Lucas vivo adaptado às trevas; fuga tensa e detonação das minas, encerrando o trauma familiar.",
-        "quote": "Lucas sobreviveu no escuro por três anos. Apesar das mutações de sobrevivência, ele ainda é Lucas.",
-        "characters": [
-          "char_lucas",
-          "char_gabriel",
-          "char_arthur"
-        ],
-        "bestiary": [
-          "creature_eco"
-        ],
-        "caused_by": [
-          "node_limiar_ataques"
-        ],
-        "leads_to": [
-          "node_colapso_iminente"
-        ]
-      },
-      {
-        "id": "node_gala_oeht_plano",
-        "title": "A Conspiração Corporativa de Theo Vanderberg",
-        "era_id": "vertente_oeht",
-        "vertente_id": "vertente_oeht",
-        "year_display": "2026 // Fase Tática 1",
-        "importance": "Privatização Paranormal",
-        "summary": "Oeht desafia a A.E.G.I.S. ao montar um mercado clandestino de relíquias anômalas para a elite mundial em Genebra, guardando lodo ácido no cofre.",
-        "quote": "Empresário visionário e arrogante que declarou guerra à A.E.G.I.S. para privatizar o controle do paranormal.",
-        "characters": [
-          "char_oeht",
-          "char_kaelen",
-          "char_victor_kael"
-        ],
-        "caused_by": [
-          "node_fundacao_aegis",
-          "node_ordens_sacrificio"
-        ],
-        "leads_to": [
-          "node_infiltracao_belvedere"
-        ]
-      },
-      {
-        "id": "node_infiltracao_belvedere",
-        "title": "Infiltração em Belvedere & A Mesa de Poker VIP",
-        "era_id": "vertente_oeht",
-        "vertente_id": "vertente_oeht",
-        "year_display": "2026 // Fase Tática 2",
-        "importance": "Espionagem Oculta",
-        "summary": "Agentes Despertos infiltram-se no baile nos Alpes. Victor Kael sabota a contenção; o vazamento de lodo roxo é detectado antes do discurso das 23h00.",
-        "quote": "Homem de terno vinho infiltrado na gala de Oeht. Sabotador ativo da missão da A.E.G.I.S.",
-        "characters": [
-          "char_kenji_sato",
-          "char_victor_kael",
-          "char_lorenzo_vane"
-        ],
-        "caused_by": [
-          "node_gala_oeht_plano"
-        ],
-        "leads_to": [
-          "node_meia_noite_anarquico"
-        ]
-      },
-      {
-        "id": "node_meia_noite_anarquico",
-        "title": "Meia-Noite: A Redoma Hermética & O Anárquico",
-        "era_id": "vertente_oeht",
-        "vertente_id": "vertente_oeht",
-        "year_display": "2026 // Clímax da Campanha III",
-        "importance": "Ameaça Cataclísmica",
-        "summary": "À 00h00, a redoma sela a mansão; o bolo gigante transmuta-se no Anárquico; a caixa de música toca no palco e garçons tornam-se Zumbis de Sangue.",
-        "quote": "Criatura colossal despertada à meia-noite a partir da transmutação do bolo de Oeht, invulnerável enquanto a caixa de música tocar.",
-        "characters": [
-          "char_oeht",
-          "char_clara_mendes",
-          "char_helena_vargas"
-        ],
-        "bestiary": [
-          "creature_parasita_redoma_oeht",
-          "mob_blood_zombies",
-          "mob_gallery_reflections"
-        ],
-        "caused_by": [
-          "node_infiltracao_belvedere"
-        ],
-        "leads_to": [
-          "node_colapso_iminente"
-        ]
-      },
-      {
-        "id": "node_colapso_iminente",
-        "title": "O Colapso da Realidade Exterior & O Apocalipse Genético",
-        "era_id": "vertente_colapso",
-        "vertente_id": "vertente_colapso",
-        "year_display": "Horizonte Futuro Crítico",
-        "importance": "Ponto de Convergência Universal",
-        "summary": "A barreira do Triângulo cede em escala planetária. Um navio com 5.000 passageiros desaparece em transmissão ao vivo. A Terra caminha para a fusão com a Lei da Alucinação.",
-        "quote": "'Incursão acontecendo, é o fim do...' — Última transmissão antes da perda total de sinal no desaparecimento de 5.000 pessoas.",
-        "characters": [
-          "char_kaelen",
-          "char_oeht",
-          "char_lucas"
-        ],
-        "bestiary": [
-          "creature_primogenito_arquiteto",
-          "creature_kraken"
-        ],
-        "caused_by": [
-          "node_resgate_triangulo_aegis",
-          "node_minas_eco_resgate",
-          "node_meia_noite_anarquico"
-        ],
-        "leads_to": []
+        "id": "teia_colapso_global",
+        "era": "vertente_colapso",
+        "label": "Colapso da Realidade Exterior & Segunda Queda do Véu",
+        "year": "Convergência",
+        "summary": "Com o enfraquecimento simultâneo do bloqueio do Triângulo, das barreiras de sal de Vera Cruz e das microfendas urbanas, Soberanos Marinhos e Lendas da Mata ameaçam convergir nas metrópoles.",
+        "quote": "“Se as duas feridas do Atlântico se tocarem, a Lei da Alucinação cai sobre toda a Terra.”",
+        "impact": "Todas as três frentes (Triângulo/Vera Cruz, Vilar/LIMIAR, Belvedere/A.E.G.I.S.) convergem em guerra total.",
+        "x_hint": 0.92,
+        "y_hint": 0.5
       }
     ],
     "links": [
       {
-        "from": "node_hallucigenia",
-        "to": "node_primogenito_fenda",
-        "type": "ancestry",
-        "label": "Origem Biológica"
+        "source": "teia_primogenito_genese",
+        "target": "teia_mitos_europa",
+        "label": "Inspira Loki, Merlin & Excalibur"
       },
       {
-        "from": "node_primogenito_fenda",
-        "to": "node_loki_mito",
-        "type": "myth",
-        "label": "Mito Escandinavo"
+        "source": "teia_hallucigenia",
+        "target": "teia_mitos_europa",
+        "label": "Venerada como relíquia por milênios"
       },
       {
-        "from": "node_primogenito_fenda",
-        "to": "node_merlin_excalibur",
-        "type": "myth",
-        "label": "Ciclo Arturiano"
+        "source": "teia_mitos_europa",
+        "target": "teia_queda_veu",
+        "label": "Ordem da Cinza navega para Vera Cruz"
       },
       {
-        "from": "node_merlin_excalibur",
-        "to": "node_ordens_sacrificio",
-        "type": "esoteric",
-        "label": "Ocultismo Humano"
+        "source": "teia_primogenito_genese",
+        "target": "teia_ilha_canibal",
+        "label": "Lei da Alucinação no Triângulo"
       },
       {
-        "from": "node_primogenito_fenda",
-        "to": "node_ilha_canibal_origem",
-        "type": "evolution",
-        "label": "Vazamento Biológico"
+        "source": "teia_queda_veu",
+        "target": "teia_fundacao_aegis",
+        "label": "Arquivos coloniais originam A.E.G.I.S."
       },
       {
-        "from": "node_primogenito_fenda",
-        "to": "node_folclore_maritimo",
-        "type": "folklore",
-        "label": "Monstros nos Mares"
+        "source": "teia_videos_aegis",
+        "target": "teia_fundacao_aegis",
+        "label": "Catalogados por Marechal Heitor"
       },
       {
-        "from": "node_folclore_maritimo",
-        "to": "node_nova_caronte_fundacao",
-        "type": "expansion",
-        "label": "Cidade de Carcaças"
+        "source": "teia_ilha_canibal",
+        "target": "teia_incursao_5000",
+        "label": "Viajantes cruzam Ilha Canibal e Nácar"
       },
       {
-        "from": "node_folclore_maritimo",
-        "to": "node_lendas_urbanas_mimetismo",
-        "type": "leakage",
-        "label": "Fendas Terrestres"
+        "source": "teia_queda_veu",
+        "target": "teia_incursao_5000",
+        "label": "Bandeirantes de Vera Cruz unidos à frente"
       },
       {
-        "from": "node_lendas_urbanas_mimetismo",
-        "to": "node_fundacao_aegis",
-        "type": "response",
-        "label": "Doutrina de Contenção"
+        "source": "teia_fundacao_aegis",
+        "target": "teia_incursao_5000",
+        "label": "Kaelen recruta sobreviventes (MDA alto)"
       },
       {
-        "from": "node_lendas_urbanas_mimetismo",
-        "to": "node_sumico_lucas",
-        "type": "tragedy",
-        "label": "O Eco nas Minas"
+        "source": "teia_queda_veu",
+        "target": "teia_vilar_sumico",
+        "label": "Mina colonial abre microfenda d’O Eco"
       },
       {
-        "from": "node_nova_caronte_fundacao",
-        "to": "node_cinco_estagios",
-        "type": "campaign_1",
-        "label": "Horizonte Atemporal"
+        "source": "teia_vilar_sumico",
+        "target": "teia_vilar_limiar",
+        "label": "3 anos geram o Projeto LIMIAR"
       },
       {
-        "from": "node_cinco_estagios",
-        "to": "node_campo_de_rosas",
-        "type": "campaign_1",
-        "label": "Sessão 1: Mar de Rosas"
+        "source": "teia_vilar_limiar",
+        "target": "teia_colapso_global",
+        "label": "Portais detectados pela A.E.G.I.S."
       },
       {
-        "from": "node_campo_de_rosas",
-        "to": "node_sessao_2_triangulo",
-        "type": "campaign_1",
-        "label": "Sessão 2: Arquipélago"
+        "source": "teia_queda_veu",
+        "target": "teia_oeht_gala",
+        "label": "Victor Kael contrabandeia relíquias da Cinza"
       },
       {
-        "from": "node_ilha_canibal_origem",
-        "to": "node_sessao_2_triangulo",
-        "type": "lore_link",
-        "label": "Encontro Canibal"
+        "source": "teia_fundacao_aegis",
+        "target": "teia_oeht_gala",
+        "label": "A.E.G.I.S. envia infiltrados às 22h00"
       },
       {
-        "from": "node_sessao_2_triangulo",
-        "to": "node_cidadela_nacar_conflito",
-        "type": "campaign_1",
-        "label": "Leilões e Abismos"
+        "source": "teia_incursao_5000",
+        "target": "teia_colapso_global",
+        "label": "Barreira atemporal cede"
       },
       {
-        "from": "node_cidadela_nacar_conflito",
-        "to": "node_resgate_triangulo_aegis",
-        "type": "campaign_1",
-        "label": "Fuga & Extração"
-      },
-      {
-        "from": "node_fundacao_aegis",
-        "to": "node_resgate_triangulo_aegis",
-        "type": "tactical",
-        "label": "Recrutamento Kaelen"
-      },
-      {
-        "from": "node_sumico_lucas",
-        "to": "node_criacao_limiar",
-        "type": "campaign_2",
-        "label": "Vendeta de Gabriel"
-      },
-      {
-        "from": "node_criacao_limiar",
-        "to": "node_expresso_vilar",
-        "type": "campaign_2",
-        "label": "O Sexto Bilhete"
-      },
-      {
-        "from": "node_expresso_vilar",
-        "to": "node_limiar_ataques",
-        "type": "campaign_2",
-        "label": "Portais na Mansão"
-      },
-      {
-        "from": "node_limiar_ataques",
-        "to": "node_minas_eco_resgate",
-        "type": "campaign_2",
-        "label": "Descida & Resgate"
-      },
-      {
-        "from": "node_ordens_sacrificio",
-        "to": "node_gala_oeht_plano",
-        "type": "ritual",
-        "label": "Leilão de Artefatos"
-      },
-      {
-        "from": "node_fundacao_aegis",
-        "to": "node_gala_oeht_plano",
-        "type": "tactical",
-        "label": "Alerta em Genebra"
-      },
-      {
-        "from": "node_gala_oeht_plano",
-        "to": "node_infiltracao_belvedere",
-        "type": "campaign_3",
-        "label": "Infiltração Tática"
-      },
-      {
-        "from": "node_infiltracao_belvedere",
-        "to": "node_meia_noite_anarquico",
-        "type": "campaign_3",
-        "label": "A Meia-Noite"
-      },
-      {
-        "from": "node_resgate_triangulo_aegis",
-        "to": "node_colapso_iminente",
-        "type": "critical",
-        "label": "Barreira Cedendo"
-      },
-      {
-        "from": "node_minas_eco_resgate",
-        "to": "node_colapso_iminente",
-        "type": "critical",
-        "label": "Fendas Continentais"
-      },
-      {
-        "from": "node_meia_noite_anarquico",
-        "to": "node_colapso_iminente",
-        "type": "critical",
-        "label": "Ruptura de Redoma"
+        "source": "teia_oeht_gala",
+        "target": "teia_colapso_global",
+        "label": "Micro-Queda do Véu urbana"
       }
     ]
-  }
+  },
+  "tomo4_entities": [
+    {
+      "num": 1,
+      "id": "tomo4_01",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Marechal Heitor Vasconcelos",
+      "title": "'O Bastião de Ferro'",
+      "mda": "MDA 82%",
+      "mda_numeric": 82,
+      "nd": "ND 16",
+      "type": "Humano Desperto (3º Estágio Pleno — Comandante Supremo do Atlântico Sul)",
+      "origin": "Conselho Central da A.E.G.I.S. (Herdeiro dos Bandeirantes do Véu)",
+      "territory": "Base Fortaleza de Santa Cruz & Fronteira do Triângulo das Bermudas",
+      "virtue": "Disciplina (Construtiva)",
+      "element": "Ferro Frio & Chumbo Consagrado",
+      "quote": "“Enquanto eu estiver de pé na muralha, o Abismo precisará pedir permissão para subir a maré.”",
+      "description": "O mais poderoso agente ativo da A.E.G.I.S. no hemisfério sul. Veterano de quarenta anos de guerra oculta contra anomalias costeiras e células da Ordem da Cinza, Heitor reveste seu corpo e seu sobretudo balístico com placas de Ferro Frio geradas por Sintonia Plena, tornando-se uma fortaleza ambulante capaz de deter a investida de um Soberano Marinho no braço.",
+      "stats": {
+        "pv": "510",
+        "pd": "65",
+        "ea": "190",
+        "est": "30 (Inabalável)",
+        "rd": "18 (Couraça de Ferro Frio da A.E.G.I.S.)",
+        "reactions": "Esq. +14 (5d20), Bloq. +25 (RD 26 c/ Escudo de Torre; Sacrifício de Guarda reduz dano a 0), C-Ataq. +22 (Marreta de Contenção 'Veredito' — 4d12+16)",
+        "attributes": {
+          "FOR": 9,
+          "VIG": 9,
+          "AGI": 4,
+          "PRE": 8,
+          "INT": 7
+        }
+      },
+      "immunities": "Medo, Empurrão, Derrubar, Armas de fogo de pequeno e médio calibre •",
+      "weakness": "Sobrecarga de Ferro (ataques elétricos de alta voltagem ou bioeletricidade de Nácar causam +50% de dano e reduzem seu deslocamento para 6m)",
+      "offense": "Desloc.: 9 m (Imune a redução de velocidade por peso) • Ataques: Martelo de Brecha 'Veredito' +23 (4d12+16 Ferro Frio, ignora 10 de RD de Lendas) e Canhão de Mão Calibre .700 A.E.G.I.S. +20 (3d12+12 perfurante/prata).",
+      "abilities": "Convergência Tática — Muralha Intransponível (25 EA): Cria um domo de grades de Ferro Frio de 15m; nenhuma anomalia pode teleportar-se ou atravessar o perímetro por 3 rodadas, e aliados dentro ganham +6 de RD.",
+      "skills": "Luta +25, Fortitude +26, Tática/Guerra +24, Vontade +25, Intimidação +24",
+      "tactics": "Comanda pessoalmente operações de Nível Eclipse e Ômega; mentor direto das forças especiais de contenção. em Armadura de Sintonia de Ferro Frio."
+    },
+    {
+      "num": 2,
+      "id": "tomo4_02",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Comandante Valéria Krow",
+      "title": "'A Valquíria de Cinza'",
+      "mda": "MDA 78%",
+      "mda_numeric": 78,
+      "nd": "ND 15",
+      "type": "Humana Desperta (3º Estágio — Chefe da Força-Tarefa Lança de Prata)",
+      "origin": "A.E.G.I.S. Divisão Europeia / Destacamento do Mar do Norte",
+      "territory": "Zonas de Queda do Véu, Navios Fantasmas e Caça a Soberanos",
+      "virtue": "Coragem (Construtiva)",
+      "element": "Prata & Juramento Luminoso",
+      "quote": "“Não recuem um único passo. A nossa alma brilha mais forte quando a noite fecha.”",
+      "description": "Conhecida nos corredores da A.E.G.I.S. como a única agente viva que enfrentou o Nuckelavee em combate singular nas Órcades e o forçou de volta ao mar. Em Sintonia Plena, a Energia de Alma de Valéria projeta duas asas laminadas de fios de prata incandescente nas costas, permitindo-lhe voar sobre tempestades e desferir cortes aéreos que cauterizam carne abissal.",
+      "stats": {
+        "pv": "430",
+        "pd": "60",
+        "ea": "185",
+        "est": "28",
+        "rd": "15 (Malha de Prata Juramentada)",
+        "reactions": "Esq. +21 (7d20 em voo), Bloq. +20 (Asas Cruzadas RD 20), C-Ataq. +23 (Estocada em Mergulho — 4d10+15 + Hitkill em lacaios)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 9,
+          "PRE": 8,
+          "INT": 6
+        }
+      },
+      "immunities": "Medo, Queda, Frio Marítimo, Maldições de Sangue •",
+      "weakness": "Código de Resgate (jamais abandona um agente subordinado ferido em campo; inimigos que usem reféns impõem -3 na Esquiva dela)",
+      "offense": "Desloc.: 12 m, Voo Anímico 24 m • Ataques: Espada Bastarda 'Alvorada de Prata' +23 (4d10+15 Prata/Alma, Crítico 18-20) e Chuva de Plumas de Prata (Cone 12m, +21, 3d12 perfurante).",
+      "abilities": "Juramento da Valquíria (20 EA): Sempre que um aliado a até 18m cair a 0 PV, Valéria pode voar instantaneamente até ele como reação livre, desferindo um ataque com +5 de bônus e transferindo 30 PV seus para estabilizá-lo.",
+      "skills": "Luta +24, Acrobacia +23, Vontade +23, Iniciativa +24, Atletismo +21",
+      "tactics": "Lidera as equipes de resposta rápida aerotransportadas da A.E.G.I.S. em incidentes críticos. Valéria Krow com asas de Projeção de Prata e Juramento."
+    },
+    {
+      "num": 3,
+      "id": "tomo4_03",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Inquisidor-Mor Padre Cassiano de Bragança",
+      "title": "'O Confessor'",
+      "mda": "MDA 76%",
+      "mda_numeric": 76,
+      "nd": "ND 14",
+      "type": "Humano Desperto (3º Estágio — Corregedor Interno e Caçador da Ordem da Cinza)",
+      "origin": "A.E.G.I.S. Secção Vaticano- Lisboa (Guardião dos Arquivos de 1500)",
+      "territory": "Catedrais Ocultas, Leilões Clandestinos e Interrogatórios de Pactuários",
+      "virtue": "Justiça (Transformadora)",
+      "element": "Cinza Litúrgica & Brasa Branca",
+      "quote": "“Deus perdoa os seus pecados, meu filho. A Corregedoria da A.E.G.I.S., infelizmente, não tem essa atribuição.”",
+      "description": "Principal especialista da A.E.G.I.S. em desfazer Rituais de Subjugação da Lua Nova e caçar células traidoras da moderna Ordem da Cinza aliadas ao Filantropo. Cassiano carrega um breviário encadernado em chumbo e uma espada longa cujo aço foi temperado nas cinzas dos santos mártires de 1348.",
+      "stats": {
+        "pv": "380",
+        "pd": "60",
+        "ea": "210",
+        "est": "32",
+        "rd": "14 (Batina Tecida em Kevlar e Fios de Prata)",
+        "reactions": "Esq. +17, Bloq. +21 (Selo da Cruz de Cinza RD 22), C-Ataq. +22 (Penitência Imediata — queima 15 EA do atacante + 3d12+12)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 6,
+          "PRE": 9,
+          "INT": 8
+        }
+      },
+      "immunities": "Possessão, Ilusões, Dreno de EST, Mentiras (detecta pactos ocultos pelo cheiro de incenso queimado) •",
+      "weakness": "Dogma Canônico (precisa recitar os artigos de acusação em voz alta para ativar seu Domínio; efeitos de Silêncio acústico impedem suas técnicas de Projeção)",
+      "offense": "Desloc.: 12 m • Ataques: Montante Litúrgica 'Absolvição' +21 (3d12+14 Brasa Branca + Purificação de Maldição) ou Litania da Cinza (Distância 18m, Vontade CD 28, 4d10 espiritual + Silenciar Pacto).",
+      "abilities": "Excomunhão da Lenda (25 EA): Força um Pactuário ou criatura invocada a passar em Vontade CD 28; em caso de falha, a conexão com a Lenda é suprimida por 2 rodadas, impedindo o uso de EA.",
+      "skills": "Religião +26, Ocultismo +25, Intuição +26, Vontade +26, Luta +21",
+      "tactics": "Inspeciona bases da A.E.G.I.S. em busca de infiltrados do Filantropo e lidera exorcismos de Grau Obsidiana. empunhando a lâmina consagrada da Corregedoria."
+    },
+    {
+      "num": 4,
+      "id": "tomo4_04",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Agente Especial Grau-Zero Dante Vilar-Mendes",
+      "title": "'O Renegado'",
+      "mda": "MDA 75%",
+      "mda_numeric": 75,
+      "nd": "ND 14",
+      "type": "Humano Desperto com Sangue Vilar (3º Estágio — Especialista em Anomalias de Sangue)",
+      "origin": "Sobrevivente do Ramo Secundário Vilar / Recrutado pela A.E.G.I.S. em 1998",
+      "territory": "Mansão Vilar, Nova Caronte e Operações de Infiltração Solo",
+      "virtue": "Fúria (Instintiva Domada)",
+      "element": "Sangue Cristalizado & Ossos",
+      "quote": "“Meu primo Arthur escolheu virar o Diabo do Mar. Eu escolhi ser o arpão que vai furar o peito dele.”",
+      "description": "Primo distante de Arthur Vilar que escapou ainda criança da noite do massacre na Mansão Vilar nos anos 1990. Recolhido e treinado sob vigilância máxima pela A.E.G.I.S., Dante usa uma coleira neural de contenção voluntária e transforma o próprio sangue amaldiçoado da família em lâminas rubras capazes de cortar tanto os Zumbis de Sangue quanto a madrepérola da Cidadela de Nácar.",
+      "stats": {
+        "pv": "410",
+        "pd": "55",
+        "ea": "175",
+        "est": "21 (Vigilância Constante)",
+        "rd": "13",
+        "reactions": "Esq. +22 (7d20), Bloq. +18, C-Ataq. +24 (Corte de Artéria — 3d12+15 + Sangramento 2d8)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 9,
+          "PRE": 6,
+          "INT": 6
+        }
+      },
+      "immunities": "Venenos hemotóxicos, Controle de Sangue de O Anárquico, Medo •",
+      "weakness": "Ressonância Fraterna com O Primogênito (na presença direta de Arthur Vilar, Dante sofre -2 em testes de Vontade e sua cicatriz sangra continuamente)",
+      "offense": "Desloc.: 15 m • Ataques: Sabre de Hemoglobina Sólida +23 (3d12+15 cortante/espiritual) e Adaga de Osso Vilar +22 (2d12+12 + rouba 10 PV).",
+      "abilities": "Sacrifício Carmesim: Pode gastar 20 PV próprios como ação livre para adicionar +2d12 de dano verdadeiro e ignorar toda a RD do alvo no próximo ataque.",
+      "skills": "Luta +24, Furtividade +22, Acrobacia +22, Investigação +20, Sobrevivência +20",
+      "tactics": "Enviado pela A.E.G.I.S. nas missões suicidas onde nenhum outro agente sobreviveria. Vilar-Mendes utilizando lâminas de hemoglobina cristalizada."
+    },
+    {
+      "num": 5,
+      "id": "tomo4_05",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Doutora Helena Lindqvist",
+      "title": "'A Cirurgiã do Véu'",
+      "mda": "MDA 72%",
+      "mda_numeric": 72,
+      "nd": "ND 13",
+      "type": "Humana Desperta (3º Estágio — Chefe de Autópsia Anímica e Alquimia Médica)",
+      "origin": "Instituto Karolinska / Laboratório Subterrâneo Nível-5 da A.E.G.I.S.",
+      "territory": "Hospitais de Campanha do Véu e Laboratórios de Contenção",
+      "virtue": "Sabedoria (Construtiva)",
+      "element": "Vidro Cirúrgico, Prata & Mercúrio",
+      "quote": "“Não existe monstro imortal. Existe apenas uma anatomia que você ainda não abriu na mesa de dissecação.”",
+      "description": "A mente científica por trás da classificação moderna de MDA e das munições anti-anomalia da A.E.G.I.S. Em campo, Helena manipula dezenas de bisturis flutuantes de vidro cirúrgico e fios de sutura de prata pura através de Projeção, podendo costurar feridas mortais de aliados a distância ou seccionar os nervos motores de uma Lenda com precisão milimétrica.",
+      "stats": {
+        "pv": "310",
+        "pd": "55",
+        "ea": "210",
+        "est": "30",
+        "rd": "12 (Jaleco Hazmat de Fios de Nácar)",
+        "reactions": "Esq. +19, Bloq. +17 (Redoma de Vidro Temperado RD 18), C-Ataq. +20 (Secção de Tendão — 3d10+12 + deixa o atacante Lento)",
+        "attributes": {
+          "FOR": 3,
+          "VIG": 5,
+          "AGI": 8,
+          "PRE": 7,
+          "INT": 10
+        }
+      },
+      "immunities": "Doenças, Venenos, Gases Tóxicos, Peste do Nuckelavee/Corpo-Seco •",
+      "weakness": "Combate de Força Bruta (se agarrada por um colosso de FOR 9+, não consegue manter a levitação de seus instrumentos cirúrgicos)",
+      "offense": "Desloc.: 12 m • Ataques: Enxame de Bisturis de Vidro Anímico +21 (Distância 15m, 3d10+12 perfurante; ignora armadura declarando ponto anatômico) e Injetor de Mercúrio Prateado +20 (Paralisia CD 27).",
+      "abilities": "Diagnóstico de Ponto Fraco (10 EA): Com uma ação de movimento, analisa a criatura e revela a todos os aliados a fraqueza exata do monstro, concedendo +1d20 e +1d10 de dano ao grupo contra aquele alvo.",
+      "skills": "Medicina +28, Ciência/Biologia +28, Ocultismo +25, Percepção +22",
+      "tactics": "Responsável por manter vivos os agentes feridos por Ruptura Espiritual ou venenos da Floresta Negra. Lindqvist, autora do Tratado Anatômico das Lendas."
+    },
+    {
+      "num": 6,
+      "id": "tomo4_06",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Capitão Rodrigo 'Quebra-Bússola' Tavares",
+      "title": "Frota Atlântica",
+      "mda": "MDA 74%",
+      "mda_numeric": 74,
+      "nd": "ND 13",
+      "type": "Humano Desperto (3º Estágio — Comandante do Encouraçado A.E.G.I.S. 'Sagres')",
+      "origin": "Marinha Portuguesa / Divisão Naval do Triângulo das Bermudas",
+      "territory": "Costa da Morte, Fosso Abissal e Perseguição ao Navio Aethelgard",
+      "virtue": "Coragem (Construtiva)",
+      "element": "Ouro, Sal & Relâmpago",
+      "quote": "“Bússola nenhuma funciona depois da linha de névoa. Quem guia este navio é o pulso da minha alma.”",
+      "description": "Nascido numa família de pescadores açorianos cujos barcos desapareciam no Triângulo das Bermudas há gerações, Rodrigo despertou sua Alma durante um ataque de tentáculos abissais aos vinte anos. Hoje comanda a frota naval da A.E.G.I.S. que patrulha o perímetro externo de Vera Cruz das Almas, canalizando relâmpagos dourados pelos canhões e arpões do navio.",
+      "stats": {
+        "pv": "420",
+        "pd": "55",
+        "ea": "175",
+        "est": "27",
+        "rd": "14",
+        "reactions": "Esq. +18, Bloq. +20, C-Ataq. +21 (Disparo de Arpão Voltaico — 4d10+14)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 8,
+          "AGI": 7,
+          "PRE": 8,
+          "INT": 6
+        }
+      },
+      "immunities": "Eletricidade, Afogamento, Enjoo/Desorientação do Véu •",
+      "weakness": "Combate em Subterrâneos Secos (longe da água do mar ou de tempestades, suas técnicas elétricas custam +5 EA adicionais)",
+      "offense": "Desloc.: 12 m, Natação 18 m • Ataques: Lança-Arpão 'Fura-Tufão' +22 (Alcance 30m, 4d10+14 elétrico/perfurante + Cabo de Aço que puxa ou prende) e Sabre Naval de Bronze +21 (3d10+12).",
+      "abilities": "Bússola Viva do Véu: Jamais se perde na névoa do Triângulo das Bermudas; pode abrir uma rota segura de navegação através da tempestade para retirar o grupo de Vera Cruz das Almas.",
+      "skills": "Pilotagem/Navegação +28, Pontaria +23, Atletismo +22, Sobrevivência no Mar +25",
+      "tactics": "Principal aliado para grupos de jogadores que precisam de extração marítima ou apoio de artilharia naval. Tavares disparando arpões de relâmpago no convés."
+    },
+    {
+      "num": 7,
+      "id": "tomo4_07",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Operadora Fantasma 'Nyx' (Akemi Sato)",
+      "title": "Inteligência Oculta",
+      "mda": "MDA 74%",
+      "mda_numeric": 74,
+      "nd": "ND 13",
+      "type": "Humana Desperta (3º Estágio — Espiã-Chefe da A.E.G.I.S. nos Leilões do Filantropo)",
+      "origin": "A.E.G.I.S. Divisão Pacífico / Tóquio-São Paulo",
+      "territory": "Navio Aethelgard, Cidadela de Nácar e Coberturas Corporativas",
+      "virtue": "Liberdade (Transformadora)",
+      "element": "Sombra, Névoa & Vidro Escuro",
+      "quote": "“O Filantropo trancou a relíquia num cofre de trinta toneladas de titânio. Ele só esqueceu que há sombra lá dentro.”",
+      "description": "Especialista em espionagem e recuperação de relíquias roubadas pela Ordem da Cinza (Crônica III). Akemi é capaz de achatar o próprio corpo em uma lâmina bidimensional de sombra para deslizar por baixo de portas herméticas de cofres ou emergir diretamente da sombra projetada pelo guarda-costas do alvo.",
+      "stats": {
+        "pv": "320",
+        "pd": "55",
+        "ea": "180",
+        "est": "26",
+        "rd": "11 (Traje Furtivo de Metamaterial)",
+        "reactions": "Esq. +24 (8d20 — Intangibilidade de Sombra), Bloq. +15, C-Ataq. +22 (Corte na Nuca a partir da Sombra — 4d10+14)",
+        "attributes": {
+          "FOR": 4,
+          "VIG": 5,
+          "AGI": 10,
+          "PRE": 7,
+          "INT": 8
+        }
+      },
+      "immunities": "Sensores de movimento, Câmeras térmicas, Prisões físicas, Agarrão •",
+      "weakness": "Clarões Fotônicos de 360° (granadas de luz solar ou o chicote dos Sacerdotes do Olho Negro a expulsam da forma de sombra, causando 2d10 de dano extra)",
+      "offense": "Desloc.: 18 m (Passo pelas Sombras 36 m) • Ataques: Par de Tantōs de Obsidiana Anímica +23 (3d10+14 + +3d8 Furtivo) e Agulhas Silenciadoras de Alma +22 (Distância 18m, 2d10+10 + bloqueia fala).",
+      "abilities": "Roubo de Sombra (15 EA): Ao cortar a sombra de um inimigo no chão, prende os pés do alvo no lugar (CD 27 Reflexos) sem precisar tocá-lo fisicamente.",
+      "skills": "Furtividade +28, Ladinagem +26, Acrobacia +25, Enganação +23, Percepção +22",
+      "tactics": "Atua infiltrada sob identidades falsas nos leilões de bilionários promovidos pelo Filantropo. emergindo de um espelho de sombra no Aethelgard."
+    },
+    {
+      "num": 8,
+      "id": "tomo4_08",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Vigilante Sênior Ezequiel Guaicuru",
+      "title": "'O Olho da Mata'",
+      "mda": "MDA 76%",
+      "mda_numeric": 76,
+      "nd": "ND 14",
+      "type": "Humano Desperto (3º Estágio — Comandante da Base Avançada na Floresta Negra)",
+      "origin": "Pantanal / Divisão Sul- Americana da A.E.G.I.S.",
+      "territory": "Ilha da Floresta Negra, Ilha Canibal e Matas de Transição",
+      "virtue": "Sabedoria (Construtiva)",
+      "element": "Cinza, Seiva & Espinhos",
+      "quote": "“A mata sempre avisa três minutos antes de um Mapinguari acordar. Basta saber ouvir os grilos pararem.”",
+      "description": "Descendente de antigos xamãs-guerreiros que colaboravam com os Bandeirantes do Véu no século XVII. Ezequiel mantém um posto avançado camuflado na copa das árvores gigantes da Ilha da Floresta Negra, resgatando sobreviventes de quedas de avião antes que sejam caçados pelo Capelobo ou pelos saurianos da Ilha Canibal.",
+      "stats": {
+        "pv": "390",
+        "pd": "55",
+        "ea": "180",
+        "est": "29",
+        "rd": "13 (Couro Tratado em Seiva Petrificada)",
+        "reactions": "Esq. +21, Bloq. +17, C-Ataq. +23 (Disparo à Queima-Roupa na Garganta — 4d10+14)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 7,
+          "AGI": 9,
+          "PRE": 7,
+          "INT": 8
+        }
+      },
+      "immunities": "Venenos naturais, Terreno difícil na selva, Emboscadas (nunca fica Surpreendido na mata) •",
+      "weakness": "Ambientes Esterilizados de Metal/Nácar (dentro da Cidadela de Nácar ou laboratórios sem flora ou terra, não pode usar suas técnicas de raízes)",
+      "offense": "Desloc.: 15 m, Escalada em árvores 15 m • Ataques: Arco Composto 'Voz do Trovão' +24 (Alcance 90m, 4d10+14 perfurante + Flecha de Espinhos que enraíza o alvo no chão CD 27) e Facão de Mato de Ferro Frio +20 (3d10+11).",
+      "abilities": "Quebra da Stalker AI: Enquanto Ezequiel guia um grupo na floresta, predadores folclóricos não conseguem aplicar a Fase 2 (Isolamento) nem a Fase 4 (Emboscada Brutal) contra a equipe.",
+      "skills": "Sobrevivência +28, Percepção +28, Pontaria +26, Furtividade +25, Ocultismo Folclórico +24",
+      "tactics": "Principal contato da A.E.G.I.S. dentro do Arquipélago de Vera Cruz das Almas. Guaicuru com seu arco composto de ipê-negro e flechas de ressonância."
+    },
+    {
+      "num": 9,
+      "id": "tomo4_09",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Agente Blindado 'Titã-04' (Viktor Drago)",
+      "title": "Escudo Pesado",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Humano Desperto (3º Estágio — Operador de Exo-Armadura Anímica MK-IV)",
+      "origin": "A.E.G.I.S. Divisão Leste Europeu / Unidade de Brecha Subterrânea",
+      "territory": "Minas Vilar, Cavernas Balcânicas e Contenção de Colossos",
+      "virtue": "Compaixão (Construtiva)",
+      "element": "Pedra, Basalto & Termia",
+      "quote": "“Fiquem atrás do meu escudo. Se o teto da mina cair, ele cai nos meus ombros.”",
+      "description": "Antigo bombeiro de resgate em minas de carvão que despertou a Virtude da Compaixão ao segurar uma galeria desabando com o próprio corpo por duas horas para salvar doze colegas. Na A.E.G.I.S., pilota a pesada armadura de ressonância 'Titã-04', alimentada pelo calor térmico de sua própria Alma bondosa.",
+      "stats": {
+        "pv": "490",
+        "pd": "50",
+        "ea": "150",
+        "est": "26",
+        "rd": "20 (Blindagem Composta de Basalto e Aço)",
+        "reactions": "Esq. +10, Bloq. +24 (RD 28), C-Ataq. +19 (Ombro Hidráulico Térmico — 3d12+15 + Empurrar 6m)",
+        "attributes": {
+          "FOR": 9,
+          "VIG": 9,
+          "AGI": 3,
+          "PRE": 7,
+          "INT": 5
+        }
+      },
+      "immunities": "Soterramento, Gases tóxicos, Fogo, Estrondos sônicos d'O Eco •",
+      "weakness": "Águas Profundas (a armadura pesa 600 kg; se cair no mar ou rio fundo sem cabo de içamento, afunda imediatamente)",
+      "offense": "Desloc.: 9 m • Ataques: Manoplas de Pistão Térmico +20 (3d12+15 contundente/fogo) e Lança-Chamas de Cinza Branca (Cone 9m, 4d10 fogo purificador, CD 25 Reflexos).",
+      "abilities": "Sacrifício de Guarda Absoluto: Pode interceptar qualquer ataque direcionado a um aliado a até 6m, recebendo o dano inteiramente na própria RD.",
+      "skills": "Fortitude +25, Atletismo +24, Engenharia/Demolição +20, Luta +20",
+      "tactics": "Deslocado para operações em espaços confinados como as Minas Vilar ou a Montanha Oca. em configuração de bloqueio total em túnel de mina."
+    },
+    {
+      "num": 10,
+      "id": "tomo4_10",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Oráculo de Campo Clara Assis",
+      "title": "'A Dama do Espelho Cego'",
+      "mda": "MDA 71%",
+      "mda_numeric": 71,
+      "nd": "ND 12",
+      "type": "Humana Desperta (3º Estágio — Coordenadora de Telecomunicações Espirituais)",
+      "origin": "A.E.G.I.S. Sede Brasileira (Ouro Preto / São Paulo)",
+      "territory": "Salas de Controle de Crise e Zonas de Anomalia Espacial",
+      "virtue": "Esperança (Transformadora)",
+      "element": "Vidro, Espelho & Luz",
+      "quote": "“Mesmo onde os rádios morrem e o tempo congela, uma voz que espera ser ouvida sempre encontra um espelho.”",
+      "description": "Cega de nascença no plano físico, Clara enxerga com nitidez absoluta o Quaternário Metafísico num raio de quilômetros. É ela quem mantém o elo mental entre as equipes de campo da A.E.G.I.S. que entram na Mansão Vilar ou em Vera Cruz das Almas e o comando central, além de restaurar a Estabilidade de agentes prestes a entrar em Ruptura.",
+      "stats": {
+        "pv": "280",
+        "pd": "55",
+        "ea": "230",
+        "est": "34",
+        "rd": "12 (Barreira Refratora)",
+        "reactions": "Esq. +20 (Previsão Espiritual), Bloq. +19 (Espelho Defletor — reflete disparos à distância), C-Ataq. +18 (Clarão de Esperança 3d10+10)",
+        "attributes": {
+          "FOR": 2,
+          "VIG": 5,
+          "AGI": 7,
+          "PRE": 10,
+          "INT": 9
+        }
+      },
+      "immunities": "Cegueira, Ilusões Visuais, Olhar do Boitatá, Surpresa •",
+      "weakness": "Fragilidade Física (se seu escudo de espelhos for quebrado por dano sônico, tem RD física 0)",
+      "offense": "Desloc.: 12 m (Levitação 12 m) • Ataques: Feixe de Refração Astral +20 (Distância 30m, 3d10+12 radiante) e Estilhaços de Luz (Área 6m, 3d10).",
+      "abilities": "Âncora de Estabilidade (15 EA): Restaura imediatamente 1d6+4 pontos de EST em um aliado e remove condições de Medo, Pavor ou Confusão.",
+      "skills": "Intuição +28, Percepção Espiritual +28, Ocultismo +25, Diplomacia +26",
+      "tactics": "Acompanha esquadrões em incursões de alto risco psíquico para impedir baixas por Ruptura Espiritual. projetando espelhos de reconhecimento espiritual."
+    },
+    {
+      "num": 11,
+      "id": "tomo4_11",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "Executor de Contenção 'Cérbero' (Major Marcus Vance)",
+      "title": "",
+      "mda": "MDA 75%",
+      "mda_numeric": 75,
+      "nd": "ND 14",
+      "type": "Humano Desperto (3º Estágio — Descendente do Soberano Solomon Vance)",
+      "origin": "A.E.G.I.S. Divisão Atlântico Norte (Londres / Boston)",
+      "territory": "Portos Internacionais, Mercado Negro de Relíquias e Navio Aethelgard",
+      "virtue": "Justiça (Transformadora)",
+      "element": "Correntes de Ferro Frio & Prata",
+      "quote": "“Você assinou um pacto na Lua Nova achando que ficaria acima da lei. Minhas correntes discordam.”",
+      "description": "Herdeiro direto da linhagem do Comodoro Solomon Vance. Marcus carrega seis correntes vivas de Ferro Frio e Prata enroladas sob o casaco tático; ao comando de sua Energia de Alma, as correntes serpenteiam pelo cenário como predadores metálicos, algemando Pactuários e mercenários da Ordem da Cinza.",
+      "stats": {
+        "pv": "400",
+        "pd": "55",
+        "ea": "175",
+        "est": "27",
+        "rd": "15 (Correntes Enroladas no Torso)",
+        "reactions": "Esq. +18, Bloq. +21, C-Ataq. +23 (Enforcar na Corrente — 3d12+14 + Imobilizar)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 7,
+          "PRE": 7,
+          "INT": 6
+        }
+      },
+      "immunities": "Desarme, Medo, Suborno •",
+      "weakness": "Rigidez Legalista (não pode atacar alvos que se rendam formalmente e larguem suas armas/relíquias)",
+      "offense": "Desloc.: 12 m (Arpéu de corrente 18 m) • Ataques: 4 Correntes de Julgamento +22 (Alcance 9m, 3d10+12 Ferro/Prata + Agarrar/Derrubar CD 27).",
+      "abilities": "Gaiola de Cérbero (20 EA): Prende um alvo agarrado num casulo de correntes que drena 10 EA por rodada e impede qualquer teleporte.",
+      "skills": "Luta +24, Intimidação +24, Investigação +22, Atletismo +22",
+      "tactics": "Caça implacavelmente os leiloeiros da Ordem da Cinza e compradores do Filantropo. Vance envolto nas correntes animadas de contenção."
+    },
+    {
+      "num": 12,
+      "id": "tomo4_12",
+      "category": "aegis_elite",
+      "category_label": "Agentes de Elite da A.E.G.I.S.",
+      "name": "O Arquivista Imortal",
+      "title": "'AGENTE FUNDADOR Nº 01'",
+      "mda": "MDA 84%",
+      "mda_numeric": 84,
+      "nd": "ND 17",
+      "type": "Humano no Limiar da Transcendência (Guardião do Cofre Ômega da A.E.G.I.S.)",
+      "origin": "Expedição Original de 1500 / Cofre Subterrâneo da A.E.G.I.S.",
+      "territory": "Santuário Central da A.E.G.I.S. (Raramente sai a campo)",
+      "virtue": "Sabedoria & Disciplina",
+      "element": "Ouro Antigo, Cinza & Tempo",
+      "quote": "“Eu vi o mar abrir em 1500. Vi Inácio forjar o primeiro selo e vi Lorenzo trair a humanidade em Nácar. Não me falem de impossíveis.”",
+      "description": "O único sobrevivente ainda desperto da expedição original de 1500 que não se corrompeu nem entrou em hibernação. Mantido vivo há mais de cinco séculos pelos selos de preservação da Biblioteca Ômega da A.E.G.I.S., o Agente Nº 01 conhece o nome verdadeiro de quase todas as Lendas e guarda as sete chaves de contenção global.",
+      "stats": {
+        "pv": "490",
+        "pd": "65",
+        "ea": "260",
+        "est": "34",
+        "rd": "17 (Manto de Escrituras Seladas)",
+        "reactions": "Esq. +21, Bloq. +23, C-Ataq. +24 (Selo de Banimento — 4d12+16 espiritual)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 7,
+          "AGI": 7,
+          "PRE": 10,
+          "INT": 10
+        }
+      },
+      "immunities": "Envelhecimento, Tempo, Maldições, Medo, Dreno de Alma •",
+      "weakness": "Âncora da Biblioteca (se permanecer mais de 24 horas fora do Cofre Central da A.E.G.I.S., os cinco séculos de idade começam a cobrar seu preço, perdendo 10 PV máximos por hora)",
+      "offense": "Desloc.: 12 m, Voo Levitatório 18 m • Ataques: Lança-Relíquia 'Memória de Vera Cruz' +24 (4d12+16 Ouro/Alma) e Palavra de Contenção (Distância 30m, CD 31 Vontade, paralisa anomalias de MDA ≤ 80%).",
+      "abilities": "Autorização Nível Ômega: Pode selar temporariamente uma fenda do Véu ou conceder a um grupo de jogadores o despertar temporário do próximo Estágio de Alma por 1 cena.",
+      "skills": "Ocultismo +30, História +30, Vontade +28, Intuição +28",
+      "tactics": "Atua como o patrono supremo da A.E.G.I.S. em campanhas de nível alto. 01, guardião das chaves seladas desde o ano de 1500."
+    },
+    {
+      "num": 13,
+      "id": "tomo4_13",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Dom Inácio de Loyola-Vilar",
+      "title": "O Primeiro Juiz da Cinza",
+      "mda": "MDA 96%",
+      "mda_numeric": 96,
+      "nd": "",
+      "type": "Humano Transcendente (Fundador Histórico da Ordo Cineris / Precursor da A.E.G.I.S.)",
+      "origin": "Império Ibérico / Costa da Morte (1492–1568)",
+      "territory": "Catedrais Submersas e Selos Atlânticos",
+      "virtue": "Disciplina (Construtiva)",
+      "element": "Ferro Frio & Cinza Litúrgica",
+      "quote": "“A alma indisciplinada é uma fenda por onde o Abismo respira.”",
+      "description": "O primeiro mortal documentado a atingir o controle absoluto de 100% de sua própria Alma sem firmar Pacto com uma Lenda externa. Quando o Véu caiu em 1500, Inácio fundiu seu Corpo, Mente e Espírito à sua Alma de Ferro Frio, erguendo os primeiros selos continentais que impediram o Primogênito de engolir todo o Atlântico.",
+      "stats": {
+        "pv": "580 (Regeneração de Ordem 15/rodada)",
+        "pd": "70",
+        "ea": "220",
+        "est": "32 (Imune a Ruptura)",
+        "rd": "18 (Ferro Frio Sagrado)",
+        "reactions": "Esq. +16 (6d20), Bloq. +24 (RD 24; Sacrifício de Guarda custa 0 EST), C-Ataq. +22 (Julgamento Instantâneo — 4d12+16)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 7,
+          "AGI": 5,
+          "PRE": 9,
+          "INT": 8
+        }
+      },
+      "immunities": "Medo, Sangramento, Corrupção do Véu, Controle Mental e Dano espiritual comum •",
+      "weakness": "Paradoxo de Juramento (se forçado a quebrar um preceito codificado por ele mesmo, perde RD por 1 rodada)",
+      "offense": "Desloc.: 12 m (Voo levitatório em Convergência 18 m) • Ataques: Alabarda das Sete Correntes +22 (4d12+14 Ferro Frio + Grilhão de Alma CD 32) ou Veredito da Cinza (Distância 30m, +20, 3d20 espiritual puro).",
+      "abilities": "Lei de Transcendência — Tribunal do Silêncio Absoluto (Raio 50m): Dentro de sua aura, nenhuma criatura pode gastar EA para ataques caóticos sem antes vencer um teste oposto de Vontade (CD 34).",
+      "skills": "Vontade +26, Ocultismo +24, Luta +22, Religião +24, Intuição +20",
+      "tactics": "Em vigília eterna num sarcófago de chumbo; cobiçado pelo Filantropo e protegido pela A.E.G.I.S. Fig. S01 — Dom Inácio em Convergência Permanente de Ferro Frio e Luz Inquisitorial."
+    },
+    {
+      "num": 14,
+      "id": "tomo4_14",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Rainha-Mártir Kaelen de Alexandria",
+      "title": "A Dama do Farol Branco",
+      "mda": "MDA 94%",
+      "mda_numeric": 94,
+      "nd": "",
+      "type": "Humana Transcendente (Arconte do Collegium Aegis, Séc. III a.C.)",
+      "origin": "Alexandria Ptolomaica (Egito Helênico, 280 a.C.)",
+      "territory": "Ruínas Submersas de Faros e Santuários Mediterrâneos",
+      "virtue": "Esperança (Transformadora)",
+      "element": "Ouro & Relâmpago Solar",
+      "quote": "“Enquanto uma única lâmpada arder na costa, o mar não terá a última palavra.”",
+      "description": "Quando uma fenda primordial abriu-se no Mediterrâneo no século III a.C., Kaelen subiu ao topo do Farol de Alexandria e converteu sua própria Alma num segundo sol espiritual por sete dias e sete noites, cegando as crias abissais e gravando no mundo a matriz máxima da Virtude da Esperança.",
+      "stats": {
+        "pv": "490",
+        "pd": "70",
+        "ea": "260",
+        "est": "34",
+        "rd": "14 (Luz Anímica)",
+        "reactions": "Esq. +18 (7d20), Bloq. +18 (Escudo de Heliópolis RD 20), C-Ataq. +19 (Lança Fotônica 3d20+12)",
+        "attributes": {
+          "FOR": 4,
+          "VIG": 6,
+          "AGI": 7,
+          "PRE": 10,
+          "INT": 8
+        }
+      },
+      "immunities": "Cegueira, Frio Abissal, Dreno de EST, Ilusões do Véu •",
+      "weakness": "Sacrifício Empático (sofre metade do dano letal que aliados jurados receberiam a até 15m)",
+      "offense": "Desloc.: 15 m (Teleporte por feixes de luz 30 m) • Ataques: Cetro de Faros +20 (3d12+12 radiante/espiritual) ou Raio da Aurora +22 (4d12+15 ignora armadura mundana).",
+      "abilities": "Lei de Transcendência — Horizonte Inextinguível: Aliados na presença de Kaelen jamais entram em Ruptura Espiritual (EST mínimo trava em 1) e recuperam 10 PV e 5 EA por turno.",
+      "skills": "Diplomacia +26, Vontade +25, Ocultismo +22, Medicina +22",
+      "tactics": "Fragmentos cristalizados de sua alma ainda alimentam os reatores de luz das bases submarinas da A.E.G.I.S. Fig. S02 — Kaelen de Alexandria irradiando a chama eterna do Farol de Faros."
+    },
+    {
+      "num": 15,
+      "id": "tomo4_15",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Almirante Fernão D'albuquerque",
+      "title": "O Bandeirante do Abismo",
+      "mda": "MDA 92%",
+      "mda_numeric": 92,
+      "nd": "",
+      "type": "Humano Transcendente (Fundador dos Bandeirantes do Véu, Séc. XVI)",
+      "origin": "Capitania de São Vicente / Vera Cruz das Almas (1540)",
+      "territory": "Mar Interior do Arquipélago e Floresta Negra",
+      "virtue": "Coragem (Construtiva)",
+      "element": "Prata & Sal Marinho",
+      "quote": "“O medo é só o vento antes da tempestade. Ajustem as velas.”",
+      "description": "Quando sua frota foi tragada para Vera Cruz das Almas no século XVI, Fernão recusou tanto a eugenia da Cidadela de Nácar quanto a submissão às Lendas. Atingiu a Transcendência da Coragem ao duelar sozinho por três dias contra o Kraken do Fosso no convés de uma caravela partida ao meio.",
+      "stats": {
+        "pv": "620",
+        "pd": "70",
+        "ea": "195",
+        "est": "30",
+        "rd": "16 (Couraça de Prata Batida)",
+        "reactions": "Esq. +17, Bloq. +23 (RD 22), C-Ataq. +24 (Corte de Abordagem — Hitkill automático em lacaios de MDA ≤ 40%)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 8,
+          "AGI": 6,
+          "PRE": 8,
+          "INT": 5
+        }
+      },
+      "immunities": "Pavor, Paralisia, Pressão Abissal, Afogamento •",
+      "weakness": "Recusa de Retirada (nunca pode realizar a ação de fugir enquanto houver um inocente atrás de si)",
+      "offense": "Desloc.: 12 m (Caminha sobre as águas agitadas 12 m) • Ataques: Montante 'Quebra-Vagalhão' +24 (4d12+18 Prata/Alma, Crítico 18-20) e Pistola de Pederneira Anímica +20 (3d12+10).",
+      "abilities": "Lei de Transcendência — Convés Invencível: Ganha +1d12 de dano extra para cada 20% de MDA do oponente e anula a Fase 3 (Pavor) da Stalker AI em 100 metros.",
+      "skills": "Luta +25, Atletismo +23, Sobrevivência +20, Intimidação +22",
+      "tactics": "Sua espada permanece cravada num recife entre Nova Caronte e a Floresta Negra como relíquia suprema. Fig. S03 — O Soberano Fernão d'Albuquerque empunhando a montante Quebra-Vagalhão."
+    },
+    {
+      "num": 16,
+      "id": "tomo4_16",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Xamã-Ancestral Ybyrá-Obi",
+      "title": "O Ouvinte das Raízes",
+      "mda": "MDA 93%",
+      "mda_numeric": 93,
+      "nd": "",
+      "type": "Humano Transcendente Fundido à Floresta (Guardião Pré-Cabralino, Séc. XIV)",
+      "origin": "Litoral Atlântico Sul / Mata Atlântica Primordial (1380)",
+      "territory": "Coração da Floresta Negra e Árvores-Mãe do Véu",
+      "virtue": "Sabedoria (Construtiva)",
+      "element": "Cinza, Seiva & Espinhos",
+      "quote": "“Vocês chamam de monstro o que a terra criou para se curar da sua fome.”",
+      "description": "Séculos antes das caravelas, Ybyrá-obi mapeou o Corpo, Mente, Espírito e Alma através da escuta das raízes. Em vez de subjugar as Lendas na Lua Nova, conversava com o Mapinguari e o Boitatá em pé de igualdade, mantendo o Véu costurado até fundir seu próprio corpo à grande árvore central da Floresta Negra.",
+      "stats": {
+        "pv": "480",
+        "pd": "70",
+        "ea": "280",
+        "est": "36",
+        "rd": "15 (Casca Petrificada)",
+        "reactions": "Esq. +19, Bloq. +17, C-Ataq. +21 (Redirecionamento Espiritual)",
+        "attributes": {
+          "FOR": 4,
+          "VIG": 6,
+          "AGI": 6,
+          "PRE": 9,
+          "INT": 10
+        }
+      },
+      "immunities": "Venenos, Doenças, Maldições Folclóricas, Desorientação espacial •",
+      "weakness": "Ferro Industrial Quente e Fogo Químico (+50% de dano de armamentos incendiários modernos)",
+      "offense": "Desloc.: 12 m (Passo pelas Raízes: teleporte entre árvores 45 m) • Ataques: Bordão de Ipê-Negro +20 (3d10+12 + Dreno de 10 EA) ou Tempestade de Esporos Anímicos (Área 12m, CD 32 Fortitude, 4d10 + Sono Espiritual).",
+      "abilities": "Lei de Transcendência — Memória da Floresta Viva: Enxerga os 4 componentes de qualquer ser vivo instantaneamente, revelando traumas, pactos e o Ponto Fraco exato.",
+      "skills": "Ocultismo +28, Sobrevivência +26, Intuição +26, Medicina +24",
+      "tactics": "Sua consciência ainda responde a Sensitivos e agentes da A.E.G.I.S. que entram na mata sem armas incendiárias. Fig. S04 — Ybyrá-obi em sua forma transcendente fundida à Árvore-Mãe do Véu."
+    },
+    {
+      "num": 17,
+      "id": "tomo4_17",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Irmã Beatriz de Montségur",
+      "title": "A Santa das Chagas Brancas",
+      "mda": "MDA 90%",
+      "mda_numeric": 90,
+      "nd": "",
+      "type": "Humana Transcendente (Médica da Peste Negra, Séc. XIV)",
+      "origin": "Sul da França / Hospitais de Quarentena da Ordo Cineris (1348)",
+      "territory": "Santuários de Cinza e Enfermarias Ocultas",
+      "virtue": "Compaixão (Construtiva)",
+      "element": "Sangue Puro & Prata",
+      "quote": "“Dai-me a vossa febre; minha alma é mais larga que a vossa dor.”",
+      "description": "Durante o surto de 1348, quando anomalias de Peste & Espinhos devoravam a Europa, Beatriz atingiu o 4º Estágio ao absorver voluntariamente a Ruptura Espiritual de trezentos moribundos sem enlouquecer, transmutando o miasma negro em lágrimas de prata curativa.",
+      "stats": {
+        "pv": "540",
+        "pd": "70",
+        "ea": "250",
+        "est": "35",
+        "rd": "12 (Manto de Graça)",
+        "reactions": "Esq. +16, Bloq. +20, C-Ataq. +18 (Toque da Penitência Pacífica — paralisa o agressor CD 31)",
+        "attributes": {
+          "FOR": 3,
+          "VIG": 7,
+          "AGI": 5,
+          "PRE": 10,
+          "INT": 8
+        }
+      },
+      "immunities": "Necrose, Peste, Parasitas Anímicos, Possessão •",
+      "weakness": "Voto de Não- Letalidade (não desfere golpes letais contra humanos vivos; contra Aberrações usa purificação espiritual)",
+      "offense": "Desloc.: 12 m • Ataques: Turíbulo de Prata Líquida +19 (3d12+10 dano purificador em Mortos-Vivos/Anomalias; cura aliados no mesmo valor).",
+      "abilities": "Lei de Transcendência — Redenção da Carne Corrompida: Pode reverter mutações abissais, cancelar a transformação lupina ou ressuscitar um aliado morto há até 3 rodadas (40 EA).",
+      "skills": "Medicina +28, Religião +25, Vontade +26, Diplomacia +24",
+      "tactics": "Relicários com seu sangue cristalizado são disputados entre a A.E.G.I.S. e os leilões do Filantropo. Fig. S05 — A Soberana Beatriz de Montségur envolta no Manto de Graça Prateada."
+    },
+    {
+      "num": 18,
+      "id": "tomo4_18",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Comodoro Solomon Kane-Vance",
+      "title": "O Carrasco dos Sete Mares",
+      "mda": "MDA 93%",
+      "mda_numeric": 93,
+      "nd": "",
+      "type": "Humano Transcendente (Juiz Naval Caçador de Pactuários, Séc. XVII)",
+      "origin": "Bristol / Caribe & Triângulo das Bermudas (1675)",
+      "territory": "Rotas Marítimas Atlânticas e Tribunais Navais",
+      "virtue": "Justiça (Transformadora)",
+      "element": "Prata & Juramento",
+      "quote": "“Todo pacto tem um preço. Eu sou a cobrança.”",
+      "description": "Quando corsários do século XVII começaram a realizar Rituais de Subjugação na Lua Nova para usar Lendas marinhas como armas de saque, Solomon despertou a Transcendência da Justiça. Sua alma media o peso dos crimes de cada alvo: quanto mais sangue inocente o inimigo houvesse derramado, mais pesada a gravidade ao redor dele se tornava.",
+      "stats": {
+        "pv": "560",
+        "pd": "70",
+        "ea": "210",
+        "est": "31",
+        "rd": "16",
+        "reactions": "Esq. +18, Bloq. +21, C-Ataq. +23 (Sentença de Talião — devolve 100% do dano sofrido + 2d12)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 6,
+          "PRE": 8,
+          "INT": 7
+        }
+      },
+      "immunities": "Mentiras, Medo, Suborno Mental •",
+      "weakness": "Inocência Comprovada (causa 0 de dano a qualquer criatura que nunca tenha tirado uma vida injustamente)",
+      "offense": "Desloc.: 12 m • Ataques: Alabarda de Execução 'Nêmesis' +23 (4d12+15 Prata) e Correntes de Chumbo Juramentado +21 (3d10+12 + Imobilização CD 32).",
+      "abilities": "Lei de Transcendência — Peso da Culpa: Inimigos culpados de assassinato sofrem -5 em Esquiva, têm o deslocamento reduzido à metade e sofrem 2d12 de dano espiritual automático por rodada.",
+      "skills": "Intuição +26, Luta +24, Pontaria +22, Investigação +24",
+      "tactics": "Ancestral do Agente 'Cérbero' da A.E.G.I.S.; seus códigos fundamentam os tribunais da Agência. Fig. S06 — Solomon Vance empunhando a alabarda de execução contra piratas pactuários."
+    },
+    {
+      "num": 19,
+      "id": "tomo4_19",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Kassanje dos Palmares",
+      "title": "O Quebrador de Grilhões",
+      "mda": "MDA 94%",
+      "mda_numeric": 94,
+      "nd": "",
+      "type": "Humano Transcendente (Guerreiro Anticolonial do Véu, Séc. XVII)",
+      "origin": "Serra da Barriga / Alagoas Colonial (1680)",
+      "territory": "Quilombos Ocultos e Rotas de Fuga pelo Véu",
+      "virtue": "Liberdade (Transformadora)",
+      "element": "Cinza, Vento & Ferro Quebrado",
+      "quote": "“Nenhum homem nasceu com coleira na alma.”",
+      "description": "Quando senhores coloniais ligados à ala corrupta da Ordem da Cinza tentaram usar grilhões de minério de ressonância para aprisionar almas humanas, Kassanje despertou o 4º Estágio da Liberdade. Ao seu toque, qualquer fechadura, corrente, selo de contenção ou contrato espiritual se desfaz em pó de ferrugem.",
+      "stats": {
+        "pv": "590",
+        "pd": "70",
+        "ea": "215",
+        "est": "33",
+        "rd": "15",
+        "reactions": "Esq. +22 (8d20 — Intocável), Bloq. +19, C-Ataq. +23 (Lança de Ferro Livre 4d12+16)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 9,
+          "PRE": 8,
+          "INT": 6
+        }
+      },
+      "immunities": "Paralisia, Agarrão, Aprisionamento, Selos de Contenção, Controle Mental, Lentidão •",
+      "weakness": "Jamais pode portar escudos pesados ou armaduras completas (perde a Sintonia se restringir o próprio corpo)",
+      "offense": "Desloc.: 18 m (Ignora terreno difícil, paredes e grades físicas) • Ataques: Zagaia de Fogo Livre +23 (4d12+15) e Golpe de Esquiva Anímica +24 (3d12+14 + Derrubar automático).",
+      "abilities": "Lei de Transcendência — Alforria Espiritual: Com uma ação livre (15 EA), liberta qualquer criatura num raio de 30m de maldições, possessões, pactos forçados ou controle da Teocracia Térmica.",
+      "skills": "Acrobacia +26, Luta +24, Furtividade +22, Vontade +24",
+      "tactics": "Diz a lenda que atravessou o Véu vivo para libertar as almas presas nos navios negreiros afogados no Atlântico. Fig. S07 — Kassanje quebrando grilhões de minério de ressonância com as mãos nuas."
+    },
+    {
+      "num": 20,
+      "id": "tomo4_20",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Arquimago-Mercador Lorenzo de Médici-Vilar",
+      "title": "Arquiteto de Nácar",
+      "mda": "MDA 95%",
+      "mda_numeric": 95,
+      "nd": "",
+      "type": "Humano Pós-Evoluído Transcendente (Fundador da Cidadela de Nácar, Séc. XVI)",
+      "origin": "Florença Renascentista / Cidadela de Nácar (1515)",
+      "territory": "Torre Central da Cidadela de Nácar (Vera Cruz das Almas)",
+      "virtue": "Ambição (Transformadora)",
+      "element": "Vidro, Ouro & Pérola Abissal",
+      "quote": "“Por que temer os deuses do abismo quando podemos dissecá-los e vestir sua eternidade?”",
+      "description": "Patriarca original da família Vilar e líder da facção científica que rompeu com a A.E.G.I.S. após 1500 para fundar a Cidadela de Nácar. Através da Virtude da Ambição em 4º Estágio, aprendeu a enxertar genes e Energia de Alma de Lendas marinhas no genoma da nobreza, mantendo-se vivo há cinco séculos.",
+      "stats": {
+        "pv": "520",
+        "pd": "70",
+        "ea": "300",
+        "est": "29",
+        "rd": "16 (Exoesqueleto de Madrepérola)",
+        "reactions": "Esq. +18, Bloq. +20 (Campo Refrator RD 22), C-Ataq. +21 (Drenagem de Virtude — rouba 15 EA e copia 1 habilidade do atacante)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 6,
+          "AGI": 7,
+          "PRE": 9,
+          "INT": 10
+        }
+      },
+      "immunities": "Envelhecimento, Pressão Marinha, Venenos, Dano Elétrico •",
+      "weakness": "Fome de Ascensão (se passar 2 rodadas sem absorver EA do ambiente ou de um oponente, sofre 15 de dano de rebote celular)",
+      "offense": "Desloc.: 12 m (Voo gravitacional 18 m) • Ataques: Bisturi de Luz Prismática +21 (4d10+14 ignora RD física) ou Canhão de Ressonância de Nácar +22 (4d12+16 em linha de 30m).",
+      "abilities": "Lei de Transcendência — Usurpação da Coroa: Copia e utiliza qualquer técnica de 1º a 3º Estágio que presencie em combate, executando-a com seus próprios atributos no turno seguinte.",
+      "skills": "Ciência/Alquimia +28, Ocultismo +26, Enganação +24, Vontade +22",
+      "tactics": "Ainda governa secretamente o Conselho Genético da Cidadela de Nácar. Fig. S08 — O Patriarca Imortal Lorenzo de Médici-Vilar em seu trono biocibernético de Nácar."
+    },
+    {
+      "num": 21,
+      "id": "tomo4_21",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Imperador-Sol Huayna Capac",
+      "title": "O Trono Inclinável dos Andes",
+      "mda": "MDA 95%",
+      "mda_numeric": 95,
+      "nd": "",
+      "type": "Humano Transcendente (Soberano Inca do Véu Andino, Séc. XVI)",
+      "origin": "Cusco / Cordilheira dos Andes (1520)",
+      "territory": "Santuários de Alta Montanha e Minas de Ouro dos Andes",
+      "virtue": "Orgulho (Instintiva)",
+      "element": "Ouro Solar & Pedra Vulcânica",
+      "quote": "“Olhem para baixo quando falarem comigo; o sol não divide o céu com vagalumes.”",
+      "description": "Quando anomalias ctônicas emergiram das minas andinas no século XVI, Huayna Capac despertou a Virtude Instintiva do Orgulho em sua expressão máxima. Sua presença anímica era tão esmagadora que criaturas de MDA inferior a 60% eram fisicamente incapazes de erguer a cabeça diante dele.",
+      "stats": {
+        "pv": "640",
+        "pd": "70",
+        "ea": "230",
+        "est": "32",
+        "rd": "20 (Armadura de Ouro Maciço Anímico)",
+        "reactions": "Esq. +14, Bloq. +26 (Muralha do Inti RD 28), C-Ataq. +25 (Reversão Imperial — 5d12+18)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 8,
+          "AGI": 5,
+          "PRE": 10,
+          "INT": 6
+        }
+      },
+      "immunities": "Fogo, Calor Térmico, Derrubar, Empurrão, Intimidação •",
+      "weakness": "Ferida na Soberania (se sofrer um acerto crítico que supere sua RD e o faça sangrar, perde 4 de EST imediatamente)",
+      "offense": "Desloc.: 10 m • Ataques: Maça Estrelada do Sol 'Inti-Illapa' +25 (5d12+18 Ouro/Fogo Solar) ou Olhar de Gravidade Real (CD 33 Fortitude ou o alvo cai ajoelhado sofrendo 4d10).",
+      "abilities": "Lei de Transcendência — Decreto de Subordinação: Qualquer criatura que o ataque estando num nível de terreno mais baixo ou com menos PV atuais que ele sofre Desvantagem Dupla (-2d20).",
+      "skills": "Intimidação +28, Luta +24, Vontade +25, História +20",
+      "tactics": "Sua múmia incorrupta irradia calor constante de 60°C num cofre de obsidiana guardado pela A.E.G.I.S. nos Andes. Fig. S09 — Huayna Capac em sua armadura de ouro solar incandescente."
+    },
+    {
+      "num": 22,
+      "id": "tomo4_22",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Berserker-Rei Harald Sangue-De-Cinza",
+      "title": "A Fera de Jomsborg",
+      "mda": "MDA 93%",
+      "mda_numeric": 93,
+      "nd": "",
+      "type": "Humano Transcendente (Senhor da Guerra Nórdico, Séc. XI)",
+      "origin": "Mar do Norte / Fiordes da Noruega (1066)",
+      "territory": "Costas Geladas do Atlântico Norte e Naufrágios Vikings",
+      "virtue": "Fúria (Instintiva)",
+      "element": "Sangue Fervente & Cinza Vulcânica",
+      "quote": "“Quebrem meus ossos! Cada lasca será mais uma lança para rasgar a sua garganta!”",
+      "description": "Guerreiro nórdico cuja fúria evaporava a água do mar ao seu redor. Quando seu drakkar foi emboscado por demônios marinhos na costa escocesa, Harald recusou a morte: sua Alma inflamou o sangue em suas veias a ponto de derreter o gelo polar, atingindo a Transcendência da Fúria pura.",
+      "stats": {
+        "pv": "720",
+        "pd": "70",
+        "ea": "180",
+        "est": "24 (Frenesi Transcendente)",
+        "rd": "14 (Pele Calcinada)",
+        "reactions": "Esq. +15, Bloq. +22, C-Ataq. +26 (Contra-Golpe Brutal — executa sempre que sofre dano)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 9,
+          "AGI": 6,
+          "PRE": 7,
+          "INT": 4
+        }
+      },
+      "immunities": "Dor, Inconsciência por PV (luta até -100 PV antes de cair), Frio Extremo, Medo •",
+      "weakness": "Calmaria Anímica (efeitos da Virtude da Compaixão CD 30 apagam suas chamas internas, reduzindo seu dano pela metade)",
+      "offense": "Desloc.: 15 m (Salto 12 m) • Ataques: Machado Dane 'Fende-Crânios' +26 (5d12+20 Sangue/Brasa, Crítico 17-20/x3) ou Garra de Sangue Ebuliente +25 (4d12+18).",
+      "abilities": "Lei de Transcendência — Agonia Combustível: Para cada 50 PV que Harald tiver perdido abaixo do máximo, todos os seus ataques ganham +1d12 de dano adicional e +2 no ataque.",
+      "skills": "Luta +27, Atletismo +26, Intimidação +25, Fortitude +26",
+      "tactics": "Congelado num iceberg negro no Círculo Polar Ártico sob monitoramento de satélites da A.E.G.I.S. Fig. S10 — Harald Sangue-de- Cinza com a barba e o machado em brasa viva."
+    },
+    {
+      "num": 23,
+      "id": "tomo4_23",
+      "category": "soberanos_alma",
+      "category_label": "Soberanos de Alma (4º Estágio)",
+      "name": "Hassan-I Sabbah (O Velho da Montanha)",
+      "title": "Arquiteto do Pavor",
+      "mda": "MDA 96%",
+      "mda_numeric": 96,
+      "nd": "",
+      "type": "Humano Transcendente (Grão-Mestre de Alamut, Séc. XII)",
+      "origin": "Fortaleza de Alamut / Pérsia Medieval (1124)",
+      "territory": "Fortalezas de Montanha e Sombras entre o Véu",
+      "virtue": "Medo (Instintiva)",
+      "element": "Sombra, Névoa & Veneno Astral",
+      "quote": "“A lâmina mata um rei. O medo da lâmina governa um império inteiro sem derramar uma gota.”",
+      "description": "O único ser humano que dominou completamente a Virtude Instintiva do Medo sem se tornar uma besta irracional. Em Alamut, descobriu que o Medo é a matéria-prima de todas as Lendas folclóricas. No 4º Estágio, tornou-se capaz de materializar os piores traumas de seus inimigos em assassinos sólidos de sombra.",
+      "stats": {
+        "pv": "460",
+        "pd": "70",
+        "ea": "290",
+        "est": "36",
+        "rd": "15 (Corpo de Miragem — 50% de falha em ataques sem Visão de Alma)",
+        "reactions": "Esq. +25 (9d20 — Passo de Fumaça), Bloq. +16, C-Ataq. +24 (Adaga no Ponto Cego — 4d12+16 + Dreno de 6 EST)",
+        "attributes": {
+          "FOR": 4,
+          "VIG": 5,
+          "AGI": 10,
+          "PRE": 9,
+          "INT": 9
+        }
+      },
+      "immunities": "Medo, Detecção Psíquica, Venenos, Ataques Furtivos •",
+      "weakness": "Luz Solar Direta ou Fogo Solar da Virtude da Esperança (desfaz seus clones de sombra e anula sua camuflagem)",
+      "offense": "Desloc.: 18 m (Teleporte entre sombras 60 m) • Ataques: Khanjar da Meia- Noite +24 (3d12+14 + 2d6 dano direto de EST) ou Execução Fóbica (Alvo com EST ≤ 5 sofre ataque de Hitkill CD 32 Vontade).",
+      "abilities": "Lei de Transcendência — Teatro dos Pesadelos Reais: A área em 60m entra automaticamente na Fase 3 e 4 da Stalker AI; quem perde 2+ EST gera um clone sombrio de seu maior medo.",
+      "skills": "Furtividade +28, Intimidação +28, Ocultismo +25, Enganação +26",
+      "tactics": "Seus pergaminhos proibidos foram parcialmente comprados pelo Filantropo no século XX. Fig. S11 — A projeção sombria de Hassan-i Sabbah, que esculpia pesadelos em lâminas reais."
+    },
+    {
+      "num": 24,
+      "id": "tomo4_24",
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "O Verme-Receptáculo das Dunas (Transmutado da Coroa Branca)",
+      "title": "",
+      "mda": "MDA 75%",
+      "mda_numeric": 75,
+      "nd": "ND 14",
+      "type": "Aberração Transmutada (Humano Condensado em Pedra e Termia — Vídeo #01)",
+      "origin": "Desertos da Teocracia Térmica (Registro Visual 19.53.28)",
+      "territory": "Dunas de Cinza, Piscinas de Conversão e Montanha Oca",
+      "virtue": "Elemento: Pedra, Areia & Termia Solar Roubada • Virtude Corrompida: Esperança/Devoção",
+      "element": "Pedra, Areia & Termia Solar Roubada",
+      "quote": "“Eles não devoram os escolhidos da coroa de flores. Eles SÃO os escolhidos do festival passado.”",
+      "description": "Originado da história do Vídeo #01: a cada festival, os aldeões colocam uma coroa de flores brancas num jovem ou criança e rezam de olhos fechados quando o chão treme. O colossal verme segmentado não mastiga a vítima — recolhe-a suavemente na boca circular e a leva até a piscina brilhante da Montanha Oca, onde o humano é transmutado em um novo Verme-Receptáculo. Carregam na carapaça cicatrizes entalhadas (como o símbolo '||O') feitas quando ainda eram humanos.",
+      "stats": {
+        "pv": "480",
+        "pd": "55",
+        "ea": "140",
+        "est": "18 (Memória Humana Fragmentada)",
+        "rd": "16 (Placas de Basalto Segmentado)",
+        "reactions": "Esq. +8 (Colossal), Bloq. +20 (Enrolar Anéis de Pedra RD 24), C-Ataq. +17 (Chicote de Cauda Sísmica 3d12+12)",
+        "attributes": {
+          "FOR": 9,
+          "VIG": 8,
+          "AGI": 3,
+          "PRE": 5,
+          "INT": 3
+        }
+      },
+      "immunities": "Calor Extremo, Fogo, Sufocamento na areia, Venenos, Cegueira •",
+      "weakness": "Reconhecimento Afetivo / Marca '||O' (mostrar o símbolo entalhado, uma coroa de flores brancas ou chamar pelo nome humano faz a criatura hesitar por 2 rodadas, Diplomacia/Intuição CD 22; interior da boca tem RD 0)",
+      "offense": "Desloc.: 12 m (Escavação nas dunas 18 m) • Ataques: Abocanhamento Litúrgico +19 (3d12+14 contundente + Engolir Intacto CD 26) ou Avalanche de Placas +18 (4d10+12 em linha de 15m).",
+      "abilities": "Forno de Pedra Solar: Regurgita um feixe térmico das pedras solares engolidas (Área 9m, 4d12 fogo solar, CD 25 Reflexos). Nunca ataca letalmente quem usa uma coroa de flores brancas.",
+      "skills": "Atletismo +22, Percepção (Vibração Sísmica) +18, Fortitude +20",
+      "tactics": "Usados como força de trabalho pelos Sacerdotes do Olho Negro para drenar o calor solar do planeta. Fig. B01 — O Verme-Receptáculo emergindo das pedras com suas mandíbulas circulares."
+    },
+    {
+      "num": 25,
+      "id": "tomo4_25",
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "Sumo Sacerdote do Olho Negro (Arconte da Teocracia Térmica)",
+      "title": "",
+      "mda": "MDA 80%",
+      "mda_numeric": 80,
+      "nd": "ND 15",
+      "type": "Entidade Extradimensional de Sangue Frio (Vídeo #01)",
+      "origin": "Montanha Oca (Registro Visual 19.53.28)",
+      "territory": "Templos de Pedra Branca e Câmaras do Sol Roubado",
+      "virtue": "Elemento: Luz Fria, Prata & Termia Drenada • Virtude Corrompida: Disciplina/Submissão",
+      "element": "Luz Fria, Prata & Termia Drenada",
+      "quote": "“Fechem os olhos e rezem. A fé de vocês é o nosso combustível; os filhos de vocês são as nossas mãos.”",
+      "description": "Seres de sangue frio que governam aldeias isoladas através de terror religioso (Vídeo #01). Sob a máscara prateada de um único orifício não há rosto humano, mas uma massa escura com um único globo ocular negro flutuante. Empunham chicotes de luz sólida e usam os Vermes-Receptáculo para roubar a energia térmica do mundo, acumulando um sol artificial subterrâneo.",
+      "stats": {
+        "pv": "340",
+        "pd": "60",
+        "ea": "210",
+        "est": "28",
+        "rd": "12 (Manto Refrator de Luz Dura)",
+        "reactions": "Esq. +17 (5d20), Bloq. +16 (Barreira de Luz Sólida RD 18), C-Ataq. +19 (Estalo do Chicote Fotônico 3d10+10 + Derrubar)",
+        "attributes": {
+          "FOR": 4,
+          "VIG": 5,
+          "AGI": 7,
+          "PRE": 8,
+          "INT": 8
+        }
+      },
+      "immunities": "Radiação Solar, Cegueira, Ilusões Ópticas, Calor •",
+      "weakness": "Frio Súbito & Quebra da Piscina Térmica (se exposto a gelo ou se o reservatório térmico for destruído, entra em hipotermia letal: -4 em todas as ações e perde 20 PV/rodada; o Olho Negro central sofre dano dobrado)",
+      "offense": "Desloc.: 12 m (Levitação silenciosa 15 m) • Ataques: Chicote de Luz Dura +20 (Alcance 6m, 3d12+10 fogo/luz + Agarrar/Eletrocutar CD 27) ou Pulso do Olho Abissal +19 (Distância 24m, 3d10 espiritual + perda de 1d4 EST).",
+      "abilities": "Dogma dos Olhos Fechados (10 EA): Todos os humanos em 20m devem passar em Vontade CD 26 ou caem de joelhos de olhos fechados (Cego e Indefeso por 1 rodada).",
+      "skills": "Religião +22, Intimidação +22, Ocultismo +20, Enganação +21",
+      "tactics": "Mantêm a humanidade ajoelhada enquanto drenam o calor do mundo para sobreviver. Fig. B02 — Anatomia alienígena de sangue frio e olho único do Sacerdote da Montanha Oca."
+    },
+    {
+      "num": 26,
+      "id": "tomo4_26",
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "Acólito da Luz Fria & Vigia do Festival (Guarda da Montanha Oca)",
+      "title": "",
+      "mda": "MDA 55%",
+      "mda_numeric": 55,
+      "nd": "ND 8",
+      "type": "Servitor Mascarado de Sangue Frio (Vídeo #01)",
+      "origin": "Aldeias da Teocracia Térmica (Registro Visual 19.53.28)",
+      "territory": "Praças de Festival, Portões da Montanha Oca e Túneis Térmicos",
+      "virtue": "Elemento: Luz Dura & Prata Fria • Virtude Corrompida: Obediência",
+      "element": "Luz Dura & Prata Fria",
+      "quote": "“Aquele que abrir os olhos durante a subida do Verme será o próximo a usar a coroa.”",
+      "description": "Casta menor de vigias mascarados que patrulham as fileiras de aldeões ajoelhados durante os festivais de coleta no Vídeo #01. Carregam lanças e açoites de luz sólida e vigiam qualquer sinal de rebelião ou tentativa de seguir o rastro dos Vermes até a Montanha Oca.",
+      "stats": {
+        "pv": "210",
+        "pd": "35",
+        "ea": "95",
+        "est": "18",
+        "rd": "10 (Máscara de Prata e Túnica Térmica)",
+        "reactions": "Esq. +15, Bloq. +15, C-Ataq. +16 (Açoite de Luz 2d10+8)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 5,
+          "AGI": 6,
+          "PRE": 5,
+          "INT": 5
+        }
+      },
+      "immunities": "Calor, Clarões luminosos •",
+      "weakness": "Arrancar a Máscara de Um Olho (manobra CD 20 expõe sua face sensível à poeira e ao frio, deixando-o Atordoado por 1 rodada)",
+      "offense": "Desloc.: 12 m • Ataques: Lança de Luz Fria +16 (2d12+8 perfurante/luz) e Laço Fotônico +15 (Imobiliza alvo que abriu os olhos CD 21).",
+      "abilities": "Caçador de Olhos Abertos: Recebe +4 de ataque e +2d6 de dano contra qualquer personagem que não esteja de olhos vendados/fechados durante a subida do Verme.",
+      "skills": "Percepção +19, Intimidação +18, Luta +16, Furtividade +15",
+      "tactics": "Atuam em patrulhas de 3 a 5 indivíduos sob comando de um Sumo Sacerdote do Olho Negro. Fig. B03 — Vigia armado da Teocracia que pune quem abre os olhos durante a oração."
+    },
+    {
+      "num": 27,
+      "id": "tomo4_27",
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "O Ciclo Lupino",
+      "title": "Carniçal da Lua Cheia (Maldição de Peter Stumpp)",
+      "mda": "MDA 78%",
+      "mda_numeric": 78,
+      "nd": "ND 14",
+      "type": "Entidade Amaldiçoada Necrótica / Licantropia Pós-Morte (Vídeo #02)",
+      "origin": "Bedburg (Alemanha, 1589) / Registro Visual #02 (Vídeo 19.53.26)",
+      "territory": "Florestas Temperadas, Quartos Trancados e Cidades sob Lua Cheia",
+      "virtue": "Elemento: Sangue & Ossos Necróticos • Virtude Corrompida: Fúria/Medo",
+      "element": "Sangue & Ossos Necróticos",
+      "quote": "“Eu dei um tiro no meu próprio peito semanas atrás para salvar minha esposa. Mas a maldição não precisava que eu estivesse vivo.”",
+      "description": "Originada do pacto de Peter Stumpp (1589) e revelada no Vídeo #02. Ao contrário do lobisomem comum, esta maldição é um Espírito Parasita Autônomo que não depende da vida do hospedeiro. Mesmo semanas após o portador cometer suicídio para encerrar o ciclo, a Lua Cheia derrete lâmpadas, estilhaça o vidro dos relógios e regenera o cadáver putrefato apenas o suficiente para erguer a besta lupina e devorar a família.",
+      "stats": {
+        "pv": "420 (Regeneração Lunar 25/rodada)",
+        "pd": "50",
+        "ea": "160",
+        "est": "0 (Cadáver Comandado pela Maldição)",
+        "rd": "15 (Ignora dor e órgãos vitais)",
+        "reactions": "Esq. +18 (6d20), Bloq. +17 (RD 18), C-Ataq. +21 (Bote de Mandíbula Deslocada 3d12+14 + Sangramento 2d6)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 6,
+          "INT": 2
+        }
+      },
+      "immunities": "Morte do Hospedeiro, Tiros comuns, Veneno, Doença, Dor, Medo, Sufocamento, Dano de EST •",
+      "weakness": "Prata Litúrgica Consagrada & Incineração Medular Diurna (apenas decapitação com prata banhada em cinza ou cremação total do cadáver durante o dia impede a ressurreição na Lua Cheia seguinte)",
+      "offense": "Desloc.: 18 m (Salto 9 m, escala paredes 12 m) • Ataques: Mordida Necrótica de Stumpp +21 (3d12+14 + Transmissão da Maldição CD 27) e 2 Garras Descarnadas +20 (2d12+12 cada).",
+      "abilities": "Campo de Sobrecarga Barométrica (Aura 15m): Estoura lâmpadas, vidros e aparelhos eletrônicos ao despertar, mergulhando o local na escuridão total (Fase 3 e 4 da Stalker AI: -2 EST por rodada).",
+      "skills": "Furtividade +20, Atletismo +22, Percepção (Faro de Sangue) +24, Luta +21",
+      "tactics": "Ao amanhecer, reverte instantaneamente para um cadáver com semanas de decomposição ao lado das vítimas. Fig. B04 — A forma lupina voraz assumida pelo cadáver regenerado sob a Lua Cheia."
+    },
+    {
+      "num": 28,
+      "id": "tomo4_28",
+      "category": "videos",
+      "category_label": "Anomalias dos Vídeos (#01 e #02)",
+      "name": "O Hospedeiro Cadavérico de Stumpp (Vaso Putrefato Diurno)",
+      "title": "",
+      "mda": "MDA 58%",
+      "mda_numeric": 58,
+      "nd": "ND 9",
+      "type": "Morto-Vivo Latente (Estágio Intermediário da Maldição Lupina — Vídeo #02)",
+      "origin": "Cenas de Crime Inexplicáveis / Necrotérios Policiais (Vídeo 19.53.26)",
+      "territory": "Quartos Trancados, Necrotérios e Covas Rasas nas Vésperas da Lua Cheia",
+      "virtue": "Elemento: Osso, Carne Morta & Sangue Coagulado • Virtude Corrompida: Medo",
+      "element": "Osso, Carne Morta & Sangue Coagulado",
+      "quote": "“O legista jurou que o homem estava morto há vinte dias. Então os ossos da mandíbula dele começaram a estalar na mesa de aço.”",
+      "description": "Nas horas que antecedem a subida da Lua Cheia, o cadáver morto há semanas (Vídeo #02) entra num estado intermediário grotesco: tendões negros e ossos lupinos começam a rasgar a carne em decomposição de dentro para fora. Se médicos legistas, policiais ou agentes da A.E.G.I.S. tentarem autopsiar ou conter o corpo nessa janela, o cadáver ataca ainda meio humano e meio esqueleto lupino.",
+      "stats": {
+        "pv": "240",
+        "pd": "35",
+        "ea": "90",
+        "est": "0",
+        "rd": "12 (Carne Morta Insensível)",
+        "reactions": "Esq. +14, Bloq. +16, C-Ataq. +17 (Espasmo de Costelas Expostas 3d10+10)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 6,
+          "PRE": 5,
+          "INT": 1
+        }
+      },
+      "immunities": "Dor, Veneno, Asfixia, Frio de necrotério, Armas perfurantes comuns •",
+      "weakness": "Fogo & Correntes de Prata antes do Nascer da Lua (se cremado antes das 21h, não atinge a forma completa do Ciclo Lupino)",
+      "offense": "Desloc.: 12 m • Ataques: Mordida de Mandíbula Partida +17 (3d10+10) e Chicote de Coluna Espinhal +16 (2d12+9).",
+      "abilities": "Metamorfose Inevitável: Ao final da 3ª rodada de combate, caso a lua já esteja no céu, evolui instantaneamente para a ficha #27 (*O Ciclo Lupino*) com PV cheios.",
+      "skills": "Atletismo +18, Intimidação +20, Furtividade (Fingir ser Cadáver Inerte) +28",
+      "tactics": "Gera os famosos relatórios policiais impossíveis arquivados pela A.E.G.I.S. Fig. B05 — O cadáver de semanas quando perturbado no necrotério horas antes do nascer da Lua. B. SOBERANOS ABISSAIS, DOMINADORES E BESTIÁRIO CANÔNICO (VERA CRUZ & MANSÃO VILAR)"
+    },
+    {
+      "num": 29,
+      "id": "tomo4_29",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Primogênito",
+      "title": "O Diabo do Mar (Arthur Vilar)",
+      "mda": "MDA 99%",
+      "mda_numeric": 99,
+      "nd": "ND 20",
+      "type": "Dominador Primordial / Rei Abissal do Triângulo das Bermudas",
+      "origin": "Cidadela de Nácar & Mansão Vilar (Crônicas I e II / Tomo II)",
+      "territory": "O Fosso Abissal, Costa da Morte e Salão Submerso de Vera Cruz",
+      "virtue": "Ambição/Orgulho Transcendente",
+      "element": "Sal Abissal, Gelo Negro & Sombra",
+      "quote": "“Eu sou a primeira prece que os afogados rezaram no escuro. E eu voltei para responder.”",
+      "description": "A entidade mais poderosa em atividade no presente do universo. Nascido da fusão entre o herdeiro renegado Arthur Vilar (banido da Cidadela de Nácar na infância) e a entidade abissal primordial que provocou a Queda do Véu em 1500. Veste um manto escuro encharcado que desafia a gravidade e uma máscara sorridente de madeira náutica e osso. Onde ele flutua, o oceano congela em rosas de gelo azul espectral.",
+      "stats": {
+        "pv": "950 (Regeneração Abissal 30/rodada na água ou névoa)",
+        "pd": "70",
+        "ea": "400",
+        "est": "40",
+        "rd": "22 (Manto do Fosso)",
+        "reactions": "Esq. +24 (8d20 — Dobra Espacial), Bloq. +26 (Muralha de Maré Congelada RD 30), C-Ataq. +27 (Rosa de Sal Perfura-Alma — 5d12+20 espiritual, ignora armadura)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 9,
+          "AGI": 9,
+          "PRE": 10,
+          "INT": 10
+        }
+      },
+      "immunities": "Afogamento, Frio, Pressão Abissal, Controle Mental, Paralisia, Armas de fogo mundanas •",
+      "weakness": "A Caixa de Música da Mãe (Clarice Vilar) & O Relicário da Mansão Vilar (ouvir a melodia original da caixa de música reduz sua RD pela metade e exige Vontade CD 32 para não hesitar)",
+      "offense": "Desloc.: 15 m (Voo / Levitação Abissal 24 m, Natação 36 m) • Ataques: Lança de Coral Negro e Gelo +27 (5d12+20 + Congelamento de Alma CD 34) ou Sinfonia dos Afogados (Área 30m, 4d20 espiritual + Dreno de 2d4 EST, CD 33 Vontade).",
+      "abilities": "Domínio Anímico — O Mar Acima do Céu (Raio 500m): Inverte o horizonte; a chuva cai para cima, o ar torna-se denso como água salgada e os mortos do mar levantam-se sob seu comando.",
+      "skills": "Ocultismo +30, Vontade +30, Intimidação +30, Luta +26, Percepção +28",
+      "tactics": "Reina no Fosso Abissal entre as quatro ilhas de Vera Cruz das Almas. Fig. B06 — O Primogênito levitando em seu manto de abismo e geada azul espectral."
+    },
+    {
+      "num": 30,
+      "id": "tomo4_30",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Kraken do Fosso",
+      "title": "O Carcereiro das Caravelas",
+      "mda": "MDA 85%",
+      "mda_numeric": 85,
+      "nd": "ND 17",
+      "type": "Lenda Abissal Colossal (Cefalópode Primordial)",
+      "origin": "Triângulo das Bermudas / Fosso de Vera Cruz (Crônica I / Tomo II)",
+      "territory": "Águas Profundas ao redor de Nova Caronte e Costa da Morte",
+      "virtue": "Elemento: Sal, Ferro Oxidado & Relâmpago • Virtude Ressonante: Fúria/Medo",
+      "element": "Sal, Ferro Oxidado & Relâmpago",
+      "quote": "“Cinco séculos de navios desaparecidos não afundaram sozinhos.”",
+      "description": "Titã cefalópode de cem metros de envergadura cujo manto encouraçado carrega âncoras de galeões espanhóis do século XVI e hélices de submarinos da Guerra Fria. Atua como o guardião físico da fronteira do Arquipélago de Vera Cruz das Almas, puxando navios e aeronaves que voam baixo para dentro do Véu.",
+      "stats": {
+        "pv": "780",
+        "pd": "65",
+        "ea": "220",
+        "est": "28",
+        "rd": "18 (Cracas Calcificadas e Cascos Fundidos)",
+        "reactions": "Esq. +10, Bloq. +25 (Barreira de Oito Tentáculos RD 26), C-Ataq. +23 (Esmagamento de Constritor 4d12+18)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 10,
+          "AGI": 4,
+          "PRE": 7,
+          "INT": 4
+        }
+      },
+      "immunities": "Pressão Abissal, Eletricidade, Frio, Venenos, Sangramento menor •",
+      "weakness": "Olho Central Bioluminescente (ataques mirados no olho com -4 acertam ponto vital ignorando RD)",
+      "offense": "Desloc.: 6 m em terra, Natação 30 m (Jato abissal 45 m) • Ataques: 4 Tentáculos Colossais +24 (4d12+16 contundente + Agarrar/Esmagar Navio CD 32) e Bico de Queratina Abissal +23 (5d12+20 perfurante).",
+      "abilities": "Tinta de Escuridão Líquida: Nuvem de 60m na água ou névoa de 30m no ar que bloqueia toda luz e drena 1d6 EST por rodada.",
+      "skills": "Atletismo +28, Fortitude +26, Percepção +20, Furtividade (Abismo) +18",
+      "tactics": "Desperta sempre que o sino de bronze de um navio toca ou quando invocado pelo Primogênito. Fig. B07 — O Kraken do Fosso emergindo das trincheiras abissais do Triângulo."
+    },
+    {
+      "num": 31,
+      "id": "tomo4_31",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Moby Dick",
+      "title": "O Leviatã Branco das Almas",
+      "mda": "MDA 85%",
+      "mda_numeric": 85,
+      "nd": "ND 17",
+      "type": "Lenda Oceânica Encarnada (Leviatã Albino Cravejado de Arpões)",
+      "origin": "Atlântico Norte & Mar Interior de Vera Cruz (Crônica I / Tomo II)",
+      "territory": "Rotas Baleeiras Ocultas e Águas de Fronteira do Véu",
+      "virtue": "Elemento: Sal, Osso Branco & Cinza • Virtude Ressonante: Obsessão/Vingança",
+      "element": "Sal, Osso Branco & Cinza",
+      "quote": "“Todo arpão cravado em seu dorso carrega a alma do capitão que jurou matá-lo.”",
+      "description": "Alimentado por séculos de terror e obsessão dos baleeiros do século XIX, o Leviatã Branco transcendeu a biologia marinha para tornar-se um purgatório ambulante. Sua pele cor de giz é cravejada de arpões enferrujados e correntes que se movem sozinhas, puxando os esqueletos conscientes de antigos capitães presos ao seu flanco.",
+      "stats": {
+        "pv": "820",
+        "pd": "65",
+        "ea": "200",
+        "est": "30",
+        "rd": "20 (Espermacete Calcificado)",
+        "reactions": "Esq. +12, Bloq. +24 (Investida Frontal RD 28), C-Ataq. +24 (Quebra-Quilha — 5d12+18)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 10,
+          "AGI": 5,
+          "PRE": 8,
+          "INT": 5
+        }
+      },
+      "immunities": "Frio, Pressão, Armas perfurantes comuns, Medo, Fadiga •",
+      "weakness": "O Arpão de Sangue do Capitão Ahab (cravado junto à nadadeira dorsal; escalar o dorso e cravá-lo até o coração com Força CD 28 causa 150 de dano verdadeiro)",
+      "offense": "Desloc.: Natação 36 m (Salto fora d'água 15 m) • Ataques: Investida de Fronte Branca +25 (6d12+20 contundente; dobra contra navios) e Coro dos Arpoados (+20, 3d10+12 + Puxar para o mar).",
+      "abilities": "Canto de Obsessão: Quem fita o olho do Leviatã deve passar em Vontade CD 28 ou fica obcecado em caçá-lo, recusando-se a abandonar o convés.",
+      "skills": "Atletismo +28, Fortitude +27, Intimidação +24, Percepção +22",
+      "tactics": "Rival ancestral do Kraken do Fosso; suas batalhas jogam destroços históricos nas praias de Nova Caronte. Fig. B08 — O Leviatã Branco das Almas agitando as águas do Mar Interior."
+    },
+    {
+      "num": 32,
+      "id": "tomo4_32",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Mapinguari",
+      "title": "O Titã Ciclópico da Floresta Negra",
+      "mda": "MDA 90%",
+      "mda_numeric": 90,
+      "nd": "ND 18",
+      "type": "Lenda Folclórica Primordial (Titã Couraçado de Um Olho e Boca Abdominal)",
+      "origin": "Amazônia Profunda & Ilha da Floresta Negra (Crônica I / Tomo II)",
+      "territory": "Interior Intocado da Floresta Negra (Vera Cruz das Almas)",
+      "virtue": "Elemento: Sangue, Osso & Terra Podre • Virtude Ressonante: Fúria/Medo Primitivo",
+      "element": "Sangue, Osso & Terra Podre",
+      "quote": "“A mata inteira cala quando o segundo estômago dele tem fome.”",
+      "description": "O predador alfa absoluto da Ilha da Floresta Negra. Uma monstruosidade bípede de quatro metros coberta por placas ósseas subdérmicas recobertas de musgo negro. Possui um único olho amarelado no centro da testa e uma segunda bocarra vertical rasgada no abdômen, capaz de triturar aço, osso e Energia de Alma.",
+      "stats": {
+        "pv": "750",
+        "pd": "65",
+        "ea": "190",
+        "est": "28",
+        "rd": "22 (Carapaça Osteodérmica — Imune a calibre leve/médio)",
+        "reactions": "Esq. +11, Bloq. +25 (Braços de Pedra RD 28), C-Ataq. +24 (Agarrão para a Boca Abdominal — 4d12+18)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 10,
+          "AGI": 4,
+          "PRE": 8,
+          "INT": 3
+        }
+      },
+      "immunities": "Armas de fogo convencionais, Venenos, Doenças, Terreno difícil, Sangramento •",
+      "weakness": "O Único Olho Frontal dilatado após o Urro (disparo de Alma mirado no olho CD 26 ignora a RD 22 e o atordoa por 1 rodada)",
+      "offense": "Desloc.: 12 m (Atropela árvores sem perder deslocamento) • Ataques: 2 Garras Escavadoras +24 (4d12+16 cortante) e Mordida Abdominal Trituradora +25 (5d12+20 + Dreno de 15 EA).",
+      "abilities": "Urro que Desorienta a Bússola (Área 60m): Causa 4d10 sônico, 1d6 EST e deixa alvos Confusos/Surdos por 2 rodadas (Fortitude CD 30 reduz).",
+      "skills": "Atletismo +27, Fortitude +27, Intimidação +26, Sobrevivência +22",
+      "tactics": "Dorme enterrado sob raízes seculares durante o dia; à noite patrulha a Floresta Negra pela Stalker AI. Fig. B09 — O Titã Ciclópico Mapinguari erguendo-se entre as árvores da Floresta Negra."
+    },
+    {
+      "num": 33,
+      "id": "tomo4_33",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Boitatá",
+      "title": "A Serpente dos Mil Olhos Devorados",
+      "mda": "MDA 85%",
+      "mda_numeric": 85,
+      "nd": "ND 16",
+      "type": "Lenda Folclórica Primordial (Serpente de Fogo-Fátuo e Madeira Calcinada)",
+      "origin": "Matas Sul-Americanas & Ilha da Floresta Negra (Tomo II)",
+      "territory": "Clareiras Queimadas, Pântanos e Fronteiras da Floresta Negra",
+      "virtue": "Elemento: Cinza, Brasa & Fogo Cadavérico • Virtude Ressonante: Justiça/Fúria da Terra",
+      "element": "Cinza, Brasa & Fogo Cadavérico",
+      "quote": "“Ele não come a carne dos que queimam a floresta. Ele come a luz dos olhos deles.”",
+      "description": "Sobrevivente do grande dilúvio primordial, alimentou-se dos olhos das criaturas mortas para absorver a luz do sol. Seu corpo colossal de quinze metros mistura carvão translúcido e fogo- fátuo azul-esverdeado que não queima as árvores vivas, mas incinera instantaneamente o espírito e as retinas de invasores.",
+      "stats": {
+        "pv": "560",
+        "pd": "60",
+        "ea": "260",
+        "est": "30",
+        "rd": "16 (Escamas de Brasa Espiritual)",
+        "reactions": "Esq. +19 (6d20), Bloq. +18 (Espiral de Chamas RD 20), C-Ataq. +22 (Bote Devora-Olhos — 4d12+14 + Cegueira CD 29)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 8,
+          "AGI": 8,
+          "PRE": 9,
+          "INT": 5
+        }
+      },
+      "immunities": "Fogo, Calor, Cegueira, Ilusões, Escuridão, Venenos •",
+      "weakness": "Imobilidade de Olhos Fechados & Ferro Frio Submerso (quem permanece imóvel de olhos fechados sem respirar fumaça/pólvora torna-se invisível para o Boitatá)",
+      "offense": "Desloc.: 18 m (Escalada 15 m) • Ataques: Bote de Presas de Fogo-Fátuo +22 (4d12+14 fogo espiritual) e Constrição de Cinza Viva +21 (3d12+14 + queima 10 EA/rodada).",
+      "abilities": "Olhar dos Mil Sóis Mortos: Encarar o corpo do Boitatá exige Vontade CD 28 ou causa 3d10 luminoso/psíquico e Cegueira por 1d4 rodadas.",
+      "skills": "Percepção +28 (Visão 360°), Furtividade +20, Ocultismo +22, Iniciativa +24",
+      "tactics": "Caça qualquer grupo que utilize armas incendiárias ou desmate áreas sagradas do Véu. Fig. B10 — A colossal serpente luminosa Boitatá erguendo-se em fogo-fátuo azul."
+    },
+    {
+      "num": 34,
+      "id": "tomo4_34",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Anárquico",
+      "title": "O Anfitrião do Salão de Gala Vilar",
+      "mda": "MDA 80%",
+      "mda_numeric": 80,
+      "nd": "ND 15",
+      "type": "Anomalia Biológica Aristocrática (Massacre da Mansão Vilar, Anos 1990)",
+      "origin": "Mansão Vilar (Crônica II)",
+      "territory": "Salão de Baile em Ruínas e Ala Leste da Mansão Vilar",
+      "virtue": "Elemento: Sangue, Osso & Música Dissonante • Virtude Corrompida: Orgulho/Caos",
+      "element": "Sangue, Osso & Música Dissonante",
+      "quote": "“A valsa de aniversário de Arthur nunca terminou. Sentem-se à mesa e cortem o bolo.”",
+      "description": "A abominação central nascida na noite do massacre da família Vilar nos anos 1990. Um ser esguio de quase três metros de altura, com musculatura cinzenta exposta e costelas abertas, que carrega uma caixa de música de latão e protege um macabro bolo de festa feito de carne e velas de osso no salão principal.",
+      "stats": {
+        "pv": "450",
+        "pd": "55",
+        "ea": "185",
+        "est": "22",
+        "rd": "14 (Costelas Entrelaçadas)",
+        "reactions": "Esq. +19 (7d20 — Passo de Valsa Distorcida), Bloq. +17, C-Ataq. +21 (Reverência Cortante — 3d12+14 + Sangramento)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 7,
+          "INT": 6
+        }
+      },
+      "immunities": "Medo, Dor, Sangramento, Efeitos Mentais de confusão •",
+      "weakness": "O Bolo de Carne & A Caixa de Música (destruir o bolo central causa 80 de dano psíquico imediato ao Anárquico; tocar a melodia invertida trava seus movimentos por 1 rodada)",
+      "offense": "Desloc.: 15 m • Ataques: Garras de Maestro +21 (3d12+14 cortante) e Espeto de Candelabro +20 (3d10+12 perfurante + 2d6 fogo).",
+      "abilities": "A Valsa Obrigatória da Meia-Noite: Enquanto a caixa de música toca, todos no salão devem passar em Vontade CD 26 ou gastam sua ação de movimento dançando até o Anárquico.",
+      "skills": "Acrobacia +22, Luta +21, Intimidação +23, Atuação +25",
+      "tactics": "Preso ao perímetro da Mansão Vilar; reconstrói obsessivamente a festa de gala usando invasores. Fig. B11 — O Anárquico exibindo sua caixa torácica aberta no salão da Mansão Vilar."
+    },
+    {
+      "num": 35,
+      "id": "tomo4_35",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Eco",
+      "title": "O Predador Acústico das Minas Vilar",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Anomalia Cavernícola Cega (Mineiro Transmutado pelo Véu)",
+      "origin": "Minas Subterrâneas da Família Vilar (Crônica II)",
+      "territory": "Túneis de Mineração, Cavernas Alagadas e Subsolos da Mansão",
+      "virtue": "Elemento: Sombra, Rocha & Ressonância Acústica • Virtude Corrompida: Medo",
+      "element": "Sombra, Rocha & Ressonância Acústica",
+      "quote": "“Se você ouviu sua mãe te chamando no escuro da mina... não responda. Ele acabou de aprender o timbre da sua voz.”",
+      "description": "Criatura pálida, cega e esguia originada dos antigos trabalhadores soterrados nas minas de minério de ressonância abaixo da propriedade Vilar. Possui audição radar perfeita e um saco vocal capaz de gravar e reproduzir os últimos pedidos de socorro de suas vítimas para atrair grupos para emboscadas no escuro.",
+      "stats": {
+        "pv": "310",
+        "pd": "45",
+        "ea": "120",
+        "est": "16",
+        "rd": "10 (Pele Calcificada de Quartzo)",
+        "reactions": "Esq. +20 (7d20 no escuro total), Bloq. +14, C-Ataq. +19 (Salto na Jugular — 3d10+12)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 5,
+          "AGI": 8,
+          "PRE": 5,
+          "INT": 4
+        }
+      },
+      "immunities": "Cegueira, Escuridão Total, Ilusões Visuais, Gases de mina •",
+      "weakness": "Sobrecarga Sônica / Sinos de Bronze e Granadas Acústicas (qualquer estrondo acima de 120 dB causa 4d12 de dano direto ao Eco e o deixa Atordoado por 2 rodadas)",
+      "offense": "Desloc.: 12 m (Escalada em tetos de caverna 15 m) • Ataques: Mordida Laringeal +19 (3d10+10 + Silenciar por 2 rodadas) e 2 Garras de Sílex +18 (2d10+10).",
+      "abilities": "Mimetismo Vocal Perfeito: Reproduz a voz exata de um aliado separado do grupo (Intuição CD 26).",
+      "skills": "Percepção (Audição) +28, Furtividade +24, Enganação (Imitar Voz) +24, Acrobacia +20",
+      "tactics": "Caça estritamente pela Stalker AI nas galerias subterrâneas. Fig. B12 — O Eco espreitando nas galerias escuras das Minas Vilar."
+    },
+    {
+      "num": 36,
+      "id": "tomo4_36",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Corpo-Seco",
+      "title": "O Rejeitado pelo Céu e pela Terra",
+      "mda": "MDA 72%",
+      "mda_numeric": 72,
+      "nd": "ND 13",
+      "type": "Cadáver Incorrupto Amaldiçoado (Folclore Brasileiro & Vera Cruz)",
+      "origin": "Cemitérios Coloniais & Floresta Negra (Tomo II)",
+      "territory": "Troncos Secos, Estradas Abandonadas e Taperas",
+      "virtue": "Elemento: Cinza, Terra Seca & Peste • Virtude Corrompida: Crueldade/Egoísmo",
+      "element": "Cinza, Terra Seca & Peste",
+      "quote": "“Nem Deus o quis no alto, nem o Diabo o aceitou no fogo, e até os vermes da terra vomitaram sua carne.”",
+      "description": "Homem que em vida espancou a própria mãe e cometeu tamanha ruindade que a própria terra o expeliu da cova. Seu corpo mumificado agarra-se aos troncos à beira das trilhas; quando um viajante passa, salta para as costas da vítima, cravando unhas de madeira petrificada para secar todo o sangue e a umidade vital.",
+      "stats": {
+        "pv": "340",
+        "pd": "45",
+        "ea": "130",
+        "est": "20",
+        "rd": "15 (Carne Mumificada Imune a Perfuração)",
+        "reactions": "Esq. +16, Bloq. +18, C-Ataq. +19 (Abraço Desidratante 3d10+10)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 6,
+          "PRE": 5,
+          "INT": 4
+        }
+      },
+      "immunities": "Necrose, Veneno, Doença, Sufocamento, Armas perfurantes (balas e flechas atravessam sem efeito) •",
+      "weakness": "Fogo Bento & Três Estacas de Aroeira Benzida (chamas sagradas ignoram sua RD; pregado ao chão com aroeira benzida, não consegue se levantar)",
+      "offense": "Desloc.: 9 m (Escalada em árvores 15 m) • Ataques: Unhas de Casca Seca +19 (2d12+10 cortante) e Parasitismo Dorsal +20 (Agarra nas costas; drena 3d10 PV e 5 EA por rodada).",
+      "abilities": "Aura de Seca Mortal (Raio 6m): Evapora água em cantis e impõe -2 em Fortitude por desidratação severa.",
+      "skills": "Furtividade (Camuflagem em Troncos) +24, Atletismo +20, Fortitude +21",
+      "tactics": "Permanece imóvel por meses fingindo ser um galho morto até sentir o calor de sangue humano. Fig. B13 — O Corpo-Seco expelido da cova, de epiderme ressecada como casca de árvore."
+    },
+    {
+      "num": 37,
+      "id": "tomo4_37",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "A Matinta Perera",
+      "title": "A Bruxa do Assobio da Meia- Noite",
+      "mda": "MDA 68%",
+      "mda_numeric": 68,
+      "nd": "ND 11",
+      "type": "Entidade Folclórica Metamórfica (Bruxa Aviária Noturna)",
+      "origin": "Amazônia & Povoado de Nova Caronte (Tomo II)",
+      "territory": "Telhados de Vilas, Manguezais e Copas da Floresta Negra",
+      "virtue": "Elemento: Sombra, Névoa & Sangue • Virtude Corrompida: Medo/Ambição",
+      "element": "Sombra, Névoa & Sangue",
+      "quote": "“Quem prometeu fumo e café para ela à meia-noite, é bom estar de pé na porta às seis da manhã.”",
+      "description": "Anciã amaldiçoada que à noite transmuta-se num corvo-rasga-mortalha gigante ou bruxa alada de asas esfarrapadas. Pousa sobre os telhados emitindo um assobio estridente que paralisa famílias inteiras de pavor até que alguém grite uma promessa de oferenda para o amanhecer.",
+      "stats": {
+        "pv": "275",
+        "pd": "40",
+        "ea": "165",
+        "est": "22",
+        "rd": "10 (Penas de Sombra)",
+        "reactions": "Esq. +21 (7d20 em voo), Bloq. +12, C-Ataq. +18 (Rasgo de Mortalha — 3d10+8 + 1d4 EST)",
+        "attributes": {
+          "FOR": 4,
+          "VIG": 5,
+          "AGI": 8,
+          "PRE": 7,
+          "INT": 6
+        }
+      },
+      "immunities": "Medo, Queda, Escuridão •",
+      "weakness": "A Promessa da Manhã & Tesoura de Ferro Aberta em Cruz (prometer café/tabaco obriga-a a cessar o ataque e voltar ao amanhecer na forma de uma velha com RD 0 e metade dos PV)",
+      "offense": "Desloc.: 9 m, Voo 24 m • Ataques: Garras de Rasga-Mortalha +19 (3d10+9 cortante) e Assobio que Rasga o Véu (Raio 30m, Vontade CD 25 ou 3d8 espiritual + 3 de perda de EST).",
+      "abilities": "Transmissão do Fardo: Quando está à beira da morte, pergunta 'Quem quer?'; quem responder 'Eu quero' recebe a maldição.",
+      "skills": "Furtividade +22, Ocultismo +20, Intimidação +22, Enganação +20",
+      "tactics": "Vive infiltrada entre moradores comuns durante o dia; à noite caça nos limites de Nova Caronte. Fig. B14 — A Matinta Perera em sua forma noturna sobre os telhados de Nova Caronte."
+    },
+    {
+      "num": 38,
+      "id": "tomo4_38",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Capelobo",
+      "title": "O Híbrido Sugador de Cérebros",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Besta Híbrida Folclórica (Maranhão/Pará & Floresta Negra)",
+      "origin": "Norte do Brasil & Ilha da Floresta Negra (Tomo II)",
+      "territory": "Trilhas de Caçadores e Acampamentos Noturnos",
+      "virtue": "Elemento: Sangue & Osso • Virtude Ressonante: Fúria/Fome",
+      "element": "Sangue & Osso",
+      "quote": "“Nenhum osso quebrado do pescoço para baixo. Só um furo limpo no topo do crânio, completamente vazio por dentro.”",
+      "description": "Monstruosidade noturna com torso humanoide musculoso, patas de cascos redondos e cabeça alongada de tamanduá-bandeira descomunal. Abraça suas vítimas com força esmagadora e introduz sua língua cilíndrica e óssea pelo ouvido ou fontanela para sugar o cérebro e a Energia de Alma em segundos.",
+      "stats": {
+        "pv": "360",
+        "pd": "45",
+        "ea": "110",
+        "est": "16",
+        "rd": "12 (Couro Espesso de Cerdas Duras)",
+        "reactions": "Esq. +15, Bloq. +19 (Abraço de Tamanduá RD 20), C-Ataq. +20 (Agarrão Esmagador 3d12+12)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 7,
+          "AGI": 6,
+          "PRE": 5,
+          "INT": 2
+        }
+      },
+      "immunities": "Faro Cego (enxerga pelo cheiro de Energia de Alma e massa encefálica) •",
+      "weakness": "O Umbigo Exposto (ataques mirados na região umbilical com -3 de penalidade ignoram toda a RD e causam Crítico automático)",
+      "offense": "Desloc.: 15 m • Ataques: 2 Garras Curvas de Tamanduá +20 (3d10+12 cortante + Agarrar automático se ambas acertarem) e Sonda Craniana (+22 em alvo agarrado, 4d12 perfurante + Dreno de 2 INT e 15 EA).",
+      "abilities": "Silêncio de Casco Redondo: Seus rastros parecem fundos de garrafa na lama (+8 na CD de Sobrevivência para rastreá-lo).",
+      "skills": "Atletismo +22, Furtividade +19, Percepção +21, Luta +20",
+      "tactics": "Atrai cães de caça para longe dos acampamentos antes de emboscar os humanos. Fig. B15 — O Capelobo exibindo suas garras curvas de tamanduá- gigante e focinho alongado."
+    },
+    {
+      "num": 39,
+      "id": "tomo4_39",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Curupira Ancestral",
+      "title": "O Senhor dos Calcanhares Invertidos",
+      "mda": "MDA 78%",
+      "mda_numeric": 78,
+      "nd": "ND 15",
+      "type": "Lenda Folclórica Soberana (Espírito Guardião da Floresta)",
+      "origin": "Florestas Tropicais do Brasil & Vera Cruz das Almas (Tomo II)",
+      "territory": "Interior Profundo da Floresta Negra",
+      "virtue": "Justiça/Fúria Natural",
+      "element": "Brasa, Madeira & Sangue Selvagem",
+      "quote": "“Quanto mais você segue as pegadas dele para sair da mata, mais fundo você entra na barriga dela.”",
+      "description": "Guerreiro silvestre feroz de cabelos de brasa crepitante, dentes tingidos de clorofila e sangue, e pés voltados para trás que distorcem a geometria da floresta. Bate nos troncos de sapopema para testar a resistência da mata antes das tempestades e enlouquece caçadores predatórios.",
+      "stats": {
+        "pv": "430",
+        "pd": "60",
+        "ea": "210",
+        "est": "28",
+        "rd": "14",
+        "reactions": "Esq. +22 (8d20 — Labirinto Vivo), Bloq. +18, C-Ataq. +22 (Lança de Tucumã — 3d12+14)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 9,
+          "PRE": 8,
+          "INT": 6
+        }
+      },
+      "immunities": "Labirintos, Terreno difícil, Fogo, Venenos naturais, Armadilhas •",
+      "weakness": "Nó de Cipó Cego & Oferenda de Fumo de Rolo (encontrar um cipó amarrado com a ponta escondida obriga-o a gastar 1d4 rodadas tentando desatar o nó)",
+      "offense": "Desloc.: 18 m • Ataques: Azagaia de Osso e Brasa +22 (3d12+14 perfurante/fogo) e Toque no Tronco de Sapopema (Onda sônica em cone de 15m: 4d10 + Derrubar CD 27).",
+      "abilities": "Geometria dos Pés Invertidos: Quem tenta fugir sem passar em Sobrevivência/Vontade CD 28 corre na direção oposta, terminando o turno adjacente a ele.",
+      "skills": "Sobrevivência +28, Furtividade +25, Enganação +24, Luta +22",
+      "tactics": "Monta queixadas gigantes encouraçados; pune com a morte quem mata fêmeas prenhes ou filhotes. Fig. B16 — O Curupira Ancestral espreitando entre as raízes de sapopema."
+    },
+    {
+      "num": 40,
+      "id": "tomo4_40",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Boto Carniceiro",
+      "title": "O Galanteador das Águas Turvas",
+      "mda": "MDA 65%",
+      "mda_numeric": 65,
+      "nd": "ND 10",
+      "type": "Lenda Metamórfica Fluvial/Costeira",
+      "origin": "Bacia Amazônica & Porto de Nova Caronte (Tomo II)",
+      "territory": "Cais, Festas Portuárias e Canais de Nova Caronte",
+      "virtue": "Elemento: Sal, Sangue & Ilusão • Virtude Corrompida: Ambição/Sedução",
+      "element": "Sal, Sangue & Ilusão",
+      "quote": "“Nunca dance com um estranho de terno branco que não tira o chapéu nem dentro da igreja.”",
+      "description": "Predador anfíbio que assume a forma de um homem elegante vestido de linho branco nas noites de festa portuária. Usa um chapéu panamá para esconder o espiráculo pulsante no topo do crânio. Atrai vítimas isoladas para a beira do cais antes de revelar oitenta dentes cônicos e arrastá-las para o fundo.",
+      "stats": {
+        "pv": "260",
+        "pd": "40",
+        "ea": "135",
+        "est": "20",
+        "rd": "10",
+        "reactions": "Esq. +18, Bloq. +15, C-Ataq. +18 (Arrasto para o Cais — 3d10+10 + Submersão)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 7,
+          "PRE": 8,
+          "INT": 5
+        }
+      },
+      "immunities": "Afogamento, Charme, Frio aquático •",
+      "weakness": "Arrancar o Chapéu (manobra CD 22 que arranque seu chapéu expõe o espiráculo craniano, quebrando seu glamour ilusório e deixando-o vulnerável a críticos em 16-20)",
+      "offense": "Desloc.: 12 m, Natação 24 m • Ataques: Mordida Cetácea +18 (3d10+10 perfurante + Agarrar) e Estocada de Bengala-Estoque +18 (2d10+8).",
+      "abilities": "Valsa Hipnótica do Porto: Alvo que dance com ele por 1 minuto deve passar em Vontade CD 24 ou segue-o voluntariamente até a água.",
+      "skills": "Enganação +24, Diplomacia +22, Furtividade +18, Atletismo +19",
+      "tactics": "Frequenta tavernas de Nova Caronte e bailes de navios; alimenta-se de sangue e memórias afetivas. Fig. B17 — A verdadeira anatomia anfíbia do Boto Carniceiro após perder o disfarce humano."
+    },
+    {
+      "num": 41,
+      "id": "tomo4_41",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "A Iara Decaída",
+      "title": "A Sereia das Mandíbulas Abissais",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Lenda Aquática Corrompida",
+      "origin": "Rios Brasileiros & Lagoas de Vera Cruz das Almas (Tomo II)",
+      "territory": "Cachoeiras, Recifes Costeiros e Galeria Submersa",
+      "virtue": "Elemento: Água, Espelho & Som • Virtude Corrompida: Orgulho/Sedução",
+      "element": "Água, Espelho & Som",
+      "quote": "“O canto dela não promete amor. Promete que a água no seu pulmão vai parecer ar puro.”",
+      "description": "Acima da superfície da água, projeta o reflexo de uma mulher de beleza hipnótica penteando cabelos negros com espinhas de peixe douradas. Sob a linha d'água, sua verdadeira anatomia revela uma cauda couraçada de escamas vermelhas e uma mandíbula bipartida de peixe-víbora abissal.",
+      "stats": {
+        "pv": "310",
+        "pd": "45",
+        "ea": "175",
+        "est": "24",
+        "rd": "12 (Escamas de Pirarucu Anímico)",
+        "reactions": "Esq. +19 (na água +23), Bloq. +15, C-Ataq. +19 (Cabelos Constritores 3d10+10)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 8,
+          "PRE": 9,
+          "INT": 6
+        }
+      },
+      "immunities": "Afogamento, Sônico, Encantamento •",
+      "weakness": "Quebrar o Espelho d'Água & Combate em Terra Seca (fora d'água seu deslocamento cai para 3m e perde 4 de Esquiva)",
+      "offense": "Desloc.: 3 m em terra, Natação 27 m • Ataques: Cabelos de Anzol +19 (Alcance 6m, 2d12+10 + Puxar 6m para a água) e Mordida Abissal +20 (3d12+12 em alvo submerso).",
+      "abilities": "Canto da Submersão Voluntária (Raio 45m): Vontade CD 26 ou a vítima caminha para o fundo da água e inspira líquido voluntariamente.",
+      "skills": "Atuação (Canto) +26, Enganação +22, Atletismo (Natação) +24, Ocultismo +19",
+      "tactics": "Guarda entradas submersas para templos antigos e coleciona joias dos afogados. Fig. B18 — A Iara Decaída revelando suas garras e feições predatórias subaquáticas."
+    },
+    {
+      "num": 42,
+      "id": "tomo4_42",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "A Mula-Sem-Cabeça",
+      "title": "A Fornalha Viva do Galope",
+      "mda": "MDA 74%",
+      "mda_numeric": 74,
+      "nd": "ND 13",
+      "type": "Maldição Folclórica Ígnea",
+      "origin": "Interior Colonial Brasileiro & Vera Cruz (Tomo II)",
+      "territory": "Encruzilhadas, Sete Freguesias e Estradas de Terra à Noite",
+      "virtue": "Elemento: Brasa, Cinza & Ferro em Brasa • Virtude Corrompida: Culpa/Fúria",
+      "element": "Brasa, Cinza & Ferro em Brasa",
+      "quote": "“O relincho dela vem de uma garganta que não existe, mas faz chorar quem ouve.”",
+      "description": "Nascida da quebra de votos sagrados nas noites de quinta para sexta-feira, esta besta negra de porte colossal galopa pelas estradas com ferraduras de prata e aço em brasa. Onde deveria estar a cabeça, jorra uma coluna vulcânica de labaredas presa por um freio de ferro espiritual invisível.",
+      "stats": {
+        "pv": "390",
+        "pd": "50",
+        "ea": "160",
+        "est": "18",
+        "rd": "14 (Pelo de Carvão Incandescente)",
+        "reactions": "Esq. +17, Bloq. +18, C-Ataq. +21 (Coice de Ferradura de Prata — 4d10+14)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 8,
+          "AGI": 7,
+          "PRE": 6,
+          "INT": 3
+        }
+      },
+      "immunities": "Fogo, Medo, Decapitação, Cegueira •",
+      "weakness": "Tirar o Freio de Ferro ou Sangrar com Agulha Virgem (Luta/Acrobacia CD 25 para puxar o freio invisível ou espetá-la com ferro virgem tirando uma gota de sangue quebra a maldição)",
+      "offense": "Desloc.: 24 m • Ataques: Atropelamento de Cascos de Prata +21 (4d10+14 contundente/fogo) e Jato da Garganta Vulcânica (Cone 9m, 4d12 fogo espiritual, CD 26 Reflexos).",
+      "abilities": "Faro por Unhas e Dentes Brancos: Enxerga no escuro pelo brilho de unhas, dentes ou metais expostos; quem se esconde de bruços ganha +10 em Furtividade.",
+      "skills": "Atletismo +24, Percepção +20, Intimidação +22, Fortitude +22",
+      "tactics": "Corre sete freguesias antes do cantar do galo; na forma humana diurna não se lembra do que matou. Fig. B19 — O galope flamejante da Mula-Sem-Cabeça com cascos de prata em brasa."
+    },
+    {
+      "num": 43,
+      "id": "tomo4_43",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Mímico Genético",
+      "title": "O Duplo de Carne de Nova Caronte",
+      "mda": "MDA 65%",
+      "mda_numeric": 65,
+      "nd": "ND 11",
+      "type": "Anomalia Metamórfica (Experimento Descartado de Nácar)",
+      "origin": "Cidadela de Nácar & Povoado de Nova Caronte (Crônica I / Tomo II)",
+      "territory": "Ruas de Nova Caronte, Abrigos de Sobreviventes e Navios",
+      "virtue": "Elemento: Sangue, Carne & Memória Celular • Virtude Corrompida: Engano",
+      "element": "Sangue, Carne & Memória Celular",
+      "quote": "“Ele tinha a voz do piloto, a aliança do piloto e a cicatriz no queixo. Só não sabia para que servia um garfo.”",
+      "description": "Subproduto dos experimentos de clonagem da Cidadela de Nácar jogado nas águas de Nova Caronte. Ao consumir sangue ou tecido de uma vítima, remodela seus ossos e cordas vocais para assumir a aparência exata da pessoa, infiltrando-se em grupos de sobreviventes para devorá-los um a um.",
+      "stats": {
+        "pv": "290",
+        "pd": "45",
+        "ea": "120",
+        "est": "18",
+        "rd": "10 (Carne Maleável)",
+        "reactions": "Esq. +18, Bloq. +16 (Endurecimento Ósseo RD 16), C-Ataq. +19 (Lâmina de Osso Exposto 3d10+11)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 7,
+          "AGI": 7,
+          "PRE": 6,
+          "INT": 5
+        }
+      },
+      "immunities": "Acerto Crítico convencional (órgãos móveis), Venenos •",
+      "weakness": "Fogo, Eletricidade & Falha Comportamental (+50% dano de fogo/choque; não absorve memórias antigas de infância, podendo ser desmascarado com Investigação/Intuição CD 20)",
+      "offense": "Desloc.: 12 m (Escalada 9 m) • Ataques: Tentáculo de Biomassa +19 (3d10+11 + Assimilar DNA) e Mordida Peitoral +19 (4d10+10 em alvo surpreendido).",
+      "abilities": "Cópia Celular Instantânea: Após causar dano de mordida, assume a face e o cheiro exato do alvo atingido.",
+      "skills": "Enganação +25, Furtividade +21, Luta +19, Acrobacia +18",
+      "tactics": "Caça em Nova Caronte fingindo ser passageiros sobreviventes de voos recém-caídos. Fig. B20 — O Mímico Genético em colapso celular ao ser exposto ao fogo."
+    },
+    {
+      "num": 44,
+      "id": "tomo4_44",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Predador da Casta Escamosa",
+      "title": "Sauriano da Ilha Canibal",
+      "mda": "MDA 62%",
+      "mda_numeric": 62,
+      "nd": "ND 10",
+      "type": "Híbrido Reptiliano-Humano / Terópode Evoluído pelo Véu",
+      "origin": "Ilha Canibal / Arquipélago de Vera Cruz das Almas (Crônica I)",
+      "territory": "Selvas Vulcânicas e Aldeias de Ossos da Ilha Canibal",
+      "virtue": "Elemento: Sangue Quente & Osso • Virtude Ressonante: Fúria/Sobrevivência",
+      "element": "Sangue Quente & Osso",
+      "quote": "“Na terceira ilha, a evolução não escolheu os mamíferos.”",
+      "description": "Na Ilha Canibal, a fauna pré- histórica preservada pelo Véu fundiu-se a náufragos ao longo dos séculos, originando uma sociedade tribal de castas híbridas entre humanos e terópodes escamosos. Caçam em matilhas coordenadas usando armadilhas de fosso e rituais antropofágicos para absorver a Energia de Alma de forasteiros.",
+      "stats": {
+        "pv": "250",
+        "pd": "35",
+        "ea": "90",
+        "est": "16",
+        "rd": "10 (Escamas Osteodérmicas)",
+        "reactions": "Esq. +19 (6d20), Bloq. +15, C-Ataq. +18 (Garra falciforme traseira 3d10+10)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 8,
+          "PRE": 4,
+          "INT": 4
+        }
+      },
+      "immunities": "Medo quando em bando (3+ indivíduos) •",
+      "weakness": "Frio Intenso & Morte do Alfa da Casta (frio reduz AGI em -2; se o Xamã-Alfa cai, os demais testam Vontade CD 20 ou recuam)",
+      "offense": "Desloc.: 18 m (Salto 9 m) • Ataques: Lança Serrilhada de Osso +18 (2d12+10) e Garra de Raptor +19 (3d10+10 + Sangramento 1d8).",
+      "abilities": "Tática de Matilha Coordenada: Recebe +3 de ataque e +2d6 de dano quando flanqueia o mesmo alvo com outro membro da casta.",
+      "skills": "Sobrevivência +20, Furtividade +20, Atletismo +21, Luta +18",
+      "tactics": "Operam em bandos de 4 a 8 batedores nas fronteiras da Ilha Canibal. Fig. B21 — Predador veloz de garras falciformes da Ilha Canibal."
+    },
+    {
+      "num": 45,
+      "id": "tomo4_45",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Tirano-Rei da Ilha Canibal",
+      "title": "O Colosso Sauriano do Véu",
+      "mda": "MDA 82%",
+      "mda_numeric": 82,
+      "nd": "ND 16",
+      "type": "Besta Colossal Mutada pelo Véu (Deus Vivo das Castas Canibais)",
+      "origin": "Cratera Central da Ilha Canibal (Crônica I)",
+      "territory": "Vale Vulcânico da Ilha Canibal",
+      "virtue": "Elemento: Osso, Sangue & Cinza Vulcânica • Virtude Ressonante: Fúria Bruta",
+      "element": "Osso, Sangue & Cinza Vulcânica",
+      "quote": "“Eles tocam os tambores de fêmur humano não para nos assustar, mas para chamar o que mora na cratera.”",
+      "description": "O topo da cadeia alimentar da Ilha Canibal: um predador sauriano encouraçado de doze metros de comprimento, mutado por séculos de exposição direta às fendas de Energia de Alma do vulcão central. As castas híbridas da ilha o veneram como encarnação divina da fome, oferecendo-lhe prisioneiros em altares de pedra.",
+      "stats": {
+        "pv": "690",
+        "pd": "60",
+        "ea": "150",
+        "est": "24",
+        "rd": "20 (Carapaça Dorsal de Espinhos Ósseos)",
+        "reactions": "Esq. +10, Bloq. +23, C-Ataq. +23 (Abocanhar e Sacudir — 5d12+18)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 10,
+          "AGI": 4,
+          "PRE": 7,
+          "INT": 2
+        }
+      },
+      "immunities": "Medo, Armas leves, Venenos, Terreno vulcânico •",
+      "weakness": "Foco pelo Movimento e Cheiro de Sangue (granadas de fumaça química misturadas com amônia cegam seu olfato por 2 rodadas)",
+      "offense": "Desloc.: 15 m • Ataques: Mordida de Tirano +24 (5d12+18 perfurante/contundente + Engolir CD 30) e Varredura de Cauda +22 (4d10+16 em cone traseiro de 9m).",
+      "abilities": "Rugido Sísmico da Cratera: Derruba todos os alvos a 15m que falharem em Fortitude CD 28.",
+      "skills": "Atletismo +27, Percepção +22, Intimidação +26, Fortitude +27",
+      "tactics": "Soberano territorial da terceira ilha de Vera Cruz das Almas. Fig. B22 — O Colosso Sauriano venerado pelas tribos da Ilha Canibal."
+    },
+    {
+      "num": 46,
+      "id": "tomo4_46",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "Nobre Bioluminescente",
+      "title": "Patrulheiro da Cidadela de Nácar",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Humano Hiper-Evoluído (Aristocracia Genética de Nácar)",
+      "origin": "Cidadela de Nácar / Arquipélago de Vera Cruz (Crônica I)",
+      "territory": "Torres de Pérola, Fronteiras de Nácar e Expedições de Coleta",
+      "virtue": "Ambição/Orgulho",
+      "element": "Vidro, Pérola & Bioeletricidade",
+      "quote": "“Vocês do mundo exterior ainda envelhecem, apodrecem e morrem no escuro. Que existência pitoresca.”",
+      "description": "Descendentes dos cientistas e nobres que se isolaram na Cidadela de Nácar após 1500. Através de séculos de eugenia anímica e enxertos de fauna abissal, possuem pele perolada com veias bioluminescentes, guelras retráteis e armaduras simbióticas de madrepérola viva.",
+      "stats": {
+        "pv": "320",
+        "pd": "55",
+        "ea": "190",
+        "est": "26",
+        "rd": "16 (Couraça Simbiótica de Madrepérola)",
+        "reactions": "Esq. +19, Bloq. +20 (Escudo Bioelétrico RD 20), C-Ataq. +20 (Lança de Coral Voltaico 3d12+12)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 6,
+          "AGI": 8,
+          "PRE": 7,
+          "INT": 8
+        }
+      },
+      "immunities": "Pressão Abissal, Eletricidade, Afogamento, Doenças mundanas •",
+      "weakness": "Vírus Necróticos da Floresta Negra (sua genética hiper-refinada sofre dano dobrado de toxinas folclóricas e do Corpo-Seco)",
+      "offense": "Desloc.: 12 m, Natação 18 m • Ataques: Alabarda de Nácar Voltaica +20 (3d12+12 elétrico/espiritual) ou Feixe de Sinapse (Distância 30m, +20, 3d10 + Paralisia CD 26).",
+      "abilities": "Sobrecarga de Bioluminescência: Cega inimigos a 6m por 1 rodada (Reflexos CD 25) e restaura 20 PV da própria armadura viva.",
+      "skills": "Ocultismo/Ciência +23, Pontaria +20, Luta +20, Intimidação +21",
+      "tactics": "Raptam Despertos de Nova Caronte para extrair suas Virtudes de Alma em laboratório. Fig. B23 — Patrulheiro aristocrata de Nácar com armadura viva e tridente bioelétrico."
+    },
+    {
+      "num": 47,
+      "id": "tomo4_47",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Reflexo da Galeria & os Zumbis de Sangue Vilar",
+      "title": "",
+      "mda": "MDA 50%",
+      "mda_numeric": 50,
+      "nd": "ND 7",
+      "type": "Anomalias Residenciais (Ecos de Espelho e Cadáveres Coagulados)",
+      "origin": "Mansão Vilar (Crônica II)",
+      "territory": "Galeria de Espelhos, Porões e Corredores da Mansão Vilar",
+      "virtue": "Elemento: Vidro, Espelho & Sangue Coagulado • Virtude Corrompida: Medo/Culpa",
+      "element": "Vidro, Espelho & Sangue Coagulado",
+      "quote": "“Seu reflexo no espelho piscou meio segundo depois de você.”",
+      "description": "Na Mansão Vilar, os convidados assassinados nos anos 1990 levantaram-se como Zumbis de Sangue — cadáveres em trajes de gala cujas feridas jorram chicotes de sangue coagulado — enquanto os espelhos da galeria aprisionaram os espíritos em Ruptura, criando Reflexos capazes de puxar os vivos para dentro do vidro.",
+      "stats": {
+        "pv": "175",
+        "pd": "25",
+        "ea": "80",
+        "est": "12",
+        "rd": "8 (Vidro/Coágulo)",
+        "reactions": "Esq. +15, Bloq. +14, C-Ataq. +15 (Estilhaço de Espelho 2d10+8)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 5,
+          "AGI": 6,
+          "PRE": 5,
+          "INT": 3
+        }
+      },
+      "immunities": "Sangramento, Medo, Exaustão •",
+      "weakness": "Cobrir ou Despedaçar Espelhos com Ferro Frio (Reflexos) / Fogo e Sal Grosso (Zumbis de Sangue)",
+      "offense": "Desloc.: 12 m (Teleporte entre espelhos da mesma sala) • Ataques: Garra de Vidro Espelhado / Chicote de Coágulo +15 (2d10+8 cortante + Puxar para o Espelho CD 21).",
+      "abilities": "Troca de Lado no Espelho: Se um personagem falhar em Vontade CD 21 ao ser agarrado junto a uma moldura, fica preso dentro do espelho enquanto o Reflexo assume seu corpo.",
+      "skills": "Furtividade +18, Luta +15, Percepção +14",
+      "tactics": "Encontrados em grupos de 3 a 6 indivíduos nos corredores da Mansão Vilar. Fig. B24 — O Reflexo emergindo da moldura espelhada na galeria da Mansão Vilar."
+    },
+    {
+      "num": 48,
+      "id": "tomo4_48",
+      "category": "vera_cruz_vilar",
+      "category_label": "Cânone Principal (Triângulo, Vera Cruz & Vilar)",
+      "name": "O Anhangá de Cinza & o Bradador dos Campos",
+      "title": "",
+      "mda": "MDA 72%",
+      "mda_numeric": 72,
+      "nd": "ND 13",
+      "type": "Lenda Folclórica Indígena e Sulista (Espírito de Fogo-Fátuo e Brado Mortal)",
+      "origin": "Sertões, Campos Gerais e Matas do Brasil (Tomo II Expandido)",
+      "territory": "Cerrados, Pampas Nebulosos e Fronteiras Rurais do Véu",
+      "virtue": "Elemento: Cinza, Fogo & Vento Cortante • Virtude Ressonante: Tormento/Justiça",
+      "element": "Cinza, Fogo & Vento Cortante",
+      "quote": "“Ao pôr do sol das sextas-feiras, o grito do Bradador rasga o capim e o espírito de brasa traz a febre da morte.”",
+      "description": "Duas manifestações registradas pelos Bandeirantes do Véu: o Anhangá surge envolto em fogo-fátuo induzindo febre delirante e alucinações mortais em quem fere a fauna; já o Bradador é o espírito seco de um homem enterrado sem absolvição que corre pelos campos às sextas-feiras emitindo sete brados capazes de estourar os tímpanos e o espírito.",
+      "stats": {
+        "pv": "350",
+        "pd": "50",
+        "ea": "170",
+        "est": "24",
+        "rd": "13",
+        "reactions": "Esq. +19, Bloq. +16, C-Ataq. +19 (Investida de Brasa 3d12+12)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 8,
+          "INT": 5
+        }
+      },
+      "immunities": "Medo, Fogo, Ilusões, Desorientação •",
+      "weakness": "Respeito ao Tabu de Caça (Anhangá) / Cortar a Sétima Camisa de Vento com Adaga Benzida (Bradador)",
+      "offense": "Desloc.: 21 m • Ataques: Investida de Brasa Espiritual +20 (3d12+12 fogo) e O Sétimo Brado do Campo (Raio 24m, 4d10 sônico/espiritual + perda de 1d4 EST, CD 26 Vontade).",
+      "abilities": "Febre do Anhangá: Quem o fere com arma letal deve passar em Vontade CD 26 ou enxerga seus aliados como monstros famintos por 2 rodadas.",
+      "skills": "Percepção +22, Intimidação +24, Sobrevivência +22, Atletismo +21",
+      "tactics": "Surgem nas zonas rurais onde o Véu se adelgaça após queimadas. Fig. B25 — Manifestação espectral luminosa do Anhangá nos campos queimados. C. LENDAS DESCONHECIDAS E OBSCURAS DE TODOS OS PAÍSES (ARQUIVOS GLOBAIS DA A.E.G.I.S.)"
+    },
+    {
+      "num": 49,
+      "id": "tomo4_49",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Nuckelavee",
+      "title": "O Demônio Sem Pele do Mar do Norte",
+      "mda": "MDA 88%",
+      "mda_numeric": 88,
+      "nd": "ND 17",
+      "type": "Lenda Abissal Escocesa/Orcadiana (Cavalo-e-Cavaleiro Fundidos)",
+      "origin": "Ilhas Órcades (Escócia) / Atlântico Norte",
+      "territory": "Praias Rochosas, Pântanos Costeiros e Tempestades de Sal",
+      "virtue": "Elemento: Sal Negro, Peste & Sangue Exposto • Virtude Corrompida: Fúria/Pestilência",
+      "element": "Sal Negro, Peste & Sangue Exposto",
+      "quote": "“Seu hálito murcha as colheitas, apodrece o gado no pasto e faz o mar ferver em sangue negro.”",
+      "description": "O demônio folclórico mais letal das Ilhas do Norte. Cavalo e cavaleiro formam uma única abominação fundida na carne viva, desprovida de pele: músculos vermelhos pulsantes, tendões amarelados e veias de sangue negro correm à mostra. O torso humanoide brota diretamente do dorso equino com braços longos que arrastam no chão.",
+      "stats": {
+        "pv": "640",
+        "pd": "65",
+        "ea": "210",
+        "est": "28",
+        "rd": "18 (Musculatura Abissal Densa)",
+        "reactions": "Esq. +16, Bloq. +22, C-Ataq. +24 (Arrastão de Garras Longas — 4d12+16 + Infecção Negra)",
+        "attributes": {
+          "FOR": 9,
+          "VIG": 9,
+          "AGI": 6,
+          "PRE": 8,
+          "INT": 4
+        }
+      },
+      "immunities": "Água Salgada, Frio Polar, Venenos, Doenças, Dor, Sangramento •",
+      "weakness": "Água Doce Corrente & Chuva Forte (tem pavor absoluto de água doce pura; não pode atravessar um riacho e jatos de água doce queimam sua carne sem pele causando 4d10 de dano e anulando sua RD)",
+      "offense": "Desloc.: 18 m, Natação no mar 24 m • Ataques: 2 Garras que Arrastam no Chão +24 (Alcance 4,5m, 4d12+16 cortante) e Mordida Ciclópica Equina +23 (4d10+15).",
+      "abilities": "Sopro de Mortandade (Cone 18m): Vapor negro pestilento que causa 5d10 necrótico/venenoso e reduz o VIG dos alvos em -2 (Fortitude CD 30).",
+      "skills": "Atletismo +26, Intimidação +26, Luta +24, Fortitude +25",
+      "tactics": "Solta-se nas tempestades de inverno do Atlântico Norte. Fig. B26 — A monstruosidade equino-humanoide Nuckelavee em investida costeira."
+    },
+    {
+      "num": 50,
+      "id": "tomo4_50",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Gashadokuro",
+      "title": "O Colosso dos Ossos Famintos",
+      "mda": "MDA 86%",
+      "mda_numeric": 86,
+      "nd": "ND 16",
+      "type": "Yokai Colossal Japonês (Esqueleto Gigante de Mortos sem Sepultura)",
+      "origin": "Campos de Batalha Feudais & Florestas do Japão",
+      "territory": "Vales de Fome, Campos de Batalha Abandonados e Ruínas Rurais",
+      "virtue": "Elemento: Osso, Sangue Seco & Rancor • Virtude Corrompida: Fúria/Fome Coletiva",
+      "element": "Osso, Sangue Seco & Rancor",
+      "quote": "“Primeiro você ouve um zumbido de sino dentro do próprio ouvido: Gachi-gachi. Depois o céu inteiro vira costela.”",
+      "description": "Quando centenas de soldados ou camponeses morrem de fome ou guerra sem ritos funerários, suas almas em Ruptura Espiritual fundem todos os esqueletos num único titã de quinze metros de altura. Move-se em silêncio absoluto na calada da noite até agarrar viajantes solitários.",
+      "stats": {
+        "pv": "680",
+        "pd": "60",
+        "ea": "200",
+        "est": "30",
+        "rd": "20 (Ossos Calcificados Imunes a Corte/Perfuração)",
+        "reactions": "Esq. +12, Bloq. +24 (Gaiola Torácica RD 26), C-Ataq. +22 (Pisoteio de Crânios 5d12+18)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 9,
+          "AGI": 5,
+          "PRE": 8,
+          "INT": 3
+        }
+      },
+      "immunities": "Invisibilidade Noturna (até atacar), Frio, Veneno, Perfuração, Corte comum, Medo •",
+      "weakness": "Amuletos Xintoístas de Apaziguamento (Ofuda) & Exorcismo da Fome (colar talismãs sagrados no crânio principal ou saciar ritualmente os nomes dos mortos desfaz os fios que unem a estrutura)",
+      "offense": "Desloc.: 15 m • Ataques: Mão Esquelética Colossal +23 (4d12+18 contundente + Agarrar) e Varredura Óssea (Área 9m, 4d10).",
+      "abilities": "O Zumbido do Sino ('Gachi-Gachi'): Faz os ouvidos das vítimas zumbirem e seus dentes baterem sozinhos (Vontade CD 27 ou perde 1d4 EST e fica Paralisado no 1º turno).",
+      "skills": "Furtividade (Noturna) +24, Atletismo +26, Intimidação +26, Percepção +20",
+      "tactics": "Só se desfaz completamente quando o sol nasce ou quando a energia de rancor (EA) do coletivo se esgota. Fig. B27 — O colosso esquelético Gashadokuro erguendo-se na noite."
+    },
+    {
+      "num": 51,
+      "id": "tomo4_51",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "El Silbón",
+      "title": "O Assobiador do Saco de Ossos",
+      "mda": "MDA 76%",
+      "mda_numeric": 76,
+      "nd": "ND 14",
+      "type": "Espectro Parricida Amaldiçoado (Folclore da Venezuela e Colômbia)",
+      "origin": "Planícies de Los Llanos (Venezuela / Colômbia, Séc. XVIII)",
+      "territory": "Planícies Abertas, Fazendas Isoladas e Estradas Chuvosas",
+      "virtue": "Elemento: Osso, Cinza & Som Invertido • Virtude Corrompida: Fúria/Medo",
+      "element": "Osso, Cinza & Som Invertido",
+      "quote": "“Se o assobio soar alto e perto, ele está longe. Se o assobio soar baixinho, lá no horizonte... não olhe para trás. Ele já está nas suas costas.”",
+      "description": "Espírito esquelético que assassinou o próprio pai em vida; amaldiçoado pelo avô com chicotadas, pimenta nas feridas e os dentes do cão Tureco, caminha eternamente carregando um saco cheio de ossos que chocalham na noite. Entoa as sete notas musicais (Dó, Ré, Mi, Fá, Sol, Lá, Si) numa escala que inverte a percepção de distância.",
+      "stats": {
+        "pv": "380",
+        "pd": "55",
+        "ea": "180",
+        "est": "24",
+        "rd": "14",
+        "reactions": "Esq. +20 (7d20), Bloq. +16, C-Ataq. +21 (Desossamento Instantâneo — 4d10+14)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 8,
+          "INT": 5
+        }
+      },
+      "immunities": "Medo, Armas comuns à distância (distância acústica invertida), Escuridão •",
+      "weakness": "O Latido de um Cão, Pimenta Malagueta & O Estalo de um Chicote (ouvir o latido de um cachorro, o estalo de um chicote ou ser atingido por pimenta reaviva seu trauma original, forçando-o a fugir por 1d4 rodadas)",
+      "offense": "Desloc.: 18 m • Ataques: Garras Desossadoras +21 (3d12+12 + fratura óssea) e Golpe com o Saco de Ossos +20 (4d10+14 contundente/espiritual).",
+      "abilities": "Paradoxo Acústico das Sete Notas: Enquanto assobia, qualquer inimigo adjacente sofre -5 de penalidade por achar que ele está distante.",
+      "skills": "Furtividade +26, Intimidação +25, Percepção +22, Enganação +24",
+      "tactics": "Caça nas noites chuvosas das planícies sul-americanas. Fig. B28 — A figura esquelética amaldiçoada de El Silbón caminhando na névoa."
+    },
+    {
+      "num": 52,
+      "id": "tomo4_52",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Chonchon (Tué-Tué)",
+      "title": "A Cabeça Alada dos Kalku",
+      "mda": "MDA 64%",
+      "mda_numeric": 64,
+      "nd": "ND 10",
+      "type": "Bruxo Mapuche em Projeção Corporal (Folclore do Chile e Andes)",
+      "origin": "Araucanía & Ilha de Chiloé (Sul do Chile)",
+      "territory": "Florestas Austrais, Telhados Rurais e Rotas Andinas",
+      "virtue": "Elemento: Sangue, Vento & Sombra • Virtude Corrompida: Ambição/Sabedoria Negra",
+      "element": "Sangue, Vento & Sombra",
+      "quote": "“Tué, tué, tué... Nunca amaldiçoe o pássaro invisível que canta sobre o seu telhado.”",
+      "description": "Quando um Kalku (feiticeiro sombrio andino) unge a própria garganta com unguento mágico à noite, sua cabeça desprende-se do pescoço; as orelhas crescem em enormes asas com garras nas pontas, voando pela noite enquanto o corpo sem cabeça permanece dormindo em casa.",
+      "stats": {
+        "pv": "230",
+        "pd": "45",
+        "ea": "175",
+        "est": "24",
+        "rd": "10 (Invisível a Pessoas Comuns com MDA ≤ 5%)",
+        "reactions": "Esq. +22 (8d20), Bloq. +10, C-Ataq. +18 (Mergulho Rasante 3d8+10)",
+        "attributes": {
+          "FOR": 3,
+          "VIG": 5,
+          "AGI": 9,
+          "PRE": 7,
+          "INT": 8
+        }
+      },
+      "immunities": "Queda, Terreno difícil, Visão mundana •",
+      "weakness": "Selo de Salomão Desenhado no Chão & Virar o Corpo sem Cabeça de Bruços (desenhar uma estrela de seis pontas no chão faz o Chonchon cair do céu com 0 de Esquiva)",
+      "offense": "Desloc.: 3 m, Voo 24 m • Ataques: Garras Auriculares +19 (2d10+8) e Sifão de Sangue e Alma +18 (3d10 necrótico + cura 15 PV).",
+      "abilities": "O Convite da Manhã: Pode ser atraído para revelar sua identidade humana no dia seguinte quando chega pedindo sal ou chá.",
+      "skills": "Ocultismo +23, Furtividade +24, Acrobacia (Voo) +24, Percepção +20",
+      "tactics": "Guardam suas cavernas rituais utilizando o Imbunche como sentinela. Fig. B29 — A cabeça alada noturna do Chonchon em voo rasante."
+    },
+    {
+      "num": 53,
+      "id": "tomo4_53",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "O Imbunche",
+      "title": "O Sentinela Costurado da Caverna",
+      "mda": "MDA 68%",
+      "mda_numeric": 68,
+      "nd": "ND 11",
+      "type": "Humano Ritualisticamente Deformado (Folclore de Chiloé, Chile)",
+      "origin": "Arquipélago de Chiloé (Chile)",
+      "territory": "Cavernas de Bruxos (Cueva de Quicaví) e Cofres Subterrâneos",
+      "virtue": "Elemento: Carne Costurada, Osso & Sombra • Virtude Corrompida: Obediência/Medo",
+      "element": "Carne Costurada, Osso & Sombra",
+      "quote": "“Tiraram-lhe a língua, viraram-lhe a cabeça para trás e costuraram cada abertura do seu corpo para que nenhum segredo jamais saísse dali.”",
+      "description": "Primogênito roubado no berço por seitas ocultas de Chiloé: seus ossos foram remodelados para que a perna direita ficasse colada à nuca, a cabeça torcida em 180 graus para trás e todos os orifícios costurados. Locomove-se em três apoios com velocidade aterradora e guarda os arquivos proibidos das cavernas do Véu.",
+      "stats": {
+        "pv": "340",
+        "pd": "45",
+        "ea": "130",
+        "est": "20",
+        "rd": "14 (Pele Coberta de Pelos Grossos e Cicatrizes Rituais)",
+        "reactions": "Esq. +18, Bloq. +18, C-Ataq. +19 (Bote Tripedal 3d12+11)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 7,
+          "PRE": 6,
+          "INT": 4
+        }
+      },
+      "immunities": "Gases inalados, Venenos ingeridos, Interrogatório Mental •",
+      "weakness": "Romper as Costuras Rituais com Prata (golpe preciso CD 24 que corte os fios negros de sua boca libera o grito reprimido de décadas, atordoando-o por 2 rodadas)",
+      "offense": "Desloc.: 15 m • Ataques: Garras e Mordida Invertida +19 (3d12+11) e Grito Gutural de Cabra (CD 25 Vontade ou congela os pés do alvo no chão por 1 rodada).",
+      "abilities": "Previsão de Cego: Pressente qualquer invasor a 100 metros do covil e avisa seu mestre mentalmente.",
+      "skills": "Percepção +24, Luta +19, Atletismo +20, Intimidação +21",
+      "tactics": "Nunca abandona a entrada do santuário subterrâneo que lhe foi designado. Fig. B30 — Anatomia retorcida do Imbunche guardando a entrada da caverna ritual."
+    },
+    {
+      "num": 54,
+      "id": "tomo4_54",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Qalupalik",
+      "title": "A Raptoressa sob o Gelo Ártico",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Entidade Anfíbia do Gelo (Mitologia Inuit — Ártico Canadense/Groenlândia)",
+      "origin": "Mar de Baffin, Nunavut & Groenlândia",
+      "territory": "Banquisas de Gelo, Fendas Glaciais e Costas Congeladas",
+      "virtue": "Elemento: Gelo, Sal & Sombra Abissal • Virtude Corrompida: Ambição/Eternidade",
+      "element": "Gelo, Sal & Sombra Abissal",
+      "quote": "“Ouça o gelo bater de baixo para cima: Tut-tut-tut. Se você chegar perto da borda, já está dentro do capuz dela.”",
+      "description": "Criatura humanoide de pele verde-acinzentada viscosa e unhas compridas de marfim negro. Veste um amauti (casaco tradicional com grande capuz dorsal de pele de foca) onde guarda as vítimas que puxa através de fendas no gelo, drenando sua juventude e Energia de Alma.",
+      "stats": {
+        "pv": "330",
+        "pd": "45",
+        "ea": "150",
+        "est": "22",
+        "rd": "13 (Gordura Térmica Abissal)",
+        "reactions": "Esq. +18 (na água gelada +22), Bloq. +16, C-Ataq. +19 (Quebrar o Gelo sob os Pés)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 7,
+          "PRE": 6,
+          "INT": 5
+        }
+      },
+      "immunities": "Frio Absoluto, Afogamento, Pressão sob o gelo •",
+      "weakness": "Fogo de Óleo de Baleia & Cortar a Tira do Capuz Amauti (fogo reduz sua RD a 0; cortar o capuz dorsal liberta os prisioneiros em estase)",
+      "offense": "Desloc.: 9 m no gelo, Natação 24 m • Ataques: Unhas de Marfim Negro +19 (3d10+10 cortante/frio) e Tragar para o Amauti +20 (Alvo agarrado entra em coma hipotérmico CD 26 Fortitude).",
+      "abilities": "Batida Hipnótica sob o Gelo: Bate sob a camada de gelo criando ressonância subgrave que racha o piso num raio de 6m.",
+      "skills": "Furtividade (Sob o Gelo) +24, Atletismo +22, Percepção +20",
+      "tactics": "Mantém câmaras de ar submersas sob icebergs onde preserva vítimas adormecidas. Fig. B31 — A entidade anfíbia Qalupalik emergindo das águas glaciais."
+    },
+    {
+      "num": 55,
+      "id": "tomo4_55",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Grootslang",
+      "title": "O Primordial da Caverna dos Diamantes",
+      "mda": "MDA 88%",
+      "mda_numeric": 88,
+      "nd": "ND 17",
+      "type": "Lenda Primordial Sul-Africana (Serpente Primordial das Profundezas)",
+      "origin": "Richtersveld (África do Sul)",
+      "territory": "O Poço sem Fundo de Richtersveld e Rios Subterrâneos",
+      "virtue": "Elemento: Pedra, Diamante & Água Abissal • Virtude Ressonante: Sabedoria/Ambição",
+      "element": "Pedra, Diamante & Água Abissal",
+      "quote": "“Os deuses eram jovens quando criaram o Grootslang e perceberam que haviam lhe dado força demais e astúcia demais.”",
+      "description": "Segundo os registros mais antigos da A.E.G.I.S. na África Austral, o Grootslang é um colosso primordial de vinte metros coberto de escamas de basalto, presas de marfim e poeira de diamante. Habita uma caverna profunda em Richtersveld que se conecta diretamente ao oceano através do Véu.",
+      "stats": {
+        "pv": "720",
+        "pd": "65",
+        "ea": "220",
+        "est": "32",
+        "rd": "20 (Escamas Incrustadas de Diamante)",
+        "reactions": "Esq. +13, Bloq. +24 (Fronte de Marfim RD 26), C-Ataq. +23 (Empalar nas Presas 4d12+18)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 9,
+          "AGI": 5,
+          "PRE": 8,
+          "INT": 8
+        }
+      },
+      "immunities": "Venenos, Esmagamento, Fogo, Lasers/Luz (refratada pelos diamantes) •",
+      "weakness": "Negociação por Gemas de Alma Pura (teste de Diplomacia/Enganação CD 28 acompanhado da entrega de uma relíquia cristalina faz o Grootslang poupar o grupo)",
+      "offense": "Desloc.: 15 m, Escavação 12 m, Natação 18 m • Ataques: Presas de Marfim Primordial +24 (5d12+18 perfurante) e Constrição Sísmica +23 (4d12+16 contundente).",
+      "abilities": "Refração de Diamante Anímico: Disparo de Energia de Alma contra ele tem 50% de chance de ser refletido em cone de luz cortante.",
+      "skills": "Intuição +24, Percepção +24, Atletismo +26, História Antiga +24",
+      "tactics": "Guarda o maior depósito natural de diamantes de ressonância do hemisfério sul. Fig. B32 — O colossal Grootslang guardando os veios de diamantes de ressonância."
+    },
+    {
+      "num": 56,
+      "id": "tomo4_56",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Penanggalan & Manananggal",
+      "title": "As Predadoras de Vísceras",
+      "mda": "MDA 72%",
+      "mda_numeric": 72,
+      "nd": "ND 13",
+      "type": "Vampiras Viscerais Desmembradas (Folclore da Malásia, Indonésia e Filipinas)",
+      "origin": "Sudeste Asiático (Península Malaia e Arquipélago Filipino)",
+      "territory": "Aldeias Costeiras, Maternidades e Selvas Tropicais",
+      "virtue": "Elemento: Sangue Ácido, Vinagre & Sombra • Virtude Corrompida: Fome/Medo",
+      "element": "Sangue Ácido, Vinagre & Sombra",
+      "quote": "“O cheiro de vinagre azedo no vento significa que ela está passando por cima da sua janela.”",
+      "description": "A Penanggalan malaia destaca a cabeça com órgãos pendurados brilhando como fogo-fátuo na escuridão; a Manananggal filipina destaca todo o torso superior com imensas asas de couro de morcego. Durante o dia, mergulham suas vísceras em vinagre para que caibam de volta no corpo inferior oculto.",
+      "stats": {
+        "pv": "320",
+        "pd": "45",
+        "ea": "160",
+        "est": "21",
+        "rd": "12",
+        "reactions": "Esq. +20, Bloq. +14, C-Ataq. +19 (Chicote Visceral Ácido 3d10+10)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 6,
+          "AGI": 8,
+          "PRE": 7,
+          "INT": 6
+        }
+      },
+      "immunities": "Queda, Terreno difícil, Sangramento •",
+      "weakness": "Cinza, Sal Grosso e Cacos de Vidro no Torso Inferior (espalhar sal ou cinza sobre o tronco sem cabeça escondido impede a reintegração ao nascer do sol, matando-a)",
+      "offense": "Desloc.: Voo 21 m • Ataques: Língua Protrátil Tubular +20 (Alcance 4,5m, 3d12+10 + Dreno de 15 PV) e Garras/Tentáculos Viscerais +19 (2d12+10 ácido/necrótico).",
+      "abilities": "Gotejamento de Bile Corrosiva: Causa 2d8 de dano ácido contínuo e febre delirante em quem está abaixo de seu voo.",
+      "skills": "Furtividade +23, Acrobacia +21, Percepção (Faro de Sangue) +24, Enganação +20",
+      "tactics": "Infiltram-se em vilas costeiras durante o dia como curandeiras antes de caçar à noite. Fig. B33 — Predadora alada noturna do Sudeste Asiático em caçada sobre os telhados."
+    },
+    {
+      "num": 57,
+      "id": "tomo4_57",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Psoglav & Drekavac",
+      "title": "Os Demônios Cinosféricos dos Bálcãs",
+      "mda": "MDA 74%",
+      "mda_numeric": 74,
+      "nd": "ND 13",
+      "type": "Demônio Cinocéfalo de Dentes de Ferro & Gritador da Névoa (Sérvia/Bósnia)",
+      "origin": "Montanhas Dináricas & Bálcãs (Leste Europeu)",
+      "territory": "Cavernas de Minério, Cemitérios Ortodoxos e Florestas de Pinheiros",
+      "virtue": "Elemento: Ferro Frio, Osso & Sombra • Virtude Corrompida: Fúria/Agonia",
+      "element": "Ferro Frio, Osso & Sombra",
+      "quote": "“Debaixo das montanhas da Bósnia vive o cão de um olho só que mastiga ferro como pão e desenterra os mortos.”",
+      "description": "O Psoglav ('Cabeça-de-Cão') possui corpo musculoso, cabeça de mastim gigante com presas de ferro maciço e olho ardente na testa, vivendo em cavernas escuras. Já o Drekavac ('O Gritador') é uma criatura esquelética envolta em mortalha cujo grito na névoa destrói a Estabilidade e cuja sombra adoece quem ela toca.",
+      "stats": {
+        "pv": "390",
+        "pd": "50",
+        "ea": "140",
+        "est": "20",
+        "rd": "15 (Dentes e Ossos de Ferro Ctoniano)",
+        "reactions": "Esq. +16, Bloq. +19, C-Ataq. +20 (Mordida Quebra-Armadura — reduz a RD da armadura do alvo em -2)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 8,
+          "AGI": 6,
+          "PRE": 6,
+          "INT": 4
+        }
+      },
+      "immunities": "Escuridão, Frio, Medo, Venenos minerais •",
+      "weakness": "Luz Solar / Clarões de Magnésio (sofre Cegueira e -4 em todas as rolagens sob luz forte)",
+      "offense": "Desloc.: 15 m, Escavação 6 m • Ataques: Mordida de Dentes de Ferro +21 (4d10+14 perfurante, ignora 10 de RD) e Garras Subterrâneas +19 (3d10+12).",
+      "abilities": "Grito do Drekavac na Névoa: Raio 20m, Vontade CD 25 ou perde 1d6 EST. Pode atacar a sombra projetada de um inimigo a até 9m.",
+      "skills": "Atletismo +22, Percepção +20, Intimidação +22, Furtividade +19",
+      "tactics": "Habitam minas abandonadas da Primeira e Segunda Guerra Mundial nos Bálcãs. Fig. B34 — A besta demoníaca de mandíbula de ferro das cavernas balcânicas."
+    },
+    {
+      "num": 58,
+      "id": "tomo4_58",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Umibozu & Nuppeppo",
+      "title": "O Monge do Mar Negro & a Carne Sem Rosto",
+      "mda": "MDA 82%",
+      "mda_numeric": 82,
+      "nd": "ND 15",
+      "type": "Yokai Marinho Colossal & Aberração de Carne Enrugada (Japão)",
+      "origin": "Mar Interior de Seto & Templos Abandonados de Kyoto (Japão)",
+      "territory": "Mares Subitamente Calmos e Santuários em Ruínas",
+      "virtue": "Elemento: Sal Negro, Água & Carne Podre • Virtude Corrompida: Vazio/Medo",
+      "element": "Sal Negro, Água & Carne Podre",
+      "quote": "“Se ele pedir um barril para você, entregue um barril sem fundo. Caso contrário, ele vai afundar seu navio com uma única concha d'água.”",
+      "description": "Quando um mar tempestuoso fica subitamente liso como um espelho negro, o Umibozu emerge: um titã de água negra solidificada que exige um barril da tripulação para inundar o convés. Em terra, nos templos arruinados, vaga o Nuppeppo: uma massa ambulante de carne enrugada cuja carne concede longevidade eterna a quem a consome.",
+      "stats": {
+        "pv": "540",
+        "pd": "60",
+        "ea": "210",
+        "est": "28",
+        "rd": "16 (Corpo Líquido/Amorfo — Imune a corte comum)",
+        "reactions": "Esq. +14, Bloq. +21, C-Ataq. +20 (Vagalhão Monástico 4d12+15)",
+        "attributes": {
+          "FOR": 9,
+          "VIG": 9,
+          "AGI": 4,
+          "PRE": 8,
+          "INT": 5
+        }
+      },
+      "immunities": "Corte, Perfuração comum, Afogamento, Frio, Medo •",
+      "weakness": "O Barril sem Fundo (Hishaku) & Fumaça de Tabaco (entregar um barril com o fundo arrancado confunde a lei ritual do Umibozu por 3 rodadas)",
+      "offense": "Desloc.: Natação 24 m (Umibozu) / 6 m em terra (Nuppeppo) • Ataques: Mão de Maré Negra +22 (4d12+16 contundente + Inundar Convés) e Miasma Rançoso (Raio 9m, Fortitude CD 25 ou Náusea).",
+      "abilities": "Calmaria Pressaga: Anula todo vento natural e desliga motores marítimos num raio de 300 metros.",
+      "skills": "Intimidação +25, Ocultismo +22, Percepção +20, Fortitude +25",
+      "tactics": "A Ordem da Cinza caça espécimes de Nuppeppo para produzir elixires de longevidade para o Filantropo. Fig. B35 — O titã líquido Umibozu erguendo-se das águas escuras sobre uma embarcação."
+    },
+    {
+      "num": 59,
+      "id": "tomo4_59",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Popobawa & Adze",
+      "title": "Os Parasitas de Sombra e Vagalume",
+      "mda": "MDA 70%",
+      "mda_numeric": 70,
+      "nd": "ND 12",
+      "type": "Demônio Ciclópico Alado de Zanzibar & Vampiro-Vagalume Ewe (África)",
+      "origin": "Arquipélago de Zanzibar (Tanzânia) & Gana/Togo",
+      "territory": "Cidades Costeiras, Telhados e Plantações de Dendê",
+      "virtue": "Elemento: Sombra, Fumaça Sulfúrica & Sangue • Virtude Corrompida: Medo/Histeria Coletiva",
+      "element": "Sombra, Fumaça Sulfúrica & Sangue",
+      "quote": "“Se você não contar a todos os vizinhos na manhã seguinte que ele te atacou... ele volta na noite seguinte com o dobro da força.”",
+      "description": "O Popobawa de Zanzibar é um metamorfo ciclópico de asas de sombra e cheiro de enxofre que esmaga o peito de vítimas adormecidas, exigindo que espalhem o pânico pela rua no dia seguinte; já o Adze do povo Ewe voa como um vagalume bioluminescente que atravessa portas trancadas para beber óleo de dendê e Energia de Alma.",
+      "stats": {
+        "pv": "295",
+        "pd": "45",
+        "ea": "175",
+        "est": "24",
+        "rd": "12 (Corpo de Fumaça Sulfúrica)",
+        "reactions": "Esq. +21 (7d20), Bloq. +14, C-Ataq. +19 (Garra de Paralisia do Sono 3d10+10)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 8,
+          "PRE": 8,
+          "INT": 6
+        }
+      },
+      "immunities": "Portas e Paredes Trancadas (na forma de vagalume/fumaça), Medo •",
+      "weakness": "Recusar o Pânico Coletivo & Potes de Óleo de Dendê (Popobawa perde metade dos atributos se ninguém ceder ao medo; Adze é atraído por óleo de dendê deixado fora de casa)",
+      "offense": "Desloc.: 12 m, Voo 21 m • Ataques: Esmagamento Torácico Noturno +19 (3d12+10 + Paralisia CD 25) e Possessão de Hospedeiro (Adze) (Vontade CD 25).",
+      "abilities": "Multiplicador de Histeria: Para cada pessoa na área com menos de 50% de EST, ganha +1 em todas as rolagens e +3 de RD.",
+      "skills": "Furtividade +24, Intimidação +25, Enganação +22, Ocultismo +20",
+      "tactics": "Surtos documentados pela A.E.G.I.S. em Zanzibar levaram cidades inteiras a dormir em volta de fogueiras. Fig. B36 — O demônio de fumaça e sombra Popobawa projetando-se na escuridão."
+    },
+    {
+      "num": 60,
+      "id": "tomo4_60",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Vetala (Baital)",
+      "title": "O Oráculo nos Cadáveres Pendurados",
+      "mda": "MDA 73%",
+      "mda_numeric": 73,
+      "nd": "ND 13",
+      "type": "Espírito Necromântico Suspenso (Mitologia Indiana / Sânscrita)",
+      "origin": "Campos de Cremação (Smashana) da Índia Antiga",
+      "territory": "Árvores de Cemitério, Criptas e Locais de Execução",
+      "virtue": "Sabedoria/Julgamento",
+      "element": "Cinza de Pira, Osso & Conhecimento",
+      "quote": "“Se você souber a resposta para o meu enigma e calar, sua cabeça se partirá em cem pedaços. Se falar, eu volto para a minha árvore.”",
+      "description": "Espírito do Véu que anima cadáveres não cremados pendurados de cabeça para baixo em árvores na Índia. Possui presciência temporal completa do passado e do presente de qualquer ser vivo, testando agentes da A.E.G.I.S. com dilemas morais mortais.",
+      "stats": {
+        "pv": "340",
+        "pd": "55",
+        "ea": "220",
+        "est": "30",
+        "rd": "14",
+        "reactions": "Esq. +19, Bloq. +17, C-Ataq. +20 (Paradoxo do Rei Vikram — devolve o ataque se o agressor falou no turno)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 6,
+          "AGI": 7,
+          "PRE": 8,
+          "INT": 10
+        }
+      },
+      "immunities": "Necrose, Morte, Tempo, Adivinhação, Medo •",
+      "weakness": "Voto de Silêncio Absoluto com Mente Vazia (quem o enfrenta sem pronunciar uma sílaba pode prendê-lo e obrigá-lo a responder qualquer segredo do universo)",
+      "offense": "Desloc.: 12 m, Voo 15 m • Ataques: Garras Cadavéricas +19 (3d10+10) e O Enigma que Parte o Crânio (INT + Vontade CD 27; falha causa 5d10 psíquico puro).",
+      "abilities": "Retorno Instantâneo à Árvore: Se o alvo quebrar o silêncio ao responder o enigma, o Vetala reaparece em sua árvore de origem com PV cheios.",
+      "skills": "Ocultismo +26, História +28, Intuição +26, Enganação +24",
+      "tactics": "Interrogado por agentes seniores da A.E.G.I.S. que buscam descobrir os planos futuros do Filantropo. Fig. B37 — O cadáver possuído pelo espírito oracular Vetala."
+    },
+    {
+      "num": 61,
+      "id": "tomo4_61",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Yara-Ma-Yha-Who",
+      "title": "O Vampiro-Rã das Figueiras Vermelhas",
+      "mda": "MDA 66%",
+      "mda_numeric": 66,
+      "nd": "ND 11",
+      "type": "Anfíbio Drenador de Sangue (Mitologia Aborígene Australiana)",
+      "origin": "Outback & Florestas de Figueiras (Austrália)",
+      "territory": "Grandes Figueiras Silvestres e Cursos d'Água",
+      "virtue": "Elemento: Sangue, Seiva & Água • Virtude Corrompida: Fome/Assimilação",
+      "element": "Sangue, Seiva & Água",
+      "quote": "“Nunca durma debaixo da figueira ao meio-dia: ele não tem dentes, mas seus dedos têm bocas.”",
+      "description": "Criatura anfíbia avermelhada de cabeça enorme sem dentes e ventosas de polvo nas pontas de cada dedo das mãos e pés. Salta do alto das figueiras sobre viajantes, drena seu sangue pelas ventosas digitais, engole a vítima inteira, bebe água e a regurgita viva — mas progressivamente transformada em outro Yara-ma-yha-who.",
+      "stats": {
+        "pv": "290",
+        "pd": "40",
+        "ea": "130",
+        "est": "19",
+        "rd": "11 (Pele Anfíbia Elástica)",
+        "reactions": "Esq. +19, Bloq. +15, C-Ataq. +18 (Salto de Ventosas 3d10+9)",
+        "attributes": {
+          "FOR": 6,
+          "VIG": 6,
+          "AGI": 8,
+          "PRE": 5,
+          "INT": 4
+        }
+      },
+      "immunities": "Queda de árvores, Dano contundente menor •",
+      "weakness": "Fingir-se de Morto até o Pôr do Sol (só ataca presas que se debatem e fica completamente cego e inativo após o pôr do sol)",
+      "offense": "Desloc.: 12 m, Escalada 15 m • Ataques: 10 Ventosas Digitais Drenadoras +19 (3d10+9 + Dreno de 2 FOR) e Engolir e Regurgitar (CD 24 Fortitude ou ganha 1 nível de mutação).",
+      "abilities": "Transmutação Regurgitada: Uma vítima engolida e regurgitada três vezes converte-se permanentemente num novo Yara-ma-yha-who.",
+      "skills": "Furtividade +22, Acrobacia +21, Escalada +24, Percepção +19",
+      "tactics": "Emboscador diurno que habita as copas de figueiras seculares na Oceania. Fig. B38 — O predador anfíbio Yara-ma-yha-who pronto para saltar da copa da figueira."
+    },
+    {
+      "num": 62,
+      "id": "tomo4_62",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Tikbalang",
+      "title": "O Guardião Equino das Trilhas Perdidas",
+      "mda": "MDA 68%",
+      "mda_numeric": 68,
+      "nd": "ND 11",
+      "type": "Gigante Equino-Humanoide (Folclore das Filipinas)",
+      "origin": "Montanhas e Florestas de Luzon (Filipinas)",
+      "territory": "Bambuzais, Pontes Antigas e Passagens de Montanha Nebulosas",
+      "virtue": "Liberdade/Trapaça",
+      "element": "Espinhos Dourados, Fumaça & Espaço",
+      "quote": "“Se você está andando há três horas e voltou para a mesma pedra, vista sua camisa do avesso.”",
+      "description": "Gigante esguio de membros compridos com a cabeça e os cascos de um cavalo selvagem; quando se senta nos calcanhares, seus joelhos ultrapassam a altura da própria cabeça. Fuma grandes charutos de ervas do Véu e possui três espinhos grossos de ouro na crina que lhe conferem domínio sobre os caminhos da floresta.",
+      "stats": {
+        "pv": "330",
+        "pd": "45",
+        "ea": "155",
+        "est": "22",
+        "rd": "13",
+        "reactions": "Esq. +19, Bloq. +18, C-Ataq. +19 (Coice de Casco Pesado 3d12+12)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 7,
+          "INT": 6
+        }
+      },
+      "immunities": "Labirintos, Ilusões espaciais, Terreno difícil •",
+      "weakness": "Virar a Camisa do Avesso (anula instantaneamente seu labirinto espacial) & Arrancar um dos 3 Espinhos Dourados da Crina enquanto o cavalga (Atletismo/Luta CD 26 doma o Tikbalang como servo leal)",
+      "offense": "Desloc.: 18 m (Salto 12 m) • Ataques: Cascos de Pedra +19 (3d12+12 contundente) e Arremesso de Espinho da Crina +20 (Distância 24m, 3d10+10 perfurante).",
+      "abilities": "Loop Espacial da Chuva com Sol: Prende o grupo num círculo infinito na mata até que alguém vista a roupa do avesso ou peça permissão formal.",
+      "skills": "Sobrevivência +24, Enganação +23, Atletismo +23, Furtividade +20",
+      "tactics": "Domado por antigos agentes filipinos da A.E.G.I.S. como montaria capaz de atravessar o Véu. Fig. B39 — O imponente guardião de cascos e crina espinhosa das trilhas de montanha."
+    },
+    {
+      "num": 63,
+      "id": "tomo4_63",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Alicanto",
+      "title": "A Ave Metálica Devoradora de Ouro e Prata",
+      "mda": "MDA 71%",
+      "mda_numeric": 71,
+      "nd": "ND 12",
+      "type": "Ave Celestial Mineradora (Folclore do Deserto do Atacama, Chile)",
+      "origin": "Deserto do Atacama & Cordilheira (Chile)",
+      "territory": "Minas Abandonadas, Penhascos Desérticos e Veios de Ressonância",
+      "virtue": "Elemento: Ouro Solar & Prata Lunar • Virtude Ressonante: Justiça/Julgamento da Ganância",
+      "element": "Ouro Solar & Prata Lunar",
+      "quote": "“As asas do Alicanto brilham em ouro ou prata conforme o minério que ele acabou de comer na montanha.”",
+      "description": "Ave majestosa do deserto chileno que se alimenta exclusivamente de minério puro de ouro ou prata carregado de Energia de Alma. Suas asas brilham intensamente no escuro da caverna (douradas se comeu ouro, prateadas se comeu prata), mas o peso metálico em seu estômago a impede de voar quando está saciada.",
+      "stats": {
+        "pv": "340",
+        "pd": "50",
+        "ea": "170",
+        "est": "26",
+        "rd": "16 (Plumas Metálicas de Ouro e Prata)",
+        "reactions": "Esq. +17 (Vazia) / +11 (Cheia de minério), Bloq. +21 (Asas de Metal RD 22), C-Ataq. +19 (Clarão Cegante das Asas + Bico 3d10+11)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 7,
+          "PRE": 8,
+          "INT": 6
+        }
+      },
+      "immunities": "Fogo, Calor, Cegueira, Venenos minerais •",
+      "weakness": "Pureza de Intenção sem Ganância (jamais ataca quem não tenta roubar seu minério; contra garimpeiros gananciosos, apaga subitamente o brilho das asas à beira de abismos mortais)",
+      "offense": "Desloc.: 15 m em terra, Voo 24 m (apenas quando não ingeriu minério nas últimas 2 horas) • Ataques: Bico de Mithril e Ouro +19 (3d12+11 perfurante, ignora RD) e Tempestade de Penas Metálicas (Cone 12m, 4d10 cortante/radiante).",
+      "abilities": "Blecaute do Precipício: Apaga todas as fontes de luz num raio de 30m instantaneamente quando perseguido em desfiladeiros.",
+      "skills": "Percepção +24, Intuição (Detectar Ganância) +26, Atletismo +20",
+      "tactics": "Onde há um ninho de Alicanto, há minério puro para forjar Armas Anímicas de Grau Mestre. Fig. B40 — O Alicanto de asas incandescentes de ouro fundido nos penhascos do Atacama."
+    },
+    {
+      "num": 64,
+      "id": "tomo4_64",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Tatzelwurm",
+      "title": "O Dragão-Gato Venenoso dos Alpes",
+      "mda": "MDA 69%",
+      "mda_numeric": 69,
+      "nd": "ND 11",
+      "type": "Réptil Felino Peçonhento (Folclore da Suíça, Áustria e Baviera)",
+      "origin": "Alpes Europeus (Suíça, Áustria, Itália e Alemanha)",
+      "territory": "Geleiras Alpinas, Fendas de Rocha e Passagens de Montanha",
+      "virtue": "Elemento: Veneno Ácido, Gelo & Rocha • Virtude Corrompida: Fúria Territorial",
+      "element": "Veneno Ácido, Gelo & Rocha",
+      "quote": "“Tem o rosto de um lince gigante, o corpo de uma serpente grossa como um tronco e um assobio que derrete o pulmão.”",
+      "description": "Predador criptídico e folclórico das altas montanhas alpinas: possui corpo serpentino blindado de três metros, patas dianteiras com garras de lince e face felina eriçada de presas. Hiberna em fendas glaciais e cospe uma névoa ácida sulfúrica que corrói armaduras e congela os pulmões.",
+      "stats": {
+        "pv": "325",
+        "pd": "45",
+        "ea": "125",
+        "est": "18",
+        "rd": "14 (Escamas Alpinas)",
+        "reactions": "Esq. +18, Bloq. +17, C-Ataq. +19 (Salto de Lince 3d10+12 + Veneno)",
+        "attributes": {
+          "FOR": 7,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 5,
+          "INT": 3
+        }
+      },
+      "immunities": "Frio Alpino, Ácido, Veneno, Terreno de gelo •",
+      "weakness": "Calor Seco Intenso (chamas reduzem sua RD pela metade e o forçam a recuar para a toca)",
+      "offense": "Desloc.: 15 m, Escalada 15 m, Escavação na neve 12 m • Ataques: Mordida Peçonhenta Felina +19 (3d10+12 + Veneno Paralítico CD 25) e 2 Garras Dianteiras +18 (2d10+10).",
+      "abilities": "Assobio de Vapor Tóxica (Cone 9m): Causa 4d10 de dano ácido/venenoso e corrói 2 pontos de RD das armaduras atingidas (Reflexos CD 25).",
+      "skills": "Furtividade (Neve/Rocha) +23, Acrobacia +20, Atletismo +21, Percepção +20",
+      "tactics": "Protege antigos bunkers ocultos da Ordem da Cinza escavados nos Alpes. Fig. B41 — O predador serpentino-felino Tatzelwurm nas rochas alpinas."
+    },
+    {
+      "num": 65,
+      "id": "tomo4_65",
+      "category": "lendas_mundiais",
+      "category_label": "Lendas Obscuras Mundiais",
+      "name": "Draugr de Sal (Gjenganger)",
+      "title": "O Morto-Vivo de Dez Toneladas",
+      "mda": "MDA 75%",
+      "mda_numeric": 75,
+      "nd": "ND 14",
+      "type": "Morto-Vivo Corpóreo Nórdico (Sagas Islandesas e Folclore Escandinavo)",
+      "origin": "Islândia, Noruega & Mar do Norte",
+      "territory": "Túmulos Costeiros (Haugr), Drakkares Afogados e Praias de Inverno",
+      "virtue": "Elemento: Sal Congelado, Ferro Oxidado & Gravidade • Virtude Corrompida: Avareza/Orgulho",
+      "element": "Sal Congelado, Ferro Oxidado & Gravidade",
+      "quote": "“Ele não é um fantasma sem peso. Ele tem o peso de todo o mar que o afogou.”",
+      "description": "Diferente de espíritos incorpóreos, o Draugr escandinavo (*Hel-blár*, 'azul-morte' ou inchado como um boi afogado) é um cadáver físico reanimado pela própria Alma orgulhosa e avarenta que se recusa a deixar seu ouro e seu navio. Cheira a salmoura podre, navega em meio-barcos que cortam contra o vento e pode aumentar a própria massa corporal até pesar dez toneladas.",
+      "stats": {
+        "pv": "440",
+        "pd": "50",
+        "ea": "155",
+        "est": "24",
+        "rd": "16 (Carne Inchada Imune a Armas sem Alma)",
+        "reactions": "Esq. +13, Bloq. +22 (Escudo de Tábua de Drakkar RD 24), C- Ataq. +21 (Esmagamento de Dez Toneladas — 4d12+16)",
+        "attributes": {
+          "FOR": 9,
+          "VIG": 9,
+          "AGI": 5,
+          "PRE": 7,
+          "INT": 5
+        }
+      },
+      "immunities": "Frio, Afogamento, Medo, Necrose, Armas mundanas •",
+      "weakness": "Decapitação, Queima do Corpo até Virar Cinza & Colocar a Cabeça Junto às Nádegas (segundo as sagas islandesas, apenas cortar a cabeça com a própria espada do túmulo e queimar o corpo em fogo de turfa impede que ele se levante na noite seguinte)",
+      "offense": "Desloc.: 12 m (Atravessa rocha e terra como se nadasse), Natação 18 m • Ataques: Espada Viking de Ferro Salgado +21 (3d12+15 cortante) e Abraço de Massa Abissal +22 (4d12+16 contundente + Imobilizar no chão com 10 toneladas CD 28 Força).",
+      "abilities": "Multiplicação de Peso (Hel-Massa): Como ação livre, aumenta seu peso em até 20 vezes, afundando embarcações pequenas ou esmagando o assoalho de edifícios.",
+      "skills": "Atletismo +25, Luta +22, Intimidação +24, Fortitude +25",
+      "tactics": "Guarda túmulos vikings e relíquias do Soberano Harald Sangue-de-Cinza. Fig. B42 — O Draugr de Sal inchado e azul-escuro guardando seu túmulo costeiro."
+    }
+  ]
 };
   }
 }

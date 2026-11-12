@@ -131,7 +131,7 @@ class MuseumController {
     if (btnTeia) {
       btnTeia.addEventListener('click', () => {
         if (window.teiaController) {
-          window.teiaController.open();
+          window.teiaController.openModal();
         }
       });
     }
@@ -399,6 +399,8 @@ class MuseumController {
     const camp = this.dataLoader.getCampaignById(campaignId);
     if (!camp) return;
 
+    document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open', 'active'));
+
     this.activeExhibitionCampaignId = campaignId;
     const hierarchy = this.dataLoader.getGeographicHierarchyForCampaign(campaignId);
     this.updateBreadcrumbs({ ...hierarchy, campaign: camp });
@@ -510,28 +512,154 @@ class MuseumController {
     if (!container) return;
 
     const nar = camp.exhibition_narrative || {};
-    const chapters = [
-      { key: 'prior_context', num: 'Capítulo I', title: 'Contexto Anterior aos Acontecimentos' },
-      { key: 'campaign_beginning', num: 'Capítulo II', title: 'Início da Campanha & Convocação' },
-      { key: 'main_events', num: 'Capítulo III', title: 'Principais Acontecimentos Documentados' },
-      { key: 'turning_points', num: 'Capítulo IV', title: 'Momentos Decisivos & Pontos de Virada' },
-      { key: 'conflicts', num: 'Capítulo V', title: 'Conflitos & Rupturas' },
-      { key: 'revelations', num: 'Capítulo VI', title: 'Revelações & Descobertas Históricas' },
-      { key: 'consequences', num: 'Capítulo VII', title: 'Consequências Planetárias & Regionais' },
-      { key: 'outcome', num: 'Capítulo VIII', title: 'Desfecho & Estado Atual da Região' }
-    ];
+    const blocks = [];
 
-    container.innerHTML = `
-      <div class="exhibition-narrative-timeline">
-        ${chapters.map((ch) => `
-          <div class="narrative-chapter">
-            <span class="narrative-chapter__num">${ch.num}</span>
-            <h4 class="narrative-chapter__title">${this.escapeHtml(ch.title)}</h4>
-            <p class="narrative-chapter__p">${this.escapeHtml(nar[ch.key] || 'Conteúdo em catalogação pela curadoria.')}</p>
+    if (nar.prior_context || nar.climax_summary || nar.outcome || nar.main_events) {
+      const chapters = [
+        { key: 'prior_context', num: 'Contexto Anterior', title: 'Antecedentes Canônicos' },
+        { key: 'main_events', num: 'Desenvolvimento', title: 'Acontecimentos Centrais' },
+        { key: 'climax_summary', num: 'Clímax', title: 'Ponto de Ruptura' },
+        { key: 'outcome', num: 'Desfecho & Estado', title: 'Situação Atual na Linha do Tempo' }
+      ].filter(ch => nar[ch.key]);
+
+      blocks.push(`
+        <div class="exhibition-narrative-timeline">
+          ${chapters.map((ch) => `
+            <div class="narrative-chapter">
+              <span class="narrative-chapter__num">${ch.num}</span>
+              <h4 class="narrative-chapter__title">${this.escapeHtml(ch.title)}</h4>
+              <p class="narrative-chapter__p">${this.escapeHtml(nar[ch.key])}</p>
+            </div>
+          `).join('')}
+        </div>
+      `);
+    } else {
+      blocks.push(`
+        <div class="narrative-chapter">
+          <span class="narrative-chapter__num">Registro Principal</span>
+          <h4 class="narrative-chapter__title">Sinopse & Desenvolvimento</h4>
+          <p class="narrative-chapter__p">${this.escapeHtml(camp.synopsis || '')}</p>
+          ${camp.outcome ? `<p class="narrative-chapter__p" style="margin-top:10px; color:#ffd700; white-space:pre-line;"><strong>Desfecho / Fluxo:</strong>\n${this.escapeHtml(camp.outcome)}</p>` : ''}
+        </div>
+      `);
+    }
+
+    // Crônica II (Mansão Vilar): Os 5 Amigos & 8 Atos Progressivos
+    if (Array.isArray(camp.friends_secrets) && camp.friends_secrets.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(255,215,0,0.4);">
+          <h4 class="exhibition-card__label">🕵️ Os 5 Amigos do Expresso (O 6º Bilhete & Pacto de Silêncio)</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; margin-top:8px;">
+            ${camp.friends_secrets.map(f => `
+              <div style="background:rgba(6,16,28,0.85); border:1px solid rgba(255,215,0,0.22); border-radius:6px; padding:10px;">
+                <div style="font-weight:700; color:#ffd700; font-size:13.5px;">${this.escapeHtml(f.name)}</div>
+                <div style="font-family:monospace; font-size:11.5px; color:#00e5ff; margin:2px 0 6px;">${this.escapeHtml(f.role)}</div>
+                <div style="font-size:12.5px; color:#d8e7f5; line-height:1.45;">${this.escapeHtml(f.secret)}</div>
+              </div>
+            `).join('')}
           </div>
-        `).join('')}
-      </div>
-    `;
+        </div>
+      `);
+    }
+
+    if (Array.isArray(camp.acts) && camp.acts.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px;">
+          <h4 class="exhibition-card__label">📖 Estrutura Canônica dos 8 Atos Progressivos (Crônica II Integrada)</h4>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+            ${camp.acts.map(act => `
+              <div style="background:rgba(8,22,38,0.82); border-left:3px solid #22c55e; padding:9px 12px; border-radius:0 5px 5px 0; font-size:13px; color:#e6f1fc; line-height:1.45;">
+                ${this.escapeHtml(act)}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    // Crônica I (Triângulo & Vera Cruz): 5 Estágios & 4 Ilhas
+    if (Array.isArray(camp.crossing_stages) && camp.crossing_stages.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(0,229,255,0.4);">
+          <h4 class="exhibition-card__label">🌊 Os 5 Estágios da Travessia do Triângulo das Bermudas</h4>
+          <div style="display:flex; flex-direction:column; gap:7px; margin-top:8px;">
+            ${camp.crossing_stages.map(st => `
+              <div style="background:rgba(6,20,36,0.88); border-left:3px solid #00e5ff; padding:8px 12px; border-radius:0 5px 5px 0; font-size:13px; color:#e0f4ff;">
+                ${this.escapeHtml(st)}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    if (Array.isArray(camp.vera_cruz_islands) && camp.vera_cruz_islands.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(16,185,129,0.45);">
+          <h4 class="exhibition-card__label">🌿 Arquipélago de Vera Cruz das Almas — Progressão das 4 Ilhas (Queda do Véu, 1500)</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; margin-top:8px;">
+            ${camp.vera_cruz_islands.map((isl, idx) => `
+              <div style="background:rgba(5,22,18,0.88); border:1px solid rgba(16,185,129,0.35); border-radius:6px; padding:10px 12px; font-size:13px; color:#d7f5ea; line-height:1.45;">
+                <strong style="color:#34d399;">Setor ${idx + 1}:</strong> ${this.escapeHtml(isl)}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    // Crônica III (Gala Belvedere / Oeht): Relógio 22h-00h, 7 Zonas, 3 Travas
+    if (Array.isArray(camp.mission_clock) && camp.mission_clock.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(192,132,252,0.45);">
+          <h4 class="exhibition-card__label">🕰️ Relógio Tático da Gala Belvedere (22h00 – 00h00 • Turnos de 15m)</h4>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+            ${camp.mission_clock.map(tick => `
+              <div style="display:grid; grid-template-columns:165px 1fr; gap:10px; align-items:center; background:rgba(18,8,34,0.85); border:1px solid rgba(192,132,252,0.28); border-radius:6px; padding:9px 12px;">
+                <span style="font-family:monospace; font-weight:700; font-size:12px; color:#ffd700;">${this.escapeHtml(tick.time)}</span>
+                <div>
+                  <strong style="color:#c084fc; font-size:13px;">${this.escapeHtml(tick.stage)}:</strong>
+                  <span style="font-size:12.5px; color:#e7dff8;">${this.escapeHtml(tick.desc)}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    if (Array.isArray(camp.mansion_zones) && camp.mansion_zones.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px;">
+          <h4 class="exhibition-card__label">🏛️ Mapa Tático das 7 Áreas da Mansão Belvedere</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:9px; margin-top:8px;">
+            ${camp.mansion_zones.map(z => `
+              <div style="background:rgba(10,20,36,0.9); border:1px solid rgba(0,229,255,0.22); border-radius:6px; padding:9px 11px;">
+                <div style="font-weight:700; color:#00e5ff; font-size:13px; margin-bottom:4px;">📍 ${this.escapeHtml(z.name)}</div>
+                <div style="font-size:12.5px; color:#cfe2f5; line-height:1.45;">${this.escapeHtml(z.desc)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    if (Array.isArray(camp.three_locks) && camp.three_locks.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(239,68,68,0.45);">
+          <h4 class="exhibition-card__label">🔒 As 3 Travas da Redoma & Protocolo do Anárquico</h4>
+          <div style="display:flex; flex-direction:column; gap:7px; margin-top:8px;">
+            ${camp.three_locks.map(lk => `
+              <div style="background:rgba(34,8,16,0.85); border-left:3px solid #ef4444; padding:9px 12px; border-radius:0 5px 5px 0; font-size:13px; color:#ffd6dc;">
+                ${this.escapeHtml(lk)}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    container.innerHTML = blocks.join('');
   }
 
   renderExhibitionTabLinhaDoTempo(camp) {

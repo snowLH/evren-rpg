@@ -511,7 +511,8 @@ html, body {
   transition: opacity 0.25s ease;
 }
 
-.modal-backdrop.open {
+.modal-backdrop.open,
+.modal-backdrop.active {
   display: flex;
   opacity: 1;
 }
@@ -744,29 +745,420 @@ html, body {
 }
 
 /* ==========================================================================
+   SISTEMA GLOBAL DE BOTÕES ESCUROS & HUD NÃO-SOBREPOSTO (V3.0 POLISH)
+   ========================================================================== */
+button,
+input[type="button"],
+input[type="submit"],
+.btn-secondary {
+  font-family: var(--font-body);
+  color: #e2e8f0;
+  background: rgba(12, 24, 40, 0.92);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(12, 24, 40, 0.94);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 229, 255, 0.16);
+  border-color: var(--color-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(0, 180, 216, 0.36), rgba(0, 229, 255, 0.22));
+  border: 1px solid var(--color-cyan);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--color-cyan);
+  color: #03070d;
+}
+
+/* Ajuste preciso da barra superior para caber em 1280px e 1440px sem cortes */
+#floating-hud {
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  width: calc(100vw - 24px);
+  max-width: calc(100vw - 24px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+#floating-hud .hud-panel {
+  min-width: 0;
+  padding: 5px 10px;
+  gap: 7px;
+}
+
+.hud-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.hud-search-input {
+  width: 168px;
+  min-width: 110px;
+  font-size: 12px;
+}
+
+.btn-primary-nav,
+.btn-action-add,
+.btn-more {
+  padding: 5px 9px;
+  font-size: 11px;
+  gap: 4px;
+  line-height: 1.15;
+}
+
+/* Footer esquerdo compacto — nunca colide com breadcrumb central nem botão 2D */
+#floating-bottom-hud {
+  left: 16px;
+  right: auto;
+  bottom: 16px;
+  width: auto;
+  max-width: 340px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  gap: 10px;
+  justify-content: flex-start;
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  z-index: 95;
+}
+
+/* Regras V3.0 em Abas & Compêndio Tomo IV Fullscreen */
+.rules-v3-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.rules-v3-tab-btn {
+  padding: 7px 13px;
+  border-radius: 5px;
+  background: rgba(10, 24, 40, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #b8cfe5;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.08s ease, border-color 0.08s ease, color 0.08s ease;
+}
+
+.rules-v3-tab-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.rules-v3-tab-btn:focus-visible {
+  outline: 1px solid #ffd700;
+  outline-offset: 2px;
+}
+
+.rules-v3-tab-btn:hover {
+  border-color: var(--color-cyan);
+  color: #ffffff;
+}
+
+.rules-v3-tab-btn.active {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: var(--color-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+}
+
+.rules-v3-panel {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rules-v3-panel.active {
+  display: flex;
+}
+
+.v3-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.v3-card {
+  background: rgba(8, 20, 36, 0.88);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.v3-card-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.v3-card-meta {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: #00e5ff;
+}
+
+.v3-card-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #dce8f5;
+}
+
+.v3-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.v3-table th,
+.v3-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+  vertical-align: top;
+}
+
+.v3-table th {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--color-cyan);
+  text-transform: uppercase;
+  background: rgba(0, 229, 255, 0.08);
+}
+
+/* Modal Tomo IV (65 Fichas) */
+.modal-bestiary-container {
+  max-width: 1240px;
+  width: 95vw;
+  max-height: 90vh;
+}
+
+.tomo4-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.tomo4-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tomo4-filter-btn {
+  padding: 6px 11px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  background: rgba(10, 22, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #c8daec;
+  cursor: pointer;
+}
+
+.tomo4-filter-btn.active {
+  background: rgba(212, 175, 55, 0.22);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.tomo4-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 12px;
+}
+
+.tomo4-card {
+  background: rgba(7, 17, 30, 0.94);
+  border: 1px solid rgba(0, 229, 255, 0.24);
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.tomo4-card:hover {
+  border-color: #ffd700;
+  transform: translateY(-2px);
+}
+
+.tomo4-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.tomo4-card-num {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #00e5ff;
+}
+
+.tomo4-card-name {
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.tomo4-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.tomo4-stat-chip {
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #d8ecf8;
+}
+
+.tomo4-detail-box {
+  background: rgba(4, 12, 22, 0.98);
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  border-radius: 8px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ==========================================================================
    RESPONSIVIDADE E BREAKPOINTS
    ========================================================================== */
-@media (max-width: 1390px) {
-  #floating-hud {
-    gap: 8px;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-  }
-  .hud-panel {
-    padding: 6px 10px;
-    gap: 8px;
-  }
-  .btn-hud {
-    padding: 5px 8px;
-    font-size: 10px;
-    gap: 4px;
-  }
-  .btn-kbd {
+@media (max-width: 1460px) {
+  #floating-hud .btn-kbd,
+  #floating-hud .hud-subline {
     display: none;
   }
   .hud-title-wrap h1 {
     font-size: 14px;
+  }
+  .hud-search-input {
+    width: 136px;
+  }
+  .btn-primary-nav,
+  .btn-action-add,
+  .btn-more {
+    padding: 5px 7px;
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 1360px) {
+  #floating-hud {
+    gap: 4px;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+  }
+  #floating-hud .hud-panel {
+    padding: 4px 6px;
+    gap: 4px;
+  }
+  .hud-branding {
+    gap: 5px;
+  }
+  .hud-logo-icon {
+    width: 22px;
+    height: 22px;
+  }
+  .hud-branding .badge-system {
+    display: none;
+  }
+  .hud-select {
+    max-width: 118px;
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+  .hud-actions {
+    gap: 2px;
+  }
+  .hud-search-input {
+    width: 82px;
+    min-width: 72px;
+    padding: 4px 6px 4px 26px;
+    font-size: 11px;
+  }
+  .btn-primary-nav,
+  .btn-action-add,
+  .btn-more {
+    padding: 4px 5px;
+    font-size: 10px;
+    gap: 3px;
+    white-space: nowrap;
+  }
+  #floating-hud .btn-icon {
+    font-size: 11px;
+  }
+  .hud-title-wrap h1 {
+    font-size: 12px;
+    letter-spacing: 0.4px;
   }
 }
 

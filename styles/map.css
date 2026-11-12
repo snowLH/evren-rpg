@@ -380,12 +380,13 @@
 /* 2. Rosa dos Ventos Náutica de 16 Pontas (Compass Rose) */
 .compass-rose-container {
   position: fixed;
-  bottom: 50px;
-  right: 28px;
-  width: 140px;
-  height: 140px;
-  z-index: 1100;
+  bottom: 72px;
+  right: 18px;
+  width: 92px;
+  height: 92px;
+  z-index: 80;
   pointer-events: none;
+  opacity: 0.72;
   filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.85));
   transition: opacity 0.4s ease;
 }

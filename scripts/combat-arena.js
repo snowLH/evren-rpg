@@ -93,7 +93,15 @@ class CombatArena {
       has_armor: cr.id === 'creature_kraken'
     }));
 
-    return [...chars, ...creatures];
+    const tomo4 = (this.dataLoader.getTomo4Entities?.() || []).map(t4 => ({
+      id: t4.id,
+      name: `#${t4.num} ${t4.name}`,
+      type: 'tomo iv',
+      badge: t4.nd ? `ND ${t4.nd}` : (t4.category_label || 'Tomo IV'),
+      has_armor: Boolean(t4.stats?.rd && !String(t4.stats.rd).trim().startsWith('0'))
+    }));
+
+    return [...chars, ...creatures, ...tomo4];
   }
 
   getFighterById(id) {

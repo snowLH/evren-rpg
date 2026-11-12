@@ -29,49 +29,39 @@ class OccultRadarWidget {
         threat: 'ÔMEGA (99% MDA)',
         campaignId: 'camp_001',
         coords: [25.5, -71.5],
-        color: '#ff3366',
+        color: '#00e5ff',
         icon: '🌊',
         country: 'Oceano Atlântico'
       },
       {
+        id: 'blip_veracruz',
+        name: 'Vera Cruz das Almas',
+        threat: 'NÍVEL 5 (QUEDA DO VÉU)',
+        campaignId: 'camp_001',
+        coords: [-17.3, -38.5],
+        color: '#39ff14',
+        icon: '🌿',
+        country: 'Brasil / Atlântico Sul'
+      },
+      {
         id: 'blip_vilar',
         name: 'Mansão Vilar',
-        threat: 'ALFA (LIMIAR)',
+        threat: 'CONCLUÍDA (LIMIAR)',
         campaignId: 'camp_002',
         coords: [21.85, -102.25],
-        color: '#00e5ff',
+        color: '#ffd700',
         icon: '🏛️',
         country: 'México'
       },
       {
-        id: 'blip_artico',
-        name: 'Estação Zero',
-        threat: 'BETA (CRIOPARASITAS)',
-        campaignId: 'camp_003',
-        coords: [72.0, -40.0],
-        color: '#22d3ee',
-        icon: '❄️',
-        country: 'Groenlândia'
-      },
-      {
-        id: 'blip_selva',
-        name: 'Bacia do Tapajós',
-        threat: 'ÔMEGA (QUARTZO)',
-        campaignId: 'camp_004',
-        coords: [-4.25, -55.98],
-        color: '#39ff14',
-        icon: '🌿',
-        country: 'Brasil'
-      },
-      {
-        id: 'blip_floresta',
-        name: 'Monastério Sem-Rosto',
-        threat: 'ALFA (ECO AMNÉSICO)',
-        campaignId: 'camp_005',
-        coords: [48.15, 8.20],
+        id: 'blip_belvedere',
+        name: 'Mansão Belvedere',
+        threat: 'SEVERO (REDOMA)',
+        campaignId: 'camp_filantropo_oeht',
+        coords: [46.2044, 6.1432],
         color: '#c084fc',
-        icon: '🔔',
-        country: 'Alemanha'
+        icon: '🎭',
+        country: 'Suíça (Genebra)'
       }
     ];
 

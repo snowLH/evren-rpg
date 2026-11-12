@@ -172,7 +172,7 @@ class AtmosphericEngine {
         });
       }
     } else if (this.currentMode === 'floresta') {
-      // 6. Névoa gótica e esporos do Monastério da Floresta Negra (Alemanha)
+      // 6. Esporos noturnos e névoa densa da Ilha da Floresta Negra (Vera Cruz)
       const sporeCount = Math.min(110, Math.floor(this.width * 0.09));
       for (let i = 0; i < sporeCount; i++) {
         this.spores.push({
@@ -420,7 +420,7 @@ class AtmosphericEngine {
   }
 
   /* ==========================================================================
-     D. EFEITOS POLARES DA ESTAÇÃO ZERO (GROENLÂNDIA)
+     D. EFEITOS POLARES & CRISTAIS DE NÉVOA (ALTAS LATITUDES)
      ========================================================================== */
   renderArticoEffects() {
     const ctx = this.ctx;

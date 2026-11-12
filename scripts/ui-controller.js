@@ -521,6 +521,8 @@ class UIController {
     this.renderChroniclesList();
     this.renderActiveCharacterSheet();
     this.renderBestiaryList();
+    this.setupBestiaryV4();
+    this.renderRulesV3Modal('quaternario');
     this.renderRelicsList();
     this.renderTimeline();
     this.renderUniversalDiceTray();
@@ -652,9 +654,19 @@ class UIController {
       });
     }
 
-    document.getElementById('btn-open-rules')?.addEventListener('click', () => {
-      this.openModal('modal-rules');
-      this.soundFX.playTacticalBeep();
+    ['btn-open-rules', 'btn-open-rules-menu'].forEach(btnId => {
+      document.getElementById(btnId)?.addEventListener('click', () => {
+        this.renderRulesV3Modal(this.activeRulesTab || 'quaternario');
+        this.openModal('modal-rules');
+        this.soundFX.playTacticalBeep();
+      });
+    });
+
+    document.querySelectorAll('.rules-v3-tab-btn[data-rules-tab]').forEach(tabBtn => {
+      tabBtn.addEventListener('click', () => {
+        this.renderRulesV3Modal(tabBtn.dataset.rulesTab || 'quaternario');
+        this.soundFX.playTacticalBeep();
+      });
     });
 
     document.getElementById('btn-open-codex')?.addEventListener('click', () => {
@@ -682,9 +694,11 @@ class UIController {
       this.soundFX.playTacticalBeep();
     });
 
-    document.getElementById('btn-open-bestiary')?.addEventListener('click', () => {
-      this.openDrawer('bestiary');
-      this.soundFX.playTacticalBeep();
+    ['btn-nav-tomo4', 'btn-open-bestiary'].forEach(btnId => {
+      document.getElementById(btnId)?.addEventListener('click', () => {
+        this.openBestiaryModal();
+        this.soundFX.playTacticalBeep();
+      });
     });
 
     document.getElementById('btn-open-relics')?.addEventListener('click', () => {
@@ -1151,6 +1165,14 @@ class UIController {
               <span class="cris-meta-val" style="color: #00e5ff;">${this.escapeHtml(char.nex || char.mda || '0%')}</span>
             </div>
           </div>
+          ${(char.race || char.virtue || char.element || char.modality || char.pact) ? `
+            <div class="cris-meta-grid" style="margin-top: 6px;">
+              ${char.race ? `<div class="cris-meta-cell"><span class="cris-meta-label">RAÇA / LINHAGEM</span><span class="cris-meta-val">${this.escapeHtml(char.race)}</span></div>` : ''}
+              ${char.virtue ? `<div class="cris-meta-cell"><span class="cris-meta-label">VIRTUDE DE ALMA</span><span class="cris-meta-val" style="color:#ffd700;">${this.escapeHtml(char.virtue)}${char.modality ? ` (${this.escapeHtml(char.modality)})` : ''}</span></div>` : ''}
+              ${char.element ? `<div class="cris-meta-cell"><span class="cris-meta-label">ELEMENTO</span><span class="cris-meta-val">${this.escapeHtml(char.element)}</span></div>` : ''}
+              ${(char.pact && char.pact !== 'Nenhum') ? `<div class="cris-meta-cell"><span class="cris-meta-label">PACTO DA LENDA</span><span class="cris-meta-val" style="color:#c084fc;">${this.escapeHtml(char.pact)}</span></div>` : ''}
+            </div>
+          ` : ''}
         </div>
 
         <!-- BARRAS DE ESTATÍSTICAS CRIS (PV, PE, SAN, DEFESA) COM AJUSTES EM TEMPO REAL -->
@@ -1632,9 +1654,10 @@ ${char.summary || 'Sem registro adicional.'}
       const participantsHtml = participantIds.map(pId => {
         const pChar = this.dataLoader.getCharacterById(pId);
         if (!pChar) return '';
+        const shortLabel = this.formatShortCharLabel(pChar.name);
         return `
           <button class="campaign-participant-tag" onclick="window.uiController.selectCharacter('${pChar.id}'); window.uiController.closeModal('modal-campaigns-hub'); window.uiController.openDrawer('characters');" title="Ver Ficha CRIS de ${this.escapeHtml(pChar.name)}">
-            👤 ${this.escapeHtml(pChar.name.split(' ')[0])}
+            👤 ${this.escapeHtml(shortLabel)}
           </button>
         `;
       }).join('');
@@ -2389,8 +2412,32 @@ ${char.summary || 'Sem registro adicional.'}
     this.openDrawer('location');
   }
 
+  formatShortCharLabel(name) {
+    if (!name) return 'Agente';
+    const cleaned = String(name)
+      .replace(/^(?:O|A|Os|As|Dr\.?|Dra\.?|Dom|Comandante|Capit[ãa]o|Capit[ãa]|Inspetora?|Padre|Irm[ãa]o)\s+/i, '')
+      .trim();
+    return cleaned.split(/\s+/)[0] || String(name).split(/\s+/)[0];
+  }
+
   /* --- MODAIS (REGRAS E CÓDICE) --- */
   openModal(modalId) {
+    const primaryModals = new Set([
+      'modal-rules', 'modal-codex', 'modal-bestiary', 'modal-campaigns-hub',
+      'modal-campaign-story', 'modal-locations-atlas', 'modal-teia-do-tempo',
+      'modal-timeline', 'modal-character-creator', 'modal-shortcuts',
+      'modal-museum-admin', 'modal-combat-arena', 'modal-relics-codex'
+    ]);
+    if (primaryModals.has(modalId)) {
+      primaryModals.forEach(id => {
+        if (id !== modalId) {
+          document.getElementById(id)?.classList.remove('open', 'active');
+        }
+      });
+      if (modalId !== 'modal-campaign-story') {
+        window.museumController?.closeExhibitionModal?.();
+      }
+    }
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.add('open', 'active');
@@ -2402,6 +2449,387 @@ ${char.summary || 'Sem registro adicional.'}
     if (modal) {
       modal.classList.remove('open', 'active');
     }
+    if (modalId === 'modal-campaign-story') {
+      window.museumController?.closeExhibitionModal?.();
+    }
+  }
+
+  rollEscolhidoInline(btnEl) {
+    const roll = Math.floor(Math.random() * 1000) + 1;
+    const out = btnEl?.closest('.v3-card')?.querySelector('.chosen-roll-out');
+    if (out) {
+      if (roll === 1) {
+        out.innerHTML = '<strong style="color:#ffd700;">🎲 1d1000 = 1 — ESCOLHIDO DE NASCENÇA (0,1%)! Segunda Árvore de Pacto desperta desde o berço!</strong>';
+      } else {
+        out.textContent = `🎲 1d1000 = ${roll} — Mortal comum no nascimento (Pacto apenas por Ritual de Subjugação na Lua Nova).`;
+        out.style.color = '#c084fc';
+      }
+    }
+    if (this.soundFX) this.soundFX.playDiceRoll();
+  }
+
+  renderRulesV3Modal(activeTab = 'quaternario') {
+    this.activeRulesTab = activeTab;
+    document.querySelectorAll('.rules-v3-tab-btn[data-rules-tab]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.rulesTab === activeTab);
+    });
+
+    const mount = document.getElementById('rules-v3-mount');
+    if (!mount) return;
+
+    const e = (v) => this.escapeHtml(v ?? '');
+    const fmtArr = (val) => Array.isArray(val) ? val.map(x => e(x)).join(', ') : e(val || '');
+
+    if (activeTab === 'quaternario') {
+      const spheres = this.dataLoader.getQuaternario() || [];
+      const mdaRows = this.dataLoader.getMdaTable() || [];
+      mount.innerHTML = `
+        <div class="rules-v3-panel active">
+          <div class="v3-card" style="border-left: 3px solid #ffd700;">
+            <div class="v3-card-title">⚖️ O Quaternário Metafísico de Evren (Tomo III V3.0)</div>
+            <div class="v3-card-body">Quatro esferas regem a existência sob o Véu. Atributos base: 5 (FOR, VIG, AGI, PRE, INT). Pontos iniciais de criação: 12 pts. Quaternário de recursos: <strong>PV = 20 + VIG×3</strong> • <strong>PD = Escala MDA</strong> • <strong>EA = Bônus MDA + PRE×3</strong> • <strong>EST = 6 + VIG + INT (+5 Humanos Despertos)</strong>.</div>
+          </div>
+          <div class="v3-grid-2">
+            ${spheres.map(s => `
+              <div class="v3-card">
+                <div class="v3-card-meta">ESFERA ${e(s.number)}</div>
+                <div class="v3-card-title">${e(s.name)}</div>
+                <div class="v3-card-body"><strong>Origem:</strong> ${e(s.origin)}<br><br><strong>Relação:</strong> ${e(s.relation)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="v3-card">
+            <div class="v3-card-title">🧬 Tabela Oficial de Progressão MDA, PD, EA &amp; Estágios</div>
+            <div style="overflow-x:auto;">
+              <table class="v3-table">
+                <thead>
+                  <tr><th>MDA</th><th>Classificação</th><th>PD</th><th>Atr.</th><th>Bônus EA</th><th>Estágio Anímico</th></tr>
+                </thead>
+                <tbody>
+                  ${mdaRows.map(r => `
+                    <tr>
+                      <td style="color:#00e5ff; font-weight:700;">${e(r.mda)}</td>
+                      <td>${e(r.classif)}</td>
+                      <td>${e(r.pd)}</td>
+                      <td>${e(r.attr_pts)} pts</td>
+                      <td style="color:#ffd700;">${e(r.ea_bonus)}</td>
+                      <td>${e(r.stage)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (activeTab === 'virtudes') {
+      const virtues = this.dataLoader.getOfficialVirtues() || [];
+      mount.innerHTML = `
+        <div class="rules-v3-panel active">
+          <div class="v3-card" style="border-left: 3px solid #ffd700;">
+            <div class="v3-card-title">✨ As 11 Virtudes Oficiais &amp; Seus 11 Exemplares</div>
+            <div class="v3-card-body">Modalidades: <strong>Projeção</strong> (forma espiritual externa), <strong>Sintonia</strong> (vestimenta/arma sobre o corpo) e <strong>Convergência</strong> (MDA 40%+, manifestação absoluta). Clique em qualquer ficha do C.R.I.S. ou Criador V3.0 para atribuir uma Virtude.</div>
+          </div>
+          <div class="v3-grid-2">
+            ${virtues.map(v => `
+              <div class="v3-card">
+                <div class="v3-card-meta">${e((v.group || '').toUpperCase())} • ${e(v.epithet || '')}</div>
+                <div class="v3-card-title">${e(v.name)}</div>
+                <div class="v3-card-body">
+                  <div><strong>Princípio:</strong> ${e(v.principle)}</div>
+                  ${v.sintonia_effect ? `<div style="margin-top:4px;"><strong>Sintonia:</strong> ${e(v.sintonia_effect)}</div>` : ''}
+                  ${Array.isArray(v.techniques) && v.techniques.length ? `
+                    <div style="margin-top:6px; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
+                      ${v.techniques.map(t => `<div style="font-size:12px; margin-bottom:4px;"><strong style="color:#00e5ff;">${e(t.name)}</strong> (${e(t.cost)}): ${e(t.desc)}</div>`).join('')}
+                    </div>
+                  ` : ''}
+                  ${v.limitations ? `<div style="margin-top:4px; color:#ff9eb0; font-size:12px;"><strong>Restrição:</strong> ${e(v.limitations)}</div>` : ''}
+                  ${v.exemplary ? `
+                    <div style="margin-top:8px; padding:7px 9px; background:rgba(212,175,55,0.1); border-left:2px solid #ffd700; border-radius:4px; font-size:12px;">
+                      <strong style="color:#ffd700;">Exemplar: ${e(v.exemplary.name)}</strong> (${e(v.exemplary.role)})<br>
+                      <em>Alma: ${e(v.exemplary.alma)}</em> — ${e(v.exemplary.lore)}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (activeTab === 'racas') {
+      const races = this.dataLoader.getRaces() || [];
+      const elements = this.dataLoader.getElements() || [];
+      mount.innerHTML = `
+        <div class="rules-v3-panel active">
+          <div class="v3-card-title" style="padding:2px 0;">🧬 As 7 Raças &amp; Linhagens Jogáveis</div>
+          <div class="v3-grid-2">
+            ${races.map(r => `
+              <div class="v3-card">
+                <div class="v3-card-meta">LINHAGEM #${e(r.number)} • ${e(r.origin)}</div>
+                <div class="v3-card-title">${e(r.name)}</div>
+                <div class="v3-card-body">
+                  <div><strong>Biologia:</strong> ${e(r.biology)}</div>
+                  <div style="margin-top:5px; color:#00e5ff;"><strong>Traços:</strong> ${e(r.traits)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="v3-card-title" style="padding:8px 0 2px;">⚡ Os 10 Elementos Primordiais</div>
+          <div class="v3-grid-2">
+            ${elements.map(el => `
+              <div class="v3-card">
+                <div class="v3-card-meta">ELEMENTO #${e(el.number)} • Virtudes: ${fmtArr(el.virtues)}</div>
+                <div class="v3-card-title">${e(el.name)}</div>
+                <div class="v3-card-body">
+                  <div>${e(el.visual)}</div>
+                  <div style="margin-top:5px; color:#ffd700;"><strong>Efeito Mecânico:</strong> ${e(el.effect)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (activeTab === 'pactos') {
+      const pacts = this.dataLoader.getPacts() || [];
+      mount.innerHTML = `
+        <div class="rules-v3-panel active">
+          <div class="v3-card" style="border-left: 3px solid #c084fc;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div class="v3-card-title" style="color:#c084fc;">🌒 Escolhido de Nascença vs Ritual da Lua Nova</div>
+              <button type="button" class="btn-secondary" style="border-color:#ffd700; color:#ffd700; padding:6px 12px;" onclick="window.uiController.rollEscolhidoInline(this)">🎲 Rolar 1d1000 Escolhido</button>
+            </div>
+            <div class="v3-card-body">
+              Apenas <strong>0,05% a 0,1%</strong> (1d1000 = 1) nascem vinculados a uma Lenda Folclórica. Os demais precisam subjugar ou negociar com a Lenda sob a Lua Nova — arriscando caçada pela Ordem da Cinza.
+              <div class="chosen-roll-out" style="margin-top:8px; font-family:monospace; font-size:12.5px; color:#d8ecf8;">Clique no botão acima para testar sua sorte de nascimento (1d1000).</div>
+            </div>
+          </div>
+          <div class="v3-grid-2">
+            ${pacts.map(p => `
+              <div class="v3-card">
+                <div class="v3-card-meta">PACTO PROIBIDO • ${e(p.theme)}</div>
+                <div class="v3-card-title" style="color:#c084fc;">${e(p.name)}</div>
+                <div class="v3-card-body">
+                  <div><strong>Estigma Físico:</strong> ${e(p.stigma)}</div>
+                  <div style="margin-top:6px; color:#ffd700;"><strong>Poder Concedido:</strong> ${e(p.power)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    // Tab: combate
+    const kinetic = this.dataLoader.getUniverseRules()?.kinetic_combat_rules || {};
+    const stances = kinetic.stances || [];
+    const pavorRows = this.dataLoader.getPavorRuptureTable() || [];
+    const arsenal = this.dataLoader.getColonialArsenal() || [];
+    mount.innerHTML = `
+      <div class="rules-v3-panel active">
+        <div class="v3-card" style="border-left: 3px solid #ff5e78;">
+          <div class="v3-card-title" style="color:#ff5e78;">⚔️ Combate Ativo (Sem CA Passiva)</div>
+          <div class="v3-card-body">Todo ataque envolve choque de rolagens em tempo real. ${e(kinetic.armor_sacrifice || '')}</div>
+        </div>
+        <div class="v3-grid-2">
+          ${stances.map(st => `
+            <div class="v3-card">
+              <div class="v3-card-meta">ROLAGEM: ${e(st.roll)}</div>
+              <div class="v3-card-title">${e(st.name)}</div>
+              <div class="v3-card-body">${e(st.on_win)}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="v3-card" style="border-left: 3px solid #c084fc;">
+          <div class="v3-card-title" style="color:#c084fc;">🧠 Tabela de Pavor &amp; Ruptura de Alma (1d6 ao zerar EST)</div>
+          <div class="v3-card-body">
+            ${pavorRows.map(row => `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.08);">• ${e(row)}</div>`).join('')}
+          </div>
+        </div>
+        <div class="v3-card">
+          <div class="v3-card-title">🗡️ Arsenal Colonial, Prata &amp; Ferramentas de Contenção</div>
+          <div style="overflow-x:auto;">
+            <table class="v3-table">
+              <thead><tr><th>Equipamento</th><th>Categoria</th><th>Uso Tático</th></tr></thead>
+              <tbody>
+                ${arsenal.map(it => `
+                  <tr>
+                    <td style="color:#ffd700; font-weight:600;">${e(it.name)}</td>
+                    <td style="color:#00e5ff;">${e(it.cat)}</td>
+                    <td>${e(it.tactical)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  setupBestiaryV4() {
+    this.tomo4Category = 'all';
+    this.tomo4Search = '';
+    document.querySelectorAll('#bestiary-v4-filters .tomo4-filter-btn[data-t4-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.tomo4Category = btn.dataset.t4Cat || 'all';
+        document.querySelectorAll('#bestiary-v4-filters .tomo4-filter-btn').forEach(b => {
+          b.classList.toggle('active', b === btn);
+        });
+        this.renderBestiaryV4();
+        this.soundFX.playTacticalBeep();
+      });
+    });
+
+    const searchInput = document.getElementById('bestiary-v4-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (ev) => {
+        this.tomo4Search = (ev.target.value || '').trim().toLowerCase();
+        this.renderBestiaryV4();
+      });
+    }
+  }
+
+  openBestiaryModal(category = 'all', highlightEntityId = null) {
+    this.tomo4Category = category || 'all';
+    document.querySelectorAll('#bestiary-v4-filters .tomo4-filter-btn').forEach(b => {
+      b.classList.toggle('active', (b.dataset.t4Cat || 'all') === this.tomo4Category);
+    });
+    this.renderBestiaryV4();
+    if (highlightEntityId) {
+      this.showTomo4Detail(highlightEntityId);
+    } else {
+      const detail = document.getElementById('bestiary-v4-detail');
+      if (detail) detail.style.display = 'none';
+    }
+    this.openModal('modal-bestiary');
+  }
+
+  renderBestiaryV4() {
+    const grid = document.getElementById('bestiary-v4-grid');
+    const countEl = document.getElementById('bestiary-v4-count');
+    if (!grid) return;
+
+    const all = this.dataLoader.getTomo4Entities() || [];
+    const q = this.tomo4Search || '';
+    const filtered = all.filter(item => {
+      if (this.tomo4Category !== 'all' && item.category !== this.tomo4Category) return false;
+      if (!q) return true;
+      const hay = [
+        item.name, item.title, item.category_label, item.type, item.origin,
+        item.territory, item.virtue, item.element, item.description,
+        item.abilities, item.weakness, item.offense
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+
+    if (countEl) {
+      countEl.textContent = `${filtered.length} de ${all.length} Fichas`;
+    }
+
+    const e = (v) => this.escapeHtml(v ?? '');
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="v3-card" style="grid-column:1/-1; text-align:center;">Nenhuma ficha do Tomo IV corresponde ao filtro atual.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(item => {
+      const st = item.stats || {};
+      const mdaClean = item.mda ? String(item.mda).replace(/^MDA\s*/i, '') : '—';
+      return `
+        <div class="tomo4-card" onclick="window.uiController.showTomo4Detail('${e(item.id)}')">
+          <div class="tomo4-card-head">
+            <div>
+              <div class="tomo4-card-num">FICHA #${e(item.num)} • ${e(item.category_label || item.category)}</div>
+              <div class="tomo4-card-name">${e(item.name)}</div>
+            </div>
+            ${item.nd ? `<span class="bestiary-threat-badge">ND ${e(item.nd)}</span>` : ''}
+          </div>
+          ${item.title ? `<div style="font-size:12px; color:#ffd700; font-style:italic;">${e(item.title)}</div>` : ''}
+          <div style="font-size:12px; color:#a8d5e8;">
+            ${e(item.type || 'Entidade')} • MDA ${e(mdaClean)}${item.virtue ? ` • ${e(item.virtue)}` : ''}
+          </div>
+          <div class="tomo4-card-stats">
+            <span class="tomo4-stat-chip">PV ${e(st.pv || '—')}</span>
+            <span class="tomo4-stat-chip">PD ${e(st.pd || '—')}</span>
+            <span class="tomo4-stat-chip">EA ${e(st.ea || '—')}</span>
+            <span class="tomo4-stat-chip">EST ${e(st.est || '—')}</span>
+          </div>
+          <div style="font-size:12px; color:#dce8f5; line-height:1.45;">
+            ${e((item.description || '').slice(0, 165))}${(item.description || '').length > 165 ? '...' : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  showTomo4Detail(entityId) {
+    const detail = document.getElementById('bestiary-v4-detail');
+    if (!detail) return;
+    const item = this.dataLoader.getTomo4EntityById(entityId);
+    if (!item) return;
+
+    const e = (v) => this.escapeHtml(v ?? '');
+    const st = item.stats || {};
+    const at = st.attributes || {};
+    const mdaClean = item.mda ? String(item.mda).replace(/^MDA\s*/i, '') : '—';
+    const quoteClean = item.quote ? String(item.quote).replace(/^["“”'\s]+|["“”'\s]+$/g, '') : '';
+    detail.style.display = 'flex';
+    detail.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+        <div>
+          <div style="font-family:monospace; font-size:12px; color:#00e5ff;">FICHA CANÔNICA #${e(item.num)} • ${e(item.category_label)} • MDA ${e(mdaClean)}${item.nd ? ` • ND ${e(item.nd)}` : ''}</div>
+          <h3 style="margin:4px 0 2px; font-family:var(--font-display); font-size:20px; color:#ffd700;">${e(item.name)}${item.title ? ` — ${e(item.title)}` : ''}</h3>
+          <div style="font-size:12.5px; color:#b8cfe5;"><strong>Tipo:</strong> ${e(item.type)} | <strong>Origem:</strong> ${e(item.origin)} | <strong>Território:</strong> ${e(item.territory)}</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-secondary" style="border-color:#ff5e78; color:#ff9eb0; padding:6px 12px;" onclick="window.uiController.closeModal('modal-bestiary'); window.combatArena?.openArenaWithDefender('${e(item.id)}')">⚔️ Enviar p/ Arena</button>
+          <button type="button" class="btn-secondary" style="border-color:#39ff14; color:#39ff14; padding:6px 12px;" onclick="window.battlemapTokens?.spawnCreatureFromBestiary('${e(item.id)}')">👾 Invocar no Mapa 2D</button>
+          <button type="button" class="btn-secondary" style="padding:6px 12px;" onclick="document.getElementById('bestiary-v4-detail').style.display='none'">✕ Ocultar</button>
+        </div>
+      </div>
+      ${quoteClean ? `<blockquote style="margin:2px 0; padding:8px 12px; border-left:3px solid #ffd700; background:rgba(212,175,55,0.08); font-style:italic; font-size:13px; color:#ffe680;">"${e(quoteClean)}"</blockquote>` : ''}
+      <div style="font-size:13.5px; line-height:1.55; color:#eef6fc;">${e(item.description)}</div>
+      <div class="tomo4-card-stats">
+        <span class="tomo4-stat-chip"><strong>PV:</strong> ${e(st.pv || '—')}</span>
+        <span class="tomo4-stat-chip"><strong>PD:</strong> ${e(st.pd || '—')}</span>
+        <span class="tomo4-stat-chip"><strong>EA:</strong> ${e(st.ea || '—')}</span>
+        <span class="tomo4-stat-chip"><strong>EST:</strong> ${e(st.est || '—')}</span>
+        <span class="tomo4-stat-chip"><strong>RD:</strong> ${e(st.rd || '—')}</span>
+        <span class="tomo4-stat-chip" style="border-color:#ffd700; color:#ffd700;">FOR ${e(at.FOR ?? '—')} | VIG ${e(at.VIG ?? '—')} | AGI ${e(at.AGI ?? '—')} | PRE ${e(at.PRE ?? '—')} | INT ${e(at.INT ?? '—')}</span>
+      </div>
+      <div class="v3-grid-2">
+        <div class="v3-card">
+          <div class="v3-card-title" style="font-size:13px;">🛡️ Defesas, Reações &amp; Fraquezas</div>
+          <div class="v3-card-body">
+            ${item.virtue ? `<div><strong>Virtude / Pacto:</strong> ${e(item.virtue)}</div>` : ''}
+            ${item.element ? `<div><strong>Elemento:</strong> ${e(item.element)}</div>` : ''}
+            ${st.reactions ? `<div><strong>Reações Ativas:</strong> ${e(st.reactions)}</div>` : ''}
+            ${item.immunities ? `<div><strong>Imunidades:</strong> ${e(item.immunities)}</div>` : ''}
+            ${item.weakness ? `<div style="color:#ff9eb0;"><strong>Ponto Fraco:</strong> ${e(item.weakness)}</div>` : ''}
+          </div>
+        </div>
+        <div class="v3-card">
+          <div class="v3-card-title" style="font-size:13px;">⚔️ Ofensiva, Habilidades &amp; Tática</div>
+          <div class="v3-card-body">
+            ${item.offense ? `<div><strong>Ataques &amp; Desloc.:</strong> ${e(item.offense)}</div>` : ''}
+            ${item.abilities ? `<div style="margin-top:4px;"><strong>Habilidades:</strong> ${e(item.abilities)}</div>` : ''}
+            ${item.skills ? `<div style="margin-top:4px;"><strong>Perícias:</strong> ${e(item.skills)}</div>` : ''}
+            ${item.tactics ? `<div style="margin-top:4px;"><strong>Tática:</strong> ${e(item.tactics)}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   renderCodexGrid() {
@@ -2671,7 +3099,14 @@ ${char.summary || 'Sem registro adicional.'}
     if (!container) return;
 
     const creatures = this.dataLoader.getBestiary();
-    container.innerHTML = creatures.map(cr => `
+    const totalT4 = (this.dataLoader.getTomo4Entities() || []).length;
+    container.innerHTML = `
+      <div style="margin-bottom: 10px;">
+        <button type="button" class="btn-activate-relic" style="width: 100%; padding: 9px 12px; font-weight: 700; border-color: #ffd700; color: #ffd700; background: rgba(212,175,55,0.14);" onclick="window.uiController.openBestiaryModal()">
+          📖 Abrir Compêndio Tomo IV Completo (${totalT4} Fichas Oficiais)
+        </button>
+      </div>
+    ` + creatures.map(cr => `
       <div class="bestiary-card">
         <div class="bestiary-header">
           <div>
@@ -2741,8 +3176,9 @@ ${char.summary || 'Sem registro adicional.'}
     this.currentTimelineFilter = filterCampaignId;
     let milestones = this.dataLoader.getTimeline() || [];
 
-    // Ordenação estrita cronológica (2023 -> 2024 -> 2025 -> 2026 -> 2027)
-    milestones = [...milestones].sort((a, b) => (a.chronological_year || 0) - (b.chronological_year || 0));
+    // Ordenação estrita cronológica (-5000 a.C. -> 900 -> 1500 -> 1975 -> 2026)
+    const getSortYear = (m) => (m.year_numeric ?? m.chronological_year ?? 0);
+    milestones = [...milestones].sort((a, b) => getSortYear(a) - getSortYear(b));
 
     // Filtragem por campanha se solicitada
     if (filterCampaignId !== 'all') {
@@ -2750,12 +3186,10 @@ ${char.summary || 'Sem registro adicional.'}
     }
 
     const campaignsList = [
-      { id: 'all', label: 'Todas as Sagas' },
-      { id: 'camp_005', label: 'Floresta Negra (2023)' },
-      { id: 'camp_002', label: 'Mansão Vilar (2023-2026)' },
-      { id: 'camp_001', label: 'A Incursão (2025-2026)' },
-      { id: 'camp_004', label: 'Protocolo Selva (2025)' },
-      { id: 'camp_003', label: 'Estação Zero (2027)' }
+      { id: 'all', label: 'Todas as Eras (-5000 -> 2026)' },
+      { id: 'camp_001', label: 'Triângulo & Vera Cruz (Futura)' },
+      { id: 'camp_002', label: 'Mansão Vilar (Concluída)' },
+      { id: 'camp_filantropo_oeht', label: 'Gala Belvedere / Oeht (Futura)' }
     ];
 
     container.innerHTML = `
@@ -2774,16 +3208,17 @@ ${char.summary || 'Sem registro adicional.'}
         <div class="saga-timeline-flow">
           ${milestones.map((m, idx) => {
             const stars = '★'.repeat(m.threat_stars || 3) + '☆'.repeat(5 - (m.threat_stars || 3));
+            const yearLabel = m.era_badge || m.year || (m.year_numeric !== undefined ? String(m.year_numeric) : 'Era Atual');
             return `
-              <div class="saga-node-card" id="timeline-card-${m.id}">
+              <div class="saga-node-card" id="timeline-card-${this.escapeHtml(m.id)}">
                 <div class="saga-node-bullet">${idx + 1}</div>
                 <div class="saga-node-header">
                   <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                    <span class="saga-badge-era">${this.escapeHtml(m.era_badge || m.year)}</span>
+                    <span class="saga-badge-era">${this.escapeHtml(yearLabel)}</span>
                     <span class="saga-threat-badge" title="Nível de Ameaça">${stars} ${this.escapeHtml(m.threat_level || 'Severo')}</span>
-                    <span class="badge-tag status" style="font-size: 0.68rem;">${this.escapeHtml(m.status || 'Registrado')}</span>
+                    <span class="badge-tag status" style="font-size: 0.72rem;">${this.escapeHtml(m.status || 'Canônico')}</span>
                   </div>
-                  <span class="badge-tag location" style="font-size: 0.7rem;">📍 ${this.escapeHtml(m.location)}</span>
+                  <span class="badge-tag location" style="font-size: 0.75rem;">📍 ${this.escapeHtml(m.location || 'Evren')}</span>
                 </div>
 
                 <h3 class="saga-node-title">${this.escapeHtml(m.title)}</h3>
@@ -3763,62 +4198,50 @@ ${char.summary || 'Sem registro adicional.'}
     this.canonicalFallen = [
       {
         id: 'fallen_davi',
-        name: 'Davi Reis',
-        codename: 'O Andarilho das Minas',
-        class: 'Especialista em Túneis',
+        name: 'Davi Reis (Identidade Civil Perdida)',
+        codename: 'O Desaparecido das Minas',
+        class: 'Sobrevivente da Família Vilar',
         campaign_id: 'camp_002',
-        campaign_title: 'Até o Amanhecer (México)',
-        date_of_death: 'Ano 2023 // -3 da Ruptura',
-        cause: 'Desaparecido nas profundezas da mina após rompimento de escoras.',
-        quote: 'Não me procurem se a sirene tocar duas vezes... fechem a comporta.',
+        campaign_title: 'Mansão Vilar (Concluída)',
+        date_of_death: 'Ano 2021 // Queda das Minas',
+        cause: 'Dado como morto após o colapso subterrâneo até o Projeto LIMIAR resgatá-lo sob o nome de Gabriel Vilar.',
+        quote: 'Se os trilhos começarem a sangrar luz azul, fechem a comporta da galeria oeste.',
         flame_lit: false
       },
       {
-        id: 'fallen_breno',
-        name: 'Tenente Breno Cruz',
-        codename: 'Sombra da Copa',
-        class: 'Combatente // Esquadrão Curupira',
-        campaign_id: 'camp_004',
-        campaign_title: 'Protocolo Selva (Brasil)',
-        date_of_death: 'Outubro de 2025',
-        cause: 'Transmutação celular acelerada por quartzo negro durante contenção.',
-        quote: 'A seiva está nos meus pulmões, capitão. Me deixe aqui e leve a Dra. Neves.',
+        id: 'fallen_guia',
+        name: 'Guia Temporário do Triângulo',
+        codename: 'O Timoneiro do Naufrágio',
+        class: 'Sobrevivente Civis • MDA 5%',
+        campaign_id: 'camp_001',
+        campaign_title: 'Triângulo & Vera Cruz (Futura)',
+        date_of_death: 'Ano 1998 // Naufrágio das 5.000 Almas',
+        cause: 'Abriu passagem contra a horda oceânica no convés superior para que quatro refugiados atravessassem o portal do Fosso.',
+        quote: 'Corram pela proa! Eu seguro a escotilha até o nevoeiro engolir o convés.',
         flame_lit: false
       },
       {
         id: 'fallen_finch',
         name: 'Dr. Alistair Finch',
-        codename: 'Pioneiro de Caronte',
-        class: 'Ocultista Teórico',
+        codename: 'Cartógrafo de Caronte',
+        class: 'Erudito do Véu',
         campaign_id: 'camp_001',
-        campaign_title: 'A Incursão (Bermudas)',
-        date_of_death: 'Março de 2025',
-        cause: 'Assimilado pela biomassa do Mímico no convés inferior do cargueiro.',
-        quote: 'Ele tem os olhos da minha filha... mas o sorriso é de ferro.',
+        campaign_title: 'Triângulo & Vera Cruz (Futura)',
+        date_of_death: 'Expedição à Cidadela de Nácar',
+        cause: 'Assimilado pela biomassa do Mímico Genético ao mapear os recifes bioluminescentes fora dos muros de Nova Caronte.',
+        quote: 'Ele imitava a voz exata do meu contramestre... só notei tarde demais que não piscava.',
         flame_lit: false
       },
       {
-        id: 'fallen_klaus',
-        name: 'Irmão Klaus Vane',
-        codename: 'O Silencioso',
-        class: 'Ocultista Hermético',
-        campaign_id: 'camp_005',
-        campaign_title: 'Floresta Negra (Alemanha)',
-        date_of_death: 'Novembro de 2023',
-        cause: 'Hemorragia craniana ao traçar o pentagrama de concreto hidrofóbico.',
-        quote: 'Nem mesmo o concreto hidrofóbico impedirá o som do carrilhão.',
-        flame_lit: false
-      },
-      {
-        id: 'fallen_ilse',
-        name: 'Dra. Ilse Krause',
-        codename: 'Sentinela do Gelo',
-        class: 'Biofísica Glacial',
-        campaign_id: 'camp_003',
-        campaign_title: 'Estação Zero (Groenlândia)',
-        date_of_death: 'Janeiro de 2026',
-        cause: 'Hipotermia extrema após despressurização criogênica acidental.',
-        quote: 'A temperatura ambiente está em -72°C... mas o gelo está respirando.',
+        id: 'fallen_video01',
+        name: 'Observadores dos Vídeos #01 & #02',
+        codename: 'Registros 19.53.28 & 19.53.26',
+        class: 'Testemunhas Anômalas (Tomo IV)',
+        campaign_id: 'camp_001',
+        campaign_title: 'Arquivos Selados A.E.G.I.S.',
+        date_of_death: '1975 // Registros Visuais',
+        cause: 'Transformados durante o ritual da Coroa Branca nas dunas e o Ciclo Lupino de Bedburg antes da quarentena da A.E.G.I.S.',
+        quote: 'A câmera continuou gravando por sete minutos depois que as sombras dobraram de altura.',
         flame_lit: false
       }
     ];
@@ -3828,20 +4251,21 @@ ${char.summary || 'Sem registro adicional.'}
     const container = document.getElementById('memorial-mount');
     if (!container) return;
 
+    const seenIds = new Set(this.canonicalFallen.map(f => f.id));
     // Combina caídos canônicos com qualquer personagem salvo no app com status 'dead'
     const customFallen = (this.dataLoader.data.characters || [])
-      .filter(c => c.life_status === 'dead' || c.status?.toLowerCase().includes('morto'))
+      .filter(c => (c.life_status === 'dead' || c.status?.toLowerCase().includes('morto')) && !seenIds.has(c.id))
       .map(c => ({
         id: c.id,
         name: c.name,
         codename: c.codename || 'Agente de Evren',
         class: c.class || 'Especialista',
         campaign_id: c.campaign_ids?.[0] || 'camp_002',
-        campaign_title: 'Campanha de Origem',
-        date_of_death: 'Registrado em Mesa',
-        cause: c.description ? c.description.slice(0, 100) : 'Tombou heroicamente em combate.',
-        quote: 'Um agente nunca é esquecido enquanto sua história for contada.',
-        flame_lit: false
+        campaign_title: (this.dataLoader.getCampaignById(c.campaign_ids?.[0])?.title) || 'Mansão Vilar',
+        date_of_death: 'Registrado em Crônica',
+        cause: c.description ? c.description.slice(0, 120) : 'Tombou heroicamente sob o Véu.',
+        quote: c.quote || 'Um agente nunca é esquecido enquanto sua história for contada.',
+        flame_lit: Boolean(c.flame_lit)
       }));
 
     let allFallen = [...this.canonicalFallen, ...customFallen];
@@ -3906,45 +4330,45 @@ ${char.summary || 'Sem registro adicional.'}
         id: 'tape_01',
         title: 'FITA #01: O LIMIAR NAS MINAS',
         author: 'Gabriel Vilar',
-        sector: 'Aguascalientes (México)',
-        date: 'Ano -1 da Ruptura',
-        transcript: 'Aqui é Gabriel Vilar. Se você está ouvindo isso, o LIMIAR foi disparado. Eu não me arrependo de ter trazido todos de volta. Lucas ainda está respirando lá embaixo... eu consigo ouvir as batidas do coração dele através dos trilhos de cobre.',
+        sector: 'Mansão Vilar & Minas Coloniais (Crônica II)',
+        date: 'Ano 2024 // Crônica II',
+        transcript: 'Aqui é Gabriel Vilar. Se você está ouvindo isso, o Projeto LIMIAR foi disparado. Lucas ainda respira lá embaixo... o Expresso do Sexto Bilhete trouxe os cinco amigos de volta à porta da Mansão.',
         frequency: 440
       },
       {
         id: 'tape_02',
-        title: 'FITA #02: DIÁRIO DE NOVA CARONTE',
-        author: 'Comandante Marcus Miller',
-        sector: 'Triângulo das Bermudas',
-        date: 'Ano 2025 // Dia 44',
-        transcript: 'Dia 44 de isolamento na fenda oceânica. O Arquiteto começou a falar pelos alto-falantes do cargueiro. A água do mar tem gosto de ferro e mercúrio. Ordenei racionamento total de munição pesada. O Mímico já levou três vigias.',
+        title: 'FITA #02: S.O.S. DE NOVA CARONTE',
+        author: 'Vigias da Muralha',
+        sector: 'Vera Cruz das Almas // Triângulo (Crônica I)',
+        date: 'Era das Muralhas',
+        transcript: 'Relatório do Porto de Nova Caronte: o farol apagou durante a névoa de sal abissal. Um Mímico Genético passou pela guarita sul imitando o capelão. Mantenham prata e ferro frio engatilhados.',
         frequency: 380
       },
       {
         id: 'tape_03',
-        title: 'FITA #03: SOS DA ESTAÇÃO ZERO',
-        author: 'Equipe de Criobiologia',
-        sector: 'Groenlândia Ártica',
-        date: 'Janeiro de 2026',
-        transcript: 'Alerta nível cinco! A câmara criogênica primária cedeu sob a tempestade. O organismo que estava sepultado há doze mil anos não é fóssil... ele tem pulso. Repito, ele tem pulso e está assumindo a anatomia da equipe.',
+        title: 'FITA #03: REGISTRO VISUAL #19.53.28',
+        author: 'Arquivo Selado A.E.G.I.S.',
+        sector: 'Teocracia Térmica // Coroa Branca (Tomo IV)',
+        date: 'Registro #01 (Vídeo)',
+        transcript: 'Transcrição do Vídeo #01: A Montanha Oca pulsa em baixa frequência. Quando o Receptáculo ergueu a Coroa Branca nas dunas, cada sombra ao redor do festival ganhou três pupilas de luz fria.',
         frequency: 520
       },
       {
         id: 'tape_04',
-        title: 'FITA #04: PROTOCOLO SELVA // TAPAJÓS',
-        author: 'Capitão Thiago Santos',
-        sector: 'Amazônia (Brasil)',
-        date: 'Outubro de 2025',
-        transcript: 'Esquadrão Curupira no ponto de inserção da cratera. A selva aqui dentro não obedece ao ciclo solar. As folhas possuem fotorreceptores orgânicos. Encontramos a Dra. Camila Neves com vida, mas o cristal de quartzo está ressoando.',
+        title: 'FITA #04: GRAVAÇÃO #19.53.26 (LUPINO)',
+        author: 'Câmara de Evidências A.E.G.I.S.',
+        sector: 'Cadeia de Custódia Stumpp (Tomo IV)',
+        date: 'Registro #02 (Vídeo)',
+        transcript: 'Alerta de contenção sobre o Ciclo Lupino: o hospedeiro cadavérico permanece inerte sob luz solar, mas sua massa óssea se recompõe em sete segundos ao cair da noite de Bedburg.',
         frequency: 330
       },
       {
         id: 'tape_05',
-        title: 'FITA #05: O SILÊNCIO DA ABADIA',
-        author: 'Hans Richter',
-        sector: 'Floresta Negra (Alemanha)',
-        date: 'Novembro de 2023',
-        transcript: 'Greta perdeu totalmente a capacidade de articular fala. A entidade da cripta arrancou a voz dela durante a descriptografia do códice. Nós lacramos a passagem subterrânea com dez toneladas de concreto. Que Deus tenha piedade de quem encontrar as runas.',
+        title: 'FITA #05: INTERCEPTAÇÃO GALA BELVEDERE',
+        author: 'Inspetora Helena Vargas / Ordem da Cinza',
+        sector: 'Mansão Belvedere — Genebra (Crônica III)',
+        date: 'Relógio 23:40 // 3 Travas',
+        transcript: 'Oeht liberou o acesso ao cofre do subsolo antes da meia-noite. Duas das Três Travas ainda seguram o Véu no Salão Dourado. Se o Anárquico romper a Redoma antes da evacuação, disparem o Protocolo Eclipse.',
         frequency: 290
       }
     ];

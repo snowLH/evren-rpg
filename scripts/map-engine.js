@@ -259,9 +259,8 @@ class MapEngine {
           const locStr = (c.country_location || '').toLowerCase();
           const cName = countryName.toLowerCase();
           if (cName === 'mexico' && (locStr.includes('méxico') || locStr.includes('mexico'))) return true;
-          if (cName === 'greenland' && (locStr.includes('groenlândia') || locStr.includes('greenland') || locStr.includes('ártica'))) return true;
-          if (cName === 'brazil' && (locStr.includes('brasil') || locStr.includes('brazil') || locStr.includes('amazônia'))) return true;
-          if (cName === 'germany' && (locStr.includes('alemanha') || locStr.includes('germany') || locStr.includes('floresta negra'))) return true;
+          if (cName === 'switzerland' && (locStr.includes('suíça') || locStr.includes('suica') || locStr.includes('genebra') || locStr.includes('belvedere'))) return true;
+          if (cName === 'brazil' && (locStr.includes('brasil') || locStr.includes('brazil') || locStr.includes('vera cruz'))) return true;
           if (cName.length > 3 && locStr.includes(cName)) return true;
           return false;
         });
@@ -443,35 +442,34 @@ class MapEngine {
     });
     this.zoneLayerGroup.addLayer(riftLine);
 
-    // Linha de Fenda Dimensional ligando o Triângulo das Bermudas à Estação Criogênica Zero (Groenlândia)
-    const arcticRiftLine = L.polyline([
+    // Linha de Fenda Dimensional ligando o Triângulo das Bermudas a Vera Cruz das Almas e Genebra (Redoma Belvedere)
+    const atlanticRiftLine = L.polyline([
       [25.50, -71.50],  // Triângulo das Bermudas
-      [50.00, -52.00],  // Atlântico Norte
-      [72.00, -40.00]   // Estação Zero (Groenlândia)
+      [-17.30, -38.50], // Vera Cruz das Almas (Queda do Véu, 1500)
+      [25.50, -71.50],
+      [46.20, 6.14]     // Mansão Belvedere (Genebra)
     ], {
       color: '#00e5ff',
-      weight: 2.2,
-      opacity: 0.85,
+      weight: 2.0,
+      opacity: 0.72,
       dashArray: '8, 6',
       className: 'dimensional-rift-line'
     });
-    this.zoneLayerGroup.addLayer(arcticRiftLine);
+    this.zoneLayerGroup.addLayer(atlanticRiftLine);
   }
 
   /**
-   * Plota os Grandes Marcadores de RPG no México, Triângulo das Bermudas e Groenlândia
+   * Plota os Grandes Marcadores de RPG no México, Triângulo das Bermudas e Genebra
    */
   renderGlobalCampaignMarkers() {
     this.globalMarkersGroup.clearLayers();
     const campaigns = this.dataLoader.getCampaigns();
 
     campaigns.forEach(camp => {
-      const coords = camp.world_coordinates || [20.0, -80.0];
+      const coords = camp.coordinates || camp.world_coordinates || [20.0, -80.0];
       const isTriangulo = camp.id === 'camp_001';
       const isMexico = camp.id === 'camp_002';
-      const isArtico = camp.id === 'camp_003';
-      const isBrasil = camp.id === 'camp_004';
-      const isAlemanha = camp.id === 'camp_005';
+      const isBelvedere = camp.id === 'camp_filantropo_oeht';
 
       let markerClass = 'marker-vilar-portal';
       let dangerClass = 'danger-alfa';
@@ -479,15 +477,9 @@ class MapEngine {
       if (isTriangulo) {
         markerClass = 'marker-triangulo-portal';
         dangerClass = 'danger-omega';
-      } else if (isArtico) {
-        markerClass = 'marker-artico-portal';
-        dangerClass = 'danger-beta';
-      } else if (isBrasil) {
-        markerClass = 'marker-brasil-portal';
-        dangerClass = 'danger-omega';
-      } else if (isAlemanha) {
+      } else if (isBelvedere) {
         markerClass = 'marker-alemanha-portal';
-        dangerClass = 'danger-alfa';
+        dangerClass = 'danger-beta';
       }
 
       let iconSvg = '';
@@ -500,30 +492,12 @@ class MapEngine {
             <circle cx="12" cy="12" r="4" fill="#e74c3c" fill-opacity="0.3"/>
           </svg>
         `;
-      } else if (isArtico) {
+      } else if (isBelvedere) {
         iconSvg = `
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="2" x2="12" y2="22"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-            <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"/>
-            <circle cx="12" cy="12" r="3" fill="#00e5ff" fill-opacity="0.4"/>
-          </svg>
-        `;
-      } else if (isBrasil) {
-        iconSvg = `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
-            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-            <circle cx="12" cy="12" r="2" fill="#39ff14"/>
-          </svg>
-        `;
-      } else if (isAlemanha) {
-        iconSvg = `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            <circle cx="12" cy="8" r="2" fill="#c084fc"/>
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15 14"/>
+            <circle cx="12" cy="12" r="2" fill="#c084fc"/>
           </svg>
         `;
       } else {
@@ -610,43 +584,21 @@ class MapEngine {
       targetName = 'MANSÃO VILAR // MÉXICO';
       targetCountry = 'México (Serra Mineradora)';
       targetAtmosphere = 'Chuva Torrencial & Vapores de Minas Antigas';
-      targetEra = 'Ano 2024 • Concluído / Histórico';
+      targetEra = 'Ano 2024 • Concluída';
       targetDanger = 'NÍVEL ALFA // ECOS & LIMIAR';
-      targetNarrative = 'Local do isolamento onde cinco amigos confrontaram o Mascarado do LIMIAR e resgataram Lucas Vilar cego nas profundezas das minas subterrâneas.';
+      targetNarrative = 'Local do isolamento onde os 5 amigos confrontaram Gabriel Vilar ("Davi Reis") e resgataram Lucas Vilar nas galerias subterrâneas.';
       targetIcon = '🏛️';
-    } else if (rpgId === 'camp_003' || rpgId === 'map_artico' || rpgId?.includes?.('estacao') || rpgId?.includes?.('monolito')) {
-      campaign = this.dataLoader.getCampaignById('camp_003');
-      targetCoords = [72.0, -40.0];
-      targetZoom = 8;
-      targetName = 'ESTAÇÃO CRIOGÊNICA ZERO // GROENLÂNDIA';
-      targetCountry = 'Groenlândia (Calota Polar Ártica)';
-      targetAtmosphere = 'Nevasca Glacial (-50°C) & Radiação Criogênica';
-      targetEra = 'Ano 2026 • RPG Em Andamento';
-      targetDanger = 'NÍVEL BETA // CRIOPARASITAS';
-      targetNarrative = 'Complexo científico subterrâneo escavado sob 3km de gelo onde um espécime primordial rompeu a contenção de quarentena.';
-      targetIcon = '❄️';
-    } else if (rpgId === 'camp_004' || rpgId === 'map_brasil' || rpgId?.includes?.('tapajos') || rpgId?.includes?.('quartzo')) {
-      campaign = this.dataLoader.getCampaignById('camp_004');
-      targetCoords = [-4.25, -55.98];
-      targetZoom = 10;
-      targetName = 'BACIA DO TAPAJÓS // BRASIL';
-      targetCountry = 'Brasil (Amazônia / Rio Tapajós)';
-      targetAtmosphere = 'Umidade Densa de Selva & Esporos Bioelétricos';
-      targetEra = 'Ano 2025 • Concluído / Histórico';
-      targetDanger = 'NÍVEL ÔMEGA // NÓDULOS DE QUARTZO';
-      targetNarrative = 'Local de infiltração do esquadrão Curupira onde o Capitão Santos e a Dra. Camila Neves detonaram a cratera de quartzo negro para deter a infecção vegetal.';
-      targetIcon = '🌿';
-    } else if (rpgId === 'camp_005' || rpgId === 'map_alemanha' || rpgId?.includes?.('monasterio') || rpgId?.includes?.('cripta')) {
-      campaign = this.dataLoader.getCampaignById('camp_005');
-      targetCoords = [48.15, 8.20];
-      targetZoom = 11;
-      targetName = 'MONASTÉRIO DOS SEM-ROSTO // ALEMANHA';
-      targetCountry = 'Alemanha (Floresta Negra)';
-      targetAtmosphere = 'Névoa Gótica Perpétua & Frequência de Amnésia';
-      targetEra = 'Ano 2023 • Concluído / Histórico';
-      targetDanger = 'NÍVEL ALFA // RESSONÂNCIA DO ECO';
-      targetNarrative = 'Abadia gótica medieval lacrada após Greta Falk e Hans Richter descobrirem que sinos do LIMIAR roubavam vozes e memórias de peregrinos.';
-      targetIcon = '🔔';
+    } else if (rpgId === 'camp_filantropo_oeht' || rpgId === 'map_belvedere' || rpgId?.includes?.('belvedere') || rpgId?.includes?.('oeht')) {
+      campaign = this.dataLoader.getCampaignById('camp_filantropo_oeht');
+      targetCoords = [46.2044, 6.1432];
+      targetZoom = 12;
+      targetName = 'MANSÃO BELVEDERE // GENEBRA';
+      targetCountry = 'Suíça (Gala de Oeht • 22h00–00h00)';
+      targetAtmosphere = 'Redoma Púrpura, Lodo Ácido & Loop Temporal 10s';
+      targetEra = 'Ano 2026 • (Futura Campanha)';
+      targetDanger = 'SEVERO // AS 3 TRAVAS & O ANÁRQUICO';
+      targetNarrative = 'Entre 22h00 e 00h00, infiltrados da A.E.G.I.S. enfrentam a Mesa de Poker VIP, reflexos vivos e o despertar d’O Anárquico (MDA 80%).';
+      targetIcon = '🎭';
     } else {
       campaign = this.dataLoader.getCampaignById(rpgId);
       if (!campaign) {
@@ -666,7 +618,7 @@ class MapEngine {
     }
 
     if (campaign) {
-      targetCoords = campaign.world_coordinates || targetCoords;
+      targetCoords = campaign.coordinates || campaign.world_coordinates || targetCoords;
       targetName = campaign.gateway_name || campaign.title;
       targetCountry = campaign.country_location || targetCountry;
       targetDanger = campaign.danger_rating || targetDanger;
@@ -674,9 +626,7 @@ class MapEngine {
       targetNarrative = campaign.synopsis || campaign.description || targetNarrative;
       if (campaign.id === 'camp_001') { targetZoom = 7; targetIcon = '🌊'; }
       else if (campaign.id === 'camp_002') { targetZoom = 11; targetIcon = '🏛️'; }
-      else if (campaign.id === 'camp_003') { targetZoom = 8; targetIcon = '❄️'; }
-      else if (campaign.id === 'camp_004') { targetZoom = 10; targetIcon = '🌿'; }
-      else if (campaign.id === 'camp_005') { targetZoom = 11; targetIcon = '🔔'; }
+      else if (campaign.id === 'camp_filantropo_oeht') { targetZoom = 12; targetIcon = '🎭'; }
     }
 
     // Fecha a gaveta lateral para visão desobstruída
@@ -742,9 +692,7 @@ class MapEngine {
     // Ajusta o clima do motor atmosférico
     if (this.atmosphericEngine) {
       if (activeCampId === 'camp_002') this.atmosphericEngine.setMode('vilar');
-      else if (activeCampId === 'camp_003') this.atmosphericEngine.setMode('artico');
-      else if (activeCampId === 'camp_004') this.atmosphericEngine.setMode('selva');
-      else if (activeCampId === 'camp_005') this.atmosphericEngine.setMode('floresta');
+      else if (activeCampId === 'camp_filantropo_oeht') this.atmosphericEngine.setMode('floresta');
       else this.atmosphericEngine.setMode('triangulo');
     }
 
@@ -1279,228 +1227,47 @@ class MapEngine {
 
       this.localTacticalOverlay = L.svgOverlay(svg, bounds, { opacity: 0.96, interactive: false });
       this.localTacticalOverlay.addTo(this.map);
-    } else if (campaignId === 'camp_003') {
-      // OVERLAY DA ESTAÇÃO CRIOGÊNICA ZERO (CAMP_003) ANCORADO NA GROENLÂNDIA
-      const bounds = [[71.0, -42.0], [73.0, -38.0]];
+    } else if (campaignId === 'camp_filantropo_oeht') {
+      // OVERLAY DA MANSÃO BELVEDERE & REDOMA DE OEHT (GENEBRA) [46.16, 6.08] a [46.25, 6.21]
+      const bounds = [[46.16, 6.08], [46.25, 6.21]];
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svg.setAttribute("viewBox", "0 0 1600 1000");
       svg.setAttribute("class", "battlemap-interactive-container");
 
       svg.innerHTML = `
         <defs>
-          <linearGradient id="permafrostGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#040b14"/>
-            <stop offset="50%" stop-color="#0a1a2c"/>
-            <stop offset="100%" stop-color="#05101c"/>
-          </linearGradient>
-
-          <radialGradient id="cryoPodGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.9"/>
-            <stop offset="60%" stop-color="#0077b6" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#021020" stop-opacity="0"/>
-          </radialGradient>
-
-          <radialGradient id="monolithAbyssGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#b432ff" stop-opacity="0.8"/>
-            <stop offset="40%" stop-color="#4a0e4e" stop-opacity="0.5"/>
-            <stop offset="85%" stop-color="#02050a" stop-opacity="0.95"/>
-            <stop offset="100%" stop-color="#010306" stop-opacity="1"/>
-          </radialGradient>
-
-          <pattern id="icePavingPattern" width="40" height="40" patternUnits="userSpaceOnUse">
-            <rect width="40" height="40" fill="#132130"/>
-            <path d="M0 0 L40 40 M40 0 L0 40" stroke="#0b1520" stroke-width="1.5" fill="none"/>
-            <circle cx="20" cy="20" r="1.5" fill="#00e5ff" opacity="0.3"/>
-          </pattern>
-        </defs>
-
-        <!-- Fundo de Gelo Milenar e Permafrost -->
-        <rect width="1600" height="1000" fill="url(#permafrostGrad)"/>
-
-        <!-- ====================================================================
-             SETOR ESQUERDO: LABORATÓRIO CRIOGÊNICO ZERO (AEGIS)
-             ==================================================================== -->
-        <!-- Fundação Blindada da Estação Subterrânea -->
-        <rect x="80" y="80" width="700" height="840" rx="8" fill="#16222f" stroke="#00e5ff" stroke-width="3"/>
-        <rect x="90" y="90" width="680" height="820" fill="url(#icePavingPattern)" opacity="0.8"/>
-
-        <!-- Corredor Central de Descontaminação e Portas Herméticas -->
-        <rect x="360" y="80" width="140" height="840" fill="#0c1520" stroke="#22d3ee" stroke-width="2"/>
-        <line x1="360" y1="280" x2="500" y2="280" stroke="#ffd700" stroke-width="4" stroke-dasharray="8 4"/>
-        <line x1="360" y1="520" x2="500" y2="520" stroke="#ffd700" stroke-width="4" stroke-dasharray="8 4"/>
-        <line x1="360" y1="740" x2="500" y2="740" stroke="#ffd700" stroke-width="4" stroke-dasharray="8 4"/>
-
-        <!-- Câmara de Quarentena Nível 4: 4 Cápsulas Criogênicas Cilíndricas -->
-        <g transform="translate(140, 160)">
-          <!-- Cápsula 1 (Ativa) -->
-          <rect x="0" y="0" width="80" height="140" rx="20" fill="#040e1a" stroke="#00e5ff" stroke-width="2.5"/>
-          <ellipse cx="40" cy="70" rx="25" ry="50" fill="url(#cryoPodGlow)"/>
-          <text x="40" y="130" fill="#00e5ff" font-family="monospace" font-size="10" text-anchor="middle">ESPÉCIME α</text>
-
-          <!-- Cápsula 2 (Ativa) -->
-          <rect x="120" y="0" width="80" height="140" rx="20" fill="#040e1a" stroke="#00e5ff" stroke-width="2.5"/>
-          <ellipse cx="160" cy="70" rx="25" ry="50" fill="url(#cryoPodGlow)"/>
-          <text x="160" y="130" fill="#00e5ff" font-family="monospace" font-size="10" text-anchor="middle">ESPÉCIME β</text>
-
-          <!-- Cápsula 3 (ROMPEU / ESTILHAÇADA) -->
-          <rect x="0" y="220" width="80" height="140" rx="20" fill="#040e1a" stroke="#ff2a4b" stroke-width="2.5" stroke-dasharray="6 4"/>
-          <!-- Rastro de Sangue Negro Congelado no Chão -->
-          <path d="M 40,320 Q 80,380 140,420 Q 200,440 280,430" stroke="#03080e" stroke-width="12" fill="none" opacity="0.9"/>
-          <path d="M 40,320 Q 80,380 140,420 Q 200,440 280,430" stroke="#8b0000" stroke-width="4" fill="none" opacity="0.8"/>
-          <text x="40" y="350" fill="#ff2a4b" font-family="monospace" font-size="10" text-anchor="middle">BRECHA // FUGIU</text>
-
-          <!-- Cápsula 4 (Estabilizada) -->
-          <rect x="120" y="220" width="80" height="140" rx="20" fill="#040e1a" stroke="#00e5ff" stroke-width="2.5"/>
-          <ellipse cx="160" cy="290" rx="25" ry="50" fill="url(#cryoPodGlow)"/>
-          <text x="160" y="350" fill="#00e5ff" font-family="monospace" font-size="10" text-anchor="middle">ESPÉCIME δ</text>
-        </g>
-
-        <!-- Luz de Alarme Estroboscópica da Estação -->
-        <circle cx="430" cy="180" r="16" fill="#ff2a4b" opacity="0.85" style="animation: pulseCatastrofe 0.8s infinite alternate;"/>
-        <circle cx="430" cy="400" r="16" fill="#ff2a4b" opacity="0.85" style="animation: pulseCatastrofe 0.8s infinite alternate;"/>
-
-        <!-- Sala de Controle com Monitores de Bio-Telemetria -->
-        <rect x="140" y="660" width="180" height="180" fill="#081422" stroke="#00e5ff" stroke-width="2" rx="4"/>
-        <rect x="160" y="680" width="60" height="40" fill="#020810" stroke="#39ff14" stroke-width="1.5"/>
-        <path d="M 165,700 L 175,690 L 185,710 L 195,695 L 215,700" stroke="#39ff14" stroke-width="1.5" fill="none"/>
-        <rect x="235" y="680" width="60" height="40" fill="#020810" stroke="#00e5ff" stroke-width="1.5"/>
-        <text x="240" y="705" fill="#00e5ff" font-family="monospace" font-size="9">MDA: 88%</text>
-
-        <!-- Rótulo Tático da Estação -->
-        <rect x="100" y="100" width="340" height="26" fill="rgba(6, 16, 26, 0.94)" stroke="#00e5ff" stroke-width="1.5" rx="3"/>
-        <text x="110" y="117" fill="#00e5ff" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="bold">ESTAÇÃO CRIOGÊNICA ZERO // QUARENTENA</text>
-
-        <!-- ====================================================================
-             SETOR DIREITO: A FENDA DO MONÓLITO DE GELO NEGRO
-             ==================================================================== -->
-        <!-- A Grande Garganta Glacial (Fissura Subglacial) -->
-        <path d="M 880,40 Q 950,300 920,540 Q 900,750 960,960 L 1540,960 Q 1480,720 1520,460 Q 1550,220 1500,40 Z" fill="#02060c" stroke="#00e5ff" stroke-width="2"/>
-        
-        <!-- Fenda Central com Gradiente Abissal -->
-        <ellipse cx="1240" cy="500" rx="240" ry="380" fill="url(#monolithAbyssGrad)"/>
-
-        <!-- O Monólito Espiralado de Gelo Negro (Origem da Mutação) -->
-        <g transform="translate(1240, 500)">
-          <!-- Estrutura Obelisca com Cristais de Gelo Negro -->
-          <polygon points="0,-180 45,-60 60,160 0,220 -60,160 -45,-60" fill="#020508" stroke="#b432ff" stroke-width="3"/>
-          <line x1="0" y1="-180" x2="0" y2="220" stroke="#00e5ff" stroke-width="2"/>
-          <line x1="-45" y1="-60" x2="45" y2="-60" stroke="#b432ff" stroke-width="1.5"/>
-          <line x1="-60" y1="60" x2="60" y2="60" stroke="#00e5ff" stroke-width="1.5"/>
-          <!-- Runa e Núcleo Bioluminescente -->
-          <circle cx="0" cy="0" r="18" fill="#b432ff" stroke="#00e5ff" stroke-width="2" style="animation: pulseCatastrofe 1.2s infinite alternate;"/>
-        </g>
-
-        <!-- Guindaste e Plataforma de Perfuração Industrial da AEGIS -->
-        <rect x="860" y="320" width="80" height="30" fill="#37474f" stroke="#263238" stroke-width="2"/>
-        <line x1="900" y1="320" x2="1000" y2="240" stroke="#78909c" stroke-width="4"/>
-        <line x1="1000" y1="240" x2="1000" y2="380" stroke="#cfd8dc" stroke-width="2" stroke-dasharray="4 2"/>
-
-        <!-- Rótulo Tático do Monólito -->
-        <rect x="1080" y="100" width="340" height="26" fill="rgba(10, 4, 18, 0.94)" stroke="#b432ff" stroke-width="1.5" rx="3"/>
-        <text x="1090" y="117" fill="#d187ff" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="bold">O MONÓLITO DE GELO NEGRO // FENDA POLAR</text>
-      `;
-
-      this.localTacticalOverlay = L.svgOverlay(svg, bounds, { opacity: 0.96, interactive: false });
-      this.localTacticalOverlay.addTo(this.map);
-    } else if (campaignId === 'camp_004') {
-      // OVERLAY DA BACIA DO TAPAJÓS (CAMP_004) ANCORADO NA AMAZÔNIA BRASILEIRA [-5.5, -57.5] a [-3.0, -54.5]
-      const bounds = [[-5.5, -57.5], [-3.0, -54.5]];
-      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 1600 1000");
-      svg.setAttribute("class", "battlemap-interactive-container");
-
-      svg.innerHTML = `
-        <defs>
-          <radialGradient id="jungleAbyssGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#051f0f" stop-opacity="0.95"/>
-            <stop offset="60%" stop-color="#021208" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#010804" stop-opacity="0.8"/>
-          </radialGradient>
-          <linearGradient id="tapajosRiverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0e3d2f"/>
-            <stop offset="50%" stop-color="#144d3b"/>
-            <stop offset="100%" stop-color="#0b2e23"/>
-          </linearGradient>
-        </defs>
-
-        <rect width="1600" height="1000" fill="url(#jungleAbyssGrad)"/>
-
-        <!-- O Rio Tapajós Serpenteante -->
-        <path d="M 0,280 Q 320,180 620,380 T 1100,420 T 1600,260" fill="none" stroke="url(#tapajosRiverGrad)" stroke-width="140" stroke-linecap="round"/>
-        <path d="M 0,280 Q 320,180 620,380 T 1100,420 T 1600,260" fill="none" stroke="#22d3ee" stroke-width="6" stroke-dasharray="16 12" opacity="0.4"/>
-
-        <!-- Setor 1: Acampamento Base Tático Tapajós -->
-        <g transform="translate(240, 520)">
-          <rect x="0" y="0" width="380" height="260" rx="8" fill="#081c10" stroke="#39ff14" stroke-width="2"/>
-          <polygon points="40,120 100,40 160,120" fill="#1b4324" stroke="#2a6637" stroke-width="2"/>
-          <polygon points="180,120 240,40 300,120" fill="#1b4324" stroke="#2a6637" stroke-width="2"/>
-          <rect x="60" y="150" width="100" height="70" fill="#102d18" stroke="#39ff14" stroke-width="1.5"/>
-          <circle cx="240" cy="180" r="35" fill="#021408" stroke="#39ff14" stroke-width="2"/>
-          <text x="240" y="184" fill="#39ff14" font-family="monospace" font-size="10" text-anchor="middle">ANTENA AEGIS</text>
-          <rect x="20" y="14" width="320" height="24" fill="rgba(2, 20, 8, 0.9)" stroke="#39ff14" stroke-width="1" rx="3"/>
-          <text x="30" y="30" fill="#39ff14" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="bold">ACAMPAMENTO BASE TAPAJÓS // SETOR CURUPIRA</text>
-        </g>
-
-        <!-- Setor 2: A Cratera de Quartzo Negro & Fissura Mutagênica -->
-        <g transform="translate(1080, 500)">
-          <ellipse cx="0" cy="0" rx="260" ry="200" fill="#030b06" stroke="#39ff14" stroke-width="3" stroke-dasharray="14 8"/>
-          <circle cx="0" cy="0" r="140" fill="#08020e" stroke="#c084fc" stroke-width="2"/>
-          <polygon points="0,-120 20,-30 80,0 20,30 0,120 -20,30 -80,0 -20,-30" fill="#120422" stroke="#a855f7" stroke-width="2"/>
-          <circle cx="0" cy="0" r="22" fill="#39ff14" style="animation: pulseCatastrofe 1s infinite alternate;"/>
-          <rect x="-160" y="150" width="320" height="26" fill="rgba(8, 2, 16, 0.94)" stroke="#c084fc" stroke-width="1.5" rx="3"/>
-          <text x="-150" y="167" fill="#c084fc" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="bold">A CRATERA DE QUARTZO NEGRO // FOCO DO ECO</text>
-        </g>
-      `;
-
-      this.localTacticalOverlay = L.svgOverlay(svg, bounds, { opacity: 0.96, interactive: false });
-      this.localTacticalOverlay.addTo(this.map);
-    } else if (campaignId === 'camp_005') {
-      // OVERLAY DO MONASTÉRIO DOS SEM-ROSTO (CAMP_005) ANCORADO NA FLORESTA NEGRA [[47.8, 7.8], [48.6, 8.6]]
-      const bounds = [[47.8, 7.8], [48.6, 8.6]];
-      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 1600 1000");
-      svg.setAttribute("class", "battlemap-interactive-container");
-
-      svg.innerHTML = `
-        <defs>
-          <radialGradient id="gothicFogGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#180b26" stop-opacity="0.95"/>
-            <stop offset="60%" stop-color="#0d0416" stop-opacity="0.92"/>
-            <stop offset="100%" stop-color="#050208" stop-opacity="0.85"/>
+          <radialGradient id="redomaBelvedereGrad" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#22093a" stop-opacity="0.92"/>
+            <stop offset="65%" stop-color="#110420" stop-opacity="0.94"/>
+            <stop offset="100%" stop-color="#05020a" stop-opacity="0.88"/>
           </radialGradient>
         </defs>
-
-        <rect width="1600" height="1000" fill="url(#gothicFogGrad)"/>
-
-        <!-- Planta Baixa da Abadia e Claustro Gótico de Friburgo -->
-        <g transform="translate(320, 240)">
-          <rect x="0" y="0" width="460" height="520" rx="6" fill="#140a20" stroke="#7e57c2" stroke-width="4"/>
-          <rect x="180" y="40" width="100" height="440" fill="#231338" stroke="#9575cd" stroke-width="2"/>
-          <rect x="60" y="160" width="340" height="90" fill="#231338" stroke="#9575cd" stroke-width="2"/>
-          <circle cx="230" cy="90" r="32" fill="#0c0414" stroke="#c084fc" stroke-width="3"/>
-          <circle cx="230" cy="90" r="12" fill="#ffd700"/>
-          <text x="230" y="145" fill="#c084fc" font-family="monospace" font-size="10" text-anchor="middle">SINO SEM BADALO</text>
-          <rect x="20" y="14" width="360" height="24" fill="rgba(12, 4, 22, 0.92)" stroke="#c084fc" stroke-width="1.2" rx="3"/>
-          <text x="30" y="30" fill="#c084fc" font-family="'Cinzel', Georgia, serif" font-size="11" font-weight="bold">MONASTÉRIO DE SANTO AGOSTINHO // ABADIA</text>
-        </g>
-
-        <!-- A Cripta Subterrânea do Eco Silencioso -->
-        <g transform="translate(1050, 480)">
-          <rect x="0" y="0" width="380" height="320" rx="8" fill="#0e0618" stroke="#c084fc" stroke-width="3"/>
-          <g stroke="#512da8" stroke-width="2" fill="#1d0d33">
-            <rect x="40" y="60" width="60" height="90"/>
-            <rect x="120" y="60" width="60" height="90"/>
-            <rect x="200" y="60" width="60" height="90"/>
-            <rect x="280" y="60" width="60" height="90"/>
-            <rect x="40" y="180" width="60" height="90"/>
-            <rect x="120" y="180" width="60" height="90"/>
-            <rect x="200" y="180" width="60" height="90"/>
-            <rect x="280" y="180" width="60" height="90"/>
-          </g>
-          <line x1="20" y1="20" x2="360" y2="300" stroke="#ff2a4b" stroke-width="3" stroke-dasharray="10 6"/>
-          <rect x="30" y="270" width="320" height="24" fill="rgba(20, 4, 30, 0.95)" stroke="#ff2a4b" stroke-width="1.5" rx="3"/>
-          <text x="40" y="286" fill="#ff6b8b" font-family="monospace" font-size="10" font-weight="bold">CRIPTA DO ECO SILENCIOSO // LACRADA EM CONCRETO</text>
-        </g>
+        <rect width="1600" height="1000" fill="url(#redomaBelvedereGrad)"/>
+        <ellipse cx="800" cy="500" rx="710" ry="440" fill="none" stroke="#c084fc" stroke-width="5" stroke-dasharray="14 8"/>
+        <!-- Entrada VIP -->
+        <rect x="650" y="830" width="300" height="110" rx="6" fill="#0d1b2a" stroke="#00e5ff" stroke-width="2.5"/>
+        <text x="800" y="890" fill="#00e5ff" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">1. ENTRADA VIP (BIOMETRIA)</text>
+        <!-- Salão Principal -->
+        <rect x="520" y="420" width="560" height="360" rx="8" fill="#170b2b" stroke="#ffd700" stroke-width="3"/>
+        <circle cx="800" cy="600" r="65" fill="#2a0a4a" stroke="#c084fc" stroke-width="3"/>
+        <text x="800" y="595" fill="#ffd700" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">SALÃO PRINCIPAL</text>
+        <text x="800" y="615" fill="#c084fc" font-family="monospace" font-size="11" text-anchor="middle">BOLO // O ANÁRQUICO (00h)</text>
+        <!-- Mesa de Poker VIP -->
+        <rect x="160" y="470" width="290" height="220" rx="8" fill="#1b0918" stroke="#f43f5e" stroke-width="2.5"/>
+        <text x="305" y="575" fill="#fb7185" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">MESA DE POKER VIP</text>
+        <text x="305" y="598" fill="#fca5a5" font-family="monospace" font-size="11" text-anchor="middle">VICTOR KAEL (DRENO DE PERÍCIA)</text>
+        <!-- Escritório Oeht -->
+        <rect x="1150" y="460" width="300" height="220" rx="8" fill="#151026" stroke="#a855f7" stroke-width="2.5"/>
+        <text x="1300" y="565" fill="#c084fc" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">ESCRITÓRIO DE OEHT</text>
+        <text x="1300" y="588" fill="#e9d5ff" font-family="monospace" font-size="11" text-anchor="middle">LODO ROXO &amp; SENHA 4 DÍGITOS</text>
+        <!-- Galeria de Espelhos & Cozinha -->
+        <rect x="180" y="170" width="310" height="210" rx="8" fill="#091d2c" stroke="#38bdf8" stroke-width="2.5"/>
+        <text x="335" y="275" fill="#38bdf8" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">GALERIA DE ESPELHOS (REFLEXOS)</text>
+        <rect x="1110" y="170" width="310" height="210" rx="8" fill="#1e1312" stroke="#fb923c" stroke-width="2.5"/>
+        <text x="1265" y="275" fill="#fb923c" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">COZINHA (TRANSE HIPNÓTICO)</text>
+        <!-- Palco & Caixa de Música -->
+        <rect x="570" y="140" width="460" height="200" rx="8" fill="#200926" stroke="#ef4444" stroke-width="3"/>
+        <text x="800" y="235" fill="#ff8585" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">PALCO // CAIXA DE MÚSICA &amp; SELO (3d6)</text>
       `;
 
       this.localTacticalOverlay = L.svgOverlay(svg, bounds, { opacity: 0.96, interactive: false });
@@ -1674,23 +1441,22 @@ class MapEngine {
             <circle cx="12" cy="15" r="2" fill="#b432ff"/>
           </svg>
         `;
-      } else if (loc.id === 'loc_tapajos' || loc.id === 'loc_quartzo' || loc.campaign_id === 'camp_004') {
+      } else if (loc.campaign_id === 'camp_filantropo_oeht' || loc.id?.includes('belvedere') || loc.id?.includes('aegis')) {
+        markerClass = 'marker-alemanha-portal';
+        badgeType = 'occult';
+        iconSvg = `
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="3" fill="#c084fc"/>
+          </svg>
+        `;
+      } else if (loc.id?.includes('veracruz')) {
         markerClass = 'marker-brasil-portal';
         badgeType = 'biohazard';
         iconSvg = `
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
             <circle cx="12" cy="12" r="2" fill="#39ff14"/>
-          </svg>
-        `;
-      } else if (loc.id === 'loc_monasterio' || loc.id === 'loc_cripta' || loc.campaign_id === 'camp_005') {
-        markerClass = 'marker-alemanha-portal';
-        badgeType = 'occult';
-        iconSvg = `
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            <circle cx="12" cy="8" r="2" fill="#c084fc"/>
           </svg>
         `;
       } else {
@@ -1777,12 +1543,12 @@ class MapEngine {
         if (this.currentRpgId === 'camp_002') {
           if (titleEl) titleEl.textContent = 'MÉXICO // PROPRIEDADE VILAR & MINAS ANTIGAS';
           if (subEl) subEl.textContent = '⚔️ BATTLEMAP TÁTICO: CASARÃO INTERIOR & CASCATA DAS MINAS';
-        } else if (this.currentRpgId === 'camp_003') {
-          if (titleEl) titleEl.textContent = 'GROENLÂNDIA // ESTAÇÃO CRIOGÊNICA ZERO';
-          if (subEl) subEl.textContent = '⚔️ BATTLEMAP TÁTICO: LABORATÓRIO SUBGLACIAL & FENDA DO MONÓLITO';
+        } else if (this.currentRpgId === 'camp_filantropo_oeht') {
+          if (titleEl) titleEl.textContent = 'GENEBRA // MANSÃO BELVEDERE & REDOMA DE OEHT';
+          if (subEl) subEl.textContent = '⚔️ CARTA TÁTICA: AS 7 ÁREAS, AS 3 TRAVAS & O PALCO';
         } else {
-          if (titleEl) titleEl.textContent = 'OCEANO ATLÂNTICO // O TRIÂNGULO DAS BERMUDAS';
-          if (subEl) subEl.textContent = '⚔️ CARTA TÁTICA: NOVA CARONTE & O FOSSO DO KRAKEN';
+          if (titleEl) titleEl.textContent = 'ATLÂNTICO // TRIÂNGULO DAS BERMUDAS & VERA CRUZ';
+          if (subEl) subEl.textContent = '⚔️ CARTA TÁTICA: NOVA CARONTE, FOSSO & 4 ILHAS DO VÉU';
         }
       }
 

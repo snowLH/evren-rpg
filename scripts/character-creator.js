@@ -60,10 +60,50 @@ class CharacterCreator {
       });
     }
 
+    this.setupV3Controls();
     this.setupAttributeSteppers();
     this.loadCustomCharactersFromStorage();
 
     console.log('✓ CharacterCreator inicializado com sucesso.');
+  }
+
+  computeQuaternario(mdaVal, raceName = '') {
+    const vig = this.attributes.Vigor || 2;
+    const pre = this.attributes.Presença || 2;
+    const inte = this.attributes.Intelecto || 2;
+    const pv = 20 + (vig * 3);
+    const pd = mdaVal >= 80 ? 60 : mdaVal >= 60 ? 50 : mdaVal >= 40 ? 40 : mdaVal >= 20 ? 30 : mdaVal >= 10 ? 20 : 15;
+    const eaBase = mdaVal >= 99 ? 35 : mdaVal >= 80 ? 28 : mdaVal >= 60 ? 22 : mdaVal >= 40 ? 18 : mdaVal >= 20 ? 14 : mdaVal >= 10 ? 10 : 0;
+    const ea = eaBase + (pre * 3);
+    const est = 6 + vig + inte + (String(raceName).includes('Humanos Despertos') ? 5 : 0);
+    return { pv, pd, ea, est };
+  }
+
+  setupV3Controls() {
+    const mdaSlider = document.getElementById('creator-mda-slider');
+    const raceSelect = document.getElementById('creator-race');
+    if (mdaSlider) {
+      mdaSlider.addEventListener('input', () => this.updatePointsRemaining());
+    }
+    if (raceSelect) {
+      raceSelect.addEventListener('change', () => this.updatePointsRemaining());
+    }
+
+    const btnChosen = document.getElementById('btn-creator-roll-chosen');
+    const chosenResult = document.getElementById('creator-chosen-result');
+    if (btnChosen && chosenResult) {
+      btnChosen.addEventListener('click', () => {
+        const roll = Math.floor(Math.random() * 1000) + 1;
+        if (roll === 1) {
+          chosenResult.textContent = '🎲 1d1000 = 1 — ESCOLHIDO DE NASCENÇA (0,1%)! Pacto desperto desde o berço com Marca Ancestral!';
+          chosenResult.style.color = '#ffd700';
+        } else {
+          chosenResult.textContent = `🎲 1d1000 = ${roll} — Sem Despertar de Nascença (Pacto exige Ritual de Subjugação na Lua Nova).`;
+          chosenResult.style.color = '#c084fc';
+        }
+        if (window.soundFX) window.soundFX.playDiceRoll();
+      });
+    }
   }
 
   openModal() {
@@ -121,6 +161,14 @@ class CharacterCreator {
       ptsEl.textContent = `${remaining} pontos restantes`;
       ptsEl.style.color = remaining === 0 ? '#39ff14' : (remaining > 0 ? '#ffd700' : '#ff5e78');
     }
+
+    const previewEl = document.getElementById('creator-ea-est-preview');
+    if (previewEl) {
+      const mdaVal = parseInt(document.getElementById('creator-mda-slider')?.value, 10) || 15;
+      const raceName = document.getElementById('creator-race')?.value || '';
+      const q = this.computeQuaternario(mdaVal, raceName);
+      previewEl.textContent = `PV ${q.pv} • PD ${q.pd} • EA ${q.ea} • EST ${q.est}`;
+    }
   }
 
   randomizeAttributes() {
@@ -155,6 +203,11 @@ class CharacterCreator {
     const mdaSlider = document.getElementById('creator-mda-slider');
     const relicInput = document.getElementById('creator-relic');
     const loreInput = document.getElementById('creator-lore');
+    const raceInput = document.getElementById('creator-race');
+    const virtueInput = document.getElementById('creator-virtue');
+    const elementInput = document.getElementById('creator-element');
+    const modalityInput = document.getElementById('creator-modality');
+    const pactInput = document.getElementById('creator-pact');
 
     const cleanStr = (s) => {
       if (!s) return '';
@@ -171,6 +224,12 @@ class CharacterCreator {
     const campId = cleanStr(campInput?.value) || 'camp_001';
     const relic = cleanStr(relicInput?.value) || 'Nenhuma Relíquia Registrada';
     const summary = cleanStr(loreInput?.value) || 'Agente de campo treinado para contenção de anomalias.';
+    const race = cleanStr(raceInput?.value) || 'Humanos Despertos';
+    const virtue = cleanStr(virtueInput?.value) || 'Coragem';
+    const element = cleanStr(elementInput?.value) || 'Ferro Frio & Correntes';
+    const modality = cleanStr(modalityInput?.value) || 'Projeção';
+    const pact = cleanStr(pactInput?.value) || 'Nenhum';
+    const q = this.computeQuaternario(mdaVal, race);
 
     // Gera conjunto canônico de perícias CRIS com base na classe e atributos
     const allSkillsList = [
@@ -208,7 +267,12 @@ class CharacterCreator {
       name: fullName,
       codename: codename || '',
       player: roleInput?.value || 'Jogador',
-      origin: 'Sobrevivente',
+      origin: race,
+      race: race,
+      virtue: virtue,
+      element: element,
+      modality: modality,
+      pact: pact,
       class: charClass,
       track: `${charClass} de Campo`,
       nex: `${mdaVal}%`,
@@ -217,18 +281,26 @@ class CharacterCreator {
       life_status: 'alive',
       attributes: { ...this.attributes },
       stats: {
-        pv_current: 20 + (this.attributes.Vigor * 3),
-        pv_max: 20 + (this.attributes.Vigor * 3),
-        pe_current: 10 + (this.attributes.Presença * 2),
-        pe_max: 10 + (this.attributes.Presença * 2),
-        san_current: 25,
-        san_max: 30,
+        pv_current: q.pv,
+        pv_max: q.pv,
+        pe_current: q.ea,
+        pe_max: q.ea,
+        ea_current: q.ea,
+        ea_max: q.ea,
+        pd_current: q.pd,
+        pd_max: q.pd,
+        est_current: q.est,
+        est_max: q.est,
+        san_current: q.est,
+        san_max: q.est,
         defesa: 10 + (this.attributes.Agilidade || 2),
         protecao: "Colete Leve (RD 1)"
       },
       skills: generatedSkills,
       abilities: [
         `Treinamento Operacional (${charClass})`,
+        `Virtude: ${virtue} (${modality} • ${element})`,
+        ...(pact !== 'Nenhum' ? [`Pacto Ancestral: ${pact}`] : []),
         "Resiliência sob Estresse Paranormal"
       ],
       inventory: [
@@ -250,7 +322,7 @@ class CharacterCreator {
 
     // 2. Registra estados no UIController
     if (this.uiController) {
-      this.uiController.pdState[charId] = { current: 20, max: 20 };
+      this.uiController.pdState[charId] = { current: q.pd, max: q.pd };
       this.uiController.mdaState[charId] = mdaVal;
       this.uiController.charAttributes[charId] = { ...this.attributes };
 
