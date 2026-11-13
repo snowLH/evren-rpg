@@ -100,13 +100,22 @@ class MuseumController {
       if (this.planetEngine) this.planetEngine.resetView();
     });
 
-    // Pílulas de Acesso Rápido às Campanhas no Planeta
+    // Pílulas de Acesso Rápido às Campanhas no Planeta / Escudo do Mestre
     document.querySelectorAll('.quick-camp-pill').forEach((pill) => {
       pill.addEventListener('click', () => {
         const campId = pill.dataset.campId;
         if (!campId) return;
+        window.uiController?.closeDmMenu?.();
         this.switchTo3DView();
-        if (this.planetEngine) {
+        const campToEra = {
+          camp_002: 'vertente_vilar',
+          camp_001: 'vertente_triangulo',
+          camp_filantropo_oeht: 'vertente_oeht'
+        };
+        if (window.planetTimeline && campToEra[campId]) {
+          window.planetTimeline.spotlightDismissed = false;
+          window.planetTimeline.selectEra(campToEra[campId]);
+        } else if (this.planetEngine) {
           this.planetEngine.focusCampaign(campId);
         } else {
           this.openExhibitionModal(campId);
@@ -123,7 +132,13 @@ class MuseumController {
     if (btnPlanet) {
       btnPlanet.addEventListener('click', () => {
         this.switchTo3DView();
-        if (this.planetEngine) this.planetEngine.setScaleView('global');
+        this.updateBreadcrumbs({ planet: this.dataLoader.getPlanet() });
+        if (window.planetTimeline) {
+          window.planetTimeline.spotlightDismissed = true;
+          window.planetTimeline.selectEra('all');
+        } else if (this.planetEngine) {
+          this.planetEngine.setScaleView('global');
+        }
       });
     }
 
@@ -280,6 +295,12 @@ class MuseumController {
   updateBreadcrumbs(context = {}) {
     const bar = document.getElementById('museum-breadcrumb-bar');
     if (!bar) return;
+
+    const hasSubContext = Boolean(context.continent || context.country || context.region || context.city || context.location || context.campaign);
+    const hudBottom = bar.closest('.museum-hud-bottom');
+    if (hudBottom) {
+      hudBottom.classList.toggle('is-global-root', !hasSubContext);
+    }
 
     const parts = [
       `<button class="museum-breadcrumb__item ${!context.continent ? 'museum-breadcrumb__item--active' : ''}" data-level="planet">PLANETA EVREN</button>`

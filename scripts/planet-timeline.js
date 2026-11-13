@@ -9,7 +9,7 @@ class PlanetTimelineController {
     this.planetEngine = planetEngine;
     this.museumController = museumController;
     this.activeEraId = 'all';
-    this.spotlightDismissed = false;
+    this.spotlightDismissed = true;
     this.tourTimer = null;
 
     this.stops = [
@@ -202,11 +202,11 @@ class PlanetTimelineController {
             aria-selected="${stop.id === this.activeEraId}"
             class="tl-era-stop ${stop.id === this.activeEraId ? 'active' : ''}"
             data-era-id="${this.escapeHtml(stop.id)}"
+            title="${this.escapeHtml(stop.fullTitle)} (${this.escapeHtml(stop.tag)})"
             style="--era-color: ${stop.color};"
           >
             <span class="tl-era-year">${this.escapeHtml(stop.year)}</span>
             <span class="tl-era-name">${this.escapeHtml(stop.shortName)}</span>
-            <span class="tl-era-tag">${this.escapeHtml(stop.tag)}</span>
           </button>
         `).join('')}
       </div>
@@ -219,7 +219,8 @@ class PlanetTimelineController {
     document.querySelectorAll('#planet-timeline-dock .tl-era-stop').forEach((btn) => {
       btn.addEventListener('click', () => {
         this.stopTour();
-        this.spotlightDismissed = false;
+        const isOverview = btn.dataset.eraId === 'all';
+        this.spotlightDismissed = isOverview;
         this.selectEra(btn.dataset.eraId);
       });
     });
@@ -303,11 +304,18 @@ class PlanetTimelineController {
   renderSpotlight() {
     const card = document.getElementById('planet-era-spotlight');
     const reopenBtn = document.getElementById('btn-reopen-spotlight');
+    const menuToggleBtn = document.getElementById('btn-toggle-spotlight-menu');
     if (!card) return;
+
+    if (menuToggleBtn) {
+      menuToggleBtn.classList.toggle('is-active', !this.spotlightDismissed);
+    }
 
     if (this.spotlightDismissed) {
       card.classList.add('is-hidden');
-      if (reopenBtn) reopenBtn.classList.add('is-visible');
+      if (reopenBtn) {
+        reopenBtn.classList.toggle('is-visible', this.activeEraId !== 'all');
+      }
       return;
     }
 

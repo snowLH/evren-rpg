@@ -130,159 +130,254 @@
     <!-- PLANETA 3D DO UNIVERSO EVREN (CENTRO DA APLICAÇÃO) -->
     <div id="planet-3d-container"></div>
 
-    <!-- HUD Flutuante Superior -->
-    <header id="floating-hud">
-      <!-- Painel Esquerdo: Identidade do Sistema -->
-      <div class="hud-panel hud-branding">
-        <svg class="hud-logo-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M12 3v18"/>
-          <path d="M3 12h18"/>
-          <circle cx="12" cy="12" r="3" fill="#e5c158" fill-opacity="0.3"/>
-        </svg>
-        <div class="hud-title-wrap">
-          <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">RPG</span></h1>
-          <div class="hud-subline">Linha do Tempo Planetária</div>
-          <div id="map-breadcrumb" class="map-breadcrumb" style="display:none;" title="Escala Atual do Mapa">
-            <span id="breadcrumb-label" class="breadcrumb-world">PLANISFÉRIO</span>
-          </div>
-        </div>
-      </div>
+    <!-- HUD Flutuante Superior Unificado — Menu Central "Escudo do Mestre" -->
+    <header id="floating-hud" class="floating-hud-centered">
+      <div class="hud-master-capsule">
+        <!-- Identidade / Voltar ao Planeta -->
+        <button id="btn-hud-brand-home" type="button" class="hud-brand-btn" title="Voltar ao Planeta 3D (Visão Geral)">
+          <svg class="hud-logo-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3v18"/>
+            <path d="M3 12h18"/>
+            <circle cx="12" cy="12" r="3" fill="#e5c158" fill-opacity="0.3"/>
+          </svg>
+          <span class="hud-brand-word">EVREN</span>
+        </button>
 
-      <!-- Painel Central: Filtros e Busca Rápida -->
-      <div class="hud-panel">
-        <div class="hud-select-wrap">
-          <select id="campaign-filter" class="hud-select" title="Filtrar por Campanha">
-            <option value="all">Todas as Campanhas</option>
-          </select>
-        </div>
+        <span class="hud-capsule-sep" aria-hidden="true"></span>
 
+        <!-- Menu Único Central: Escudo do Mestre -->
+        <button id="btn-dm-shield-menu" type="button" class="btn-dm-shield-trigger" aria-expanded="false" aria-controls="dm-shield-popover" title="Abrir Menu Unificado (Escudo do Mestre)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Escudo do Mestre</span>
+          <svg class="dm-caret-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <span class="hud-capsule-sep" aria-hidden="true"></span>
+
+        <!-- Busca Rápida Compacta -->
         <div class="hud-search-wrap">
           <svg class="hud-search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
             <circle cx="11" cy="11" r="8"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input type="text" id="search-input" class="hud-search-input" placeholder="Buscar no universo... [/]" autocomplete="off">
+          <input type="text" id="search-input" class="hud-search-input" placeholder="Buscar... [/]" autocomplete="off">
           <div id="search-results-dropdown" class="search-dropdown-menu"></div>
+        </div>
+
+        <!-- Campos mantidos ocultos para compatibilidade técnica -->
+        <div class="hud-select-wrap" style="display:none;" aria-hidden="true">
+          <select id="campaign-filter" class="hud-select" title="Filtrar por Campanha">
+            <option value="all">Todas as Campanhas</option>
+          </select>
+        </div>
+        <div id="map-breadcrumb" class="map-breadcrumb" style="display:none;" aria-hidden="true">
+          <span id="breadcrumb-label" class="breadcrumb-world">PLANISFÉRIO</span>
         </div>
       </div>
 
-      <!-- Painel Direito: Navegação Essencial do Universo EVREN -->
-      <div class="hud-panel hud-actions">
-        <button id="btn-nav-planet" type="button" class="btn-hud btn-primary-nav museum-nav-btn--active" title="Planeta 3D & Linha do Tempo">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M12 3a14 14 0 0 1 0 18"/></svg>
-          <span class="btn-text">Planeta</span>
-        </button>
-
-        <button id="btn-nav-teia-do-tempo" type="button" class="btn-hud btn-primary-nav btn-hud-teia-principal" title="Teia do Tempo: Grafo Causal & Vertentes [W]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><line x1="6.7" y1="7.2" x2="10" y2="10.2"/><line x1="17.3" y1="7.2" x2="14" y2="10.2"/><line x1="6.7" y1="16.8" x2="10" y2="13.8"/><line x1="17.3" y1="16.8" x2="14" y2="13.8"/></svg>
-          <span class="btn-text">Teia do Tempo</span>
-        </button>
-
-        <button id="btn-open-campaigns-hub" class="btn-hud btn-primary-nav" title="Central de Campanhas & Histórias">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <span class="btn-text">Campanhas</span>
-        </button>
-
-        <button id="btn-open-characters" class="btn-hud btn-primary-nav" title="Fichas C.R.I.S. dos Personagens [D]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span class="btn-text">Personagens</span>
-        </button>
-
-        <button id="btn-open-locations" class="btn-hud btn-primary-nav" title="Atlas de Locais & Fendas">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span class="btn-text">Locais</span>
-        </button>
-
-        <button id="btn-nav-tomo4" type="button" class="btn-hud btn-primary-nav" title="Tomo IV: 65 Fichas Oficiais (Agentes, Soberanos & Bestiário) [B]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
-          <span class="btn-text">Tomo IV</span>
-        </button>
-
-        <button id="btn-open-rules" class="btn-hud btn-primary-nav" title="Regras Oficiais V3.0 & Virtudes de Alma [R]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span class="btn-text">Regras</span>
-        </button>
-
-        <!-- Elementos mantidos ocultos para compatibilidade com handlers e integridade de IDs -->
-        <button id="btn-nav-archive" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-nav-exhibitions" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-nav-characters" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-nav-admin" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-chronicles" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-teia-do-tempo" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-timeline" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-lore-graph" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-codex" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-rules-menu" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-bestiary" type="button" style="display:none;" aria-hidden="true"></button>
-        <button id="btn-open-mixer" type="button" style="display:none;" aria-hidden="true"></button>
-
-        <!-- Menu Dropdown: Novo Registro -->
-        <div class="hud-dropdown-wrap">
-          <button id="btn-hud-create" class="btn-hud btn-action-add" title="Cadastrar Ficha ou Campanha">
-            <span class="btn-text">+ Novo</span> <span class="btn-caret">▾</span>
-          </button>
-          <div class="hud-dropdown-menu">
-            <div class="hud-dropdown-group-title">CADASTRAR NO ACERVO</div>
-            <button id="btn-open-creator" class="hud-dropdown-item">
-              <span>Nova Ficha de Agente</span>
+      <!-- POPOVER CENTRAL UNIFICADO: ESCUDO DO MESTRE -->
+      <div id="dm-shield-popover" class="dm-shield-popover" role="region" aria-label="Menu Unificado Escudo do Mestre">
+        <div class="dm-popover-top">
+          <div class="dm-popover-heading">
+            <span class="dm-kicker">Escudo do Mestre</span>
+            <span class="dm-subtitle">Painel organizado para conduzir campanhas e consultas rápidas</span>
+          </div>
+          <div class="dm-top-controls">
+            <button id="btn-toggle-spotlight-menu" type="button" class="dm-chip-btn" title="Mostrar ou ocultar o cartão de resumo da era atual">
+              Resumo da Era
             </button>
-            <button id="btn-open-cris-importer" class="hud-dropdown-item">
-              <span>Importar Ficha C.R.I.S. (JSON)</span>
+            <button id="btn-toggle-timeline-dock" type="button" class="dm-chip-btn is-active" title="Mostrar ou ocultar a régua cronológica inferior">
+              Linha do Tempo
             </button>
-            <button id="btn-open-campaign-creator" class="hud-dropdown-item">
-              <span>Nova Campanha de RPG</span>
-            </button>
+            <button id="btn-museum-toggle-2d" type="button" class="dm-chip-btn dm-chip-btn--gold" title="Alternar entre Planeta 3D e Mapa Topográfico 2D">Mapa 2D</button>
           </div>
         </div>
 
-        <!-- Menu Dropdown: Acervo & Utilitários -->
-        <div class="hud-dropdown-wrap">
-          <button id="btn-hud-tools" class="btn-hud btn-more" title="Acervo Complementar & Utilitários">
-            <span class="btn-text">Mais</span> <span class="btn-caret">▾</span>
+        <div class="dm-campaign-strip">
+          <span class="dm-strip-label">Foco rápido:</span>
+          <button type="button" class="dm-camp-pill quick-camp-pill" data-camp-id="camp_002">
+            <span class="dm-dot is-done"></span>Mansão Vilar <small>Concluída</small>
           </button>
-          <div class="hud-dropdown-menu right-aligned">
-            <div class="hud-dropdown-group-title">ACERVO COMPLEMENTAR</div>
-            <button id="btn-open-memorial" class="hud-dropdown-item">
-              <span>Memorial dos Caídos</span>
+          <button type="button" class="dm-camp-pill quick-camp-pill" data-camp-id="camp_001">
+            <span class="dm-dot is-future"></span>Triângulo &amp; Vera Cruz <small>Futura</small>
+          </button>
+          <button type="button" class="dm-camp-pill quick-camp-pill" data-camp-id="camp_filantropo_oeht">
+            <span class="dm-dot is-violet"></span>Gala Belvedere <small>Futura</small>
+          </button>
+        </div>
+
+        <div class="dm-menu-grid">
+          <section class="dm-menu-col">
+            <h3 class="dm-col-title">Mundo &amp; História</h3>
+            <button id="btn-nav-planet" type="button" class="dm-menu-item museum-nav-btn--active">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M12 3a14 14 0 0 1 0 18"/></svg>
+              <span class="dm-item-body">
+                <strong>Planeta 3D</strong>
+                <small>Visão orbital e arcos de tempo</small>
+              </span>
             </button>
-            <button id="btn-open-cassette" class="hud-dropdown-item">
-              <span>Fitas de Áudio A.E.G.I.S.</span>
+            <button id="btn-nav-teia-do-tempo" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><line x1="6.7" y1="7.2" x2="10" y2="10.2"/><line x1="17.3" y1="7.2" x2="14" y2="10.2"/><line x1="6.7" y1="16.8" x2="10" y2="13.8"/><line x1="17.3" y1="16.8" x2="14" y2="13.8"/></svg>
+              <span class="dm-item-body">
+                <strong>Teia do Tempo</strong>
+                <small>Grafo causal e vertentes</small>
+              </span>
+              <kbd>W</kbd>
             </button>
-            <button id="btn-open-relics" class="hud-dropdown-item">
-              <span>Arsenal de Relíquias</span>
+            <button id="btn-open-campaigns-hub" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              <span class="dm-item-body">
+                <strong>Central de Campanhas</strong>
+                <small>Concluídas e futuras sagas</small>
+              </span>
             </button>
-            <button id="btn-open-journal" class="hud-dropdown-item">
-              <span>Diário do Mestre [J]</span>
+            <button id="btn-open-locations" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span class="dm-item-body">
+                <strong>Atlas de Locais</strong>
+                <small>14 cenários e fendas geográficas</small>
+              </span>
             </button>
-            <div class="hud-dropdown-divider"></div>
-            <div class="hud-dropdown-group-title">SISTEMA & ÁUDIO</div>
-            <button id="btn-open-backup" class="hud-dropdown-item">
-              <span>Backup & Sincronização</span>
+            <button id="btn-open-timeline" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+              <span class="dm-item-body">
+                <strong>Cronologia Geral</strong>
+                <small>Lista histórica completa</small>
+              </span>
+              <kbd>T</kbd>
             </button>
-            <button id="btn-open-shortcuts" class="hud-dropdown-item">
-              <span>Atalhos do Teclado [?]</span>
+          </section>
+
+          <section class="dm-menu-col">
+            <h3 class="dm-col-title">Consulta da Sessão</h3>
+            <button id="btn-open-characters" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="dm-item-body">
+                <strong>Personagens &amp; Fichas</strong>
+                <small>Fichas C.R.I.S., PV, PD e MDA</small>
+              </span>
+              <kbd>D</kbd>
             </button>
-            <button id="btn-toggle-sound" class="hud-dropdown-item active">
+            <button id="btn-open-rules" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span class="dm-item-body">
+                <strong>Regras Oficiais V3.0</strong>
+                <small>Quaternário, Alma e Limiar</small>
+              </span>
+              <kbd>R</kbd>
+            </button>
+            <button id="btn-nav-tomo4" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+              <span class="dm-item-body">
+                <strong>Tomo IV: Bestiário</strong>
+                <small>65 fichas de ameaças e agentes</small>
+              </span>
+              <kbd>B</kbd>
+            </button>
+            <button id="btn-open-relics" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 19 9 12 22 5 9 12 2"/></svg>
+              <span class="dm-item-body">
+                <strong>Arsenal de Relíquias</strong>
+                <small>Objetos anômalos e pactos</small>
+              </span>
+            </button>
+            <button id="btn-open-journal" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <span class="dm-item-body">
+                <strong>Diário do Mestre</strong>
+                <small>Anotações e log de campanha</small>
+              </span>
+              <kbd>J</kbd>
+            </button>
+          </section>
+
+          <section class="dm-menu-col">
+            <h3 class="dm-col-title">Mesa ao Vivo</h3>
+            <button id="btn-open-dice" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <span class="dm-item-body">
+                <strong>Bandeja de Dados</strong>
+                <small>Rolagens d4–d100 instantâneas</small>
+              </span>
+              <kbd>X</kbd>
+            </button>
+            <button id="btn-open-initiative" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span class="dm-item-body">
+                <strong>Iniciativa &amp; Turnos</strong>
+                <small>Fila de combate em tempo real</small>
+              </span>
+              <kbd>I</kbd>
+            </button>
+            <button id="btn-open-combat" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/></svg>
+              <span class="dm-item-body">
+                <strong>Arena de Combate</strong>
+                <small>Simulador e confronto tático</small>
+              </span>
+            </button>
+            <button id="btn-open-oracle" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span class="dm-item-body">
+                <strong>Oráculo do Véu</strong>
+                <small>Ganchos e eventos aleatórios</small>
+              </span>
+              <kbd>O</kbd>
+            </button>
+            <button id="btn-open-mda-tree" type="button" class="dm-menu-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              <span class="dm-item-body">
+                <strong>Árvore de MDA</strong>
+                <small>Mutações e estágios celulares</small>
+              </span>
+              <kbd>U</kbd>
+            </button>
+          </section>
+        </div>
+
+        <div class="dm-popover-footer">
+          <div class="dm-footer-group">
+            <button id="btn-open-memorial" type="button" class="dm-mini-btn">Memorial</button>
+            <button id="btn-open-cassette" type="button" class="dm-mini-btn">Fitas A.E.G.I.S.</button>
+            <button id="btn-open-creator" type="button" class="dm-mini-btn dm-mini-btn--create">+ Agente</button>
+            <button id="btn-open-cris-importer" type="button" class="dm-mini-btn">Importar C.R.I.S.</button>
+            <button id="btn-open-campaign-creator" type="button" class="dm-mini-btn dm-mini-btn--create">+ Campanha</button>
+          </div>
+          <div class="dm-footer-group">
+            <button id="btn-toggle-fog" type="button" class="dm-mini-btn dm-only-2d">Névoa 2D</button>
+            <button id="btn-toggle-sound" type="button" class="dm-mini-btn active">
               <span id="sound-btn-text">Efeitos Sonoros [ON]</span>
             </button>
-            <button id="btn-toggle-ambient" class="hud-dropdown-item">
+            <button id="btn-toggle-ambient" type="button" class="dm-mini-btn">
               <span id="ambient-btn-text">Música de Fundo [OFF]</span>
             </button>
-            <button id="btn-pwa-install" class="hud-dropdown-item" style="display:none;">
+            <button id="btn-open-backup" type="button" class="dm-mini-btn">Backup</button>
+            <button id="btn-open-shortcuts" type="button" class="dm-mini-btn">Atalhos [?]</button>
+            <button id="btn-pwa-install" type="button" class="dm-mini-btn" style="display:none;">
               <span class="btn-text">Instalar App</span>
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Elementos táticos de combate mantidos para integridade técnica mas ocultos -->
-        <button id="btn-open-combat" style="display:none;"></button>
-        <button id="btn-open-dice" style="display:none;"></button>
-        <button id="btn-open-initiative" style="display:none;"></button>
-        <button id="btn-toggle-fog" style="display:none;"></button>
-        <button id="btn-open-oracle" style="display:none;"></button>
-        <button id="btn-open-mda-tree" style="display:none;"></button>
+      <!-- IDs legados mantidos ocultos para compatibilidade técnica -->
+      <div style="display:none;" aria-hidden="true">
+        <button id="btn-nav-archive" type="button"></button>
+        <button id="btn-nav-exhibitions" type="button"></button>
+        <button id="btn-nav-characters" type="button"></button>
+        <button id="btn-nav-admin" type="button"></button>
+        <button id="btn-open-chronicles" type="button"></button>
+        <button id="btn-open-teia-do-tempo" type="button"></button>
+        <button id="btn-open-lore-graph" type="button"></button>
+        <button id="btn-open-codex" type="button"></button>
+        <button id="btn-open-rules-menu" type="button"></button>
+        <button id="btn-open-bestiary" type="button"></button>
+        <button id="btn-open-mixer" type="button"></button>
       </div>
     </header>
 
@@ -434,8 +529,7 @@
       <button id="context-panel-btn" type="button" class="museum-context-panel__btn">Ver Acontecimentos</button>
     </div>
 
-    <!-- BOTÃO PARA ALTERNAR ENTRE GLOBO 3D E MAPA TOPOGRÁFICO LOCAL 2D -->
-    <button id="btn-museum-toggle-2d" type="button" class="museum-view-toggle-btn">Mapa 2D</button>
+    <!-- Alternância Planeta 3D / Mapa 2D agora vive unificada no menu Escudo do Mestre -->
 
     <!-- CONTROLES FLUTUANTES DO PLANETA 3D -->
     <div id="planet-3d-controls" class="planet-3d-controls" aria-label="Controles Interativos do Planeta 3D">

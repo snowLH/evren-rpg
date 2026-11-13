@@ -534,32 +534,81 @@ class UIController {
     this.setupSessionCreator();
   }
 
+  closeDmMenu() {
+    const pop = document.getElementById('dm-shield-popover');
+    const btn = document.getElementById('btn-dm-shield-menu');
+    const hud = document.getElementById('floating-hud');
+    pop?.classList.remove('is-open');
+    hud?.classList.remove('dm-menu-open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+
   setupEventListeners() {
-    // Dropdowns do HUD Superior (Cadastrar e Arquivo & Mais)
-    ['btn-hud-create', 'btn-hud-tools'].forEach(btnId => {
-      const btn = document.getElementById(btnId);
-      if (btn) {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const parentWrap = btn.closest('.hud-dropdown-wrap');
-          const wasOpen = parentWrap?.classList.contains('open');
-          document.querySelectorAll('.hud-dropdown-wrap.open').forEach(w => w.classList.remove('open'));
-          if (!wasOpen) parentWrap?.classList.add('open');
-          this.soundFX.playTacticalBeep();
-        });
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.hud-dropdown-wrap')) {
-        document.querySelectorAll('.hud-dropdown-wrap.open').forEach(w => w.classList.remove('open'));
-      }
-    });
-
-    document.querySelectorAll('.hud-dropdown-item').forEach(item => {
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.hud-dropdown-wrap.open').forEach(w => w.classList.remove('open'));
+    // Menu Unificado Central: Escudo do Mestre
+    const dmBtn = document.getElementById('btn-dm-shield-menu');
+    const dmPopover = document.getElementById('dm-shield-popover');
+    const hudRoot = document.getElementById('floating-hud');
+    if (dmBtn && dmPopover) {
+      dmBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const willOpen = !dmPopover.classList.contains('is-open');
+        dmPopover.classList.toggle('is-open', willOpen);
+        hudRoot?.classList.toggle('dm-menu-open', willOpen);
+        dmBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        this.soundFX.playTacticalBeep();
       });
+
+      dmPopover.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const actionEl = e.target.closest('button');
+        if (!actionEl) return;
+        // Mantém aberto apenas para interruptores rápidos de áudio/visualização
+        const stayOpenIds = new Set(['btn-toggle-sound', 'btn-toggle-ambient', 'btn-toggle-spotlight-menu', 'btn-toggle-timeline-dock']);
+        if (!stayOpenIds.has(actionEl.id)) {
+          this.closeDmMenu();
+        }
+      });
+    }
+
+    document.addEventListener('pointerdown', (e) => {
+      if (!e.target.closest('#floating-hud')) {
+        this.closeDmMenu();
+      }
+    });
+
+    // Logo EVREN no topo: volta imediatamente ao Planeta 3D global
+    document.getElementById('btn-hud-brand-home')?.addEventListener('click', () => {
+      this.closeDmMenu();
+      this.closeDrawer();
+      document.querySelectorAll('.modal-backdrop.open, .modal-backdrop.active').forEach(m => m.classList.remove('open', 'active'));
+      window.museumController?.switchTo3DView?.();
+      if (window.planetTimeline) {
+        window.planetTimeline.stopTour();
+        window.planetTimeline.spotlightDismissed = true;
+        window.planetTimeline.selectEra('all');
+      } else {
+        window.planetEngine?.resetView?.();
+      }
+      this.soundFX.playTacticalBeep();
+    });
+
+    // Interruptor de Resumo da Era dentro do Escudo do Mestre
+    document.getElementById('btn-toggle-spotlight-menu')?.addEventListener('click', () => {
+      if (window.planetTimeline) {
+        window.planetTimeline.spotlightDismissed = !window.planetTimeline.spotlightDismissed;
+        window.planetTimeline.renderSpotlight();
+      }
+      this.soundFX.playTacticalBeep();
+    });
+
+    // Interruptor da Régua Cronológica Inferior dentro do Escudo do Mestre
+    document.getElementById('btn-toggle-timeline-dock')?.addEventListener('click', (e) => {
+      const dock = document.getElementById('planet-timeline-dock');
+      if (dock) {
+        const hidden = dock.classList.toggle('is-dock-hidden');
+        e.currentTarget.classList.toggle('is-active', !hidden);
+      }
+      this.soundFX.playTacticalBeep();
     });
 
     // Botão de fechar gaveta
@@ -894,6 +943,7 @@ class UIController {
 
   /* --- GAVETA LATERAL --- */
   openDrawer(tabKey = 'characters', forceDive = false) {
+    this.closeDmMenu();
     document.querySelectorAll('.museum-location-modal.is-open, .museum-exhibition-modal.is-open, .museum-biography-modal.is-open, .museum-archive-modal.is-open, .museum-admin-modal.is-open')
       .forEach(m => m.classList.remove('is-open'));
     if (forceDive && window.app?.mapEngine && window.app.mapEngine.currentScale === 'global') {
@@ -2463,6 +2513,7 @@ ${char.summary || 'Sem registro adicional.'}
 
   /* --- MODAIS (REGRAS E CÓDICE) --- */
   openModal(modalId) {
+    this.closeDmMenu();
     const primaryModals = new Set([
       'modal-rules', 'modal-codex', 'modal-bestiary', 'modal-campaigns-hub',
       'modal-campaign-story', 'modal-locations-atlas', 'modal-teia-do-tempo',

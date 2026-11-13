@@ -62,8 +62,8 @@ class InteractiveTabletopApp {
             if (!m) continue;
             if (!el._cardDim) {
               el._cardDim = {
-                w: Math.max(120, Math.min(255, label.offsetWidth || 220)),
-                h: Math.max(36, Math.min(92, label.offsetHeight || 56))
+                w: Math.max(96, Math.min(225, label.offsetWidth || 168)),
+                h: Math.max(26, Math.min(68, label.offsetHeight || 38))
               };
             }
             items.push({ el, label, px: parseFloat(m[1]), py: parseFloat(m[2]), dim: el._cardDim, pr: prio(el) });
@@ -71,22 +71,32 @@ class InteractiveTabletopApp {
 
           // Phase 2: Pure-math non-overlapping placement in screen space
           const placed = [];
-          // Evita colisão com o botão superior direito "Mapa 2D" e controles laterais 3D
-          placed.push({ x1: W - 154, x2: W, y1: 56, y2: 112 });
-          placed.push({ x1: W - 76, x2: W, y1: 210, y2: 520 });
+          const capsuleEl = document.querySelector('.hud-master-capsule') || document.getElementById('floating-hud');
+          if (capsuleEl) {
+            const hr = capsuleEl.getBoundingClientRect();
+            placed.push({ x1: hr.left - 12, x2: hr.right + 12, y1: 0, y2: hr.bottom + 12 });
+          }
+          const ctrlEl = document.getElementById('planet-3d-controls');
+          if (ctrlEl) {
+            const cr = ctrlEl.getBoundingClientRect();
+            placed.push({ x1: cr.left - 10, x2: W, y1: cr.top - 10, y2: cr.bottom + 10 });
+          }
           const spotEl = document.getElementById('planet-era-spotlight');
           if (W >= 1024 && spotEl && !spotEl.classList.contains('is-hidden')) {
             const sr = spotEl.getBoundingClientRect();
             placed.push({ x1: sr.left - 8, x2: sr.right + 12, y1: sr.top - 8, y2: sr.bottom + 8 });
           }
+          const dockEl = document.getElementById('planet-timeline-dock');
+          const dockVisible = dockEl && getComputedStyle(dockEl).display !== 'none' && !dockEl.classList.contains('is-dock-hidden');
+          const bottomLimit = dockVisible ? Math.min(H - 18, dockEl.getBoundingClientRect().top - 10) : H - 18;
           const tryOffsets = [
-            [0, 0], [0, -76], [0, 76], [235, 0], [-235, 0],
-            [0, -148], [0, 148], [210, -72], [-210, -72], [210, 72], [-210, 72]
+            [0, 0], [0, -64], [0, 64], [215, 0], [-215, 0],
+            [0, -124], [0, 124], [195, -62], [-195, -62], [195, 62], [-195, 62]
           ];
 
           for (const it of items) {
             const { label, px, py, dim } = it;
-            if (py < 74 || py > H - 150 || px < 28 || px > W - 28) {
+            if (py < 24 || py > bottomLimit || px < 28 || px > W - 28) {
               label.style.opacity = '0';
               label.style.pointerEvents = 'none';
               continue;
@@ -100,7 +110,7 @@ class InteractiveTabletopApp {
               const bx2 = cx + dim.w / 2;
               const by1 = cy - dim.h / 2;
               const by2 = cy + dim.h / 2;
-              if (by1 < 74 || by2 > H - 150 || bx1 < 10 || bx2 > W - 10) continue;
+              if (by1 < 22 || by2 > bottomLimit || bx1 < 12 || bx2 > W - 12) continue;
               const hits = placed.some(r => !(bx2 <= r.x1 || bx1 >= r.x2 || by2 <= r.y1 || by1 >= r.y2));
               if (!hits) {
                 chosenDx = dx;
@@ -283,6 +293,10 @@ class InteractiveTabletopApp {
 
       switch (e.key) {
         case 'Escape':
+          if (document.getElementById('dm-shield-popover')?.classList.contains('is-open')) {
+            this.uiController?.closeDmMenu?.();
+            break;
+          }
           if (this.mapEngine) {
             this.mapEngine.dismissPlanetaryArrivalCard();
           }
