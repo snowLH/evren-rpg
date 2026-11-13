@@ -637,7 +637,7 @@ class UIController {
       this.soundFX.playTacticalBeep();
     });
 
-    ['all', 'ongoing', 'completed'].forEach(f => {
+    ['all', 'ongoing', 'completed', 'future'].forEach(f => {
       document.getElementById(`hub-tab-${f}`)?.addEventListener('click', (e) => {
         document.querySelectorAll('.hub-tab-btn').forEach(b => b.classList.remove('active'));
         e.currentTarget.classList.add('active');
@@ -894,6 +894,8 @@ class UIController {
 
   /* --- GAVETA LATERAL --- */
   openDrawer(tabKey = 'characters', forceDive = false) {
+    document.querySelectorAll('.museum-location-modal.is-open, .museum-exhibition-modal.is-open, .museum-biography-modal.is-open, .museum-archive-modal.is-open, .museum-admin-modal.is-open')
+      .forEach(m => m.classList.remove('is-open'));
     if (forceDive && window.app?.mapEngine && window.app.mapEngine.currentScale === 'global') {
       const targetCamp = this.currentCampaignFilter !== 'all' ? this.currentCampaignFilter : 'camp_002';
       window.mergulhoNasNuvens(targetCamp).then(() => {
@@ -953,10 +955,19 @@ class UIController {
     const characters = this.dataLoader.getCharacters(this.currentCampaignFilter);
     container.innerHTML = '';
 
+    const campShort = (c) => {
+      const cid = c.campaign_ids?.[0] || '';
+      if (cid === 'camp_002') return 'Vilar';
+      if (cid === 'camp_001') return 'Triângulo';
+      if (cid === 'camp_filantropo_oeht') return 'Belvedere';
+      return c.codename || '';
+    };
+
     characters.forEach(char => {
       const pill = document.createElement('button');
       pill.className = `entity-pill ${char.id === this.currentCharacterId ? 'active' : ''}`;
-      pill.textContent = char.name;
+      const sub = campShort(char);
+      pill.innerHTML = `<span>${this.escapeHtml(char.name)}</span>${sub ? `<span class="entity-pill-sub">${this.escapeHtml(sub)}</span>` : ''}`;
       pill.addEventListener('click', () => {
         this.currentCharacterId = char.id;
         document.querySelectorAll('#character-selector-row .entity-pill').forEach(p => p.classList.remove('active'));
@@ -1632,10 +1643,13 @@ ${char.summary || 'Sem registro adicional.'}
     if (!grid) return;
 
     let campaigns = this.dataLoader.getCampaigns();
-    if (filter === 'ongoing') {
-      campaigns = campaigns.filter(c => (c.category === 'ongoing' || c.status?.toLowerCase().includes('andamento') || c.status?.toLowerCase().includes('ativa')));
-    } else if (filter === 'completed') {
-      campaigns = campaigns.filter(c => (c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída')));
+    const isFutureCamp = (c) => (c.status && c.status.toLowerCase().includes('futur')) || c.id !== 'camp_002';
+    const isCompletedCamp = (c) => !isFutureCamp(c) && (c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída'));
+
+    if (filter === 'completed') {
+      campaigns = campaigns.filter(isCompletedCamp);
+    } else if (filter === 'future' || filter === 'ongoing') {
+      campaigns = campaigns.filter(c => filter === 'future' ? isFutureCamp(c) : (!isFutureCamp(c) && !isCompletedCamp(c)));
     }
 
     if (campaigns.length === 0) {
@@ -1646,7 +1660,7 @@ ${char.summary || 'Sem registro adicional.'}
     grid.innerHTML = campaigns.map(c => {
       const isFuture = (c.status && c.status.toLowerCase().includes('futur')) || c.id !== 'camp_002';
       const isCompleted = !isFuture && (c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída'));
-      const statusBadge = isFuture ? '🔮 (FUTURA CAMPANHA)' : (isCompleted ? '📜 CONCLUÍDA / HISTÓRICA' : '🟢 EM ANDAMENTO');
+      const statusBadge = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA / HISTÓRICA' : 'EM ANDAMENTO');
       const statusClass = isFuture ? 'future' : (isCompleted ? 'completed' : 'ongoing');
 
       // Agentes participantes
@@ -1951,23 +1965,42 @@ ${char.summary || 'Sem registro adicional.'}
     const grid = document.getElementById('locations-atlas-grid');
     if (!grid) return;
 
+    const inferZoneLabel = (loc) => {
+      if (loc.zone && loc.zone.trim()) return loc.zone;
+      if (loc.region && loc.region.trim()) return loc.region;
+      if (loc.country_id === 'country_mexico') return 'México (Aguascalientes / Serra Subterrânea)';
+      if (loc.country_id === 'country_suica') return 'Genebra, Suíça';
+      if (loc.country_id === 'country_brasil') return 'Arquipélago de Vera Cruz das Almas';
+      if (loc.country_id === 'country_bahamas') return 'Triângulo das Bermudas (Atlântico Norte)';
+      return 'Eixo Histórico Evren';
+    };
+
     let locations = this.dataLoader.getLocations();
     if (zoneFilter && zoneFilter !== 'all') {
-      locations = locations.filter(l => (l.zone && l.zone.includes(zoneFilter)) || (l.name && l.name.includes(zoneFilter)));
+      locations = locations.filter(l => {
+        const z = inferZoneLabel(l);
+        return z.includes(zoneFilter) || (l.name && l.name.includes(zoneFilter));
+      });
     }
 
     grid.innerHTML = locations.map(loc => {
+      const zoneLabel = inferZoneLabel(loc);
       return `
         <div class="location-atlas-card">
           <div class="location-atlas-title-row">
             <h4 class="location-atlas-name">${this.escapeHtml(loc.name)}</h4>
-            <span class="location-atlas-type">${this.escapeHtml(loc.type || 'Ponto de Interesse')}</span>
+            <span class="location-atlas-type">${this.escapeHtml(loc.type || 'Marco Histórico')}</span>
           </div>
-          <div class="location-atlas-zone">📍 ${this.escapeHtml(loc.zone || 'Setor')}</div>
+          <div class="location-atlas-zone">${this.escapeHtml(zoneLabel)}</div>
           <div class="location-atlas-desc">${this.escapeHtml(loc.description || 'Sem registro histórico.')}</div>
-          <button class="btn-location-fly" onclick="window.uiController.flyToLocation('${loc.id}')">
-            📍 Voar para o Local
-          </button>
+          <div class="location-atlas-actions">
+            <button class="btn-location-fly" onclick="window.uiController.flyToLocation('${this.escapeHtml(loc.id)}', '3d')">
+              Focar no Planeta 3D
+            </button>
+            <button class="btn-location-fly secondary" onclick="window.uiController.flyToLocation('${this.escapeHtml(loc.id)}', '2d')">
+              Mapa 2D
+            </button>
+          </div>
         </div>
       `;
     }).join('');
@@ -1984,30 +2017,38 @@ ${char.summary || 'Sem registro adicional.'}
     });
   }
 
-  flyToLocation(locId) {
+  flyToLocation(locId, mode = '3d') {
     const loc = this.dataLoader.getLocationById(locId);
     if (!loc) return;
 
     this.closeModal('modal-locations-atlas');
 
+    if (mode === '3d' && window.planetEngine && loc.coordinates) {
+      window.museumController?.switchTo3DView();
+      window.planetEngine.highlightSurfacePoint(loc.coordinates[0], loc.coordinates[1]);
+      window.planetEngine.flyToGeo(loc.coordinates[0], loc.coordinates[1], 132, () => {
+        window.museumController?.openLocationDossier(loc.id);
+      });
+      return;
+    }
+
     if (loc.coordinates) {
-      if (window.app?.mapEngine) {
-        if (window.app.mapEngine.currentScale === 'global') {
-          window.app.mapEngine.mergulhoNasNuvens(loc.campaign_id || loc.id).then(() => {
-            if (window.app?.mapEngine?.map) {
-              window.app.mapEngine.map.flyTo(loc.coordinates, 12, { duration: 1.5 });
-            }
-            this.openDrawer('location');
-            this.renderLocationDossier(loc);
-          });
-          return;
-        }
+      const planetEl = document.getElementById('planet-3d-container');
+      const mapEl = document.getElementById('map');
+      const btnToggle = document.getElementById('btn-museum-toggle-2d');
+      if (planetEl && mapEl) {
+        planetEl.classList.add('is-hidden');
+        planetEl.style.display = 'none';
+        mapEl.style.display = 'block';
+        document.body.classList.add('mode-2d');
+        if (btnToggle) btnToggle.textContent = 'Planeta 3D';
       }
       if (window.app?.mapEngine?.map) {
-        window.app.mapEngine.map.flyTo(loc.coordinates, 12, { duration: 1.5 });
-        this.openDrawer('location');
-        this.renderLocationDossier(loc);
+        window.app.mapEngine.map.invalidateSize();
+        window.app.mapEngine.map.flyTo(loc.coordinates, 12, { duration: 1.3 });
       }
+      this.openDrawer('location');
+      this.renderLocationDossier(loc);
     }
   }
 
@@ -2438,6 +2479,8 @@ ${char.summary || 'Sem registro adicional.'}
         window.museumController?.closeExhibitionModal?.();
       }
     }
+    document.querySelectorAll('.museum-location-modal.is-open, .museum-exhibition-modal.is-open, .museum-biography-modal.is-open, .museum-archive-modal.is-open, .museum-admin-modal.is-open')
+      .forEach(m => m.classList.remove('is-open'));
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.add('open', 'active');
@@ -2745,6 +2788,7 @@ ${char.summary || 'Sem registro adicional.'}
     grid.innerHTML = filtered.map(item => {
       const st = item.stats || {};
       const mdaClean = item.mda ? String(item.mda).replace(/^MDA\s*/i, '') : '—';
+      const ndClean = item.nd ? String(item.nd).replace(/^ND\s*/i, '') : '';
       return `
         <div class="tomo4-card" onclick="window.uiController.showTomo4Detail('${e(item.id)}')">
           <div class="tomo4-card-head">
@@ -2752,7 +2796,7 @@ ${char.summary || 'Sem registro adicional.'}
               <div class="tomo4-card-num">FICHA #${e(item.num)} • ${e(item.category_label || item.category)}</div>
               <div class="tomo4-card-name">${e(item.name)}</div>
             </div>
-            ${item.nd ? `<span class="bestiary-threat-badge">ND ${e(item.nd)}</span>` : ''}
+            ${ndClean ? `<span class="bestiary-threat-badge">ND ${e(ndClean)}</span>` : ''}
           </div>
           ${item.title ? `<div style="font-size:12px; color:#ffd700; font-style:italic;">${e(item.title)}</div>` : ''}
           <div style="font-size:12px; color:#a8d5e8;">
@@ -4197,25 +4241,13 @@ ${char.summary || 'Sem registro adicional.'}
   setupMemorial() {
     this.canonicalFallen = [
       {
-        id: 'fallen_davi',
-        name: 'Davi Reis (Identidade Civil Perdida)',
-        codename: 'O Desaparecido das Minas',
-        class: 'Sobrevivente da Família Vilar',
-        campaign_id: 'camp_002',
-        campaign_title: 'Mansão Vilar (Concluída)',
-        date_of_death: 'Ano 2021 // Queda das Minas',
-        cause: 'Dado como morto após o colapso subterrâneo até o Projeto LIMIAR resgatá-lo sob o nome de Gabriel Vilar.',
-        quote: 'Se os trilhos começarem a sangrar luz azul, fechem a comporta da galeria oeste.',
-        flame_lit: false
-      },
-      {
         id: 'fallen_guia',
         name: 'Guia Temporário do Triângulo',
         codename: 'O Timoneiro do Naufrágio',
-        class: 'Sobrevivente Civis • MDA 5%',
+        class: 'Sobrevivente Civil • MDA 5%',
         campaign_id: 'camp_001',
         campaign_title: 'Triângulo & Vera Cruz (Futura)',
-        date_of_death: 'Ano 1998 // Naufrágio das 5.000 Almas',
+        date_of_death: 'Ano 1998 • Naufrágio das 5.000 Almas',
         cause: 'Abriu passagem contra a horda oceânica no convés superior para que quatro refugiados atravessassem o portal do Fosso.',
         quote: 'Corram pela proa! Eu seguro a escotilha até o nevoeiro engolir o convés.',
         flame_lit: false
@@ -4239,7 +4271,7 @@ ${char.summary || 'Sem registro adicional.'}
         class: 'Testemunhas Anômalas (Tomo IV)',
         campaign_id: 'camp_001',
         campaign_title: 'Arquivos Selados A.E.G.I.S.',
-        date_of_death: '1975 // Registros Visuais',
+        date_of_death: '1975 • Registros Visuais',
         cause: 'Transformados durante o ritual da Coroa Branca nas dunas e o Ciclo Lupino de Bedburg antes da quarentena da A.E.G.I.S.',
         quote: 'A câmera continuou gravando por sete minutos depois que as sombras dobraram de altura.',
         flame_lit: false
@@ -4258,12 +4290,12 @@ ${char.summary || 'Sem registro adicional.'}
       .map(c => ({
         id: c.id,
         name: c.name,
-        codename: c.codename || 'Agente de Evren',
+        codename: c.codename || 'Civil / Guia Local',
         class: c.class || 'Especialista',
         campaign_id: c.campaign_ids?.[0] || 'camp_002',
         campaign_title: (this.dataLoader.getCampaignById(c.campaign_ids?.[0])?.title) || 'Mansão Vilar',
         date_of_death: 'Registrado em Crônica',
-        cause: c.description ? c.description.slice(0, 120) : 'Tombou heroicamente sob o Véu.',
+        cause: c.description ? c.description.slice(0, 140) : 'Tombou heroicamente sob o Véu.',
         quote: c.quote || 'Um agente nunca é esquecido enquanto sua história for contada.',
         flame_lit: Boolean(c.flame_lit)
       }));
@@ -4273,13 +4305,16 @@ ${char.summary || 'Sem registro adicional.'}
       allFallen = allFallen.filter(f => f.campaign_id === filterCamp);
     }
 
+    const flameSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.3 3.4-1.8 5.4-3.4 7.3C7.2 11 6.5 12.6 6.5 14.5a5.5 5.5 0 0 0 11 0c0-2.6-1.4-4.7-3-6.6-.4 1.6-1.2 2.7-2.2 3.1.4-2.5-.1-5.6-.3-9z"/></svg>`;
+    const calendarSvg = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+
     container.innerHTML = `
       <div class="memorial-grid">
         ${allFallen.map(f => `
           <div class="memorial-card ${f.flame_lit ? 'candle-lit' : ''}" id="card-${this.escapeHtml(f.id)}">
             <div class="memorial-header">
-              <span class="memorial-badge-fallen">💀 TOMBOU EM COMBATE</span>
-              <span class="badge-tag location" style="font-size: 0.68rem;">${this.escapeHtml(f.campaign_title)}</span>
+              <span class="memorial-badge-fallen">TOMBOU EM COMBATE</span>
+              <span class="memorial-campaign-tag">${this.escapeHtml(f.campaign_title)}</span>
             </div>
 
             <h3 class="memorial-name">${this.escapeHtml(f.name)}</h3>
@@ -4290,13 +4325,16 @@ ${char.summary || 'Sem registro adicional.'}
             </div>
 
             <div class="memorial-quote">
-              "${this.escapeHtml(f.quote)}"
+              “${this.escapeHtml(f.quote)}”
             </div>
 
             <div class="memorial-actions">
-              <span style="font-family: monospace; font-size: 0.68rem; color: #8da4be;">🗓️ ${this.escapeHtml(f.date_of_death)}</span>
+              <span class="memorial-date" style="display:inline-flex; align-items:center; gap:5px;">
+                ${calendarSvg}
+                <span>${this.escapeHtml(f.date_of_death)}</span>
+              </span>
               <button class="btn-memorial-flame" onclick="window.uiController.toggleMemorialFlame('${this.escapeHtml(f.id)}')">
-                <span class="${f.flame_lit ? 'memorial-candle-flicker' : ''}">🕯️</span>
+                <span class="${f.flame_lit ? 'memorial-candle-flicker' : ''}" style="display:inline-flex; color:${f.flame_lit ? '#fb923c' : '#e5c158'};">${flameSvg}</span>
                 <span>${f.flame_lit ? 'Chama Acesa' : 'Acender Chama'}</span>
               </button>
             </div>

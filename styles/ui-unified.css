@@ -1,0 +1,1347 @@
+/* ==========================================================================
+   EVREN RPG — UI UNIFIED DESIGN SYSTEM (Museu Cartográfico & Linha do Tempo)
+   Reorganização completa de tipografia, hierarquia, contrastes e componentes.
+   ========================================================================== */
+
+:root {
+  --font-display: 'Palatino Linotype', 'Book Antiqua', 'Cinzel', Georgia, serif;
+  --font-body: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'Consolas', 'Cascadia Mono', 'Courier New', monospace;
+
+  --ev-bg-obsidian: rgba(7, 13, 22, 0.94);
+  --ev-bg-card: rgba(11, 20, 34, 0.92);
+  --ev-bg-elevated: rgba(16, 28, 46, 0.96);
+  --ev-border: rgba(148, 184, 218, 0.16);
+  --ev-border-strong: rgba(148, 184, 218, 0.28);
+  --ev-gold: #e5c158;
+  --ev-gold-soft: rgba(229, 193, 88, 0.14);
+  --ev-gold-border: rgba(229, 193, 88, 0.42);
+  --ev-cyan: #38bdf8;
+  --ev-cyan-soft: rgba(56, 189, 248, 0.12);
+  --ev-text: #eef4fa;
+  --ev-text-secondary: #b9cde0;
+  --ev-text-muted: #7f97af;
+  --ev-danger: #f87171;
+  --ev-success: #4ade80;
+  --ev-future: #c084fc;
+  --ev-radius: 10px;
+  --ev-radius-lg: 14px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ev-text);
+  background: #03070d;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar sutil e unificada */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(5, 11, 20, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(127, 151, 175, 0.3);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 193, 88, 0.5);
+}
+
+/* ==========================================================================
+   OCULTAÇÃO DE RUÍDOS VISUAIS SOBRE O PLANETA 3D
+   ========================================================================== */
+#planet-quick-campaigns,
+#floating-bottom-hud {
+  display: none !important;
+}
+
+body:not(.mode-2d) .compass-rose-container,
+body:not(.mode-2d) .fantasy-cartouche-banner {
+  display: none !important;
+}
+
+/* Esconde badges de atalho redundantes e seletor antigo na barra superior */
+#floating-hud .btn-kbd {
+  display: none !important;
+}
+
+#floating-hud .hud-select-wrap {
+  display: none !important;
+}
+
+/* ==========================================================================
+   BARRA SUPERIOR UNIFICADA (#floating-hud)
+   ========================================================================== */
+#floating-hud {
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1050;
+}
+
+#floating-hud .hud-panel {
+  background: var(--ev-bg-obsidian);
+  border: 1px solid var(--ev-border-strong);
+  border-radius: 12px;
+  padding: 6px 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  gap: 8px;
+}
+
+.hud-branding {
+  gap: 10px;
+  padding-right: 14px !important;
+}
+
+.hud-logo-icon {
+  width: 26px;
+  height: 26px;
+  stroke: var(--ev-gold);
+  filter: drop-shadow(0 0 6px rgba(229, 193, 88, 0.35));
+}
+
+.hud-title-wrap h1 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  color: #ffffff;
+  text-shadow: none !important;
+}
+
+.badge-system {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  background: var(--ev-gold-soft);
+  border: 1px solid var(--ev-gold-border);
+  color: var(--ev-gold);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.hud-subline {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ev-text-muted);
+  letter-spacing: 0.3px;
+}
+
+/* Busca central limpa */
+.hud-search-wrap {
+  min-width: 205px;
+  max-width: 260px;
+}
+
+.hud-search-input {
+  width: 100%;
+  background: rgba(15, 27, 44, 0.85);
+  border: 1px solid var(--ev-border);
+  color: var(--ev-text);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  padding: 6px 10px 6px 30px;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.hud-search-input:focus {
+  border-color: var(--ev-gold);
+  background: rgba(19, 34, 54, 0.96);
+}
+
+.hud-actions {
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+
+.btn-hud {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 6px 11px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ev-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-hud:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--ev-border-strong);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: none;
+}
+
+.btn-hud.museum-nav-btn--active,
+.btn-hud.btn-hud-teia-principal.active {
+  background: var(--ev-gold-soft);
+  border-color: var(--ev-gold-border);
+  color: var(--ev-gold);
+  box-shadow: inset 0 0 0 1px rgba(229, 193, 88, 0.12);
+}
+
+.btn-hud.btn-hud-teia-principal {
+  border-color: rgba(56, 189, 248, 0.34);
+  background: rgba(56, 189, 248, 0.09);
+  color: #bae6fd;
+}
+
+.btn-hud.btn-hud-teia-principal:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: var(--ev-cyan);
+  color: #ffffff;
+}
+
+.btn-hud.btn-action-add {
+  background: rgba(74, 222, 128, 0.09);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: #86efac;
+}
+
+.btn-hud.btn-action-add:hover {
+  background: rgba(74, 222, 128, 0.18);
+  color: #ffffff;
+}
+
+/* Dropdowns refinados */
+.hud-dropdown-menu {
+  background: rgba(8, 15, 25, 0.98) !important;
+  border: 1px solid var(--ev-border-strong) !important;
+  border-radius: 12px !important;
+  padding: 6px !important;
+  min-width: 245px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.78) !important;
+  backdrop-filter: blur(16px);
+}
+
+.hud-dropdown-group-title {
+  font-family: var(--font-mono);
+  font-size: 10px !important;
+  letter-spacing: 1px;
+  color: var(--ev-text-muted) !important;
+  padding: 6px 10px 4px !important;
+}
+
+.hud-dropdown-item {
+  font-family: var(--font-body);
+  font-size: 12.5px !important;
+  border-radius: 7px !important;
+  padding: 8px 10px !important;
+  color: var(--ev-text-secondary) !important;
+}
+
+.hud-dropdown-item:hover {
+  background: rgba(229, 193, 88, 0.12) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   CONTROLES SUPERIORES DO PLANETA (BREADCRUMBS, MODO 2D/3D, ESCALAS)
+   ========================================================================== */
+.museum-hud-bottom {
+  top: 66px !important;
+  bottom: auto !important;
+  left: 16px !important;
+  right: auto !important;
+  width: auto !important;
+  max-width: calc(100vw - 260px) !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 95;
+  pointer-events: none;
+  overflow: visible !important;
+}
+
+.museum-hud-bottom .museum-breadcrumb {
+  pointer-events: auto;
+  background: var(--ev-bg-obsidian);
+  border: 1px solid var(--ev-border);
+  border-radius: 99px;
+  padding: 5px 12px !important;
+  font-family: var(--font-body);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.museum-hud-bottom .museum-scale-selector {
+  display: none !important;
+}
+
+/* Alternar Planeta 3D / Mapa 2D no canto superior direito */
+.museum-view-toggle-btn {
+  top: 66px !important;
+  bottom: auto !important;
+  right: 16px !important;
+  padding: 7px 14px !important;
+  border-radius: 99px !important;
+  background: var(--ev-bg-obsidian) !important;
+  border: 1px solid var(--ev-gold-border) !important;
+  color: var(--ev-gold) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 96;
+}
+
+.museum-view-toggle-btn:hover {
+  background: var(--ev-gold) !important;
+  color: #060d16 !important;
+}
+
+/* Botões laterais direitos de câmera 3D */
+.planet-3d-controls {
+  right: 16px !important;
+  top: 44% !important;
+  gap: 6px !important;
+}
+
+.planet-ctrl-btn {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 10px !important;
+  background: var(--ev-bg-obsidian) !important;
+  border: 1px solid var(--ev-border-strong) !important;
+  color: var(--ev-text-secondary) !important;
+  font-size: 14px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
+}
+
+.planet-ctrl-btn:hover {
+  background: var(--ev-gold-soft) !important;
+  border-color: var(--ev-gold) !important;
+  color: var(--ev-gold) !important;
+  transform: scale(1.05);
+}
+
+/* Marcadores do Globo 3D mais limpos */
+.planet-marker__card {
+  background: rgba(7, 14, 24, 0.92) !important;
+  border: 1px solid rgba(148, 184, 218, 0.25) !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65) !important;
+  max-width: 225px !important;
+}
+
+.planet-marker--campaign .planet-marker__card {
+  border-color: var(--ev-gold-border) !important;
+  background: rgba(11, 19, 32, 0.96) !important;
+}
+
+.planet-marker__title {
+  font-family: var(--font-display) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.planet-marker__sub {
+  font-family: var(--font-body) !important;
+  font-size: 10.5px !important;
+  color: var(--ev-text-muted) !important;
+}
+
+.planet-marker.is-era-dimmed {
+  opacity: 0.22 !important;
+  filter: saturate(0.3);
+}
+
+.planet-marker.is-era-highlighted .planet-marker__card {
+  border-color: var(--ev-gold) !important;
+  box-shadow: 0 0 22px rgba(229, 193, 88, 0.35), 0 8px 22px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* ==========================================================================
+   LINHA DO TEMPO PLANETÁRIA (DOCK INFERIOR + CARTÃO DE ERA)
+   ========================================================================== */
+.planet-timeline-dock {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 28px));
+  z-index: 100;
+  background: rgba(6, 12, 21, 0.93);
+  border: 1px solid var(--ev-border-strong);
+  border-radius: 16px;
+  padding: 10px 16px 12px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.mode-2d .planet-timeline-dock,
+body.mode-2d .planet-era-spotlight {
+  display: none !important;
+}
+
+.tl-dock-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tl-dock-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tl-dock-kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ev-gold);
+  background: var(--ev-gold-soft);
+  border: 1px solid var(--ev-gold-border);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.tl-dock-current-title {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.tl-dock-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tl-nav-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ev-border-strong);
+  color: var(--ev-text-secondary);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.16s ease;
+}
+
+.tl-nav-btn:hover {
+  background: var(--ev-gold-soft);
+  border-color: var(--ev-gold-border);
+  color: var(--ev-gold);
+}
+
+.tl-nav-btn.is-playing {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: var(--ev-cyan);
+  color: #e0f2fe;
+}
+
+/* Trilho horizontal da cronologia */
+.tl-track-scroll {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px 2px;
+  scrollbar-width: thin;
+}
+
+.tl-era-stop {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 108px;
+  background: rgba(13, 24, 39, 0.72);
+  border: 1px solid rgba(148, 184, 218, 0.14);
+  border-radius: 10px;
+  padding: 7px 9px 8px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all 0.18s ease;
+}
+
+.tl-era-stop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--era-color, var(--ev-cyan));
+  opacity: 0.45;
+  transition: opacity 0.2s ease, height 0.2s ease;
+}
+
+.tl-era-stop:hover {
+  background: rgba(20, 36, 58, 0.92);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+.tl-era-stop:hover::before {
+  opacity: 0.95;
+}
+
+.tl-era-stop.active {
+  background: linear-gradient(180deg, rgba(22, 38, 60, 0.98) 0%, rgba(11, 21, 36, 0.98) 100%);
+  border-color: var(--era-color, var(--ev-gold));
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.tl-era-stop.active::before {
+  opacity: 1;
+  height: 3px;
+}
+
+.tl-era-year {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--era-color, var(--ev-gold));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tl-era-name {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ev-text);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tl-era-tag {
+  font-size: 9.5px;
+  color: var(--ev-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cartão Flutuante de Destaque da Era Selecionada */
+.planet-era-spotlight {
+  position: fixed;
+  top: 106px;
+  left: 16px;
+  width: 348px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 252px);
+  overflow-y: auto;
+  z-index: 94;
+  background: rgba(7, 14, 24, 0.92);
+  border: 1px solid var(--ev-border-strong);
+  border-radius: 14px;
+  padding: 15px 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.68);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.planet-era-spotlight.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+.spotlight-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.spotlight-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.spotlight-year-pill {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.spotlight-status-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+}
+
+.spotlight-status-pill.is-completed {
+  background: rgba(74, 222, 128, 0.14);
+  color: #86efac;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.spotlight-status-pill.is-future {
+  background: rgba(192, 132, 252, 0.14);
+  color: #e9d5ff;
+  border: 1px solid rgba(192, 132, 252, 0.35);
+}
+
+.spotlight-status-pill.is-era {
+  background: rgba(56, 189, 248, 0.12);
+  color: #bae6fd;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.spotlight-close-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--ev-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ev-text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.spotlight-close-btn:hover {
+  color: #ffffff;
+  border-color: var(--ev-border-strong);
+}
+
+.spotlight-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.spotlight-geo {
+  font-size: 11.5px;
+  color: var(--ev-gold);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.spotlight-summary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ev-text-secondary);
+}
+
+.spotlight-quote {
+  margin: 0;
+  padding: 8px 11px;
+  border-left: 2px solid var(--ev-gold);
+  background: rgba(229, 193, 88, 0.06);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #f3e8c8;
+}
+
+.spotlight-nodes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.spotlight-nodes-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ev-text-muted);
+}
+
+.spotlight-node-btn {
+  width: 100%;
+  text-align: left;
+  background: rgba(15, 27, 45, 0.78);
+  border: 1px solid rgba(148, 184, 218, 0.16);
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: var(--ev-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  transition: all 0.15s ease;
+}
+
+.spotlight-node-btn:hover {
+  border-color: var(--ev-cyan);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.spotlight-node-year {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ev-cyan);
+  white-space: nowrap;
+}
+
+.spotlight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding-top: 4px;
+}
+
+.spotlight-cta-primary,
+.spotlight-cta-secondary {
+  flex: 1 1 auto;
+  padding: 8px 11px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.16s ease;
+}
+
+.spotlight-cta-primary {
+  background: var(--ev-gold);
+  border: 1px solid var(--ev-gold);
+  color: #060d16;
+}
+
+.spotlight-cta-primary:hover {
+  background: #f3d473;
+}
+
+.spotlight-cta-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--ev-border-strong);
+  color: var(--ev-text);
+}
+
+.spotlight-cta-secondary:hover {
+  background: rgba(56, 189, 248, 0.14);
+  border-color: var(--ev-cyan);
+}
+
+/* Botão sutil para reabrir spotlight se o usuário fechou */
+.timeline-spotlight-reopen {
+  position: fixed;
+  top: 106px;
+  left: 16px;
+  z-index: 93;
+  background: var(--ev-bg-obsidian);
+  border: 1px solid var(--ev-gold-border);
+  color: var(--ev-gold);
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+}
+
+.timeline-spotlight-reopen.is-visible {
+  display: inline-flex;
+}
+
+/* ==========================================================================
+   SISTEMA UNIFICADO DE MODAIS & CONTAINERS
+   ========================================================================== */
+.modal-backdrop {
+  background: rgba(2, 6, 12, 0.82) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  padding: 20px !important;
+}
+
+.modal-container {
+  background: #08111d !important;
+  border: 1px solid var(--ev-border-strong) !important;
+  border-radius: var(--ev-radius-lg) !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  max-height: 90vh !important;
+}
+
+.modal-header {
+  background: linear-gradient(180deg, rgba(13, 24, 40, 0.98) 0%, rgba(8, 16, 28, 0.96) 100%) !important;
+  border-bottom: 1px solid var(--ev-border) !important;
+  padding: 15px 22px !important;
+}
+
+.modal-header h2 {
+  font-family: var(--font-display) !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  color: #ffffff !important;
+  text-transform: none !important;
+}
+
+.modal-header h2 svg {
+  stroke: var(--ev-gold);
+  flex-shrink: 0;
+}
+
+.btn-close-modal {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--ev-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ev-text-secondary) !important;
+  font-size: 16px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.btn-close-modal:hover {
+  background: rgba(248, 113, 113, 0.18);
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fecaca !important;
+}
+
+.modal-body {
+  padding: 20px 22px !important;
+  gap: 16px !important;
+}
+
+/* Unificação dos Tabs de todos os Modais */
+.hub-nav-tabs,
+.locations-filter-bar,
+.rules-v3-tabs,
+.tomo4-toolbar,
+.exhibition-modal__tabs {
+  background: rgba(11, 20, 34, 0.72) !important;
+  border-bottom: 1px solid var(--ev-border) !important;
+  padding: 12px 22px !important;
+  gap: 8px !important;
+}
+
+.hub-tab-btn,
+.loc-filter-pill,
+.rules-v3-tab-btn,
+.tomo4-filter-btn,
+.exhibition-tab-btn {
+  font-family: var(--font-body) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  padding: 7px 14px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--ev-border) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--ev-text-secondary) !important;
+  box-shadow: none !important;
+}
+
+.hub-tab-btn:hover,
+.loc-filter-pill:hover,
+.rules-v3-tab-btn:hover,
+.tomo4-filter-btn:hover,
+.exhibition-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--ev-border-strong) !important;
+  color: #ffffff !important;
+}
+
+.hub-tab-btn.active,
+.loc-filter-pill.active,
+.rules-v3-tab-btn.active,
+.tomo4-filter-btn.active,
+.exhibition-tab-btn--active {
+  background: var(--ev-gold-soft) !important;
+  border-color: var(--ev-gold-border) !important;
+  color: var(--ev-gold) !important;
+}
+
+/* ==========================================================================
+   MEMORIAL DOS CAÍDOS (REFORMULADO — ZERO EMOJI QUEBRADO / ZERO TEXT WRAP FEIO)
+   ========================================================================== */
+.memorial-banner {
+  background: linear-gradient(135deg, rgba(229, 193, 88, 0.08) 0%, rgba(16, 28, 46, 0.85) 100%) !important;
+  border: 1px solid var(--ev-gold-border) !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+}
+
+.memorial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.memorial-card {
+  background: var(--ev-bg-card) !important;
+  border: 1px solid var(--ev-border) !important;
+  border-radius: 12px !important;
+  padding: 16px 18px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.memorial-card.candle-lit {
+  border-color: rgba(251, 146, 60, 0.55) !important;
+  box-shadow: 0 0 28px rgba(251, 146, 60, 0.18), 0 10px 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+.memorial-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.memorial-badge-fallen {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: rgba(248, 113, 113, 0.14);
+  border: 1px solid rgba(248, 113, 113, 0.42);
+  color: #fca5a5;
+}
+
+.memorial-campaign-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ev-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+}
+
+.memorial-name {
+  margin: 0 !important;
+  font-family: var(--font-display) !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  line-height: 1.25;
+}
+
+.memorial-meta {
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  color: var(--ev-cyan) !important;
+  margin-top: -4px;
+}
+
+.memorial-cause {
+  background: rgba(5, 11, 20, 0.68) !important;
+  border: 1px solid rgba(148, 184, 218, 0.12) !important;
+  border-left: 3px solid var(--ev-danger) !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  font-size: 12.5px !important;
+  line-height: 1.5 !important;
+  color: var(--ev-text-secondary) !important;
+}
+
+.memorial-cause strong {
+  color: #fca5a5;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.memorial-quote {
+  font-size: 12.5px !important;
+  line-height: 1.48 !important;
+  color: #e9d9b4 !important;
+  border-left: 2px solid var(--ev-gold) !important;
+  padding: 4px 0 4px 10px !important;
+  margin-top: 2px !important;
+}
+
+.memorial-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 184, 218, 0.12);
+}
+
+.memorial-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ev-text-muted);
+}
+
+.btn-memorial-flame {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  background: rgba(229, 193, 88, 0.1) !important;
+  border: 1px solid var(--ev-gold-border) !important;
+  color: var(--ev-gold) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.btn-memorial-flame:hover {
+  background: rgba(251, 146, 60, 0.2) !important;
+  border-color: #fb923c !important;
+  color: #fed7aa !important;
+}
+
+/* ==========================================================================
+   CENTRAL DE CAMPANHAS, ATLAS DE LOCAIS, TOMO IV E REGRAS V3.0
+   ========================================================================== */
+.hub-campaigns-grid {
+  padding: 18px 22px !important;
+  gap: 16px !important;
+}
+
+.campaign-card {
+  background: var(--ev-bg-card) !important;
+  border: 1px solid var(--ev-border) !important;
+  border-radius: 12px !important;
+  padding: 16px 18px !important;
+}
+
+.campaign-card.completed {
+  border-color: rgba(74, 222, 128, 0.32) !important;
+}
+
+.campaign-card-title {
+  font-family: var(--font-display) !important;
+  font-size: 17px !important;
+  line-height: 1.25 !important;
+  color: #ffffff !important;
+}
+
+.campaign-card.completed .campaign-card-title {
+  color: var(--ev-gold) !important;
+}
+
+.campaign-status-badge {
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  border-radius: 99px !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.4px;
+}
+
+.campaign-status-badge.completed {
+  background: var(--ev-gold-soft) !important;
+  border: 1px solid var(--ev-gold-border) !important;
+  color: var(--ev-gold) !important;
+}
+
+.campaign-status-badge.future {
+  background: rgba(192, 132, 252, 0.14) !important;
+  border: 1px solid rgba(192, 132, 252, 0.42) !important;
+  color: #e9d5ff !important;
+}
+
+.campaign-meta-item {
+  font-family: var(--font-body) !important;
+  font-size: 11.5px !important;
+  color: var(--ev-text-muted) !important;
+}
+
+.campaign-synopsis {
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+  color: var(--ev-text-secondary) !important;
+}
+
+/* Atlas de Locais */
+.locations-atlas-grid {
+  padding: 18px 22px !important;
+  gap: 14px !important;
+  grid-template-columns: repeat(auto-fill, minmax(305px, 1fr)) !important;
+}
+
+.location-atlas-card {
+  background: var(--ev-bg-card) !important;
+  border: 1px solid var(--ev-border) !important;
+  border-radius: 12px !important;
+  padding: 15px 16px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.location-atlas-card:hover {
+  border-color: var(--ev-gold-border) !important;
+}
+
+.location-atlas-name {
+  font-family: var(--font-display) !important;
+  font-size: 15.5px !important;
+  color: #ffffff !important;
+  margin: 0;
+}
+
+.location-atlas-type {
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  background: var(--ev-cyan-soft) !important;
+  color: var(--ev-cyan) !important;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 99px !important;
+  padding: 2px 9px !important;
+  max-width: 175px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+.location-atlas-zone {
+  font-size: 12px !important;
+  color: var(--ev-gold) !important;
+}
+
+.location-atlas-desc {
+  font-size: 12.5px !important;
+  line-height: 1.52 !important;
+  color: var(--ev-text-secondary) !important;
+  flex: 1;
+}
+
+.location-atlas-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.btn-location-fly {
+  flex: 1;
+  border-radius: 8px !important;
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 7px 10px !important;
+  background: var(--ev-gold-soft) !important;
+  border: 1px solid var(--ev-gold-border) !important;
+  color: var(--ev-gold) !important;
+  cursor: pointer;
+}
+
+.btn-location-fly:hover {
+  background: var(--ev-gold) !important;
+  color: #060d16 !important;
+}
+
+.btn-location-fly.secondary {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: var(--ev-border-strong) !important;
+  color: var(--ev-text-secondary) !important;
+}
+
+.btn-location-fly.secondary:hover {
+  background: var(--ev-cyan-soft) !important;
+  border-color: var(--ev-cyan) !important;
+  color: #ffffff !important;
+}
+
+/* Regras V3.0 e Tomo IV */
+.v3-card,
+.tomo4-card,
+.exhibition-card,
+.narrative-chapter {
+  background: var(--ev-bg-card) !important;
+  border: 1px solid var(--ev-border) !important;
+  border-radius: 12px !important;
+}
+
+.v3-card-title,
+.tomo4-card-name,
+.narrative-chapter__title {
+  font-family: var(--font-display) !important;
+  font-size: 16px !important;
+  color: var(--ev-gold) !important;
+}
+
+.v3-card-meta,
+.tomo4-card-num {
+  font-family: var(--font-mono) !important;
+  font-size: 10.5px !important;
+  color: var(--ev-cyan) !important;
+}
+
+.v3-card-body,
+.narrative-chapter__p {
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  line-height: 1.58 !important;
+  color: var(--ev-text-secondary) !important;
+}
+
+.tomo4-grid {
+  grid-template-columns: repeat(auto-fill, minmax(305px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.bestiary-threat-badge {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+}
+
+/* Gaveta Lateral C.R.I.S. */
+#side-drawer {
+  background: rgba(7, 13, 23, 0.97) !important;
+  border-left: 1px solid var(--ev-border-strong) !important;
+}
+
+#character-selector-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 170px;
+  overflow-y: auto;
+  padding: 10px 14px;
+  background: rgba(4, 9, 17, 0.65);
+  border-bottom: 1px solid var(--ev-border);
+}
+
+.entity-pill {
+  font-family: var(--font-body) !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 5px 10px !important;
+  border: 1px solid var(--ev-border) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--ev-text-secondary) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.entity-pill.active {
+  background: var(--ev-gold-soft) !important;
+  border-color: var(--ev-gold-border) !important;
+  color: var(--ev-gold) !important;
+}
+
+.entity-pill-sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  opacity: 0.72;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE PARA TELAS MÉDIAS (1280px) & PEQUENAS
+   ========================================================================== */
+@media (max-width: 1320px) {
+  #floating-hud {
+    gap: 6px;
+  }
+  #floating-hud .hud-panel {
+    padding: 5px 8px;
+    gap: 5px;
+  }
+  .hud-branding {
+    padding-right: 8px !important;
+  }
+  .hud-subline {
+    display: none;
+  }
+  .hud-search-wrap {
+    min-width: 135px;
+    max-width: 155px;
+  }
+  .btn-hud {
+    padding: 5px 8px;
+    font-size: 11.5px;
+    gap: 4px;
+  }
+  .planet-era-spotlight {
+    width: 316px;
+  }
+}
+
+@media (max-width: 1024px) {
+  #floating-hud {
+    flex-wrap: wrap;
+  }
+  .planet-era-spotlight {
+    display: none;
+  }
+  .planet-timeline-dock {
+    padding: 8px 10px;
+  }
+  .tl-era-stop {
+    min-width: 96px;
+  }
+}

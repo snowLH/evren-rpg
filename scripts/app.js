@@ -71,14 +71,22 @@ class InteractiveTabletopApp {
 
           // Phase 2: Pure-math non-overlapping placement in screen space
           const placed = [];
+          // Evita colisão com o botão superior direito "Mapa 2D" e controles laterais 3D
+          placed.push({ x1: W - 154, x2: W, y1: 56, y2: 112 });
+          placed.push({ x1: W - 76, x2: W, y1: 210, y2: 520 });
+          const spotEl = document.getElementById('planet-era-spotlight');
+          if (W >= 1024 && spotEl && !spotEl.classList.contains('is-hidden')) {
+            const sr = spotEl.getBoundingClientRect();
+            placed.push({ x1: sr.left - 8, x2: sr.right + 12, y1: sr.top - 8, y2: sr.bottom + 8 });
+          }
           const tryOffsets = [
             [0, 0], [0, -76], [0, 76], [235, 0], [-235, 0],
             [0, -148], [0, 148], [210, -72], [-210, -72], [210, 72], [-210, 72]
           ];
 
           for (const it of items) {
-            const { label, px, py, dim, pr } = it;
-            if (py < 108 || py > H - 64 || px < 28 || px > W - 28) {
+            const { label, px, py, dim } = it;
+            if (py < 74 || py > H - 150 || px < 28 || px > W - 28) {
               label.style.opacity = '0';
               label.style.pointerEvents = 'none';
               continue;
@@ -92,7 +100,7 @@ class InteractiveTabletopApp {
               const bx2 = cx + dim.w / 2;
               const by1 = cy - dim.h / 2;
               const by2 = cy + dim.h / 2;
-              if (by1 < 108 || by2 > H - 64 || bx1 < 10 || bx2 > W - 10) continue;
+              if (by1 < 74 || by2 > H - 150 || bx1 < 10 || bx2 > W - 10) continue;
               const hits = placed.some(r => !(bx2 <= r.x1 || bx1 >= r.x2 || by2 <= r.y1 || by1 >= r.y2));
               if (!hits) {
                 chosenDx = dx;
@@ -125,6 +133,13 @@ class InteractiveTabletopApp {
             this.museumController.handlePlanetSelection(kind, data, context);
           };
         }
+      }
+
+      // 1.4 Inicializa Linha do Tempo Planetária (Dock Cronológico + Destaque de Era + Planeta 3D)
+      if (window.PlanetTimelineController) {
+        this.planetTimeline = new PlanetTimelineController(this.dataLoader, this.planetEngine, this.museumController);
+        this.planetTimeline.init();
+        window.planetTimeline = this.planetTimeline;
       }
 
       // 2. Inicializa UI

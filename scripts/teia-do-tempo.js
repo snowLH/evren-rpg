@@ -683,12 +683,28 @@ class TeiaDoTempoController {
       }
       this.ctx.stroke();
 
-      if ((isConnectedToHover || isSelected) && link.label) {
+      if (isConnectedToHover && !this.draggedNode && !this.isDragging && link.label) {
         const mx = (p1.x + p2.x) * 0.5;
-        const my = (p1.y + p2.y) * 0.5 - 6;
+        const my = (p1.y + p2.y) * 0.5 - 12;
         this.ctx.shadowBlur = 0;
-        this.ctx.font = '10px monospace';
-        this.ctx.fillStyle = '#00e5ff';
+        this.ctx.font = '600 10.5px Segoe UI, sans-serif';
+        const metrics = this.ctx.measureText(link.label);
+        const padX = 7;
+        const boxW = metrics.width + padX * 2;
+        const boxH = 18;
+        this.ctx.fillStyle = 'rgba(6, 13, 23, 0.94)';
+        this.ctx.beginPath();
+        if (this.ctx.roundRect) {
+          this.ctx.roundRect(mx - boxW / 2, my - 13, boxW, boxH, 5);
+        } else {
+          this.ctx.rect(mx - boxW / 2, my - 13, boxW, boxH);
+        }
+        this.ctx.fill();
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+        this.ctx.stroke();
+
+        this.ctx.fillStyle = '#e0f2fe';
         this.ctx.textAlign = 'center';
         this.ctx.fillText(link.label, mx, my);
       }

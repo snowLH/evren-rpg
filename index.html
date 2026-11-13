@@ -46,6 +46,7 @@
   <link rel="stylesheet" href="styles/campaigns-hub.css">
   <link rel="stylesheet" href="styles/museum.css">
   <link rel="stylesheet" href="styles/teia-do-tempo.css">
+  <link rel="stylesheet" href="styles/ui-unified.css">
 </head>
 <body class="paranormal-fx">
 
@@ -137,13 +138,13 @@
           <circle cx="12" cy="12" r="9"/>
           <path d="M12 3v18"/>
           <path d="M3 12h18"/>
-          <circle cx="12" cy="12" r="3" fill="#00e5ff" fill-opacity="0.3"/>
+          <circle cx="12" cy="12" r="3" fill="#e5c158" fill-opacity="0.3"/>
         </svg>
         <div class="hud-title-wrap">
           <h1 class="glitch-text" data-text="EVREN">EVREN <span class="badge-system">RPG</span></h1>
-          <div class="hud-subline">Atlas Planetário & Teia do Tempo</div>
+          <div class="hud-subline">Linha do Tempo Planetária</div>
           <div id="map-breadcrumb" class="map-breadcrumb" style="display:none;" title="Escala Atual do Mapa">
-            <span id="breadcrumb-label" class="breadcrumb-world">🧭 PLANISFÉRIO</span>
+            <span id="breadcrumb-label" class="breadcrumb-world">PLANISFÉRIO</span>
           </div>
         </div>
       </div>
@@ -161,44 +162,46 @@
             <circle cx="11" cy="11" r="8"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input type="text" id="search-input" class="hud-search-input" placeholder="Buscar personagens, locais, histórias... [/]" autocomplete="off">
+          <input type="text" id="search-input" class="hud-search-input" placeholder="Buscar no universo... [/]" autocomplete="off">
           <div id="search-results-dropdown" class="search-dropdown-menu"></div>
         </div>
       </div>
 
-      <!-- Painel Direito: Ações Principais do Universo EVREN (Organizado & Unificado) -->
+      <!-- Painel Direito: Navegação Essencial do Universo EVREN -->
       <div class="hud-panel hud-actions">
-        <!-- 1. Planeta 3D -->
-        <button id="btn-nav-planet" type="button" class="btn-hud btn-primary-nav museum-nav-btn--active" title="Planeta 3D (Globo Físico Interativo)">
-          <span class="btn-icon">🪐</span> <span class="btn-text">Planeta 3D</span>
+        <button id="btn-nav-planet" type="button" class="btn-hud btn-primary-nav museum-nav-btn--active" title="Planeta 3D & Linha do Tempo">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M12 3a14 14 0 0 1 0 18"/></svg>
+          <span class="btn-text">Planeta</span>
         </button>
 
-        <!-- 2. Teia do Tempo (O PRINCIPAL - Destacado) -->
-        <button id="btn-nav-teia-do-tempo" type="button" class="btn-hud btn-primary-nav btn-hud-teia-principal" title="Teia do Tempo: História Conectada, Linhas do Tempo e Vertentes [W]">
-          <span class="btn-icon">🕸️</span> <span class="btn-text">Teia do Tempo</span> <span class="btn-kbd">[W]</span>
+        <button id="btn-nav-teia-do-tempo" type="button" class="btn-hud btn-primary-nav btn-hud-teia-principal" title="Teia do Tempo: Grafo Causal & Vertentes [W]">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><line x1="6.7" y1="7.2" x2="10" y2="10.2"/><line x1="17.3" y1="7.2" x2="14" y2="10.2"/><line x1="6.7" y1="16.8" x2="10" y2="13.8"/><line x1="17.3" y1="16.8" x2="14" y2="13.8"/></svg>
+          <span class="btn-text">Teia do Tempo</span>
         </button>
 
-        <!-- 3. Central de Campanhas -->
         <button id="btn-open-campaigns-hub" class="btn-hud btn-primary-nav" title="Central de Campanhas & Histórias">
-          <span class="btn-icon">📜</span> <span class="btn-text">Campanhas</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span class="btn-text">Campanhas</span>
         </button>
 
-        <!-- 4. Personagens (C.R.I.S.) -->
-        <button id="btn-open-characters" class="btn-hud btn-primary-nav" title="Fichas dos Personagens (C.R.I.S.) [D]">
-          <span class="btn-icon">👤</span> <span class="btn-text">Personagens</span> <span class="btn-kbd">[D]</span>
+        <button id="btn-open-characters" class="btn-hud btn-primary-nav" title="Fichas C.R.I.S. dos Personagens [D]">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="btn-text">Personagens</span>
         </button>
 
-        <!-- 5. Atlas de Locais -->
-        <button id="btn-open-locations" class="btn-hud btn-primary-nav" title="Atlas de Locais e Fendas">
-          <span class="btn-icon">📍</span> <span class="btn-text">Locais</span>
+        <button id="btn-open-locations" class="btn-hud btn-primary-nav" title="Atlas de Locais & Fendas">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="btn-text">Locais</span>
         </button>
 
-        <!-- 6. Regras & Virtudes de Alma -->
-        <button id="btn-nav-tomo4" type="button" class="btn-hud btn-primary-nav" title="Tomo IV: 65 Fichas Oficiais (Agentes A.E.G.I.S., Soberanos & Bestiário) [B]">
-          <span class="btn-icon">👹</span> <span class="btn-text">Tomo IV</span>
+        <button id="btn-nav-tomo4" type="button" class="btn-hud btn-primary-nav" title="Tomo IV: 65 Fichas Oficiais (Agentes, Soberanos & Bestiário) [B]">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+          <span class="btn-text">Tomo IV</span>
         </button>
+
         <button id="btn-open-rules" class="btn-hud btn-primary-nav" title="Regras Oficiais V3.0 & Virtudes de Alma [R]">
-          <span class="btn-icon">📖</span> <span class="btn-text">Regras</span> <span class="btn-kbd">[R]</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span class="btn-text">Regras</span>
         </button>
 
         <!-- Elementos mantidos ocultos para compatibilidade com handlers e integridade de IDs -->
@@ -207,82 +210,68 @@
         <button id="btn-nav-characters" type="button" style="display:none;" aria-hidden="true"></button>
         <button id="btn-nav-admin" type="button" style="display:none;" aria-hidden="true"></button>
         <button id="btn-open-chronicles" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-teia-do-tempo" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-timeline" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-lore-graph" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-codex" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-rules-menu" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-bestiary" type="button" style="display:none;" aria-hidden="true"></button>
+        <button id="btn-open-mixer" type="button" style="display:none;" aria-hidden="true"></button>
 
-        <!-- Menu Dropdown: Cadastrar Novo -->
+        <!-- Menu Dropdown: Novo Registro -->
         <div class="hud-dropdown-wrap">
-          <button id="btn-hud-create" class="btn-hud btn-action-add" title="Cadastrar Nova Ficha ou Campanha">
-            <span class="btn-icon">➕</span> <span class="btn-text">Novo</span> <span class="btn-caret">▾</span>
+          <button id="btn-hud-create" class="btn-hud btn-action-add" title="Cadastrar Ficha ou Campanha">
+            <span class="btn-text">+ Novo</span> <span class="btn-caret">▾</span>
           </button>
           <div class="hud-dropdown-menu">
-            <div class="hud-dropdown-group-title">CADASTRAR NO UNIVERSO</div>
+            <div class="hud-dropdown-group-title">CADASTRAR NO ACERVO</div>
             <button id="btn-open-creator" class="hud-dropdown-item">
-              <span class="btn-icon">👤</span> <span>Nova Ficha de Agente</span>
+              <span>Nova Ficha de Agente</span>
             </button>
             <button id="btn-open-cris-importer" class="hud-dropdown-item">
-              <span class="btn-icon">📥</span> <span>Importar do C.R.I.S. (JSON)</span>
+              <span>Importar Ficha C.R.I.S. (JSON)</span>
             </button>
             <button id="btn-open-campaign-creator" class="hud-dropdown-item">
-              <span class="btn-icon">🌐</span> <span>Nova Campanha de RPG</span>
+              <span>Nova Campanha de RPG</span>
             </button>
           </div>
         </div>
 
-        <!-- Menu Dropdown: Arquivo & Mais -->
+        <!-- Menu Dropdown: Acervo & Utilitários -->
         <div class="hud-dropdown-wrap">
-          <button id="btn-hud-tools" class="btn-hud btn-more" title="Mais Opções e Ferramentas">
-            <span class="btn-icon">📚</span> <span class="btn-text">Arquivo & Mais</span> <span class="btn-caret">▾</span>
+          <button id="btn-hud-tools" class="btn-hud btn-more" title="Acervo Complementar & Utilitários">
+            <span class="btn-text">Mais</span> <span class="btn-caret">▾</span>
           </button>
           <div class="hud-dropdown-menu right-aligned">
-            <div class="hud-dropdown-group-title">LORE & EXPLORAÇÃO</div>
-            <button id="btn-open-teia-do-tempo" class="hud-dropdown-item">
-              <span class="btn-icon">🕸️</span> <span>Teia do Tempo [W]</span>
-            </button>
-            <button id="btn-open-timeline" class="hud-dropdown-item">
-              <span class="btn-icon">⏳</span> <span>Cronologia Histórica [T]</span>
-            </button>
-            <button id="btn-open-lore-graph" class="hud-dropdown-item">
-              <span class="btn-icon">🕸️</span> <span>Teia de Conexões de Evren</span>
-            </button>
+            <div class="hud-dropdown-group-title">ACERVO COMPLEMENTAR</div>
             <button id="btn-open-memorial" class="hud-dropdown-item">
-              <span class="btn-icon">🕯️</span> <span>Memorial dos Caídos</span>
+              <span>Memorial dos Caídos</span>
             </button>
             <button id="btn-open-cassette" class="hud-dropdown-item">
-              <span class="btn-icon">📼</span> <span>Fitas de Áudio da A.E.G.I.S.</span>
-            </button>
-            <button id="btn-open-journal" class="hud-dropdown-item">
-              <span class="btn-icon">📝</span> <span>Diário do Mestre [J]</span>
-            </button>
-            <button id="btn-open-codex" class="hud-dropdown-item">
-              <span class="btn-icon">🗂️</span> <span>Códice da Lore [C]</span>
-            </button>
-            <button id="btn-open-rules-menu" class="hud-dropdown-item">
-              <span class="btn-icon">📜</span> <span>Regras de Evren [R]</span>
+              <span>Fitas de Áudio A.E.G.I.S.</span>
             </button>
             <button id="btn-open-relics" class="hud-dropdown-item">
-              <span class="btn-icon">🏺</span> <span>Arsenal de Relíquias</span>
+              <span>Arsenal de Relíquias</span>
             </button>
-            <button id="btn-open-bestiary" class="hud-dropdown-item">
-              <span class="btn-icon">👾</span> <span>Bestiário de Ameaças [B]</span>
+            <button id="btn-open-journal" class="hud-dropdown-item">
+              <span>Diário do Mestre [J]</span>
             </button>
             <div class="hud-dropdown-divider"></div>
-            <div class="hud-dropdown-group-title">SISTEMA & OPÇÕES</div>
+            <div class="hud-dropdown-group-title">SISTEMA & ÁUDIO</div>
             <button id="btn-open-backup" class="hud-dropdown-item">
-              <span class="btn-icon">💾</span> <span>Backup & Sincronização</span>
+              <span>Backup & Sincronização</span>
             </button>
             <button id="btn-open-shortcuts" class="hud-dropdown-item">
-              <span class="btn-icon">⌨️</span> <span>Guia de Atalhos [?]</span>
+              <span>Atalhos do Teclado [?]</span>
             </button>
             <button id="btn-toggle-sound" class="hud-dropdown-item active">
-              <span class="btn-icon">🔊</span> <span id="sound-btn-text">Efeitos Sonoros [ON]</span>
+              <span id="sound-btn-text">Efeitos Sonoros [ON]</span>
             </button>
             <button id="btn-toggle-ambient" class="hud-dropdown-item">
-              <span class="btn-icon">🎵</span> <span id="ambient-btn-text">Música de Fundo [OFF]</span>
-            </button>
-            <button id="btn-open-mixer" class="hud-dropdown-item">
-              <span class="btn-icon">🎛️</span> <span>Mesa de Som [S]</span>
+              <span id="ambient-btn-text">Música de Fundo [OFF]</span>
             </button>
             <button id="btn-pwa-install" class="hud-dropdown-item" style="display:none;">
-              <span class="btn-icon">📲</span> <span class="btn-text">Instalar App</span>
+              <span class="btn-text">Instalar App</span>
             </button>
           </div>
         </div>
@@ -446,15 +435,33 @@
     </div>
 
     <!-- BOTÃO PARA ALTERNAR ENTRE GLOBO 3D E MAPA TOPOGRÁFICO LOCAL 2D -->
-    <button id="btn-museum-toggle-2d" type="button" class="museum-view-toggle-btn">🗺️ Mapa Topográfico Local</button>
+    <button id="btn-museum-toggle-2d" type="button" class="museum-view-toggle-btn">Mapa 2D</button>
 
     <!-- CONTROLES FLUTUANTES DO PLANETA 3D -->
     <div id="planet-3d-controls" class="planet-3d-controls" aria-label="Controles Interativos do Planeta 3D">
-      <button id="btn-planet-zoom-in" type="button" class="planet-ctrl-btn" title="Aproximar Câmera [Zoom In]">➕</button>
-      <button id="btn-planet-zoom-out" type="button" class="planet-ctrl-btn" title="Afastar Câmera [Zoom Out]">➖</button>
-      <button id="btn-planet-rotate-toggle" type="button" class="planet-ctrl-btn" title="Alternar Rotação Automática do Planeta">🔄</button>
-      <button id="btn-planet-reset" type="button" class="planet-ctrl-btn" title="Resetar Câmera para Visão Global">🧭</button>
+      <button id="btn-planet-zoom-in" type="button" class="planet-ctrl-btn" title="Aproximar Câmera">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button id="btn-planet-zoom-out" type="button" class="planet-ctrl-btn" title="Afastar Câmera">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button id="btn-planet-rotate-toggle" type="button" class="planet-ctrl-btn" title="Alternar Rotação Automática">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </button>
+      <button id="btn-planet-reset" type="button" class="planet-ctrl-btn" title="Visão Global Inicial">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>
+      </button>
     </div>
+
+    <!-- CARTÃO FLUTUANTE DE DESTAQUE DA ERA ATUAL NA LINHA DO TEMPO -->
+    <aside id="planet-era-spotlight" class="planet-era-spotlight" aria-label="Destaque da Era Selecionada"></aside>
+    <button id="btn-reopen-spotlight" type="button" class="timeline-spotlight-reopen">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      <span>Resumo da Era</span>
+    </button>
+
+    <!-- BARRA CRONOLÓGICA INFERIOR DO PLANETA (LINHA DO TEMPO INTERATIVA) -->
+    <section id="planet-timeline-dock" class="planet-timeline-dock" aria-label="Linha do Tempo Planetária do Universo Evren"></section>
 
     <!-- BARRA FLUTUANTE DE ACESSO RÁPIDO ÀS CAMPANHAS DO PLANETA -->
     <div id="planet-quick-campaigns" class="planet-quick-campaigns" aria-label="Navegação Rápida entre Campanhas">
@@ -1405,10 +1412,11 @@
           <button class="btn-close-modal" data-close="modal-campaigns-hub" title="Fechar [ESC]">✕</button>
         </div>
         <div class="hub-nav-tabs">
-          <button id="hub-tab-all" class="hub-tab-btn active" data-filter="all">🌐 Todas as Histórias</button>
-          <button id="hub-tab-ongoing" class="hub-tab-btn" data-filter="ongoing">🟢 RPGs em Andamento</button>
-          <button id="hub-tab-completed" class="hub-tab-btn" data-filter="completed">📜 RPGs Concluídos / Históricos</button>
-          <button id="btn-hub-new-campaign" class="btn-secondary" style="margin-left: auto; font-size: 0.75rem; border-color: #00e5ff; color: #00e5ff;">+ Cadastrar Nova História</button>
+          <button id="hub-tab-all" class="hub-tab-btn active" data-filter="all">Todas as Campanhas</button>
+          <button id="hub-tab-completed" class="hub-tab-btn" data-filter="completed">Concluídas</button>
+          <button id="hub-tab-future" class="hub-tab-btn" data-filter="future">Futuras Campanhas</button>
+          <button id="hub-tab-ongoing" class="hub-tab-btn" data-filter="ongoing" style="display:none;" aria-hidden="true"></button>
+          <button id="btn-hub-new-campaign" class="btn-secondary" style="margin-left: auto; font-size: 0.75rem; border-color: #38bdf8; color: #38bdf8;">+ Nova Campanha</button>
         </div>
         <div class="hub-campaigns-grid" id="hub-campaigns-grid">
           <!-- Renderizado dinamicamente via UIController -->
@@ -2302,6 +2310,7 @@
   <script src="scripts/ui-controller.js"></script>
   <script src="scripts/radar-widget.js"></script>
   <script src="scripts/teia-do-tempo.js"></script>
+  <script src="scripts/planet-timeline.js"></script>
   <script src="scripts/app.js"></script>
 </body>
 </html>

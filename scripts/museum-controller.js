@@ -182,10 +182,13 @@ class MuseumController {
 
     const isPlanetVisible = !planetEl.classList.contains('is-hidden');
     if (isPlanetVisible) {
+      document.querySelectorAll('.museum-location-modal.is-open, .museum-exhibition-modal.is-open, .museum-biography-modal.is-open, .museum-archive-modal.is-open, .museum-admin-modal.is-open')
+        .forEach((m) => m.classList.remove('is-open'));
       planetEl.classList.add('is-hidden');
       planetEl.style.display = 'none';
       mapEl.style.display = 'block';
-      if (btnToggle) btnToggle.innerHTML = '🪐 Retornar ao Planeta 3D';
+      document.body.classList.add('mode-2d');
+      if (btnToggle) btnToggle.textContent = 'Planeta 3D';
       if (window.app?.mapEngine?.map) {
         window.app.mapEngine.map.invalidateSize();
       }
@@ -193,7 +196,8 @@ class MuseumController {
       planetEl.classList.remove('is-hidden');
       planetEl.style.display = 'block';
       mapEl.style.display = 'none';
-      if (btnToggle) btnToggle.innerHTML = '🗺️ Mapa Topográfico Local';
+      document.body.classList.remove('mode-2d');
+      if (btnToggle) btnToggle.textContent = 'Mapa 2D';
       if (this.planetEngine) {
         this.planetEngine.onWindowResize();
       }
@@ -208,7 +212,8 @@ class MuseumController {
     planetEl.classList.remove('is-hidden');
     planetEl.style.display = 'block';
     mapEl.style.display = 'none';
-    if (btnToggle) btnToggle.innerHTML = '🗺️ Mapa Topográfico Local';
+    document.body.classList.remove('mode-2d');
+    if (btnToggle) btnToggle.textContent = 'Mapa 2D';
     if (this.planetEngine) {
       this.planetEngine.onWindowResize();
     }

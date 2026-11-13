@@ -31,18 +31,21 @@ class Planet3DEngine {
     this.cloudMesh = null;
     this.atmosphereMesh = null;
     this.markers3DGroup = null;
+    this.timelineArcsGroup = null;
+    this.timelineArcMeshes = [];
+    this.activeTimelineEra = 'all';
     this.selectionRingMesh = null;
 
     this.globeRadius = 100;
 
-    // Coordenadas esféricas da câmera (em torno do centro do planeta)
+    // Coordenadas esféricas da câmera (foco inicial no arco Atlântico-Américas-Europa de Evren)
     this.cameraState = {
-      lat: 12.0,
-      lng: -42.0,
-      distance: 285,
-      targetLat: 12.0,
-      targetLng: -42.0,
-      targetDistance: 285
+      lat: 18.0,
+      lng: -54.0,
+      distance: 268,
+      targetLat: 18.0,
+      targetLng: -54.0,
+      targetDistance: 268
     };
 
     // Limites de escala
@@ -203,6 +206,11 @@ class Planet3DEngine {
     // 5. Grupo de marcadores 3D ancorados na superfície
     this.markers3DGroup = new THREE.Group();
     this.globeGroup.add(this.markers3DGroup);
+
+    // 5.1 Grupo de arcos geodésicos cronológicos da Linha do Tempo Planetária
+    this.timelineArcsGroup = new THREE.Group();
+    this.globeGroup.add(this.timelineArcsGroup);
+    this.buildTimelineArcs();
 
     // 6. Anel 3D de seleção geográfica na superfície
     const ringGeo = new THREE.RingGeometry(1.4, 2.2, 48);
@@ -592,34 +600,96 @@ class Planet3DEngine {
     const locations = this.dataLoader.getLocations();
     const campaigns = this.dataLoader.getCampaigns();
 
-    // 1. Oceanos (Visão Global)
-    (planet.oceans || []).forEach((ocean) => {
-      if (!ocean.coordinates) return;
+    // 1. Marcos Cronológicos Planetários (Linhas do Tempo não vinculadas diretamente a uma única campanha)
+    const eraWaypoints = [
+      {
+        id: 'era_anchor_primordial',
+        eraId: 'era_primordial',
+        eraYear: '+5.000 Anos',
+        name: 'Gênese Abissal & Hallucigenia',
+        subtitle: 'Primogênito e bio-relíquia cambriana',
+        lat: 30.5,
+        lng: -62.5,
+        colorHex: 0xff2a85,
+        dotColor: '#ff2a85'
+      },
+      {
+        id: 'era_anchor_mitica',
+        eraId: 'era_mitica',
+        eraYear: 'Era Mítica',
+        name: 'Mitos Europeus & Ordem da Cinza',
+        subtitle: 'Arthur/Loki & Inquisição Velada',
+        lat: 48.2,
+        lng: -2.8,
+        colorHex: 0xa855f7,
+        dotColor: '#a855f7'
+      },
+      {
+        id: 'era_anchor_veracruz',
+        eraId: 'era_navegacoes',
+        eraYear: '~1500 • Vera Cruz',
+        name: 'Queda do Véu & Vera Cruz das Almas',
+        subtitle: '4 Ilhas coloniais & Serra do Véu Rasgado',
+        lat: -17.3,
+        lng: -38.5,
+        colorHex: 0xfb923c,
+        dotColor: '#fb923c'
+      },
+      {
+        id: 'era_anchor_aegis',
+        eraId: 'era_moderna',
+        eraYear: 'Séc. XX • A.E.G.I.S.',
+        name: 'Vídeos #01/#02 & Fundação A.E.G.I.S.',
+        subtitle: 'Genebra e registros anômalos selados',
+        lat: 44.5,
+        lng: 12.4,
+        colorHex: 0x38bdf8,
+        dotColor: '#38bdf8'
+      },
+      {
+        id: 'era_anchor_colapso',
+        eraId: 'vertente_colapso',
+        eraYear: 'Convergência',
+        name: 'Horizonte da Segunda Queda do Véu',
+        subtitle: 'Ruptura das três vertentes atlânticas',
+        lat: 16.5,
+        lng: -52.5,
+        colorHex: 0xef4444,
+        dotColor: '#ef4444'
+      }
+    ];
+
+    eraWaypoints.forEach((wp) => {
       this.registerMarker({
-        id: ocean.id,
-        kind: 'ocean',
-        name: ocean.name,
-        subtitle: 'Oceano Planetário',
-        lat: ocean.coordinates[0],
-        lng: ocean.coordinates[1],
-        scales: ['global'],
-        data: ocean
+        id: wp.id,
+        kind: 'era_waypoint',
+        eraId: wp.eraId,
+        eraYear: wp.eraYear,
+        dotColor: wp.dotColor,
+        name: wp.name,
+        subtitle: wp.subtitle,
+        lat: wp.lat,
+        lng: wp.lng,
+        scales: ['global', 'continental'],
+        data: wp
       });
+      this.add3DPinMesh(wp.lat, wp.lng, wp.colorHex, 0.62);
     });
 
-    // 2. Continentes (Visão Global e Continental)
+    // 2. Continentes relevantes (somente em escala Continental para manter Visão Global limpa)
     continents.forEach((cont) => {
       if (!cont.coordinates) return;
       const campCount = (cont.campaign_ids || []).length;
+      if (campCount === 0) return;
       this.registerMarker({
         id: cont.id,
         kind: 'continent',
         name: cont.name,
-        subtitle: campCount > 0 ? `${campCount} Exposição(ões) Histórica(s)` : 'Continente',
+        subtitle: `${campCount} Campanha(s) Canônica(s)`,
         lat: cont.coordinates[0],
         lng: cont.coordinates[1],
-        scales: ['global', 'continental'],
-        hasCampaigns: campCount > 0,
+        scales: ['continental'],
+        hasCampaigns: true,
         data: cont
       });
     });
@@ -707,21 +777,7 @@ class Planet3DEngine {
       });
     });
 
-    (planet.undocumented_zones || []).forEach((uz) => {
-      if (!uz.coordinates) return;
-      this.registerMarker({
-        id: uz.id,
-        kind: 'feature_unknown',
-        name: uz.name,
-        subtitle: uz.status || 'Área Não Documentada',
-        lat: uz.coordinates[0],
-        lng: uz.coordinates[1],
-        continentId: uz.continent_id,
-        scales: ['global', 'continental', 'regional'],
-        isFeature: true,
-        data: uz
-      });
-    });
+    // Zonas não documentadas mantidas apenas em dados cartográficos internos (sem poluir o globo cronológico)
 
     // 5. Regiões Geográficas (Visão Regional)
     regions.forEach((reg) => {
@@ -770,9 +826,20 @@ class Planet3DEngine {
       const offsetLat = sameCoordIndex * 0.42;
       const offsetLng = sameCoordIndex * 0.55;
 
+      const inferLocationEra = () => {
+        if (loc.id && loc.id.includes('veracruz')) return 'era_navegacoes';
+        if (loc.id === 'loc_aegis_genebra') return 'era_moderna';
+        const rel = loc.related_campaigns || [];
+        if (rel.includes('camp_002')) return 'vertente_vilar';
+        if (rel.includes('camp_filantropo_oeht')) return 'vertente_oeht';
+        if (rel.includes('camp_001')) return 'vertente_triangulo';
+        return 'all';
+      };
+
       this.registerMarker({
         id: loc.id,
         kind: 'location',
+        eraId: inferLocationEra(),
         name: loc.name,
         subtitle: `${loc.epoch || 'Marco Histórico'} • ${(loc.related_campaigns || []).length} Campanha(s)`,
         lat: loc.coordinates[0] + offsetLat,
@@ -783,7 +850,7 @@ class Planet3DEngine {
         countryId: loc.country_id,
         regionId: loc.region_id,
         cityId: loc.city_id,
-        scales: ['local'],
+        scales: ['local', 'regional'],
         data: loc
       });
 
@@ -791,6 +858,11 @@ class Planet3DEngine {
     });
 
     // 8. Campanhas / Exposições Históricas (Visíveis em todas as escalas com detalhamento progressivo)
+    const campaignToEra = {
+      camp_001: 'vertente_triangulo',
+      camp_002: 'vertente_vilar',
+      camp_filantropo_oeht: 'vertente_oeht'
+    };
     campaigns.forEach((camp) => {
       let coords = camp.world_coordinates || camp.coordinates;
       if (!coords || coords.length < 2) {
@@ -810,6 +882,7 @@ class Planet3DEngine {
       this.registerMarker({
         id: camp.id,
         kind: 'campaign',
+        eraId: campaignToEra[camp.id] || 'vertente_triangulo',
         name: campTitle,
         subtitle: `${camp.year || camp.epoch || ''} • ${camp.country_location || camp.region || ''}`,
         statusMuseum,
@@ -827,7 +900,7 @@ class Planet3DEngine {
         data: camp
       });
 
-      const pinColor = isFuture ? 0xa855f7 : 0xd4af37;
+      const pinColor = isFuture ? 0xc084fc : 0xe5c158;
       this.add3DPinMesh(coords[0], coords[1], pinColor, 0.85);
     });
   }
@@ -875,6 +948,8 @@ class Planet3DEngine {
       const statusClass = isFuture ? 'is-future' : (item.category === 'completed' || item.statusMuseum === 'concluída' ? 'is-completed' : 'is-ongoing');
       el.classList.add(statusClass);
       iconHtml = `<span class="planet-marker__beacon ${isFuture ? 'planet-marker__beacon--future' : ''}"></span>`;
+    } else if (item.kind === 'era_waypoint') {
+      iconHtml = `<span class="planet-marker__dot planet-marker__dot--era" style="background:${item.dotColor || '#38bdf8'}; box-shadow:0 0 10px ${item.dotColor || '#38bdf8'};"></span>`;
     } else if (item.kind === 'location') {
       iconHtml = `<span class="planet-marker__dot planet-marker__dot--location"></span>`;
     } else if (item.kind === 'city') {
@@ -885,12 +960,18 @@ class Planet3DEngine {
       iconHtml = `<span class="planet-marker__dot planet-marker__dot--feature"></span>`;
     }
 
+    if (item.eraId) {
+      el.dataset.markerEra = item.eraId;
+    }
+
     let badgeText = '';
     if (item.kind === 'campaign') {
       const isFuture = item.isFuture || item.category === 'future' || (item.statusMuseum && item.statusMuseum.includes('futur'));
       const isCompleted = !isFuture && (item.category === 'completed' || item.statusMuseum === 'concluída');
-      const label = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
+      const label = isFuture ? 'FUTURA CAMPANHA' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
       badgeText = `<span class="planet-marker__status ${isFuture ? 'planet-marker__status--future' : ''}">${label}</span>`;
+    } else if (item.kind === 'era_waypoint' && item.eraYear) {
+      badgeText = `<span class="planet-marker__status" style="color:${item.dotColor || '#38bdf8'}; border:1px solid ${item.dotColor || '#38bdf8'}44; background:rgba(6,13,22,0.85);">${item.eraYear}</span>`;
     }
 
     el.innerHTML = `
@@ -919,6 +1000,15 @@ class Planet3DEngine {
     const targetLng = item.trueLng !== undefined ? item.trueLng : item.lng;
 
     this.highlightSurfacePoint(targetLat, targetLng);
+
+    if (item.kind === 'era_waypoint') {
+      if (window.planetTimeline) {
+        window.planetTimeline.selectEra(item.eraId);
+      } else {
+        this.flyToGeo(targetLat, targetLng, 185);
+      }
+      return;
+    }
 
     if (item.kind === 'ocean') {
       this.flyToGeo(targetLat, targetLng, 250, () => {
@@ -1153,10 +1243,14 @@ class Planet3DEngine {
       location: null,
       campaign: null
     };
-    this.flyToGeo(12.0, -42.0, 285, () => {
+    this.activeTimelineEra = 'all';
+    if (window.planetTimeline) {
+      window.planetTimeline.selectEra('all', { skipFly: true });
+    }
+    this.flyToGeo(18.0, -54.0, 268, () => {
       this.autoRotate = true;
       if (this.onSelectionCallback) {
-        this.onSelectionCallback('scale_change', { scale: 'global', distance: 285 }, this.focusedContext);
+        this.onSelectionCallback('scale_change', { scale: 'global', distance: 268 }, this.focusedContext);
       }
     }, 1200);
   }
@@ -1166,6 +1260,78 @@ class Planet3DEngine {
    */
   setFilter(filterOptions = {}) {
     this.activeFilter = { ...this.activeFilter, ...filterOptions };
+  }
+
+  /**
+   * Constrói arcos geodésicos 3D luminosos ligando os marcos cronológicos de Evren ao redor do globo
+   */
+  buildTimelineArcs() {
+    if (!this.timelineArcsGroup || typeof THREE === 'undefined') return;
+    while (this.timelineArcsGroup.children.length > 0) {
+      this.timelineArcsGroup.remove(this.timelineArcsGroup.children[0]);
+    }
+    this.timelineArcMeshes = [];
+
+    const segments = [
+      { eras: ['era_primordial', 'era_mitica'], from: [30.5, -62.5], to: [48.2, -2.8], color: 0xa855f7, lift: 18 },
+      { eras: ['era_mitica', 'era_navegacoes'], from: [48.2, -2.8], to: [-17.3, -38.5], color: 0xfb923c, lift: 22 },
+      { eras: ['era_navegacoes', 'era_moderna'], from: [-17.3, -38.5], to: [44.5, 12.4], color: 0x38bdf8, lift: 24 },
+      { eras: ['era_moderna', 'vertente_triangulo'], from: [44.5, 12.4], to: [25.5, -71.5], color: 0x00e5ff, lift: 22 },
+      { eras: ['vertente_triangulo', 'vertente_vilar'], from: [25.5, -71.5], to: [21.85, -102.25], color: 0xe5c158, lift: 12 },
+      { eras: ['vertente_vilar', 'vertente_oeht'], from: [21.85, -102.25], to: [46.2, 6.14], color: 0xc084fc, lift: 28 },
+      { eras: ['vertente_oeht', 'vertente_colapso'], from: [46.2, 6.14], to: [16.5, -52.5], color: 0xef4444, lift: 20 }
+    ];
+
+    segments.forEach((seg) => {
+      const startVec = this.latLngToVector3(seg.from[0], seg.from[1], this.globeRadius + 0.5);
+      const endVec = this.latLngToVector3(seg.to[0], seg.to[1], this.globeRadius + 0.5);
+      const midVec = startVec.clone().add(endVec).multiplyScalar(0.5);
+      if (midVec.lengthSq() < 1) midVec.set(0, this.globeRadius, 0);
+      midVec.normalize().multiplyScalar(this.globeRadius + seg.lift);
+
+      const curve = new THREE.QuadraticBezierCurve3(startVec, midVec, endVec);
+      const points = curve.getPoints(44);
+      const geo = new THREE.BufferGeometry().setFromPoints(points);
+      const mat = new THREE.LineBasicMaterial({
+        color: seg.color,
+        transparent: true,
+        opacity: 0.48
+      });
+      const line = new THREE.Line(geo, mat);
+      line.userData = { eras: seg.eras, baseColor: seg.color };
+      this.timelineArcsGroup.add(line);
+      this.timelineArcMeshes.push(line);
+    });
+  }
+
+  /**
+   * Destaca uma Era específica da Linha do Tempo no Globo 3D e anima a câmera até sua âncora geográfica
+   */
+  setTimelineEra(eraId = 'all', targetGeo = null) {
+    this.activeTimelineEra = eraId || 'all';
+
+    // Atualiza opacidade e cor dos arcos cronológicos 3D
+    this.timelineArcMeshes.forEach((line) => {
+      const mat = line.material;
+      if (!mat) return;
+      if (this.activeTimelineEra === 'all') {
+        mat.opacity = 0.45;
+      } else if (line.userData.eras.includes(this.activeTimelineEra)) {
+        mat.opacity = 0.96;
+      } else {
+        mat.opacity = 0.1;
+      }
+    });
+
+    if (this.activeTimelineEra === 'all') {
+      this.flyToGeo(18.0, -54.0, 268);
+      return;
+    }
+
+    if (targetGeo && targetGeo.lat !== undefined && targetGeo.lng !== undefined) {
+      this.highlightSurfacePoint(targetGeo.lat, targetGeo.lng);
+      this.flyToGeo(targetGeo.lat, targetGeo.lng, targetGeo.distance || 186);
+    }
   }
 
   /**
@@ -1453,7 +1619,16 @@ class Planet3DEngine {
       item.el.style.display = 'inline-flex';
       item.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%)`;
       item.el.style.opacity = Math.min(1, (dot - 0.14) * 3.2).toFixed(2);
-      item.el.style.zIndex = item.kind === 'campaign' ? '30' : item.kind === 'location' ? '25' : '15';
+      item.el.style.zIndex = item.kind === 'campaign' ? '32' : item.kind === 'era_waypoint' ? '28' : item.kind === 'location' ? '25' : '15';
+
+      if (this.activeTimelineEra && this.activeTimelineEra !== 'all' && item.eraId) {
+        const isMatch = item.eraId === this.activeTimelineEra;
+        item.el.classList.toggle('is-era-highlighted', isMatch);
+        item.el.classList.toggle('is-era-dimmed', !isMatch);
+        if (isMatch) item.el.style.zIndex = '40';
+      } else {
+        item.el.classList.remove('is-era-highlighted', 'is-era-dimmed');
+      }
     });
   }
 
