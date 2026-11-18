@@ -1229,3 +1229,53 @@
   border-color: #00e5ff;
   box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
 }
+
+/* ==========================================================================
+   FICHAS C.R.I.S. — RESPONSIVIDADE MOBILE (< 768px e < 480px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .sheet-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .sheet-subinfo {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .cris-identity-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .cris-attrs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .cris-attr-box,
+  .cris-attr-cell {
+    min-width: 0;
+    padding: 6px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cris-stats-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .cris-attrs-grid {
+    gap: 4px;
+  }
+
+  .cris-attr-name {
+    font-size: 0.62rem;
+  }
+}

@@ -18,13 +18,13 @@ class PlanetTimelineController {
         year: 'Visão Geral',
         shortName: 'Todas as Eras',
         fullTitle: 'Planeta Evren — Linha do Tempo Completa',
-        tag: '8 Marcos',
+        tag: '9 Marcos',
         color: '#e5c158',
-        geo: { lat: 18.0, lng: -54.0, distance: 268 },
-        locationLabel: 'Atlântico, Américas & Europa',
+        geo: { lat: 24.0, lng: -44.0, distance: 268 },
+        locationLabel: 'Atlântico Norte/Sul, Américas & Europa',
         statusKind: 'era',
         statusLabel: 'Atlas Planetário',
-        summary: 'Navegue cronologicamente pelas eras do universo Evren — das relíquias cambrianas de +5.000 anos até a Queda do Véu em Vera Cruz, a fundação da A.E.G.I.S. e as três grandes vertentes de campanha.',
+        summary: 'Navegue cronologicamente pelas eras do universo Evren — das relíquias cambrianas à Queda do Véu, Operação Skjoldr-Ey (2014), Mansão Vilar, Triângulo e Gala Belvedere.',
         quote: 'Toda ferida no Véu deixou cicatrizes geográficas conectadas pela mesma força.'
       },
       {
@@ -97,6 +97,21 @@ class PlanetTimelineController {
         statusLabel: '(Futura Campanha)',
         summary: 'Naufrágio de 5.000 almas nos cinco estágios da passagem, o Campo de Rosas do Arquiteto, Nova Caronte e o sacrifício do Guia Temporário no convés.',
         quote: 'Corram pela proa! Eu seguro a escotilha até o nevoeiro engolir o convés.'
+      },
+      {
+        id: 'vertente_skjoldr_2014',
+        year: '2014',
+        shortName: 'Skjoldr-Ey',
+        fullTitle: 'Operação Skjoldr-Ey: A Ilha do Labirinto',
+        tag: 'Nova Campanha',
+        color: '#38bdf8',
+        geo: { lat: 64.5, lng: 4.2, distance: 158 },
+        locationLabel: 'Mar da Noruega • Ilha de 780 km², 6 Aldeias & Névoa 2 km',
+        campaignId: 'camp_labirinto_2014',
+        statusKind: 'active',
+        statusLabel: 'Campanha 2014',
+        summary: 'Esquadrão Classe B da A.E.G.I.S. cruza 2 km de névoa para desligar o Escudo Metafísico da Ilha de Skjoldr-Ey, encontrando clãs vikings sob a Regra de Foster, o General Hálfdan e as Feras das 19h.',
+        quote: 'Um único braço empunhando Grim-Fang vale por cem portões fechados às dezenove horas.'
       },
       {
         id: 'vertente_vilar',
@@ -323,7 +338,7 @@ class PlanetTimelineController {
     if (reopenBtn) reopenBtn.classList.remove('is-visible');
 
     const stop = this.getActiveStop();
-    const statusClass = stop.statusKind === 'completed' ? 'is-completed' : stop.statusKind === 'future' ? 'is-future' : 'is-era';
+    const statusClass = stop.statusKind === 'completed' ? 'is-completed' : (stop.statusKind === 'active' ? 'is-active-camp' : (stop.statusKind === 'future' ? 'is-future' : 'is-era'));
 
     const teiaRaw = this.dataLoader.getTeiaDoTempo() || { nodes: [] };
     const eraNodes = stop.id === 'all'

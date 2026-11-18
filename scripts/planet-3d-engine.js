@@ -830,6 +830,7 @@ class Planet3DEngine {
         if (loc.id && loc.id.includes('veracruz')) return 'era_navegacoes';
         if (loc.id === 'loc_aegis_genebra') return 'era_moderna';
         const rel = loc.related_campaigns || [];
+        if (rel.includes('camp_labirinto_2014') || loc.id?.includes('skjoldr') || loc.id?.includes('vila_')) return 'vertente_skjoldr_2014';
         if (rel.includes('camp_002')) return 'vertente_vilar';
         if (rel.includes('camp_filantropo_oeht')) return 'vertente_oeht';
         if (rel.includes('camp_001')) return 'vertente_triangulo';
@@ -860,6 +861,7 @@ class Planet3DEngine {
     // 8. Campanhas / Exposições Históricas (Visíveis em todas as escalas com detalhamento progressivo)
     const campaignToEra = {
       camp_001: 'vertente_triangulo',
+      camp_labirinto_2014: 'vertente_skjoldr_2014',
       camp_002: 'vertente_vilar',
       camp_filantropo_oeht: 'vertente_oeht'
     };
@@ -875,9 +877,12 @@ class Planet3DEngine {
       }
       if (!coords || coords.length < 2) return;
 
-      const isFuture = camp.is_future || (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
-      const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
-      const statusMuseum = isFuture ? '(futura campanha)' : (isCompleted ? 'concluída' : 'futura campanha');
+      const stLower = (camp.status || '').toLowerCase();
+      const catLower = (camp.category || '').toLowerCase();
+      const isFuture = Boolean(camp.is_future || stLower.includes('futur') || catLower === 'future');
+      const isCompleted = !isFuture && (catLower === 'completed' || stLower.includes('concl') || stLower.includes('finaliz'));
+      const isActive = !isFuture && !isCompleted;
+      const statusMuseum = isFuture ? '(futura campanha)' : (isCompleted ? 'concluída' : 'em preparação');
       const campTitle = camp.title || camp.name || 'Campanha';
       this.registerMarker({
         id: camp.id,
@@ -886,7 +891,7 @@ class Planet3DEngine {
         name: campTitle,
         subtitle: `${camp.year || camp.epoch || ''} • ${camp.country_location || camp.region || ''}`,
         statusMuseum,
-        category: isFuture ? 'future' : (isCompleted ? 'completed' : 'future'),
+        category: isFuture ? 'future' : (isCompleted ? 'completed' : 'ongoing'),
         isFuture,
         lat: coords[0] - 0.35,
         lng: coords[1] - 0.45,
@@ -900,7 +905,7 @@ class Planet3DEngine {
         data: camp
       });
 
-      const pinColor = isFuture ? 0xc084fc : 0xe5c158;
+      const pinColor = isFuture ? 0xc084fc : (isActive ? 0x38bdf8 : 0xe5c158);
       this.add3DPinMesh(coords[0], coords[1], pinColor, 0.85);
     });
   }
@@ -968,8 +973,8 @@ class Planet3DEngine {
     if (item.kind === 'campaign') {
       const isFuture = item.isFuture || item.category === 'future' || (item.statusMuseum && item.statusMuseum.includes('futur'));
       const isCompleted = !isFuture && (item.category === 'completed' || item.statusMuseum === 'concluída');
-      const label = isFuture ? 'FUTURA CAMPANHA' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
-      badgeText = `<span class="planet-marker__status ${isFuture ? 'planet-marker__status--future' : ''}">${label}</span>`;
+      const label = isFuture ? 'FUTURA CAMPANHA' : (isCompleted ? 'CONCLUÍDA' : 'NOVA 2014');
+      badgeText = `<span class="planet-marker__status ${isFuture ? 'planet-marker__status--future' : (isCompleted ? '' : 'planet-marker__status--active2014')}">${label}</span>`;
     } else if (item.kind === 'era_waypoint' && item.eraYear) {
       badgeText = `<span class="planet-marker__status" style="color:${item.dotColor || '#38bdf8'}; border:1px solid ${item.dotColor || '#38bdf8'}44; background:rgba(6,13,22,0.85);">${item.eraYear}</span>`;
     }
@@ -1277,7 +1282,9 @@ class Planet3DEngine {
       { eras: ['era_mitica', 'era_navegacoes'], from: [48.2, -2.8], to: [-17.3, -38.5], color: 0xfb923c, lift: 22 },
       { eras: ['era_navegacoes', 'era_moderna'], from: [-17.3, -38.5], to: [44.5, 12.4], color: 0x38bdf8, lift: 24 },
       { eras: ['era_moderna', 'vertente_triangulo'], from: [44.5, 12.4], to: [25.5, -71.5], color: 0x00e5ff, lift: 22 },
+      { eras: ['era_moderna', 'vertente_skjoldr_2014'], from: [44.5, 12.4], to: [64.5, 4.2], color: 0x38bdf8, lift: 14 },
       { eras: ['vertente_triangulo', 'vertente_vilar'], from: [25.5, -71.5], to: [21.85, -102.25], color: 0xe5c158, lift: 12 },
+      { eras: ['vertente_skjoldr_2014', 'vertente_vilar'], from: [64.5, 4.2], to: [21.85, -102.25], color: 0x38bdf8, lift: 26 },
       { eras: ['vertente_vilar', 'vertente_oeht'], from: [21.85, -102.25], to: [46.2, 6.14], color: 0xc084fc, lift: 28 },
       { eras: ['vertente_oeht', 'vertente_colapso'], from: [46.2, 6.14], to: [16.5, -52.5], color: 0xef4444, lift: 20 }
     ];

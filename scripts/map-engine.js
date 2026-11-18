@@ -599,6 +599,17 @@ class MapEngine {
       targetDanger = 'SEVERO // AS 3 TRAVAS & O ANÁRQUICO';
       targetNarrative = 'Entre 22h00 e 00h00, infiltrados da A.E.G.I.S. enfrentam a Mesa de Poker VIP, reflexos vivos e o despertar d’O Anárquico (MDA 80%).';
       targetIcon = '🎭';
+    } else if (rpgId === 'camp_labirinto_2014' || rpgId === 'map_skjoldr_ey_2014' || rpgId?.includes?.('skjoldr') || rpgId?.includes?.('vila_') || rpgId?.includes?.('nevoa_escudo')) {
+      campaign = this.dataLoader.getCampaignById('camp_labirinto_2014');
+      targetCoords = [64.5, 4.2];
+      targetZoom = 8;
+      targetName = 'OPERAÇÃO SKJOLDR-EY // ILHA DO LABIRINTO';
+      targetCountry = 'Mar da Noruega (780 km² • Escudo de Névoa 2 km)';
+      targetAtmosphere = 'Névoa Metafísica de 2 km & Crepúsculo das 19h00';
+      targetEra = 'Ano 2014 • Em Preparação';
+      targetDanger = 'NÍVEL ÔMEGA // FERAS DAS 19H & REGRA DE FOSTER';
+      targetNarrative = 'Agentes Classe B da A.E.G.I.S. infiltram uma ilha viva de 780 km² parada na Era Viking, lar de 6 aldeias, tatuagens de selamento e Cristais Natais.';
+      targetIcon = '🛡️';
     } else {
       campaign = this.dataLoader.getCampaignById(rpgId);
       if (!campaign) {
@@ -627,6 +638,7 @@ class MapEngine {
       if (campaign.id === 'camp_001') { targetZoom = 7; targetIcon = '🌊'; }
       else if (campaign.id === 'camp_002') { targetZoom = 11; targetIcon = '🏛️'; }
       else if (campaign.id === 'camp_filantropo_oeht') { targetZoom = 12; targetIcon = '🎭'; }
+      else if (campaign.id === 'camp_labirinto_2014') { targetZoom = 8; targetIcon = '🛡️'; }
     }
 
     // Fecha a gaveta lateral para visão desobstruída
@@ -1272,6 +1284,32 @@ class MapEngine {
 
       this.localTacticalOverlay = L.svgOverlay(svg, bounds, { opacity: 0.96, interactive: false });
       this.localTacticalOverlay.addTo(this.map);
+    } else if (campaignId === 'camp_labirinto_2014') {
+      // OVERLAY TÁTICO DE SKJOLDR-EY (ILHA DO LABIRINTO — 780 km² & ESCUDO 2 km)
+      const bounds = [[63.85, 3.25], [65.15, 5.20]];
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 1600 1000");
+      svg.setAttribute("class", "battlemap-interactive-container");
+      svg.innerHTML = `
+        <defs>
+          <radialGradient id="skjoldrFogGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="55%" stop-color="#0a1f33" stop-opacity="0.88"/>
+            <stop offset="82%" stop-color="#1e4976" stop-opacity="0.72"/>
+            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.1"/>
+          </radialGradient>
+        </defs>
+        <circle cx="800" cy="500" r="465" fill="url(#skjoldrFogGrad)" stroke="#38bdf8" stroke-width="5" stroke-dasharray="14,8"/>
+        <text x="800" y="70" fill="#bae6fd" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">BARREIRA DE NÉVOA (2 KM) // ESCUDO METAFÍSICO</text>
+        <polygon points="480,250 1120,230 1230,540 1040,790 520,760 390,480" fill="#0d1e2b" stroke="#e5c158" stroke-width="4"/>
+        <circle cx="800" cy="500" r="240" fill="none" stroke="rgba(229,193,88,0.35)" stroke-width="2" stroke-dasharray="8,8"/>
+        <circle cx="800" cy="500" r="145" fill="none" stroke="rgba(239,68,68,0.4)" stroke-width="2" stroke-dasharray="6,6"/>
+        <rect x="705" y="455" width="190" height="90" rx="8" fill="#122742" stroke="#38bdf8" stroke-width="3"/>
+        <text x="800" y="495" fill="#ffd700" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">KRISTAL-HOF</text>
+        <text x="800" y="518" fill="#bae6fd" font-family="monospace" font-size="10.5" text-anchor="middle">NÚCLEO DO ESCUDO (FOSTER)</text>
+        <text x="800" y="925" fill="#fbbf24" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle">ILHA DE SKJOLDR-EY (780 KM²) — TOQUE DE RECOLHER DAS 19H00</text>
+      `;
+      this.localTacticalOverlay = L.svgOverlay(svg, bounds, { opacity: 0.94, interactive: false });
+      this.localTacticalOverlay.addTo(this.map);
     } else {
       // OVERLAY DO TRIÂNGULO DAS BERMUDAS (CAMP_001) ANCORADO NO ATLÂNTICO
       const bounds = [[19.5, -79.5], [29.5, -65.5]];
@@ -1546,6 +1584,9 @@ class MapEngine {
         } else if (this.currentRpgId === 'camp_filantropo_oeht') {
           if (titleEl) titleEl.textContent = 'GENEBRA // MANSÃO BELVEDERE & REDOMA DE OEHT';
           if (subEl) subEl.textContent = '⚔️ CARTA TÁTICA: AS 7 ÁREAS, AS 3 TRAVAS & O PALCO';
+        } else if (this.currentRpgId === 'camp_labirinto_2014') {
+          if (titleEl) titleEl.textContent = 'MAR DA NORUEGA // SKJOLDR-EY (780 KM²)';
+          if (subEl) subEl.textContent = '🛡️ ESCUDO METAFÍSICO 2 KM, AS 6 ALDEIAS & TOQUE DAS 19H';
         } else {
           if (titleEl) titleEl.textContent = 'ATLÂNTICO // TRIÂNGULO DAS BERMUDAS & VERA CRUZ';
           if (subEl) subEl.textContent = '⚔️ CARTA TÁTICA: NOVA CARONTE, FOSSO & 4 ILHAS DO VÉU';
@@ -1583,7 +1624,11 @@ class MapEngine {
     if (!loc) return;
 
     if (this.currentScale === 'global') {
-      const campId = loc.map_id === 'map_triangulo' ? 'camp_001' : 'camp_002';
+      const campId = loc.campaign_id || (
+        loc.map_id === 'map_triangulo' ? 'camp_001' :
+        (loc.map_id === 'map_skjoldr_ey_2014' ? 'camp_labirinto_2014' :
+        (loc.map_id === 'map_belvedere' ? 'camp_filantropo_oeht' : 'camp_002'))
+      );
       this.mergulhoNasNuvens(campId).then(() => {
         setTimeout(() => this.flyToLocalMarker(locationId), 800);
       });

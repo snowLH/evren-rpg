@@ -1195,6 +1195,28 @@
         6.1432
       ],
       "zoom": 13
+    },
+    {
+      "id": "map_skjoldr_ey_2014",
+      "name": "Operação Skjoldr-Ey: Ilha do Labirinto (780 km²)",
+      "type": "local",
+      "campaign_id": "camp_labirinto_2014",
+      "center": [
+        64.5,
+        4.2
+      ],
+      "default_zoom": 8,
+      "bounds": [
+        [
+          62.5,
+          1.5
+        ],
+        [
+          66.5,
+          7
+        ]
+      ],
+      "description": "Mapa tático da Ilha do Labirinto no Mar da Noruega, incluindo a barreira de névoa de 2 km e as 6 aldeias da Era Viking."
     }
   ],
   "campaigns": [
@@ -1431,6 +1453,124 @@
         "climax_summary": "Entre 22h00 e 00h00, agentes precisam transpor Entrada VIP, Poker VIP (dreno de perícias), Escritório (lodo roxo), Galeria de Espelhos e Palco para romper as 3 Travas e silenciar a Caixa de Música ao despertar d’O Anárquico (MDA 80%).",
         "outcome": "Campanha futura completa (Crônica III — Edição Integrada)."
       }
+    },
+    {
+      "id": "camp_labirinto_2014",
+      "title": "Operação Skjoldr-Ey: A Ilha do Labirinto & O Escudo Metafísico",
+      "status": "Em Preparação (Nova Campanha)",
+      "status_museum": "active_campaign",
+      "category": "Incursão A.E.G.I.S. Classe B & Clãs Vikings do Labirinto",
+      "theme": "Sobrevivência no Labirinto, Clãs Vikings & Regra de Foster",
+      "year": "2014",
+      "year_numeric": 2014,
+      "danger_rating": "Nível Ômega (Escudo Metafísico / Feras das 19h)",
+      "country_location": "Atlântico Norte / Mar da Noruega (Ilha Isolada de 780 km² — Tamanho de NY)",
+      "world_coordinates": [
+        64.5,
+        4.2
+      ],
+      "coordinates": [
+        64.5,
+        4.2
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "map_id": "map_skjoldr_ey_2014",
+      "canon_status": "confirmed",
+      "synopsis": "Em 2014, agentes de Classe B da A.E.G.I.S. atravessam uma barreira de névoa de 2 km para desligar o Escudo Metafísico que esconde uma ilha gigante do tamanho de Nova York. Lá dentro, um Labirinto Vivo auto-regenerativo abriga 6 aldeias paradas na Era Viking, onde a Regra de Foster amplificou a energia metafísica ao extremo através de Tatuagens de Selamento na pele e Cristais Natais fundidos ao corpo — e onde ninguém sobrevive fora dos muros após as 19h.",
+      "outcome": "Operação em preparação para a mesa (Ano 2014): o Esquadrão Classe B adentra a névoa enquanto as 6 aldeias enfrentam a iminência da abertura do Labirinto e das Bestas Noturnas após as 19h00.",
+      "foster_rule": "Regra de Foster Metafísica: milênios de isolamento hermeticamente fechado sob equilíbrio absoluto hipertrófiaram toda a energia metafísica da ilha, manifestando Tatuagens de Selamento vivas na pele e Cristais Natais incrustados nos corpos.",
+      "curfew_rule": "Toque de Recolher das 19h00: das 06:00 às 19:00 os portões permanecem abertos para expedições no Labirinto Vivo; às 19:00 em ponto todas as aldeias lacram seus portões e as Bestas Noturnas caçam tudo do lado de fora até o amanhecer.",
+      "factions_split": [
+        {
+          "group_id": "grp_aegis_b_2014",
+          "name": "Grupo 1: Agentes da A.E.G.I.S. (Classe B — 2014)",
+          "mission": "Infiltrar a ilha, sobreviver ao Labirinto e desligar a Fonte do Escudo Metafísico sem causar extinção em massa."
+        },
+        {
+          "group_id": "grp_nativos_ilha",
+          "name": "Grupo 2: Nativos das 6 Aldeias (Clãs Vikings do Labirinto)",
+          "mission": "Proteger as aldeias antes do toque das 19h, defender os Portadores de Cristal e compreender os forasteiros vindos de além da Névoa de 2 km."
+        }
+      ],
+      "villages": [
+        {
+          "id": "vila_thrum_vik",
+          "name": "Thrum-Vik (Aldeia do Trovão & Raio)",
+          "element": "Raio / Relâmpago & Presença",
+          "protector": "General Hálfdan 'Mão-Carmesim' (Protetor de Um Braço)",
+          "seal_style": "Raios ramificados nos braços, ombros e pescoço para cortes de velocidade absurda e aura de desmaio."
+        },
+        {
+          "id": "vila_eld_borg",
+          "name": "Eld-Borg (Aldeia do Fogo & Brasa)",
+          "element": "Fogo / Magma Térmico",
+          "protector": "Jarl Torstein 'Forja-Viva'",
+          "seal_style": "Espirais solares e brasas nas costas e punhos que aquecem armas e explodem em chamas."
+        },
+        {
+          "id": "vila_haf_gardr",
+          "name": "Haf-Garðr (Aldeia da Água & Maré Gelada)",
+          "element": "Água / Gelo Abissal",
+          "protector": "Freya 'Coração-de-Gelo' (Portadora de Cristal Natal)",
+          "seal_style": "Ondas e serpentes marinhas ao longo da coluna para cura hidro-vital e lanças de gelo."
+        },
+        {
+          "id": "vila_stein_vidr",
+          "name": "Stein-Vidr (Aldeia da Rocha & Raiz Viva)",
+          "element": "Pedra / Raízes do Labirinto",
+          "protector": "Erik 'Pele-de-Pedra'",
+          "seal_style": "Runas angulares no torso e pernas que calcificam a pele (alta RD) e leem o movimento das paredes."
+        },
+        {
+          "id": "vila_mist_heim",
+          "name": "Mist-Heim (Aldeia do Vento & Névoa)",
+          "element": "Vento / Vácuo & Silêncio",
+          "protector": "Conselho dos Corvos do Crepúsculo",
+          "seal_style": "Asas e espirais nas pernas e mãos para corrida silenciosa antes do toque das 19h."
+        },
+        {
+          "id": "vila_kristal_hof",
+          "name": "Kristal-Hof (Santuário Central dos Cristais Natais)",
+          "element": "Energia Metafísica Pura (Núcleo do Escudo)",
+          "protector": "O Guardião do Núcleo",
+          "seal_style": "Sem tatuagens; habitantes nascem com Cristais Metafísicos incrustados no corpo (se arrancados, morrem)."
+        }
+      ],
+      "acts": [
+        "Ato I — Travessia da Névoa de 2 km: queda das comunicações satelitais da A.E.G.I.S. e desembarque forçado no perímetro de 780 km².",
+        "Ato II — O Labirinto Vivo & O Grito das Muralhas: descoberta das paredes auto-regenerativas que mudam de configuração e contato inicial com batedores de Stein-Vidr.",
+        "Ato III — As 6 Aldeias & A Regra de Foster: encontro em Thrum-Vik com o General Hálfdan, estudo do equilíbrio hermético e escolha entre respeitar os clãs ou avançar sobre os Cristais.",
+        "Ato IV — 19h00: Portões Fechados: sobrevivência noturna contra as Feras Noturnas do Labirinto e colapso iminente do Escudo Metafísico em Kristal-Hof."
+      ],
+      "exhibition_narrative": {
+        "prior_context": "Por séculos, a ilha nórdica de Skjoldr-Ey permaneceu oculta por um domo metafísico e uma muralha de névoa de 2 km no Mar da Noruega. Isolada sob equilíbrio perfeito, a energia local sofreu hipertrofia biológica e anímica (Regra de Foster).",
+        "main_events": "Em 2014, satélites anômalos detectam perturbações eletromagnéticas na borda da névoa. A A.E.G.I.S. destaca o Esquadrão Classe B sob comando do Capitão Arthur Valente para desligar a fonte do escudo — encontrando clãs vikings ativos, tatuagens rúnicas condutoras e cristais vitais.",
+        "climax_summary": "Ao soar das 19h00, todas as seis aldeias cerram as comportas. O Labirinto Vivo reconfigura suas rotas enquanto Feras Noturnas emergem e segredos sobre o Cristal Carmesim no peito de Hálfdan vêm à tona.",
+        "outcome": "Em preparação (Ano 2014): campanha de frente dupla para mesa presencial e online com agentes de 2014 e nativos da Ilha."
+      },
+      "participants": [
+        "char_arthur_valente",
+        "char_slot_aegis_b_1",
+        "char_slot_aegis_b_2",
+        "char_halfdan_protetor",
+        "char_player_filho_halfdan",
+        "char_jarl_torstein",
+        "char_freya_cristal",
+        "char_erik_pele_pedra"
+      ],
+      "locations_list": [
+        "loc_skjoldr_ilha_780",
+        "loc_nevoa_escudo_2km",
+        "loc_vila_thrum_vik",
+        "loc_vila_eld_borg",
+        "loc_vila_haf_gardr",
+        "loc_vila_stein_vidr",
+        "loc_vila_mist_heim",
+        "loc_vila_kristal_hof"
+      ]
     }
   ],
   "locations": [
@@ -1856,6 +1996,203 @@
       ],
       "danger_level": "Extremo / Cataclísmico",
       "description": "Montanhas colossais de pedra negra, frio congelante, florestas petrificadas, cavernas onde habita o Mapinguari ancestral e a cratera onde as primeiras árvores sagradas foram derrubadas em 1500, rasgando o Véu."
+    },
+    {
+      "id": "loc_skjoldr_ilha_780",
+      "name": "Ilha de Skjoldr-Ey (Labirinto Vivo — 780 km²)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Ilha / Labirinto Metafísico",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.5,
+        4.2
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "epoch": "2014 • Campanha Ativa",
+      "description": "Ilha colossal do tamanho de Nova York envolta em névoa impenetrável de 2 km. Seu interior é fatiado por corredores de pedra e raízes vivas que se reconfiguram diariamente."
+    },
+    {
+      "id": "loc_nevoa_escudo_2km",
+      "name": "Barreira de Névoa (2 km) & Escudo Metafísico",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Anomalia Perimetral / Barreira",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.15,
+        3.65
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "epoch": "2014 • Operação Skjoldr-Ey",
+      "description": "Cinturão circular de nevoeiro espesso com 2 km de largura capaz de anular radares modernos, bússolas e sinais da A.E.G.I.S."
+    },
+    {
+      "id": "loc_vila_thrum_vik",
+      "name": "Thrum-Vik (Aldeia do Trovão & Raio)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Aldeia Fortificada (Raio)",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.68,
+        3.92
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "characters_present": [
+        "char_halfdan_protetor",
+        "char_player_filho_halfdan"
+      ],
+      "epoch": "Era Viking – 2014",
+      "description": "Bastion do Trovão guardado pelo General Hálfdan \"Mão-Carmesim\". Suas paliçadas conduzem descargas de relâmpago para conter o Labirinto às 19h00."
+    },
+    {
+      "id": "loc_vila_eld_borg",
+      "name": "Eld-Borg (Aldeia do Fogo & Brasa)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Aldeia Forja (Fogo)",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.76,
+        4.48
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "characters_present": [
+        "char_jarl_torstein"
+      ],
+      "epoch": "Era Viking – 2014",
+      "description": "Cidadela de basalto e forjas perpétuas regida pelo Jarl Torstein; produz armas imbuídas de selamentos térmicos."
+    },
+    {
+      "id": "loc_vila_haf_gardr",
+      "name": "Haf-Garðr (Aldeia da Água & Maré Gelada)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Aldeia Costeira (Água & Gelo)",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.32,
+        4.65
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "characters_present": [
+        "char_freya_cristal"
+      ],
+      "epoch": "Era Viking – 2014",
+      "description": "Vilarejo sobre fiordes internos congelados liderado por Freya, Portadora de Cristal Natal capaz de purificar e cristalizar ferimentos."
+    },
+    {
+      "id": "loc_vila_stein_vidr",
+      "name": "Stein-Vidr (Aldeia da Rocha & Raiz Viva)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Posto dos Batedores (Pedra)",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.28,
+        4.02
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "characters_present": [
+        "char_erik_pele_pedra"
+      ],
+      "epoch": "Era Viking – 2014",
+      "description": "Entroncamento cravado nas raízes colossais das muralhas móveis, mantido pelos batedores de Erik Pele-de-Pedra."
+    },
+    {
+      "id": "loc_vila_mist_heim",
+      "name": "Mist-Heim (Aldeia do Vento & Névoa)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Vila Suspensa (Vento)",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.58,
+        4.82
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "epoch": "Era Viking – 2014",
+      "description": "Plataformas elevadas nos cânions de vento; seus mensageiros correm em silêncio absoluto para retornar aos portões antes das 19h00."
+    },
+    {
+      "id": "loc_vila_kristal_hof",
+      "name": "Kristal-Hof (Santuário Central & Núcleo do Escudo)",
+      "zone": "Atlântico Norte (Ilha de Skjoldr-Ey)",
+      "type": "Santuário Central / Núcleo",
+      "map_id": "map_skjoldr_ey_2014",
+      "scope": "local",
+      "coordinates": [
+        64.52,
+        4.24
+      ],
+      "country": "Ilha de Skjoldr-Ey",
+      "campaign_id": "camp_labirinto_2014",
+      "related_campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "continent_id": "cont_atlantico_norte",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "city_id": "city_kristal_hof",
+      "epoch": "Era Primordial – 2014",
+      "description": "Coração geométrico do Labirinto onde o Núcleo do Escudo Metafísico pulsa. Habitado por portadores naturais cujos corpos carregam cristais vitais."
     }
   ],
   "characters": [
@@ -2327,7 +2664,8 @@
         "relics": []
       },
       "description": "Caiu nas minas após quebrar a perna e sobreviveu 3 anos na escuridão absoluta entre O Eco, adaptando-se fisicamente e despertando percepção sensível sem perder sua humanidade.",
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_gabriel",
@@ -2809,7 +3147,8 @@
           "Arma de Portais: LIMIAR"
         ]
       },
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_rafael",
@@ -3278,7 +3617,8 @@
         ],
         "relics": []
       },
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_arquiteto",
@@ -3733,7 +4073,8 @@
       },
       "short_name": "Primogênito",
       "description": "Arthur Vilar / Entidade primordial detentora da Verdadeira Magia (MDA 99%). Origem dos mitos de Loki, Merlin e da Ilusão do Campo de Rosas.",
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Soberanos & Vilões"
     },
     {
       "id": "char_helena",
@@ -3816,7 +4157,8 @@
           "training": "Treinado"
         }
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_diego",
@@ -3889,7 +4231,8 @@
           "training": "Treinado"
         }
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_bia",
@@ -3962,7 +4305,8 @@
           "training": "Treinado"
         }
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_arthur",
@@ -4037,7 +4381,8 @@
           "training": "Treinado"
         }
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_camila_torres",
@@ -4087,7 +4432,8 @@
       "historical_title": "Testemunha da Tragédia Vilar",
       "portrait": "assets/icon-192.png",
       "relics": [],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_mauro_azevedo",
@@ -4137,7 +4483,8 @@
       "historical_title": "Vigia das Galerias Vilar",
       "portrait": "assets/icon-192.png",
       "relics": [],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_elias_rocha",
@@ -4189,7 +4536,8 @@
       "relics": [
         "Chave Antiga da Galeria 4 das Minas"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_oeht",
@@ -4275,7 +4623,8 @@
       ],
       "curator_notes": "Arrogante, persuasivo e convencido de sua superioridade intelectual. Acreditava piamente ser capaz de controlar a caixa parasita comprada no mercado oculto.",
       "short_name": "Oeht",
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Soberanos & Vilões"
     },
     {
       "id": "char_kaelen",
@@ -4361,7 +4710,8 @@
         }
       ],
       "curator_notes": "Voz firme, pragmática e inflexível. Coordena equipes de contenção através de canais criptografados.",
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Agentes A.E.G.I.S."
     },
     {
       "id": "char_marcos_valente",
@@ -4432,7 +4782,8 @@
       "campaign_ids": [
         "camp_001"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_clara_mendes",
@@ -4503,7 +4854,8 @@
       "campaign_ids": [
         "camp_filantropo_oeht"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_kenji_sato",
@@ -4574,7 +4926,8 @@
       "campaign_ids": [
         "camp_filantropo_oeht"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_veronica_dias",
@@ -4645,7 +4998,8 @@
       "campaign_ids": [
         "camp_002"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_mateus_alencar",
@@ -4716,7 +5070,8 @@
       "campaign_ids": [
         "camp_001"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_helena_vargas",
@@ -4787,7 +5142,8 @@
       "campaign_ids": [
         "camp_filantropo_oeht"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_iris_vento_solto",
@@ -4858,7 +5214,8 @@
       "campaign_ids": [
         "camp_001"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_lorenzo_vane",
@@ -4929,7 +5286,8 @@
       "campaign_ids": [
         "camp_filantropo_oeht"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_valerius",
@@ -5000,7 +5358,8 @@
       "campaign_ids": [
         "camp_001"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_raissa_carnica",
@@ -5071,7 +5430,8 @@
       "campaign_ids": [
         "camp_001"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_jonas_silveira",
@@ -5142,7 +5502,8 @@
       "campaign_ids": [
         "camp_002"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Mansão Vilar"
     },
     {
       "id": "char_victor_kael",
@@ -5196,7 +5557,8 @@
         "camp_filantropo_oeht"
       ],
       "description": "Contrabandista de relíquias coloniais da Ordem da Cinza, Nácar e Lendas do Véu; sabotador da Gala Belvedere para completar o ritual à meia-noite.",
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_guia_temporario",
@@ -5250,7 +5612,8 @@
       "campaign_ids": [
         "camp_001"
       ],
-      "race": "Humano Desperto"
+      "race": "Humano Desperto",
+      "faction_group": "Triângulo & Belvedere"
     },
     {
       "id": "char_dom_sebastiao",
@@ -5291,7 +5654,1928 @@
         "defesa": 22,
         "protecao": "RD 8 (Malha & Sal)"
       },
-      "description": "Comandante fanático da guarnição da Ordem da Cinza na Ilha de Santa Cruz das Cinzas. Contrata Bandeirantes do Véu mas executa qualquer caçador suspeito de portar Pacto da Lenda."
+      "description": "Comandante fanático da guarnição da Ordem da Cinza na Ilha de Santa Cruz das Cinzas. Contrata Bandeirantes do Véu mas executa qualquer caçador suspeito de portar Pacto da Lenda.",
+      "faction_group": "Triângulo & Belvedere"
+    },
+    {
+      "id": "char_arthur_valente",
+      "name": "Capitão Arthur Valente",
+      "codename": "Líder de Campo // Destacamento Classe B (2014)",
+      "player": "NPC / Comandante A.E.G.I.S.",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Agentes A.E.G.I.S. (Classe B — 2014)",
+      "faction_role": "Grupo 1 — Incursão A.E.G.I.S. (2014)",
+      "origin": "Marinha & Operações Especiais A.E.G.I.S.",
+      "class": "Combatente Tático (Classe B)",
+      "track": "Comando de Contenção",
+      "nex": "40%",
+      "mda": "18%",
+      "status": "Ativo (Operação Skjoldr-Ey 2014)",
+      "life_status": "alive",
+      "race": "Humano Desperto",
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 3,
+        "Intelecto": 3,
+        "Presença": 3,
+        "Vigor": 3,
+        "FOR": 3,
+        "VIG": 3,
+        "AGI": 3,
+        "PRE": 3,
+        "INT": 3
+      },
+      "stats": {
+        "pv_current": 68,
+        "pv_max": 68,
+        "pe_current": 24,
+        "pe_max": 24,
+        "pd": 24,
+        "max_pd": 24,
+        "ea": 48,
+        "max_ea": 48,
+        "san_current": 42,
+        "san_max": 45,
+        "defesa": 21,
+        "protecao": "Colete Tático A.E.G.I.S. Mk-II (RD 6)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 3
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Fortitude": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "VIG",
+          "total": 13
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Iniciativa": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 13
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Luta": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "FOR",
+          "total": 13
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Percepção": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 13
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 13
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Sobrevivência": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 8
+        },
+        "Tática": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 18
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Vontade": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 13
+        }
+      },
+      "abilities": [
+        {
+          "name": "Protocolo Classe B — Linha de Contenção",
+          "type": "Tática A.E.G.I.S.",
+          "cost": "2 PD",
+          "desc": "Coordena o esquadrão ao entrar na névoa, concedendo +2 em Reflexos e Percepção contra emboscadas até o fim da cena."
+        },
+        {
+          "name": "Leitura de Campo Anômalo",
+          "type": "Passiva",
+          "desc": "Estima variações da Regra de Foster por medidores portáteis antes das 19h00."
+        }
+      ],
+      "inventory": [
+        "Fuzil Tático de Liga Fria (Munição de Contenção 2014)",
+        "Dosímetro de Ressonância Metafísica A.E.G.I.S.",
+        "Rádio Satelital Curto Alcance (Interrompido além dos 2 km de névoa)",
+        "Sinalizadores Químicos de Crise (3x)"
+      ],
+      "relics": [],
+      "quote": "Temos ordens para desligar o escudo sem transformar setecentos quilômetros quadrados num cemitério."
+    },
+    {
+      "id": "char_slot_aegis_b_1",
+      "name": "[Slot Player 1] Agente A.E.G.I.S. Classe B",
+      "codename": "Operador de Vanguarda // Turma de 2014",
+      "player": "Jogador (Slot Aberto — Classe B)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Agentes A.E.G.I.S. (Classe B — 2014)",
+      "faction_role": "Jogador — Grupo 1 (A.E.G.I.S. 2014)",
+      "origin": "Recruta Selecionado A.E.G.I.S.",
+      "class": "Especialista / Combatente (Classe B)",
+      "track": "Aberta para escolha do Jogador",
+      "nex": "25%",
+      "mda": "10%",
+      "status": "Ativo (Slot Editável de Mesa)",
+      "life_status": "alive",
+      "race": "Humano Desperto",
+      "attributes": {
+        "Agilidade": 2,
+        "Força": 2,
+        "Intelecto": 3,
+        "Presença": 2,
+        "Vigor": 2
+      },
+      "stats": {
+        "pv_current": 42,
+        "pv_max": 42,
+        "pe_current": 18,
+        "pe_max": 18,
+        "pd": 18,
+        "max_pd": 18,
+        "ea": 25,
+        "max_ea": 25,
+        "san_current": 35,
+        "san_max": 35,
+        "defesa": 16,
+        "protecao": "Traje Balístico Leve A.E.G.I.S. (RD 4)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 2
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 2
+        },
+        "Furtividade": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 7
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Investigação": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 13
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 2
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Percepção": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 12
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Pontaria": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 7
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Reflexos": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 7
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Sobrevivência": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 8
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Vontade": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 7
+        }
+      },
+      "abilities": [
+        {
+          "name": "Ficha Base Classe B (2014)",
+          "type": "Slot de Jogador",
+          "desc": "Pronta para personalização ao vivo no Criador/Exportador C.R.I.S. ou via edição direta em sessão."
+        }
+      ],
+      "inventory": [
+        "Pistola Semiautomática A.E.G.I.S. 9mm",
+        "Kit Médico de Campo + Lanterna Tática Estanque",
+        "Gravador Analógico de Bolso"
+      ],
+      "relics": []
+    },
+    {
+      "id": "char_slot_aegis_b_2",
+      "name": "[Slot Player 2] Agente A.E.G.I.S. Classe B",
+      "codename": "Analista Metafísico // Turma de 2014",
+      "player": "Jogador (Slot Aberto — Classe B)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Agentes A.E.G.I.S. (Classe B — 2014)",
+      "faction_role": "Jogador — Grupo 1 (A.E.G.I.S. 2014)",
+      "origin": "Divisão de Estudos do Véu",
+      "class": "Ocultista / Pesquisador (Classe B)",
+      "track": "Aberta para escolha do Jogador",
+      "nex": "25%",
+      "mda": "15%",
+      "status": "Ativo (Slot Editável de Mesa)",
+      "life_status": "alive",
+      "race": "Humano Desperto",
+      "attributes": {
+        "Agilidade": 2,
+        "Força": 1,
+        "Intelecto": 4,
+        "Presença": 3,
+        "Vigor": 2
+      },
+      "stats": {
+        "pv_current": 34,
+        "pv_max": 34,
+        "pe_current": 24,
+        "pe_max": 24,
+        "pd": 24,
+        "max_pd": 24,
+        "ea": 45,
+        "max_ea": 45,
+        "san_current": 38,
+        "san_max": 38,
+        "defesa": 14,
+        "protecao": "Sobretudo Isolante Rúnico (RD 2)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Ciências": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 14
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 2
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Investigação": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 14
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 1
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Ocultismo": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 14
+        },
+        "Percepção": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 2
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Tecnologia": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "INT",
+          "total": 9
+        },
+        "Vontade": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "PRE",
+          "total": 13
+        }
+      },
+      "abilities": [
+        {
+          "name": "Analisar Regra de Foster",
+          "type": "Analítica",
+          "cost": "2 EA",
+          "desc": "Identifica se um nativo opera por Tatuagem de Selamento ou Cristal Natal em 1 rodada de observação."
+        }
+      ],
+      "inventory": [
+        "Tablet Blindado Offline A.E.G.I.S. (Mapas 2014)",
+        "Espectrômetro de Ressonância de Cristal",
+        "Caderno de Selos Arcaicos"
+      ],
+      "relics": []
+    },
+    {
+      "id": "char_halfdan_protetor",
+      "name": "General Hálfdan 'Mão-Carmesim'",
+      "codename": "O Protetor de Um Braço (General da Guarda de Thrum-Vik)",
+      "player": "NPC Mestre (Pai de Player)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Nativos da Ilha (Clãs Vikings)",
+      "faction_role": "Grupo 2 — Protetor de Thrum-Vik (Chefe / Pai de Player)",
+      "origin": "Thrum-Vik (Ilha de Skjoldr-Ey)",
+      "class": "General Guardião / Mestre de Selamento & Cristal",
+      "track": "Híbrido Secreto (Selamentos de Raio + Cristal Carmesim no Peito)",
+      "nex": "92%",
+      "mda": 92,
+      "status": "Ativo",
+      "life_status": "alive",
+      "race": "Nativo da Ilha (Híbrido Foster)",
+      "virtue": "Coragem / Devoção de Guarda",
+      "element": "Raio Carmesim & Energia Metafísica Pura",
+      "attributes": {
+        "Agilidade": 5,
+        "Força": 5,
+        "Intelecto": 4,
+        "Presença": 5,
+        "Vigor": 5,
+        "FOR": 5,
+        "VIG": 5,
+        "AGI": 5,
+        "PRE": 5,
+        "INT": 4
+      },
+      "stats": {
+        "pv": 680,
+        "max_pv": 680,
+        "pv_current": 680,
+        "pv_max": 680,
+        "pd": 70,
+        "max_pd": 70,
+        "pe_current": 70,
+        "pe_max": 70,
+        "ea": 320,
+        "max_ea": 320,
+        "san": 38,
+        "max_san": 38,
+        "san_current": 38,
+        "san_max": 38,
+        "rd": 18,
+        "defesa": 32,
+        "protecao": "Armadura de Escamas Runadas + Pele de Relâmpago (RD 18)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 5
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 5
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 5
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Fortitude": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "VIG",
+          "total": 25
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 5
+        },
+        "Iniciativa": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "AGI",
+          "total": 25
+        },
+        "Intimidação": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "PRE",
+          "total": 25
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Luta": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "FOR",
+          "total": 25
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Ocultismo": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 19
+        },
+        "Percepção": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 20
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 5
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 5
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Reflexos": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "AGI",
+          "total": 20
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 5
+        },
+        "Sobrevivência": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 19
+        },
+        "Tática": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 19
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Vontade": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "PRE",
+          "total": 25
+        }
+      },
+      "abilities": [
+        {
+          "name": "Saque Instantâneo — Sabre Grim-Fang",
+          "type": "Tatuagem de Selamento",
+          "cost": "0s (Cristal)",
+          "desc": "Raios negros e rubros nos braços e costas permitem embanhar Grim-Fang com energia metafísica vermelha em corte relâmpago."
+        },
+        {
+          "name": "Presença Esmagadora do Rei da Tempestade",
+          "type": "Selamento em Área",
+          "cost": "10 PD",
+          "desc": "Ritual de presença absoluta que faz alvos em raio de 45m desmaiarem caso falhem em Vontade (CD 32)."
+        },
+        {
+          "name": "Segredo Oculto — Pulso do Cristal Carmesim",
+          "type": "Cristal Natal (Secreto)",
+          "desc": "Cristal incrustado no centro do esterno gera energia metafísica instantânea (preparo 0s). Fraqueza fatal: se arrancado ou drenado a zero, Hálfdan morre na hora."
+        }
+      ],
+      "inventory": [
+        "Sabre Runado 'Grim-Fang' (Bainha Rúnica de Condução Carmesim)",
+        "Manto Pesado de Thrum-Vik (Oculta o Cristal do Peito)",
+        "Bracelete de Ferro Frio do Conselho das 6 Aldeias"
+      ],
+      "relics": [
+        "Sabre 'Grim-Fang'",
+        "Cristal Carmesim do Esterno"
+      ],
+      "quote": "Um braço basta para fechar o portão quando as dezenove badaladas começam — e para defender meu sangue.",
+      "metaphysical_island_system": {
+        "type": "HYBRID_SECRET",
+        "seal_tattoos": [
+          "Tatuagens de Raios Negros e Rubros (Braço Esquerdo, Ombro e Costas): Corte Instantâneo de Saque",
+          "Selo da Tempestade do Rei (Tórax): Ritual de Presença Esmagadora (Desmaia alvos em raio de 45m que falhem em Vontade CD 32)",
+          "Selo de Condutividade Carmesim (Punho Esquerdo): Embanhar o Sabre 'Grim-Fang' com Energia Metafísica Vermelha"
+        ],
+        "natal_crystal": {
+          "has_crystal": true,
+          "secret": true,
+          "location_on_body": "Centro do Peito (Esterno — oculto sob as roupas e tatuagens)",
+          "effect": "Gera energia metafísica infinita em pulso curto, permitindo conjurar rituais de espada em 0 segundos sem tempo de preparo.",
+          "fatal_flaw": "Se o Cristal do Peito for arrancado ou completamente drenado, Hálfdan morre instantaneamente."
+        },
+        "child_player_hook": {
+          "linked_character_id": "char_player_filho_halfdan",
+          "status": "OPEN_FOR_PLAYER_SHEET",
+          "notes": "Um dos jogadores é filho(a) biológico(a) de Hálfdan; ficha aberta para integração assim que o jogador enviar os atributos finais."
+        }
+      }
+    },
+    {
+      "id": "char_player_filho_halfdan",
+      "name": "[Slot Aberto] Filho(a) de Hálfdan",
+      "codename": "Herdeiro do Sangue Carmesim (Thrum-Vik)",
+      "player": "Jogador (Slot Aberto — Filho de Hálfdan)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Nativos da Ilha (Clãs Vikings)",
+      "faction_role": "Jogador — Herdeiro de Thrum-Vik (Slot Aberto)",
+      "origin": "Thrum-Vik — Linhagem de Hálfdan",
+      "class": "Guerreiro de Selamento (Slot Aberto)",
+      "track": "Herdeiro da Tempestade (Integração com Player)",
+      "nex": "30%",
+      "mda": "35%",
+      "status": "Ativo (Aguardando Atributos Finais do Jogador)",
+      "life_status": "alive",
+      "race": "Nativo da Ilha (Descendente de Hálfdan)",
+      "virtue": "Coragem",
+      "element": "Raio & Metal Runado",
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 3,
+        "Intelecto": 2,
+        "Presença": 3,
+        "Vigor": 3
+      },
+      "stats": {
+        "pv_current": 48,
+        "pv_max": 48,
+        "pe_current": 20,
+        "pe_max": 20,
+        "pd": 20,
+        "max_pd": 20,
+        "ea": 40,
+        "max_ea": 40,
+        "san_current": 32,
+        "san_max": 34,
+        "defesa": 18,
+        "protecao": "Couro de Tempestade (RD 4)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Atletismo": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "FOR",
+          "total": 13
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 3
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Iniciativa": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Luta": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "FOR",
+          "total": 13
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Percepção": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Reflexos": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "AGI",
+          "total": 8
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 3
+        },
+        "Sobrevivência": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "INT",
+          "total": 12
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 2
+        },
+        "Vontade": {
+          "grau": "Treinado",
+          "bonus": 5,
+          "attr": "PRE",
+          "total": 8
+        }
+      },
+      "abilities": [
+        {
+          "name": "Afinidade de Sangue com Thrum-Vik",
+          "type": "Slot de Player Aberto",
+          "desc": "Vinculado diretamente à ficha do General Hálfdan (\"char_halfdan_protetor\"). Pronto para preencher com atributos, nome definitivo e selamentos escolhidos pelo jogador."
+        }
+      ],
+      "inventory": [
+        "Lâmina Runada de Treino de Thrum-Vik",
+        "Pingente da Guarda do Portão Leste"
+      ],
+      "relics": [],
+      "metaphysical_island_system": {
+        "type": "SEAL_TATTOOS_INITIATE",
+        "seal_tattoos": [
+          "Tatuagens Iniciais de Faísca no Antebraço (Pronto para evolução em campanha)",
+          "Vínculo de Linhagem com General Hálfdan (OPEN_FOR_PLAYER_SHEET)"
+        ],
+        "natal_crystal": {
+          "has_crystal": false,
+          "secret": false,
+          "location_on_body": "Não desperto",
+          "effect": "Herança adormecida sob análise do mestre.",
+          "fatal_flaw": "Dependência física ao desligar o Escudo Metafísico."
+        },
+        "child_player_hook": {
+          "linked_character_id": "char_halfdan_protetor",
+          "status": "OPEN_FOR_PLAYER_SHEET",
+          "notes": "Slot oficial vinculado a General Hálfdan Mão-Carmesim."
+        }
+      }
+    },
+    {
+      "id": "char_jarl_torstein",
+      "name": "Jarl Torstein 'Forja-Viva'",
+      "codename": "Líder de Eld-Borg (Aldeia do Fogo & Brasa)",
+      "player": "NPC Mestre (Jarl da Ilha)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Nativos da Ilha (Clãs Vikings)",
+      "faction_role": "Grupo 2 — Líder de Eld-Borg",
+      "origin": "Eld-Borg (Ilha de Skjoldr-Ey)",
+      "class": "Mestre dos Selamentos de Fogo",
+      "track": "Forja Solar de Foster",
+      "nex": "75%",
+      "mda": "75%",
+      "status": "Ativo",
+      "life_status": "alive",
+      "race": "Nativo da Ilha (Selamentos)",
+      "element": "Fogo & Magma Térmico",
+      "attributes": {
+        "Agilidade": 3,
+        "Força": 5,
+        "Intelecto": 3,
+        "Presença": 4,
+        "Vigor": 5
+      },
+      "stats": {
+        "pv_current": 420,
+        "pv_max": 420,
+        "pe_current": 55,
+        "pe_max": 55,
+        "pd": 55,
+        "max_pd": 55,
+        "ea": 210,
+        "max_ea": 210,
+        "san_current": 34,
+        "san_max": 34,
+        "defesa": 26,
+        "rd": 14,
+        "protecao": "Couraça Vulcânica de Eld-Borg (RD 14)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 5
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Fortitude": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "VIG",
+          "total": 20
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Intimidação": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 19
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Luta": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "FOR",
+          "total": 20
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Percepção": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Profissão": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "INT",
+          "total": 23
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 3
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Vontade": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 19
+        }
+      },
+      "abilities": [
+        {
+          "name": "Espirais Solares das Costas",
+          "type": "Tatuagem de Selamento",
+          "cost": "6 EA",
+          "desc": "Aquece armas em brasa branca e dispara ondas explosivas ao redor dos portões de Eld-Borg."
+        }
+      ],
+      "inventory": [
+        "Machado Térmico 'Surtr-Járn'",
+        "Runas de Ferreiro de Foster"
+      ],
+      "relics": [
+        "Machado 'Surtr-Járn'"
+      ],
+      "metaphysical_island_system": {
+        "type": "SEAL_TATTOOS_MASTER",
+        "seal_tattoos": [
+          "Espirais solares e brasas nas costas e punhos que aquecem armas e explodem em chamas."
+        ],
+        "natal_crystal": {
+          "has_crystal": false,
+          "secret": false,
+          "location_on_body": "Nenhum",
+          "effect": "Opera estritamente via Selamentos Ígneos."
+        }
+      }
+    },
+    {
+      "id": "char_freya_cristal",
+      "name": "Freya 'Coração-de-Gelo'",
+      "codename": "Portadora de Cristal Natal (Haf-Garðr)",
+      "player": "NPC Mestre (Aldeia da Água & Maré)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Nativos da Ilha (Clãs Vikings)",
+      "faction_role": "Grupo 2 — Líder de Haf-Garðr",
+      "origin": "Haf-Garðr (Ilha de Skjoldr-Ey)",
+      "class": "Sacerdotisa da Maré Gelada & Cristal Natal",
+      "track": "Cristal Hidro-Vital",
+      "nex": "68%",
+      "mda": "68%",
+      "status": "Ativo",
+      "life_status": "alive",
+      "race": "Portadora de Cristal Natal",
+      "element": "Água & Gelo Abissal",
+      "attributes": {
+        "Agilidade": 4,
+        "Força": 2,
+        "Intelecto": 4,
+        "Presença": 4,
+        "Vigor": 3
+      },
+      "stats": {
+        "pv_current": 290,
+        "pv_max": 290,
+        "pe_current": 48,
+        "pe_max": 48,
+        "pd": 48,
+        "max_pd": 48,
+        "ea": 240,
+        "max_ea": 240,
+        "san_current": 40,
+        "san_max": 40,
+        "defesa": 24,
+        "rd": 10,
+        "protecao": "Manto de Geada Viva (RD 10)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Atletismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 2
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Diplomacia": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 19
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Fortitude": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "VIG",
+          "total": 3
+        },
+        "Furtividade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Intuição": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 19
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 2
+        },
+        "Medicina": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "INT",
+          "total": 24
+        },
+        "Ocultismo": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "INT",
+          "total": 19
+        },
+        "Percepção": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Pontaria": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 14
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 4
+        },
+        "Sobrevivência": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 4
+        },
+        "Vontade": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 19
+        }
+      },
+      "abilities": [
+        {
+          "name": "Cura Hidro-Vital & Lanças da Coluna",
+          "type": "Tatuagem + Cristal Natal",
+          "cost": "8 EA",
+          "desc": "Ondas e serpentes marinhas pela coluna restauram PV de aliados e lançam estacas glaciais."
+        }
+      ],
+      "inventory": [
+        "Cajado de Gelo Abissal",
+        "Água Pura de Haf-Garðr"
+      ],
+      "relics": [
+        "Cristal Natal da Clavícula Azul"
+      ],
+      "metaphysical_island_system": {
+        "type": "CRYSTAL_AND_SEAL",
+        "seal_tattoos": [
+          "Ondas e serpentes marinhas ao longo da coluna para cura hidro-vital e lanças de gelo."
+        ],
+        "natal_crystal": {
+          "has_crystal": true,
+          "secret": false,
+          "location_on_body": "Clavícula Esquerda",
+          "effect": "Amplifica cura hidro-vital sem drenar água ao redor.",
+          "fatal_flaw": "Remoção do cristal é fatal."
+        }
+      }
+    },
+    {
+      "id": "char_erik_pele_pedra",
+      "name": "Erik 'Pele-de-Pedra'",
+      "codename": "Batedor das Muralhas Móveis (Stein-Vidr)",
+      "player": "NPC Mestre (Batedor do Labirinto)",
+      "campaign_id": "camp_labirinto_2014",
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "faction_group": "Nativos da Ilha (Clãs Vikings)",
+      "faction_role": "Grupo 2 — Guia & Batedor de Stein-Vidr",
+      "origin": "Stein-Vidr (Ilha de Skjoldr-Ey)",
+      "class": "Batedor do Labirinto Vivo",
+      "track": "Runas de Basalto & Raiz",
+      "nex": "58%",
+      "mda": "58%",
+      "status": "Ativo",
+      "life_status": "alive",
+      "race": "Nativo da Ilha (Selamentos)",
+      "element": "Pedra & Raiz Viva",
+      "attributes": {
+        "Agilidade": 4,
+        "Força": 4,
+        "Intelecto": 3,
+        "Presença": 2,
+        "Vigor": 4
+      },
+      "stats": {
+        "pv_current": 310,
+        "pv_max": 310,
+        "pe_current": 42,
+        "pe_max": 42,
+        "pd": 42,
+        "max_pd": 42,
+        "ea": 130,
+        "max_ea": 130,
+        "san_current": 34,
+        "san_max": 34,
+        "defesa": 25,
+        "rd": 16,
+        "protecao": "Pele Calcificada de Basalto (RD 16)"
+      },
+      "skills": {
+        "Acrobacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Adestramento": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Artes": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Atletismo": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "FOR",
+          "total": 19
+        },
+        "Atualidades": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ciências": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Crime": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Diplomacia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Enganação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Fortitude": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "VIG",
+          "total": 19
+        },
+        "Furtividade": {
+          "grau": "Veterano",
+          "bonus": 10,
+          "attr": "AGI",
+          "total": 14
+        },
+        "Iniciativa": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Intimidação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Intuição": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Investigação": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Luta": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "FOR",
+          "total": 4
+        },
+        "Medicina": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Ocultismo": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Percepção": {
+          "grau": "Expert",
+          "bonus": 15,
+          "attr": "PRE",
+          "total": 17
+        },
+        "Pilotagem": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Pontaria": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Profissão": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Reflexos": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "AGI",
+          "total": 4
+        },
+        "Religião": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        },
+        "Sobrevivência": {
+          "grau": "Expert",
+          "bonus": 20,
+          "attr": "INT",
+          "total": 23
+        },
+        "Tática": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Tecnologia": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "INT",
+          "total": 3
+        },
+        "Vontade": {
+          "grau": "Destreinado",
+          "bonus": 0,
+          "attr": "PRE",
+          "total": 2
+        }
+      },
+      "abilities": [
+        {
+          "name": "Ler o Giro das Paredes",
+          "type": "Tatuagem Angular",
+          "desc": "Pressente quando uma muralha do Labirinto vai se mover com 15 minutos de antecedência antes das 19h00."
+        }
+      ],
+      "inventory": [
+        "Picareta-Âncora de Pedra",
+        "Mapa Entalhado em Casca de Raiz"
+      ],
+      "relics": [],
+      "metaphysical_island_system": {
+        "type": "SEAL_TATTOOS_SCOUT",
+        "seal_tattoos": [
+          "Runas angulares no torso e pernas que calcificam a pele (alta RD) e leem o movimento das paredes."
+        ],
+        "natal_crystal": {
+          "has_crystal": false,
+          "secret": false,
+          "location_on_body": "Nenhum",
+          "effect": "Resistência mineral pelas tatuagens de Stein-Vidr."
+        }
+      }
     }
   ],
   "chronicles": [
@@ -5317,6 +7601,15 @@
       "author": "Equipe Tática A.E.G.I.S.",
       "text": "Briefing de infiltração na Mansão Belvedere durante a gala do magnata Oeht. Monitoramento da relíquia da redoma e detecção de anomalias espaciais.",
       "campaign_id": "camp_filantropo_oeht"
+    },
+    {
+      "id": "cron_skjoldr_2014_01",
+      "campaign_id": "camp_labirinto_2014",
+      "location_id": "loc_skjoldr_ilha_780",
+      "title": "Operação Skjoldr-Ey: Travessia da Névoa & As Badaladas das 19h",
+      "session": "Prólogo Oficial (Ano 2014)",
+      "date": "2014",
+      "lore": "Em 2014, o Esquadrão Classe B da A.E.G.I.S. atravessa os 2 km do Escudo Metafísico e descobre uma ilha viva de 780 km² onde seis aldeias vikings sobreviveram ao isolamento milenar sob a Regra de Foster. Às 19h00 os muros se trancam e apenas os Selamentos de Hálfdan e os Portadores de Cristal seguram a noite."
     }
   ],
   "bestiary": [
@@ -7432,6 +9725,92 @@
       "signature_ability": "Estabilização de Fenda e Disparo de Choque em ZZZZT.",
       "weakness": "Esgotamento da bateria após 3 ciclos de salto dimensional.",
       "lore_notes": "Mecanismo patenteado por Gabriel para patrulhar os corredores da Mansão Vilar."
+    },
+    {
+      "id": "creature_t4_66",
+      "tomo4_num": 66,
+      "category": "skjoldr_2014",
+      "category_label": "Feras das 19h & Skjoldr-Ey (2014)",
+      "name": "Fera Noturna do Labirinto (O Caçador das 19h)",
+      "biotype": "Predador Noturno Hipertrófico (Skjoldr-Ey 2014)",
+      "mda": "MDA 74%",
+      "nd": "ND 13",
+      "threat_level": "ND 13 • MDA 74%",
+      "origin": "Labirinto Vivo de Skjoldr-Ey (2014)",
+      "territory": "Fora das 6 Aldeias (19h00 às 06h00)",
+      "virtue": "Instinto Predatório",
+      "element": "Sombra Abissal & Osso",
+      "description": "Bestas biomecânicas naturais moldadas pela hipertrofia da Regra de Foster no Labirinto de Skjoldr-Ey. Dormem nas fendas profundas das muralhas durante o dia e despertam exatamente às 19h00. Cegam radares modernos com estática, rastreiam portadores de Cristais Natais pelo pulso energético e dilaceram blindagens de Classe B.",
+      "canon_status": "confirmed",
+      "pv": "440",
+      "pd": "45",
+      "ea": "150",
+      "est": "16",
+      "rd": "15",
+      "attributes": {
+        "FOR": 8,
+        "VIG": 7,
+        "AGI": 8,
+        "PRE": 5,
+        "INT": 3
+      },
+      "attacks": [
+        {
+          "name": "Investida do Crepúsculo",
+          "type": "Corpo a Corpo / Emboscada",
+          "damage": "4d10+14",
+          "desc": "Ativa automaticamente fora dos portões após as 19h00."
+        },
+        {
+          "name": "Uivo Quebra-Escudo",
+          "type": "Sônico 12m (Vontade CD 25)",
+          "damage": "Atordoado 1 turno",
+          "desc": "Interfere com rádios e implantes da A.E.G.I.S."
+        }
+      ]
+    },
+    {
+      "id": "creature_t4_67",
+      "tomo4_num": 67,
+      "category": "skjoldr_2014",
+      "category_label": "Feras das 19h & Skjoldr-Ey (2014)",
+      "name": "Colosso das Muralhas Vivas",
+      "biotype": "Entidade Geológica Auto-Regenerativa (Skjoldr-Ey 2014)",
+      "mda": "MDA 78%",
+      "nd": "ND 15",
+      "threat_level": "ND 15 • MDA 78%",
+      "origin": "Labirinto Vivo de Skjoldr-Ey (2014)",
+      "territory": "Muralhas Móveis & Stein-Vidr",
+      "virtue": "Resistência Geológica",
+      "element": "Pedra & Raiz Viva",
+      "description": "Manifestação ambulante das próprias paredes móveis do Labirinto de 780 km². Composto por blocos ciclópicos de rocha negra entrelaçados por raízes luminosas que canalizam a energia de Foster, rearranja passagens inteiras e esmaga intrusos armados que tentem dinamitar os muros.",
+      "canon_status": "confirmed",
+      "pv": "620",
+      "pd": "50",
+      "ea": "180",
+      "est": "26",
+      "rd": "22",
+      "attributes": {
+        "FOR": 10,
+        "VIG": 10,
+        "AGI": 2,
+        "PRE": 4,
+        "INT": 4
+      },
+      "attacks": [
+        {
+          "name": "Punho de Monólito",
+          "type": "Impacto Colossal",
+          "damage": "5d12+16",
+          "desc": "Esmaga barricadas e blindados leves."
+        },
+        {
+          "name": "Prisão das Duas Paredes",
+          "type": "Controle de Terreno 15m",
+          "damage": "Reflexos CD 26",
+          "desc": "Fecha corredores vivos instantaneamente."
+        }
+      ]
     }
   ],
   "relics": [
@@ -7719,6 +10098,17 @@
       "threat_stars": "★★★★★ Severo",
       "status": "(Futura Campanha)",
       "description": "Oeht exibe artefato do mercado negro (lodo roxo no cofre) e desafia a A.E.G.I.S. às 23h00; Victor Kael fecha a redoma e engasga o tempo em loops de 10s até despertar O Anárquico à meia-noite."
+    },
+    {
+      "id": "time_skjoldr_2014",
+      "year": "2014",
+      "year_numeric": 2014,
+      "title": "Operação Skjoldr-Ey: Incursão A.E.G.I.S. Classe B na Ilha do Labirinto",
+      "description": "A A.E.G.I.S. envia o Esquadrão Classe B através da névoa de 2 km em uma ilha de 780 km² parada na Era Viking, descobrindo as 6 Aldeias, os Cristais Natais e o General Hálfdan.",
+      "campaign_id": "camp_labirinto_2014",
+      "location_id": "loc_skjoldr_ilha_780",
+      "threat_stars": "★★★★★ (Ômega / Isolamento)",
+      "status": "Campanha Ativa (2014)"
     }
   ],
   "battlemap_tokens": [
@@ -8109,8 +10499,8 @@
       }
     ]
   },
-  "schema_version": "3.0.0-canon-unificado",
-  "last_updated": "2026-11-12",
+  "schema_version": "4.0.0-skjoldr",
+  "last_updated": "2026-11-18",
   "planet": {
     "id": "planet_evren",
     "name": "Planeta Evren",
@@ -8440,10 +10830,14 @@
         "country_atlantico_bermudas"
       ],
       "campaigns": [
-        "camp_001"
+        "camp_001",
+        "camp_labirinto_2014"
       ],
       "summary": "Região oceânica e arquipélago isolado entre a Flórida, Bermudas e Porto Rico, onde naufrágios históricos convergiram para Nova Caronte.",
-      "campaign_ids": []
+      "campaign_ids": [
+        "camp_001",
+        "camp_labirinto_2014"
+      ]
     },
     {
       "id": "cont_africa_asia_oceania",
@@ -8457,6 +10851,25 @@
       "campaigns": [],
       "summary": "Continentes físicos presentes na cartografia planetária de Evren cujos arquivos de campanhas ainda não foram abertos ou permanecem pendentes de documentação.",
       "campaign_ids": []
+    },
+    {
+      "id": "cont_atlantico_norte",
+      "name": "Atlântico Norte & Mar da Noruega",
+      "coordinates": [
+        64.5,
+        4.2
+      ],
+      "zoom_level": 3,
+      "countries": [
+        "country_skjoldr_ey"
+      ],
+      "campaigns": [
+        "camp_labirinto_2014"
+      ],
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "summary": "Águas setentrionais entre a costa da Noruega e o Círculo Polar Ártico onde uma barreira anômala de névoa de 2 km oculta a Ilha de Skjoldr-Ey."
     }
   ],
   "countries": [
@@ -8511,6 +10924,19 @@
         "camp_filantropo_oeht"
       ],
       "summary": "Território europeu da Gala Belvedere (Crônica III — O Filantropo, Oeht, Victor Kael e O Anárquico) e bunker central da A.E.G.I.S."
+    },
+    {
+      "id": "country_skjoldr_ey",
+      "name": "Ilha de Skjoldr-Ey (Ilha do Labirinto)",
+      "continent_id": "cont_atlantico_norte",
+      "coordinates": [
+        64.5,
+        4.2
+      ],
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "summary": "Ilha isolada de 780 km² (dimensão equivalente a Nova York) cercada pelo Escudo Metafísico e dividida por um Labirinto Vivo e 6 aldeias vikings."
     }
   ],
   "regions": [
@@ -8569,6 +10995,20 @@
         "camp_filantropo_oeht"
       ],
       "summary": "Zona de isolamento diplomático e corporativo onde Oeht tentou inaugurar a privatização do paranormal."
+    },
+    {
+      "id": "reg_labirinto_vivo",
+      "name": "Labirinto Vivo & As 6 Aldeias",
+      "country_id": "country_skjoldr_ey",
+      "continent_id": "cont_atlantico_norte",
+      "coordinates": [
+        64.5,
+        4.2
+      ],
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "summary": "Território de muralhas móveis auto-regenerativas regido pela Regra de Foster Metafísica e pelo toque de recolher das 19h00."
     }
   ],
   "cities": [
@@ -8631,6 +11071,22 @@
         "camp_filantropo_oeht"
       ],
       "description": "Metrópole europeia sob a qual a A.E.G.I.S. opera em sigilo diante da incursão de Oeht e Victor Kael."
+    },
+    {
+      "id": "city_kristal_hof",
+      "name": "Kristal-Hof & Aldeias de Skjoldr-Ey",
+      "type": "Arquipélago Murado / Santuário",
+      "region_id": "reg_labirinto_vivo",
+      "country_id": "country_skjoldr_ey",
+      "continent_id": "cont_atlantico_norte",
+      "coordinates": [
+        64.5,
+        4.2
+      ],
+      "campaign_ids": [
+        "camp_labirinto_2014"
+      ],
+      "description": "Conjunto das seis aldeias protegidas por muros móveis e santuário central dos Cristais Natais."
     }
   ],
   "historical_events": [
@@ -8809,6 +11265,31 @@
       "status": "(Futura Campanha)",
       "description": "Oeht exibe artefato do mercado negro (lodo roxo no cofre) e desafia a A.E.G.I.S. às 23h00; Victor Kael fecha a redoma e engasga o tempo em loops de 10s até despertar O Anárquico à meia-noite.",
       "consequences": "Marco estrutural da tapeçaria temporal do Universo Evren."
+    },
+    {
+      "id": "evt_2014_skjoldr_incursao",
+      "title": "Incursão à Ilha de Skjoldr-Ey & O Toque das 19h00",
+      "chronological_year": 2014,
+      "year_numeric": 2014,
+      "year_label": "2014",
+      "date": "Ano 2014",
+      "era_badge": "OPERAÇÃO SKJOLDR-EY • CLASSE B",
+      "campaign_id": "camp_labirinto_2014",
+      "location_id": "loc_skjoldr_ilha_780",
+      "country_id": "country_skjoldr_ey",
+      "region_id": "reg_labirinto_vivo",
+      "location_name": "Skjoldr-Ey (Mar da Noruega — 780 km²)",
+      "characters_involved": [
+        "char_arthur_valente",
+        "char_halfdan_protetor",
+        "char_jarl_torstein",
+        "char_freya_cristal",
+        "char_erik_pele_pedra"
+      ],
+      "threat_level": "★★★★★ Ômega Metafísico",
+      "status": "Em Preparação (2014)",
+      "description": "Esquadrão Classe B da A.E.G.I.S. penetra a névoa de 2 km para desligar a fonte do Escudo Metafísico no santuário de Kristal-Hof.",
+      "consequences": "Choque cultural entre armamento de 2014 e portadores ancestrais da Regra de Foster."
     }
   ],
   "organizations": [
@@ -9301,6 +11782,21 @@
       ],
       "confidence": "Alta (Fundamento Filosófico de Evren)",
       "curator_notes": "A tensão entre a explicação biopunk científica e a percepção subjetiva de horror místico é parte intencional do universo de Evren."
+    },
+    {
+      "id": "ledger_foster_skjoldr_2014",
+      "title": "Regra de Foster & A Sobrevivência dos Portadores caso o Escudo Caia",
+      "category": "Mistério Metafísico (2014)",
+      "status": "open_mystery",
+      "summary": "Habitantes de Kristal-Hof — e o próprio segredo híbrido de Hálfdan — possuem Cristais Natais fundidos ao corpo ligados ao Núcleo do Escudo de 2 km.",
+      "canonical_positions": [
+        "Diretriz A.E.G.I.S. (2014): Desativar o Escudo Metafísico para neutralizar o risco da ilha nos radares do Atlântico Norte.",
+        "Risco Vital de Foster: Desligar bruscamente o Núcleo sem dissociar os Cristais Natais pode provocar colapso imediato nos habitantes."
+      ],
+      "sources": [
+        "Briefing Classe B 2014 — Cap. Arthur Valente",
+        "Observações em Thrum-Vik"
+      ]
     }
   ],
   "powers": [
@@ -9386,6 +11882,46 @@
       "sources": [
         "Manual Tático de Agentes A.E.G.I.S.",
         "Compêndio de Regras de Evren"
+      ]
+    },
+    {
+      "id": "power_selo_tatuagem_ilha",
+      "name": "Tatuagem de Selamento da Ilha (Regra de Foster)",
+      "category": "Selamento Corporal Metafísico",
+      "origin_type": "Clãs Vikings de Skjoldr-Ey (2014)",
+      "belief_conflict": "Disciplina marcial conduzindo a hipertrofia metafísica da ilha pela própria pele.",
+      "observable_effect": "Canaliza raios carmesins, fogo vulcânico, gelo hidro-vital, pele de pedra ou passos de vento através de runas gravadas no corpo.",
+      "trigger": "Fluxo de EA / PD com postura de combate ou toque na empunhadura.",
+      "range_duration_targets": "Pessoal / Toque / Área até 45m (Selo de Presença do General)",
+      "cost_pd": 4,
+      "risk_mda": 1,
+      "sensory_sign": "As linhas tatuadas acendem sob a pele com faíscas carmesins, azuis ou douradas audíveis.",
+      "limits": "Não funciona sem energia da Regra de Foster se o Escudo for totalmente desligado.",
+      "counterplay": "Quebra de linha rúnica na pele ou drenagem em Kristal-Hof.",
+      "consequences": "Sobrecarga muscular severa após combates noturnos.",
+      "canon_status": "confirmed",
+      "sources": [
+        "Dossiê Operação Skjoldr-Ey (2014)"
+      ]
+    },
+    {
+      "id": "power_pulso_cristal_natal",
+      "name": "Pulso de Cristal Natal (Ritual em 0 Segundos)",
+      "category": "Simbiose Metafísica (Kristal-Hof / Híbrido)",
+      "origin_type": "Núcleo do Escudo Metafísico de Skjoldr-Ey",
+      "belief_conflict": "O corpo inteiro do portador é parte viva da fonte do Escudo.",
+      "observable_effect": "Libera energia metafísica pura instantaneamente, anulando tempo de preparo em técnicas como Grim-Fang.",
+      "trigger": "Pulso cardíaco direto no cristal incrustado (esterno ou clavícula).",
+      "range_duration_targets": "Pessoal / Instantâneo (0 segundos)",
+      "cost_pd": 0,
+      "risk_mda": 3,
+      "sensory_sign": "Estalo cristalino sob as vestes acompanhado de fulgor carmesim ou azul-gelo no tórax.",
+      "limits": "Falha fatal: se o Cristal Natal for arrancado ou drenado a zero, o portador morre imediatamente.",
+      "counterplay": "Ataques precisos ao esterno quando o segredo é descoberto.",
+      "consequences": "Dependência vital absoluta da matriz cristalina da ilha.",
+      "canon_status": "confirmed",
+      "sources": [
+        "Registros Confidenciais de Thrum-Vik & Kristal-Hof"
       ]
     }
   ],
@@ -9571,6 +12107,12 @@
         "years": "2026"
       },
       {
+        "id": "vertente_skjoldr_2014",
+        "name": "Vertente 4: Operação Skjoldr-Ey (2014)",
+        "color": "#38bdf8",
+        "years": "2014 (Ativa)"
+      },
+      {
         "id": "vertente_colapso",
         "name": "O Colapso da Realidade Exterior",
         "color": "#ef4444",
@@ -9594,7 +12136,7 @@
         "era": "era_primordial",
         "label": "Despertar do Primogênito (Verdadeira Magia)",
         "year": "+5.000 Anos",
-        "summary": "Arthur Vilar / Primeiro humano fundido à anomalia primordial do mar adquire autoridade sobre o código-fonte físico e genético da realidade.",
+        "summary": "Arthur Vilar / Primeiro humano fundido à anomalia primordial do mar adquire autoridade sobre o código-fonte físico e genético da realidade. Na mesma era arcaica, o Núcleo do Labirinto de Skjoldr-Ey sela uma fração hermética no Atlântico Norte.",
         "quote": "“Não é mutação nem virtude: é a própria Regra reescrita.”",
         "impact": "Criação da Verdadeira Magia e gênese de toda a prisão dimensional atlântica.",
         "x_hint": 0.08,
@@ -9609,7 +12151,7 @@
         "quote": "“A água congelou azul e o ferro enferrujou brilhando sob o manto sem luz.”",
         "impact": "Criação da Inquisição da Ordem da Cinza contra bruxos e anomalias.",
         "x_hint": 0.21,
-        "y_hint": 0.45
+        "y_hint": 0.34
       },
       {
         "id": "teia_queda_veu",
@@ -9668,7 +12210,7 @@
         "quote": "“Incursão acontecendo, é o fim do...”",
         "impact": "Fusão da frente marítima do Triângulo com os Bandeirantes de Vera Cruz e entrada na A.E.G.I.S.",
         "x_hint": 0.62,
-        "y_hint": 0.22,
+        "y_hint": 0.18,
         "linked_campaign": "camp_001",
         "linked_location": "loc_campo_rosas"
       },
@@ -9681,7 +12223,7 @@
         "quote": "“Três anos. Cinco mentirosos.”",
         "impact": "Cicatrizes psíquicas da culpa e início de 3 anos de sobrevivência cega nas galerias.",
         "x_hint": 0.62,
-        "y_hint": 0.5,
+        "y_hint": 0.48,
         "linked_campaign": "camp_002",
         "linked_location": "loc_vilar_minas",
         "linked_character": "char_lucas"
@@ -9694,8 +12236,8 @@
         "summary": "Gabriel (\"Davi Reis\") testa portais ZZZZT de ozônio; após desmascaramento e combate contra O Eco, o grupo resgata Lucas vivo e explode as minas.",
         "quote": "“Ele sobreviveu no escuro… ainda é o nosso Lucas.”",
         "impact": "Selo definitivo das minas mexicanas e alerta máximo na rede da A.E.G.I.S.",
-        "x_hint": 0.76,
-        "y_hint": 0.5,
+        "x_hint": 0.77,
+        "y_hint": 0.48,
         "linked_campaign": "camp_002",
         "linked_location": "loc_vilar",
         "linked_character": "char_gabriel"
@@ -9708,7 +12250,7 @@
         "summary": "Oeht tenta privatizar relíquias da Ordem da Cinza com lodo roxo vazando no escritório; Victor Kael trava o salão sob redoma púrpura, loops de 10s, reflexos vivos nos espelhos e o despertar d’O Anárquico.",
         "quote": "“Às 23h00, Oeht chama a A.E.G.I.S. de carcereira; à meia-noite, o bolo acorda.”",
         "impact": "Ruptura de segurança em plena Europa e roubo/uso aberto de artefatos do Véu.",
-        "x_hint": 0.76,
+        "x_hint": 0.77,
         "y_hint": 0.78,
         "linked_campaign": "camp_filantropo_oeht",
         "linked_location": "loc_mansao_belvedere",
@@ -9724,6 +12266,54 @@
         "impact": "Todas as três frentes (Triângulo/Vera Cruz, Vilar/LIMIAR, Belvedere/A.E.G.I.S.) convergem em guerra total.",
         "x_hint": 0.92,
         "y_hint": 0.5
+      },
+      {
+        "id": "node_viking_skjoldr",
+        "era": "era_mitica",
+        "era_id": "era_mitica",
+        "label": "Era Viking: O Escudo Metafísico & As 6 Aldeias de Skjoldr-Ey",
+        "title": "Era Viking: O Escudo Metafísico & As 6 Aldeias de Skjoldr-Ey",
+        "year": "Séc. X – XIV",
+        "year_display": "Séc. X – XIV",
+        "summary": "Clãs vikings ficam isolados no Labirinto Vivo de 780 km² sob o Escudo Metafísico. Pela Regra de Foster, desenvolvem Tatuagens de Selamento e Cristais Natais.",
+        "quote": "“Quem cruza o muro após o sol cair alimenta as feras da névoa.”",
+        "impact": "Preservação isolada da Era Viking no Atlântico Norte até a incursão moderna de 2014.",
+        "x_hint": 0.21,
+        "y_hint": 0.72,
+        "linked_campaign": "camp_labirinto_2014",
+        "linked_location": "loc_vila_kristal_hof",
+        "linked_character": "char_halfdan_protetor"
+      },
+      {
+        "id": "node_2014_labirinto",
+        "era": "vertente_skjoldr_2014",
+        "era_id": "vertente_skjoldr_2014",
+        "vertente_id": "vertente_skjoldr_2014",
+        "label": "2014: Operação Skjoldr-Ey — A Ilha do Labirinto",
+        "title": "2014: Operação Skjoldr-Ey — A Ilha do Labirinto",
+        "year": "2014 (Campanha Ativa)",
+        "year_display": "2014 (Nova Campanha)",
+        "summary": "A A.E.G.I.S. envia o Esquadrão Classe B através da névoa de 2 km para desligar o Escudo Metafísico em uma ilha de 780 km², encontrando as 6 Aldeias, as Feras das 19h e o General Hálfdan Mão-Carmesim.",
+        "quote": "“Se o escudo cair antes das 19h00, o que está preso lá fora vai descobrir o caminho de casa.”",
+        "impact": "Primeiro choque direto entre operadores A.E.G.I.S. de 2014 e portadores hipertróficos da Regra de Foster.",
+        "importance": "Marco Canônico 2014",
+        "x_hint": 0.62,
+        "y_hint": 0.8,
+        "linked_campaign": "camp_labirinto_2014",
+        "linked_location": "loc_skjoldr_ilha_780",
+        "linked_character": "char_halfdan_protetor",
+        "characters": [
+          "char_arthur_valente",
+          "char_halfdan_protetor",
+          "char_player_filho_halfdan"
+        ],
+        "bestiary": [
+          "tomo4_66",
+          "tomo4_67"
+        ],
+        "relics": [
+          "Sabre 'Grim-Fang'"
+        ]
       }
     ],
     "links": [
@@ -9806,6 +12396,30 @@
         "source": "teia_oeht_gala",
         "target": "teia_colapso_global",
         "label": "Micro-Queda do Véu urbana"
+      },
+      {
+        "source": "teia_primogenito_genese",
+        "target": "node_viking_skjoldr",
+        "label": "Núcleo ancestral forma o Labirinto de Skjoldr-Ey",
+        "type": "normal"
+      },
+      {
+        "source": "node_viking_skjoldr",
+        "target": "node_2014_labirinto",
+        "label": "Regra de Foster isola 6 aldeias até 2014",
+        "type": "normal"
+      },
+      {
+        "source": "teia_fundacao_aegis",
+        "target": "node_2014_labirinto",
+        "label": "A.E.G.I.S. destaca Esquadrão Classe B (2014)",
+        "type": "normal"
+      },
+      {
+        "source": "node_2014_labirinto",
+        "target": "teia_colapso_global",
+        "label": "Queda do Escudo ameaça romper equilíbrio atlântico",
+        "type": "critical"
       }
     ]
   },
@@ -12344,6 +14958,123 @@
       "abilities": "Multiplicação de Peso (Hel-Massa): Como ação livre, aumenta seu peso em até 20 vezes, afundando embarcações pequenas ou esmagando o assoalho de edifícios.",
       "skills": "Atletismo +25, Luta +22, Intimidação +24, Fortitude +25",
       "tactics": "Guarda túmulos vikings e relíquias do Soberano Harald Sangue-de-Cinza. Fig. B42 — O Draugr de Sal inchado e azul-escuro guardando seu túmulo costeiro."
+    },
+    {
+      "num": 66,
+      "id": "tomo4_66",
+      "category": "skjoldr_2014",
+      "category_label": "Feras das 19h & Skjoldr-Ey (2014)",
+      "name": "Fera Noturna do Labirinto (O Caçador das 19h)",
+      "title": "'O Terror de Quem Perde o Toque dos Portões'",
+      "mda": "MDA 74%",
+      "mda_numeric": 74,
+      "nd": "ND 13",
+      "type": "Predador Noturno Hipertrófico (Regra de Foster — Ilha de Skjoldr-Ey)",
+      "origin": "Corredores Profundos do Labirinto Vivo (2014)",
+      "territory": "Labirinto de 780 km² (Fora das 6 Aldeias após 19h00)",
+      "virtue": "Instinto (Predatório)",
+      "element": "Sombra Abissal & Osso Metafísico",
+      "quote": "“Quando o relógio bate 19h00 em Thrum-Vik, o som das portas de ferro não serve para prender ladrões — serve para esconder nossos batimentos.”",
+      "description": "Bestas biomecânicas naturais moldadas pela hipertrofia da Regra de Foster no Labirinto de Skjoldr-Ey. Dormem nas fendas profundas das muralhas durante o dia e despertam exatamente às 19h00. Cegam radares modernos com estática, rastreiam portadores de Cristais Natais pelo pulso energético e dilaceram blindagens de Classe B.",
+      "stats": {
+        "pv": "440",
+        "pd": "45",
+        "ea": "150",
+        "est": "16 (Frenesi Noturno)",
+        "rd": "15 (Quitinização Basal & Sangue Frio)",
+        "reactions": "Esq. +19 (6d20), Bloq. +16 (RD 22), C-Ataq. +20 (Garras Rúnicas — 3d10+12)",
+        "attributes": {
+          "FOR": 8,
+          "VIG": 7,
+          "AGI": 8,
+          "PRE": 5,
+          "INT": 3
+        }
+      },
+      "immunities": "Medo, Frio Polar, Gás Lacrimogêneo, Armas de baixo calibre •",
+      "weakness": "Luz Solar Plena ou Selos Concentrados de Raio Carmesim (+50% de dano e recua se forçada para dentro dos pórticos das aldeias antes do lacre)",
+      "offense": "Desloc.: 18 m (Escala muralhas verticais do Labirinto) • Ataques: Investida do Crepúsculo +21 (4d10+14 dilacerante) & Uivo Quebra-Escudo (área 12m, Vontade CD 25 ou atordoado 1 turno).",
+      "abilities": "Caçada das 19h00: Recebe +4 em Ataque e Movimento após o toque de recolher; detecta Cristais Natais e tatuagens ativas num raio de 120m.",
+      "skills": "Atletismo +22, Furtividade +24, Iniciativa +21, Percepção +22, Luta +21",
+      "tactics": "Atua em matilhas de 2 a 4 indivíduos sempre fora dos portões após as 19h00; evita confrontar diretamente Hálfdan se Grim-Fang for desembainhado."
+    },
+    {
+      "num": 67,
+      "id": "tomo4_67",
+      "category": "skjoldr_2014",
+      "category_label": "Feras das 19h & Skjoldr-Ey (2014)",
+      "name": "Colosso das Muralhas Vivas",
+      "title": "'Sentinela Auto-Regenerativo de Stein-Vidr'",
+      "mda": "MDA 78%",
+      "mda_numeric": 78,
+      "nd": "ND 15",
+      "type": "Entidade Geológica Simbiótica (Labirinto Vivo — Skjoldr-Ey 2014)",
+      "origin": "Camada Tectônica sob Kristal-Hof",
+      "territory": "Corredores Móveis & Fronteira de Stein-Vidr",
+      "virtue": "Paciência (Inabalável)",
+      "element": "Pedra Viva & Raízes Ancestrais",
+      "quote": "“Não é a ilha que possui muralhas. As muralhas é que caminham sobre ossos de basalto.”",
+      "description": "Manifestação ambulante das próprias paredes móveis do Labirinto de 780 km². Composto por blocos ciclópicos de rocha negra entrelaçados por raízes luminosas que canalizam a energia de Foster, rearranja passagens inteiras e esmaga intrusos armados que tentem dinamitar os muros.",
+      "stats": {
+        "pv": "620",
+        "pd": "50",
+        "ea": "180",
+        "est": "26 (Indomável)",
+        "rd": "22 (Basalto Hipertrofiado — Regenera 25 PV/turno se tocando o solo do Labirinto)",
+        "reactions": "Bloq. +24 (RD 30), C-Ataq. +18 (Desabamento de Raiz 4d12+16)",
+        "attributes": {
+          "FOR": 10,
+          "VIG": 10,
+          "AGI": 2,
+          "PRE": 4,
+          "INT": 4
+        }
+      },
+      "immunities": "Cortes comuns, Veneno, Sangramento, Atordoamento, Esmagamento •",
+      "weakness": "Sobrecarga Térmica de Eld-Borg seguida de Congelamento de Haf-Garðr (fratura o basalto e reduz RD para 8 por 2 rodadas)",
+      "offense": "Desloc.: 9 m • Ataques: Punho de Monólito +23 (5d12+16 impacto) & Prisão das Duas Paredes (fecha duas muralhas em linha de 15m, Reflexos CD 26).",
+      "abilities": "Regeneração Tectônica: Cargas explosivas de 2014 apenas abrem fendas temporárias — os muros fecham em 1d4 rodadas.",
+      "skills": "Fortitude +26, Luta +23, Percepção Sísmica +22",
+      "tactics": "Protege rotas próximas a Kristal-Hof e castiga violações agressivas contra os corredores do Labirinto."
+    },
+    {
+      "num": 68,
+      "id": "tomo4_68",
+      "category": "skjoldr_2014",
+      "category_label": "Feras das 19h & Skjoldr-Ey (2014)",
+      "name": "General Hálfdan 'Mão-Carmesim'",
+      "title": "'O Protetor de Um Braço de Thrum-Vik (Híbrido Secreto)'",
+      "mda": "MDA 92%",
+      "mda_numeric": 92,
+      "nd": "ND 18",
+      "type": "Humano Híbrido (Selamentos de Raio + Cristal Carmesim no Peito — Skjoldr-Ey 2014)",
+      "origin": "Thrum-Vik (Ilha de Skjoldr-Ey)",
+      "territory": "Thrum-Vik & Perímetro Leste do Labirinto",
+      "virtue": "Coragem / Juramento de Guarda",
+      "element": "Raio Carmesim & Energia Metafísica Pura",
+      "quote": "“Um único braço empunhando Grim-Fang vale por cem portões fechados.”",
+      "description": "Protetor supremo de Thrum-Vik e pai biológico de um dos jogadores. Embora ostente tatuagens de relâmpago para combate em velocidade extrema com seu sabre Grim-Fang, guarda em segredo um Cristal Carmesim incrustado no centro do esterno — permitindo conjurar rituais de espada em 0 segundos.",
+      "stats": {
+        "pv": "680",
+        "pd": "70",
+        "ea": "320",
+        "est": "38",
+        "rd": "18 (Armadura Rúnica & Selo Corporal)",
+        "reactions": "Esq. +22, Bloq. +24 (Grim-Fang), C-Ataq. +26 (Embanhar Carmesim — 5d10+18)",
+        "attributes": {
+          "FOR": 5,
+          "VIG": 5,
+          "AGI": 5,
+          "PRE": 5,
+          "INT": 4
+        }
+      },
+      "immunities": "Medo, Paralisia elétrica, Aura de Desmaio •",
+      "weakness": "Cristal Carmesim no Centro do Peito (Esterno): se o cristal for arrancado ou completamente drenado em combate, Hálfdan morre instantaneamente.",
+      "offense": "Desloc.: 15 m • Ataques: Saque Relâmpago 'Grim-Fang' +26 (Corte instantâneo em 0s de preparo) & Ritual de Presença Esmagadora (45m, Vontade CD 32 ou desmaio).",
+      "abilities": "Híbrido Secreto: Combina Selamentos de Raio nos braços/costas com geração instantânea de energia pelo Cristal Carmesim no peito.",
+      "skills": "Luta +26, Fortitude +25, Intimidação +25, Iniciativa +24, Vontade +24",
+      "tactics": "Lidera a defesa de Thrum-Vik às 19h00 e testa a honra dos invasores da A.E.G.I.S. Classe B em busca do paradeiro de seu filho."
     }
   ]
 }

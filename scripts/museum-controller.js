@@ -109,6 +109,7 @@ class MuseumController {
         this.switchTo3DView();
         const campToEra = {
           camp_002: 'vertente_vilar',
+          camp_labirinto_2014: 'vertente_skjoldr_2014',
           camp_001: 'vertente_triangulo',
           camp_filantropo_oeht: 'vertente_oeht'
         };
@@ -434,9 +435,11 @@ class MuseumController {
     const modal = document.getElementById('museum-exhibition-modal');
     if (!modal) return;
 
-    const isFuture = (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
-    const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
-    const badgeStatus = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA' : 'EM ANDAMENTO');
+    const stLower = (camp.status || '').toLowerCase();
+    const catLower = (camp.category || '').toLowerCase();
+    const isFuture = Boolean(camp.is_future || stLower.includes('futur') || catLower === 'future');
+    const isCompleted = !isFuture && (catLower === 'completed' || stLower.includes('concl') || stLower.includes('finaliz'));
+    const badgeStatus = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA' : 'NOVA CAMPANHA (2014)');
 
     document.getElementById('exhibition-modal-badge').textContent = `DOSSIÊ DA CAMPANHA // ${badgeStatus}`;
     document.getElementById('exhibition-modal-title').textContent = camp.title || camp.name;
@@ -472,10 +475,23 @@ class MuseumController {
     if (!container) return;
 
     const geoPlace = hi.geographic_location || camp.country_location || `${hierarchy?.country?.name || ''} (${hierarchy?.region?.name || ''})`;
-    const isFuture = (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
-    const isCompleted = !isFuture && (camp.category === 'completed' || (camp.status && camp.status.toLowerCase().includes('concl')));
-    const statusText = isFuture ? '(Futura Campanha)' : (isCompleted ? 'Concluída' : 'Futura Campanha');
-    const statusColor = isFuture ? '#c084fc' : (isCompleted ? '#2ecc71' : 'var(--museum-gold-bright)');
+    const stLower = (camp.status || '').toLowerCase();
+    const catLower = (camp.category || '').toLowerCase();
+    const isFuture = Boolean(camp.is_future || stLower.includes('futur') || catLower === 'future');
+    const isCompleted = !isFuture && (catLower === 'completed' || stLower.includes('concl') || stLower.includes('finaliz'));
+    const statusText = isFuture ? '(Futura Campanha)' : (isCompleted ? 'Concluída' : (camp.status || 'Em Preparação (2014)'));
+    const statusColor = isFuture ? '#c084fc' : (isCompleted ? '#2ecc71' : '#38bdf8');
+
+    const exclusiveRulesHtml = (camp.foster_rule || camp.curfew_rule)
+      ? `
+        <div class="exhibition-card" style="border-color: rgba(56, 189, 248, 0.45); background: rgba(6, 18, 32, 0.9);">
+          <h4 class="exhibition-card__label" style="color: #38bdf8;">🛡️ Regras Exclusivas — Ilha do Labirinto (2014)</h4>
+          ${camp.foster_rule ? `<p class="exhibition-card__text" style="margin-bottom: 10px;"><strong>⚖️ Regra de Foster Metafísica:</strong> ${this.escapeHtml(camp.foster_rule)}</p>` : ''}
+          ${camp.curfew_rule ? `<p class="exhibition-card__text" style="margin-bottom: 12px;"><strong>🕰️ Toque das 19h00:</strong> ${this.escapeHtml(camp.curfew_rule)}</p>` : ''}
+          <div class="skjoldr-curfew-mount" data-curfew-mount></div>
+        </div>
+      `
+      : '';
 
     const pendingHtml = (camp.pending_documentation && camp.pending_documentation.length > 0)
       ? `
@@ -499,6 +515,7 @@ class MuseumController {
             <h4 class="exhibition-card__label">Contexto Histórico & Geopolítico Anterior</h4>
             <p class="exhibition-card__text">${this.escapeHtml(hi.historical_context || camp.historical_context || camp.exhibition_narrative?.prior_context || 'Registro em fase de documentação.')}</p>
           </div>
+          ${exclusiveRulesHtml}
           ${pendingHtml}
         </div>
         <div>
@@ -531,6 +548,9 @@ class MuseumController {
         </div>
       </div>
     `;
+    if (window.uiController?.mountCurfewClocks) {
+      window.uiController.mountCurfewClocks(container);
+    }
   }
 
   renderExhibitionTabNarrativa(camp) {
@@ -685,6 +705,41 @@ class MuseumController {
       `);
     }
 
+    // Operação Skjoldr-Ey (2014): Facções em Campo & As 6 Aldeias do Labirinto
+    if (Array.isArray(camp.factions_split) && camp.factions_split.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(56,189,248,0.4);">
+          <h4 class="exhibition-card__label" style="color:#38bdf8;">⚔️ Frentes &amp; Facções em Campo</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:10px; margin-top:8px;">
+            ${camp.factions_split.map(grp => `
+              <div style="background:rgba(6,16,30,0.88); border:1px solid rgba(56,189,248,0.28); border-radius:6px; padding:10px 12px;">
+                <div style="font-weight:700; color:#bae6fd; font-size:13px; margin-bottom:4px;">${this.escapeHtml(grp.name)}</div>
+                <div style="font-size:12.5px; color:#d4e5f7; line-height:1.45;">${this.escapeHtml(grp.mission)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
+    if (Array.isArray(camp.villages) && camp.villages.length > 0) {
+      blocks.push(`
+        <div class="exhibition-card" style="margin-top:16px; border-color:rgba(229,193,88,0.42);">
+          <h4 class="exhibition-card__label" style="color:#e5c158;">🏘️ As 6 Aldeias da Ilha de Skjoldr-Ey</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:10px; margin-top:8px;">
+            ${camp.villages.map(v => `
+              <div style="background:rgba(10,20,34,0.9); border:1px solid rgba(229,193,88,0.24); border-radius:6px; padding:10px 12px; display:flex; flex-direction:column; gap:4px;">
+                <div style="font-weight:700; color:#ffd700; font-size:13px;">${this.escapeHtml(v.name)}</div>
+                <div style="font-family:monospace; font-size:11px; color:#38bdf8;">Elemento: ${this.escapeHtml(v.element)}</div>
+                <div style="font-size:12px; color:#e6eef7;"><strong>Protetor:</strong> ${this.escapeHtml(v.protector)}</div>
+                <div style="font-size:12px; color:#b9cde0; line-height:1.4;">${this.escapeHtml(v.seal_style)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `);
+    }
+
     container.innerHTML = blocks.join('');
   }
 
@@ -735,14 +790,29 @@ class MuseumController {
               <img src="${this.safeUrl(ch.portrait, 'assets/icon-192.png')}" alt="${this.escapeHtml(ch.name)}" class="character-history-card__portrait" onerror="this.src='assets/icon-192.png'">
               <div class="character-history-card__info">
                 <h4 class="character-history-card__name">${this.escapeHtml(ch.name)}</h4>
-                <span class="character-history-card__title">${this.escapeHtml(ch.historical_title || ch.codename || ch.class || 'Figura Histórica')}</span>
-                <span class="character-status-pill ${stClass}">${this.escapeHtml(st.toUpperCase())}</span>
+                <span class="character-history-card__title">${this.escapeHtml(ch.faction_role || ch.historical_title || ch.codename || ch.class || 'Figura Histórica')}</span>
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                  <span class="character-status-pill ${stClass}">${this.escapeHtml(st.toUpperCase())}</span>
+                  <button type="button" class="btn-exhibition-open-sheet" data-open-sheet="${this.escapeHtml(ch.id)}" style="background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.4); color:#bae6fd; border-radius:4px; font-size:10.5px; font-weight:600; padding:2px 8px; cursor:pointer;">📋 Abrir Ficha</button>
+                </div>
               </div>
             </div>
           `;
         }).join('')}
       </div>
     `;
+
+    container.querySelectorAll('.btn-exhibition-open-sheet').forEach((btn) => {
+      btn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const cid = btn.dataset.openSheet;
+        this.closeExhibitionModal();
+        if (window.uiController) {
+          window.uiController.selectCharacter(cid);
+          window.uiController.openDrawer('characters');
+        }
+      });
+    });
 
     container.querySelectorAll('.character-history-card').forEach((card) => {
       card.addEventListener('click', () => {
@@ -794,7 +864,7 @@ class MuseumController {
     }));
 
     container.innerHTML = `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div class="exhibition-two-col">
         <div>
           <h4 class="exhibition-card__label">Relíquias & Objetos Históricos Vinculados</h4>
           ${relics.length ? relics.map((r) => `

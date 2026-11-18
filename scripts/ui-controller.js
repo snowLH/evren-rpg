@@ -473,6 +473,11 @@ class UIController {
     this.currentCampaignFilter = 'all';
     this.currentCharacterId = 'char_lucas';
     this.currentLocationId = 'loc_vilar';
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this._ensurePillarObserver(), { once: true });
+    } else {
+      setTimeout(() => this._ensurePillarObserver(), 0);
+    }
 
     // Estado dinâmico de PD dos personagens
     this.pdState = {
@@ -501,8 +506,11 @@ class UIController {
       'char_arquiteto': 99
     };
 
-    // Estado da Linha do Tempo
+    // Estado da Linha do Tempo & Central Unificada de Fichas (V4.0)
     this.selectedTimelineIndex = 0;
+    this.sheetCampaignFilter = 'all';
+    this.sheetFactionFilter = 'all';
+    this.skjoldrCurfewMinutes = 14 * 60; // 14:00 (Portões Abertos por padrão)
 
     // Estado da Bandeja de Dados Universal
     this.diceSelection = { type: 20, count: 1, modifier: 0 };
@@ -543,7 +551,90 @@ class UIController {
     if (btn) btn.setAttribute('aria-expanded', 'false');
   }
 
+  setActivePillar(pillarName = null) {
+    document.querySelectorAll('.hud-pillar-btn[data-pillar], .mobile-nav-btn[data-pillar]').forEach((btn) => {
+      btn.classList.toggle('is-active', Boolean(pillarName) && btn.dataset.pillar === pillarName);
+    });
+  }
+
+  openSheetsForCampaign(campId = 'all') {
+    this.closeModal('modal-campaigns-hub');
+    window.museumController?.closeExhibitionModal?.();
+    if (campId === 'camp_001' || campId === 'camp_filantropo_oeht') {
+      this.sheetCampaignFilter = 'legacy_pack';
+    } else if (campId === 'camp_002' || campId === 'camp_labirinto_2014' || campId === 'tomo4_68') {
+      this.sheetCampaignFilter = campId;
+    } else {
+      this.sheetCampaignFilter = 'all';
+    }
+    this.sheetFactionFilter = 'all';
+    document.querySelectorAll('#sheets-campaign-filters .sheets-filter-chip').forEach((b) => {
+      b.classList.toggle('active', b.dataset.sheetCamp === this.sheetCampaignFilter);
+    });
+    document.querySelectorAll('#sheets-faction-filters .sheets-subchip').forEach((b) => {
+      b.classList.toggle('active', b.dataset.sheetFaction === 'all');
+    });
+    this.setActivePillar('sheets');
+    this.openDrawer('characters');
+    this.renderCharactersList();
+    this.renderActiveCharacterSheet();
+  }
+
   setupEventListeners() {
+    // Barra Principal das 3 Áreas (Desktop + Mobile Bottom Navigation)
+    const openPillarCampaigns = () => {
+      this.closeDmMenu();
+      this.closeDrawer();
+      this.setActivePillar('campaigns');
+      this.renderCampaignsHub();
+      this.openModal('modal-campaigns-hub');
+      this.soundFX.playTacticalBeep();
+    };
+    const openPillarSheets = () => {
+      this.closeDmMenu();
+      document.querySelectorAll('.modal-backdrop.open, .modal-backdrop.active').forEach(m => m.classList.remove('open', 'active'));
+      this.setActivePillar('sheets');
+      this.openDrawer('characters');
+      this.soundFX.playTacticalBeep();
+    };
+    const openPillarTeia = () => {
+      this.closeDmMenu();
+      this.closeDrawer();
+      this.setActivePillar('teia');
+      window.teiaController?.openModal();
+    };
+
+    ['btn-pillar-campaigns', 'btn-mobile-campaigns'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('click', openPillarCampaigns);
+    });
+    ['btn-pillar-sheets', 'btn-mobile-sheets'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('click', openPillarSheets);
+    });
+    ['btn-pillar-teia', 'btn-mobile-teia'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('click', openPillarTeia);
+    });
+
+    // Filtros em 2 Níveis na Central de Fichas (Área 2)
+    document.querySelectorAll('#sheets-campaign-filters .sheets-filter-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        this.sheetCampaignFilter = chip.dataset.sheetCamp || 'all';
+        document.querySelectorAll('#sheets-campaign-filters .sheets-filter-chip').forEach((b) => b.classList.toggle('active', b === chip));
+        this.renderCharactersList();
+        this.renderActiveCharacterSheet();
+        this.soundFX.playTacticalBeep();
+      });
+    });
+
+    document.querySelectorAll('#sheets-faction-filters .sheets-subchip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        this.sheetFactionFilter = chip.dataset.sheetFaction || 'all';
+        document.querySelectorAll('#sheets-faction-filters .sheets-subchip').forEach((b) => b.classList.toggle('active', b === chip));
+        this.renderCharactersList();
+        this.renderActiveCharacterSheet();
+        this.soundFX.playTacticalBeep();
+      });
+    });
+
     // Menu Unificado Central: Escudo do Mestre
     const dmBtn = document.getElementById('btn-dm-shield-menu');
     const dmPopover = document.getElementById('dm-shield-popover');
@@ -580,6 +671,7 @@ class UIController {
     document.getElementById('btn-hud-brand-home')?.addEventListener('click', () => {
       this.closeDmMenu();
       this.closeDrawer();
+      this.setActivePillar(null);
       document.querySelectorAll('.modal-backdrop.open, .modal-backdrop.active').forEach(m => m.classList.remove('open', 'active'));
       window.museumController?.switchTo3DView?.();
       if (window.planetTimeline) {
@@ -941,6 +1033,34 @@ class UIController {
     }
   }
 
+  syncActivePillarFromState() {
+    this._ensurePillarObserver();
+    const drawerOpen = document.getElementById('side-drawer')?.classList.contains('open');
+    const teiaOpen = document.getElementById('modal-teia-do-tempo')?.classList.contains('active');
+    const campHubOpen = document.getElementById('modal-campaigns-hub')?.classList.contains('open')
+      || document.getElementById('modal-campaign-story')?.classList.contains('open')
+      || document.getElementById('museum-exhibition-modal')?.classList.contains('is-open');
+    if (teiaOpen) {
+      this.setActivePillar('teia');
+    } else if (campHubOpen) {
+      this.setActivePillar('campaigns');
+    } else if (drawerOpen) {
+      this.setActivePillar('sheets');
+    } else {
+      this.setActivePillar(null);
+    }
+  }
+
+  _ensurePillarObserver() {
+    if (this._pillarObserverInstalled || typeof MutationObserver === 'undefined') return;
+    this._pillarObserverInstalled = true;
+    const obs = new MutationObserver(() => this.syncActivePillarFromState());
+    ['side-drawer', 'modal-teia-do-tempo', 'modal-campaigns-hub', 'modal-campaign-story', 'museum-exhibition-modal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+
   /* --- GAVETA LATERAL --- */
   openDrawer(tabKey = 'characters', forceDive = false) {
     this.closeDmMenu();
@@ -953,6 +1073,7 @@ class UIController {
         if (drawer) {
           drawer.classList.add('open');
           this.switchTab(tabKey);
+          this.syncActivePillarFromState();
           if (window.app?.mapEngine?.map) {
             setTimeout(() => window.app.mapEngine.map.invalidateSize(), 320);
           }
@@ -965,6 +1086,7 @@ class UIController {
     if (drawer) {
       drawer.classList.add('open');
       this.switchTab(tabKey);
+      this.syncActivePillarFromState();
       if (window.app?.mapEngine?.map) {
         setTimeout(() => window.app.mapEngine.map.invalidateSize(), 320);
       }
@@ -975,6 +1097,7 @@ class UIController {
     const drawer = document.getElementById('side-drawer');
     if (drawer) {
       drawer.classList.remove('open');
+      this.syncActivePillarFromState();
       if (window.app?.mapEngine?.map) {
         setTimeout(() => window.app.mapEngine.map.invalidateSize(), 320);
       }
@@ -997,16 +1120,113 @@ class UIController {
     }
   }
 
-  /* --- FICHAS DE PERSONAGEM --- */
+  /* --- FICHAS DE PERSONAGEM & TOMO IV (ÁREA 2 UNIFICADA) --- */
+  classifyCharacterFaction(c) {
+    if (!c) return 'outros';
+    const playerLower = (c.player || '').toLowerCase();
+    const grpLower = (c.faction_group || '').toLowerCase();
+    const originLower = (c.origin || '').toLowerCase();
+    if (playerLower.includes('jogador') || playerLower.includes('slot') || c.id.includes('slot') || c.id.includes('player') || ['char_rafael', 'char_helena', 'char_diego', 'char_bia', 'char_arthur', 'char_lucas'].includes(c.id)) {
+      return 'players';
+    }
+    if (grpLower.includes('nativ') || originLower.includes('skjoldr') || originLower.includes('thrum') || originLower.includes('eld-borg') || originLower.includes('haf-gar') || originLower.includes('stein-vidr') || Boolean(c.metaphysical_island_system)) {
+      return 'nativos';
+    }
+    if (grpLower.includes('soberan') || ['char_arquiteto', 'char_oeht'].includes(c.id)) {
+      return 'soberanos';
+    }
+    if (grpLower.includes('a.e.g.i.s') || originLower.includes('a.e.g.i.s') || c.id === 'char_kaelen' || c.id === 'char_arthur_valente' || c.id.includes('aegis')) {
+      return 'aegis';
+    }
+    return 'outros';
+  }
+
   renderCharactersList() {
     const container = document.getElementById('character-selector-row');
     if (!container) return;
 
-    const characters = this.dataLoader.getCharacters(this.currentCampaignFilter);
     container.innerHTML = '';
+    const campFilter = this.sheetCampaignFilter || 'all';
+    const facFilter = this.sheetFactionFilter || 'all';
+
+    // Modo 1: Tomo IV Completo (68 Fichas Catalogadas dentro da Área 2)
+    if (campFilter === 'tomo4_68') {
+      let t4 = this.dataLoader.getTomo4Entities() || [];
+      if (facFilter === 'aegis') {
+        t4 = t4.filter(e => e.category === 'aegis_elite');
+      } else if (facFilter === 'soberanos') {
+        t4 = t4.filter(e => ['soberanos_alma', 'skjoldr_2014', 'vera_cruz_vilar', 'videos', 'lendas_mundiais'].includes(e.category));
+      } else if (facFilter === 'nativos') {
+        t4 = t4.filter(e => e.category === 'skjoldr_2014');
+      }
+
+      if (!t4.length) {
+        container.innerHTML = '<div style="font-size:11.5px; color:#8da4be; padding:6px;">Nenhuma ficha do Tomo IV neste subfiltro.</div>';
+        return;
+      }
+
+      if (!t4.some(x => x.id === this.currentTomo4InlineId)) {
+        this.currentTomo4InlineId = t4[0].id;
+      }
+      this.activeSheetKind = 'tomo4';
+
+      t4.forEach(item => {
+        const pill = document.createElement('button');
+        pill.className = `entity-pill ${item.id === this.currentTomo4InlineId ? 'active' : ''}`;
+        pill.innerHTML = `<span>#${this.escapeHtml(item.num)} ${this.escapeHtml(item.name)}</span><span class="entity-pill-sub">${this.escapeHtml(item.nd || item.mda || '')}</span>`;
+        pill.addEventListener('click', () => {
+          this.activeSheetKind = 'tomo4';
+          this.currentTomo4InlineId = item.id;
+          document.querySelectorAll('#character-selector-row .entity-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          this.renderActiveCharacterSheet();
+          this.soundFX.playTacticalBeep();
+        });
+        container.appendChild(pill);
+      });
+      return;
+    }
+
+    // Modo 2: Fichas das Campanhas (2014, Vilar, Triângulo & Belvedere)
+    this.activeSheetKind = 'char';
+    let characters = this.dataLoader.getAllCharacters ? this.dataLoader.getAllCharacters() : this.dataLoader.getCharacters('all');
+
+    if (campFilter === 'camp_labirinto_2014' || campFilter === 'camp_002') {
+      const campChars = new Set(this.dataLoader.getCharacters(campFilter).map(c => c.id));
+      characters = characters.filter(c => campChars.has(c.id));
+    } else if (campFilter === 'legacy_pack') {
+      const legacyIds = new Set([
+        ...this.dataLoader.getCharacters('camp_001').map(c => c.id),
+        ...this.dataLoader.getCharacters('camp_filantropo_oeht').map(c => c.id)
+      ]);
+      characters = characters.filter(c => legacyIds.has(c.id));
+    }
+
+    if (facFilter !== 'all') {
+      characters = characters.filter(c => {
+        const grp = this.classifyCharacterFaction(c);
+        if (facFilter === 'players') return grp === 'players' || (c.player && (c.player.toLowerCase().includes('jogador') || c.player.toLowerCase().includes('slot')));
+        if (facFilter === 'aegis') return grp === 'aegis' || (c.campaign_ids || []).includes('camp_labirinto_2014') && (c.faction_group || '').includes('A.E.G.I.S');
+        if (facFilter === 'nativos') return grp === 'nativos';
+        if (facFilter === 'soberanos') return grp === 'soberanos';
+        return true;
+      });
+    }
+
+    if (!characters.length) {
+      container.innerHTML = `<div style="font-size:11.5px; color:#8da4be; padding:6px;">Nenhuma ficha nesta combinação. <button type="button" class="btn-secondary" style="font-size:11px; padding:2px 8px; margin-left:6px;" onclick="window.uiController.openBestiaryModal()">Abrir 68 Fichas do Tomo IV</button></div>`;
+      return;
+    }
+
+    if (!characters.some(c => c.id === this.currentCharacterId)) {
+      this.currentCharacterId = characters[0].id;
+    }
 
     const campShort = (c) => {
-      const cid = c.campaign_ids?.[0] || '';
+      const cid = c.campaign_id || c.campaign_ids?.[0] || '';
+      if (cid === 'camp_labirinto_2014') {
+        return this.classifyCharacterFaction(c) === 'nativos' ? '2014 • Ilha' : '2014 • AEGIS';
+      }
       if (cid === 'camp_002') return 'Vilar';
       if (cid === 'camp_001') return 'Triângulo';
       if (cid === 'camp_filantropo_oeht') return 'Belvedere';
@@ -1019,6 +1239,7 @@ class UIController {
       const sub = campShort(char);
       pill.innerHTML = `<span>${this.escapeHtml(char.name)}</span>${sub ? `<span class="entity-pill-sub">${this.escapeHtml(sub)}</span>` : ''}`;
       pill.addEventListener('click', () => {
+        this.activeSheetKind = 'char';
         this.currentCharacterId = char.id;
         document.querySelectorAll('#character-selector-row .entity-pill').forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
@@ -1030,14 +1251,81 @@ class UIController {
   }
 
   selectCharacter(charId) {
+    this.activeSheetKind = 'char';
     this.currentCharacterId = charId;
+    if (this.sheetCampaignFilter === 'tomo4_68') {
+      this.sheetCampaignFilter = 'all';
+      this.sheetFactionFilter = 'all';
+    }
     this.renderCharactersList();
+    if (!document.querySelector('#character-selector-row .entity-pill.active')) {
+      this.sheetCampaignFilter = 'all';
+      this.sheetFactionFilter = 'all';
+      this.renderCharactersList();
+    }
+    document.querySelectorAll('#sheets-campaign-filters .sheets-filter-chip').forEach((b) => {
+      b.classList.toggle('active', b.dataset.sheetCamp === this.sheetCampaignFilter);
+    });
+    document.querySelectorAll('#sheets-faction-filters .sheets-subchip').forEach((b) => {
+      b.classList.toggle('active', b.dataset.sheetFaction === this.sheetFactionFilter);
+    });
     this.renderActiveCharacterSheet();
   }
 
   renderActiveCharacterSheet() {
     const container = document.getElementById('character-sheet-container');
     if (!container) return;
+
+    // Preview Inline de Ficha do Tomo IV (68 Fichas) quando o filtro Tomo IV estiver selecionado
+    if (this.activeSheetKind === 'tomo4' && this.currentTomo4InlineId) {
+      const item = this.dataLoader.getTomo4EntityById(this.currentTomo4InlineId);
+      if (item) {
+        const st = item.stats || {};
+        const at = st.attributes || {};
+        const e = (v) => this.escapeHtml(v ?? '');
+        const mdaClean = item.mda ? String(item.mda).replace(/^MDA\s*/i, '') : '—';
+        container.innerHTML = `
+          <div class="character-sheet-card">
+            <div class="cris-header-wrap">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                <span class="badge-tag prime">TOMO IV • FICHA #${e(item.num)}</span>
+                <button type="button" class="btn-secondary" style="font-size:0.72rem; padding:3px 9px; border-color:#e5c158; color:#e5c158;" onclick="window.uiController.openBestiaryModal('${e(item.category)}', '${e(item.id)}')">📚 Abrir Compêndio (68)</button>
+              </div>
+              <h3 class="cris-name">${e(item.name)}</h3>
+              <div class="cris-codename">${e(item.title || item.category_label)} • ${e(item.nd || '')} • MDA ${e(mdaClean)}</div>
+              <div class="cris-meta-grid" style="margin-top:8px;">
+                <div class="cris-meta-cell"><span class="cris-meta-label">TIPO</span><span class="cris-meta-val">${e(item.type)}</span></div>
+                <div class="cris-meta-cell"><span class="cris-meta-label">ORIGEM</span><span class="cris-meta-val">${e(item.origin)}</span></div>
+                <div class="cris-meta-cell"><span class="cris-meta-label">ELEMENTO</span><span class="cris-meta-val">${e(item.element || '—')}</span></div>
+              </div>
+            </div>
+            <div class="cris-stats-row">
+              <div class="cris-stat-box"><div class="cris-stat-header"><span style="color:#ff5e78;">PV</span><span>${e(st.pv || '—')}</span></div></div>
+              <div class="cris-stat-box"><div class="cris-stat-header"><span style="color:#ffa726;">PD</span><span>${e(st.pd || '—')}</span></div></div>
+              <div class="cris-stat-box"><div class="cris-stat-header"><span style="color:#00e5ff;">EA</span><span>${e(st.ea || '—')}</span></div></div>
+              <div class="cris-stat-box"><div class="cris-stat-header"><span style="color:#c084fc;">RD / EST</span><span>${e(st.rd || st.est || '—')}</span></div></div>
+            </div>
+            <div class="cris-attributes-container">
+              <div class="cris-attrs-grid">
+                <div class="cris-attr-monument"><span class="cris-attr-tag">FOR</span><span class="cris-attr-num">${e(at.FOR ?? '—')}</span></div>
+                <div class="cris-attr-monument"><span class="cris-attr-tag">VIG</span><span class="cris-attr-num">${e(at.VIG ?? '—')}</span></div>
+                <div class="cris-attr-monument"><span class="cris-attr-tag">AGI</span><span class="cris-attr-num">${e(at.AGI ?? '—')}</span></div>
+                <div class="cris-attr-monument"><span class="cris-attr-tag">PRE</span><span class="cris-attr-num">${e(at.PRE ?? '—')}</span></div>
+                <div class="cris-attr-monument"><span class="cris-attr-tag">INT</span><span class="cris-attr-num">${e(at.INT ?? '—')}</span></div>
+              </div>
+            </div>
+            <div class="cris-abilities-section">
+              <div class="section-label">⚔️ Combate, Poderes &amp; Fraqueza</div>
+              <div class="cris-ability-pill">${e(item.description)}</div>
+              ${item.offense ? `<div class="cris-ability-pill">⚡ <strong>Ofensiva:</strong> ${e(item.offense)}</div>` : ''}
+              ${item.abilities ? `<div class="cris-ability-pill">🛡️ <strong>Habilidades:</strong> ${e(item.abilities)}</div>` : ''}
+              ${item.weakness ? `<div class="cris-ability-pill" style="border-left-color:#ef4444;">⚠️ <strong>Fraqueza:</strong> ${e(item.weakness)}</div>` : ''}
+            </div>
+          </div>
+        `;
+        return;
+      }
+    }
 
     const char = this.dataLoader.getCharacterById(this.currentCharacterId);
     if (!char) {
@@ -1060,28 +1348,28 @@ class UIController {
       lifeStatusClass = 'quarantine';
     }
 
-    // Estatísticas CRIS (PV, PE, SAN, Defesa, Proteção)
+    // Estatísticas CRIS Normalizadas (aceita formato C.R.I.S. clássico e formato Skjoldr-Ey 2014)
     const stats = char.stats || {};
-    const pvCur = stats.pv_current ?? stats.pv?.current ?? 25;
-    const pvMax = stats.pv_max ?? stats.pv?.max ?? 25;
-    const peCur = stats.pe_current ?? stats.pe?.current ?? 15;
-    const peMax = stats.pe_max ?? stats.pe?.max ?? 15;
-    const sanCur = stats.san_current ?? stats.san?.current ?? 20;
-    const sanMax = stats.san_max ?? stats.san?.max ?? 30;
-    const defesa = stats.defesa ?? 10;
-    const protecao = typeof stats.protecao === 'object' ? `RD ${stats.protecao.rd || stats.protecao || 0}` : (stats.protecao || "Nenhuma");
+    const pvCur = stats.pv_current ?? stats.pv?.current ?? (typeof stats.pv === 'number' ? stats.pv : 25);
+    const pvMax = stats.pv_max ?? stats.max_pv ?? stats.pv?.max ?? pvCur ?? 25;
+    const peCur = stats.pe_current ?? stats.pe?.current ?? (typeof stats.pd === 'number' ? stats.pd : 15);
+    const peMax = stats.pe_max ?? stats.max_pd ?? stats.max_pe ?? stats.pe?.max ?? peCur ?? 15;
+    const sanCur = stats.san_current ?? stats.san?.current ?? (typeof stats.san === 'number' ? stats.san : 20);
+    const sanMax = stats.san_max ?? stats.max_san ?? stats.san?.max ?? sanCur ?? 30;
+    const defesa = stats.defesa ?? (stats.rd ? (10 + Number(stats.rd)) : 10);
+    const protecao = typeof stats.protecao === 'object' ? `RD ${stats.protecao.rd || stats.protecao || 0}` : (stats.protecao || (stats.rd ? `RD ${stats.rd}` : "Nenhuma"));
 
     const pvRatio = Math.max(0, Math.min(100, (pvCur / (pvMax || 1)) * 100));
     const peRatio = Math.max(0, Math.min(100, (peCur / (peMax || 1)) * 100));
     const sanRatio = Math.max(0, Math.min(100, (sanCur / (sanMax || 1)) * 100));
 
-    // Atributos Canônicos CRIS (AGI, FOR, INT, PRE, VIG)
+    // Atributos Canônicos CRIS (aceita chaves em minúsculas e maiúsculas FOR/VIG/AGI/PRE/INT)
     const attrs = char.attributes || {};
-    const agi = attrs.Agilidade ?? attrs.agi ?? 1;
-    const forca = attrs.Força ?? attrs.for ?? 1;
-    const int = attrs.Intelecto ?? attrs.int ?? 1;
-    const pre = attrs.Presença ?? attrs.pre ?? 1;
-    const vig = attrs.Vigor ?? attrs.vig ?? 1;
+    const agi = attrs.Agilidade ?? attrs.agi ?? attrs.AGI ?? 1;
+    const forca = attrs.Força ?? attrs.for ?? attrs.FOR ?? 1;
+    const int = attrs.Intelecto ?? attrs.int ?? attrs.INT ?? 1;
+    const pre = attrs.Presença ?? attrs.pre ?? attrs.PRE ?? 1;
+    const vig = attrs.Vigor ?? attrs.vig ?? attrs.VIG ?? 1;
 
     // Perícias CRIS (28 canônicas)
     const rawSkills = char.skills || {};
@@ -1349,6 +1637,40 @@ class UIController {
         <!-- RELÍQUIAS -->
         ${relicsHtml}
 
+        <!-- SISTEMA METAFÍSICO DA ILHA DE SKJOLDR-EY (REGRA DE FOSTER) -->
+        ${(() => {
+          const mis = char.metaphysical_island_system;
+          if (!mis) return '';
+          const typeLabel = mis.type === 'HYBRID_SECRET'
+            ? 'HÍBRIDO SECRETO (TATUAGENS + CRISTAL OCULTO)'
+            : (mis.type === 'CRYSTAL_AND_SEAL' ? 'PORTADOR DE CRISTAL NATAL + SELAMENTO' : 'SISTEMA DE SELAMENTO DE SKJOLDR-EY');
+          const tattoosHtml = (mis.seal_tattoos || []).map(t => `<div class="cris-ability-pill" style="border-left-color:#38bdf8;">⚡ ${this.escapeHtml(t)}</div>`).join('');
+          const nc = mis.natal_crystal;
+          const crystalHtml = nc ? `
+            <div class="cris-ability-pill" style="border-left-color:${nc.has_crystal ? '#ef4444' : '#64748b'}; background:rgba(30,8,16,0.72);">
+              💎 <strong>Cristal Natal (${nc.has_crystal ? (nc.secret ? 'SECRETO' : 'ATIVO') : 'Inativo'}):</strong> ${this.escapeHtml(nc.location_on_body || '')}<br>
+              <span style="color:#dce8f5;">${this.escapeHtml(nc.effect || '')}</span>
+              ${nc.fatal_flaw ? `<div style="margin-top:4px; color:#fda4af;">⚠️ <strong>Falha Fatal:</strong> ${this.escapeHtml(nc.fatal_flaw)}</div>` : ''}
+            </div>
+          ` : '';
+          const hook = mis.child_player_hook;
+          const linkedChar = hook?.linked_character_id ? this.dataLoader.getCharacterById(hook.linked_character_id) : null;
+          const hookHtml = hook ? `
+            <div class="cris-ability-pill" style="border-left-color:#e5c158; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+              <div>🧬 <strong>Vínculo Familiar (${this.escapeHtml(hook.status || '')}):</strong> ${this.escapeHtml(hook.notes || '')}</div>
+              ${linkedChar ? `<button type="button" class="btn-secondary" style="font-size:0.7rem; padding:3px 9px; border-color:#e5c158; color:#ffd700;" onclick="window.uiController.selectCharacter('${this.escapeHtml(linkedChar.id)}')">Ver ${this.escapeHtml(linkedChar.name)}</button>` : ''}
+            </div>
+          ` : '';
+          return `
+            <div class="cris-abilities-section" style="border-left-color:#e5c158;">
+              <div class="section-label" style="color:#e5c158;">🛡️ ${this.escapeHtml(typeLabel)}</div>
+              ${tattoosHtml}
+              ${crystalHtml}
+              ${hookHtml}
+            </div>
+          `;
+        })()}
+
         <!-- CITAÇÃO MARCANTE -->
         ${char.quote ? `
           <div class="cris-quote-box">
@@ -1378,28 +1700,35 @@ class UIController {
 
     if (!char.stats) char.stats = {};
 
-    let curKey, maxKey, statLabel;
+    let curKey, maxKey, altCurKey, altMaxKey, statLabel;
     if (statName === 'pv') {
       curKey = 'pv_current';
       maxKey = 'pv_max';
+      altCurKey = 'pv';
+      altMaxKey = 'max_pv';
       statLabel = 'Pontos de Vida (PV)';
     } else if (statName === 'pe') {
       curKey = 'pe_current';
       maxKey = 'pe_max';
-      statLabel = 'Pontos de Esforço (PE)';
+      altCurKey = 'pd';
+      altMaxKey = 'max_pd';
+      statLabel = 'Pontos de Esforço (PE / PD)';
     } else if (statName === 'san') {
       curKey = 'san_current';
       maxKey = 'san_max';
+      altCurKey = 'san';
+      altMaxKey = 'max_san';
       statLabel = 'Sanidade (SAN)';
     } else {
       return;
     }
 
-    const maxVal = char.stats[maxKey] ?? char.stats[statName]?.max ?? 25;
-    const oldVal = char.stats[curKey] ?? char.stats[statName]?.current ?? maxVal;
+    const maxVal = char.stats[maxKey] ?? char.stats[altMaxKey] ?? char.stats[statName]?.max ?? 25;
+    const oldVal = char.stats[curKey] ?? (typeof char.stats[altCurKey] === 'number' ? char.stats[altCurKey] : undefined) ?? char.stats[statName]?.current ?? maxVal;
     const newVal = Math.max(0, Math.min(maxVal, oldVal + delta));
 
     char.stats[curKey] = newVal;
+    if (typeof char.stats[altCurKey] === 'number') char.stats[altCurKey] = newVal;
     if (char.stats[statName] && typeof char.stats[statName] === 'object') {
       char.stats[statName].current = newVal;
     }
@@ -1686,6 +2015,73 @@ ${char.summary || 'Sem registro adicional.'}
   }
 
   /* ==========================================================================
+     RELÓGIO INTERATIVO DO TOQUE DE RECOLHER (19H00 — SKJOLDR-EY 2014)
+     ========================================================================== */
+  renderSkjoldrCurfewClockHtml() {
+    const mins = ((this.skjoldrCurfewMinutes ?? 840) % 1440 + 1440) % 1440;
+    const hh = Math.floor(mins / 60);
+    const mm = mins % 60;
+    const hhStr = String(hh).padStart(2, '0');
+    const mmStr = String(mm).padStart(2, '0');
+    const isCurfew = hh >= 19 || hh < 6;
+    const isWarning = !isCurfew && hh === 18;
+    const stateClass = isCurfew ? 'is-curfew' : (isWarning ? 'is-warning' : 'is-day');
+    const stateTitle = isCurfew
+      ? '🌑 TOQUE DE RECOLHER ATIVO (19h00–06h00) — Aldeias Trancadas / Saída das Bestas Noturnas'
+      : (isWarning
+        ? '⚠️ CREPÚSCULO CRÍTICO (18h–19h) — Última hora antes do fechamento dos portões'
+        : '☀️ PORTÕES ABERTOS (06h00–19h00) — Exploração do Labirinto Vivo autorizada');
+
+    return `
+      <div class="skjoldr-curfew-widget ${stateClass}">
+        <div class="curfew-head">
+          <div>
+            <span class="curfew-kicker">RELÓGIO DO LABIRINTO (TOQUE DAS 19H00)</span>
+            <div class="curfew-time-display">${hhStr}:${mmStr}</div>
+          </div>
+          <div class="curfew-controls">
+            <button type="button" class="curfew-step-btn" data-curfew-delta="-60">-1h</button>
+            <button type="button" class="curfew-step-btn" data-curfew-delta="-30">-30m</button>
+            <button type="button" class="curfew-step-btn" data-curfew-delta="30">+30m</button>
+            <button type="button" class="curfew-step-btn" data-curfew-delta="60">+1h</button>
+          </div>
+        </div>
+        <div class="curfew-status-banner">${stateTitle}</div>
+        <div class="curfew-presets">
+          <button type="button" class="curfew-preset-btn ${hh === 8 && mm === 0 ? 'active' : ''}" data-curfew-set="480">08:00 Dia</button>
+          <button type="button" class="curfew-preset-btn ${hh === 14 && mm === 0 ? 'active' : ''}" data-curfew-set="840">14:00 Exploração</button>
+          <button type="button" class="curfew-preset-btn ${hh === 18 && mm === 30 ? 'active' : ''}" data-curfew-set="1110">18:30 Alerta</button>
+          <button type="button" class="curfew-preset-btn ${hh === 19 && mm === 0 ? 'active' : ''}" data-curfew-set="1140">19:00 Recolher</button>
+          <button type="button" class="curfew-preset-btn ${hh === 23 && mm === 0 ? 'active' : ''}" data-curfew-set="1380">23:00 Feras</button>
+        </div>
+      </div>
+    `;
+  }
+
+  mountCurfewClocks(root = document) {
+    const scope = root || document;
+    scope.querySelectorAll('[data-curfew-mount]').forEach((el) => {
+      el.innerHTML = this.renderSkjoldrCurfewClockHtml();
+      el.querySelectorAll('[data-curfew-delta]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.skjoldrCurfewMinutes = ((this.skjoldrCurfewMinutes + Number(btn.dataset.curfewDelta || 0)) % 1440 + 1440) % 1440;
+          this.mountCurfewClocks(document);
+          this.soundFX?.playTacticalBeep();
+        });
+      });
+      el.querySelectorAll('[data-curfew-set]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.skjoldrCurfewMinutes = Number(btn.dataset.curfewSet || 840);
+          this.mountCurfewClocks(document);
+          this.soundFX?.playTacticalBeep();
+        });
+      });
+    });
+  }
+
+  /* ==========================================================================
      CENTRAL DE HISTÓRIAS & SAGAS (HUB DE CAMPANHAS)
      ========================================================================== */
   renderCampaignsHub(filter = 'all') {
@@ -1693,13 +2089,22 @@ ${char.summary || 'Sem registro adicional.'}
     if (!grid) return;
 
     let campaigns = this.dataLoader.getCampaigns();
-    const isFutureCamp = (c) => (c.status && c.status.toLowerCase().includes('futur')) || c.id !== 'camp_002';
-    const isCompletedCamp = (c) => !isFutureCamp(c) && (c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída'));
+    const isFutureCamp = (c) => {
+      const st = (c.status || '').toLowerCase();
+      return Boolean(c.is_future || c.category === 'future' || st.includes('futur'));
+    };
+    const isCompletedCamp = (c) => {
+      if (isFutureCamp(c)) return false;
+      const st = (c.status || '').toLowerCase();
+      return c.category === 'completed' || st.includes('finalizada') || st.includes('concluída') || st.includes('concluida');
+    };
 
     if (filter === 'completed') {
       campaigns = campaigns.filter(isCompletedCamp);
-    } else if (filter === 'future' || filter === 'ongoing') {
-      campaigns = campaigns.filter(c => filter === 'future' ? isFutureCamp(c) : (!isFutureCamp(c) && !isCompletedCamp(c)));
+    } else if (filter === 'future') {
+      campaigns = campaigns.filter(isFutureCamp);
+    } else if (filter === 'ongoing') {
+      campaigns = campaigns.filter(c => !isFutureCamp(c) && !isCompletedCamp(c));
     }
 
     if (campaigns.length === 0) {
@@ -1708,9 +2113,9 @@ ${char.summary || 'Sem registro adicional.'}
     }
 
     grid.innerHTML = campaigns.map(c => {
-      const isFuture = (c.status && c.status.toLowerCase().includes('futur')) || c.id !== 'camp_002';
-      const isCompleted = !isFuture && (c.category === 'completed' || c.status?.toLowerCase().includes('finalizada') || c.status?.toLowerCase().includes('concluída'));
-      const statusBadge = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA / HISTÓRICA' : 'EM ANDAMENTO');
+      const isFuture = isFutureCamp(c);
+      const isCompleted = isCompletedCamp(c);
+      const statusBadge = isFuture ? '(FUTURA CAMPANHA)' : (isCompleted ? 'CONCLUÍDA / HISTÓRICA' : 'NOVA CAMPANHA (2014)');
       const statusClass = isFuture ? 'future' : (isCompleted ? 'completed' : 'ongoing');
 
       // Agentes participantes
@@ -1725,6 +2130,14 @@ ${char.summary || 'Sem registro adicional.'}
           </button>
         `;
       }).join('');
+
+      const villagesBadge = Array.isArray(c.villages) && c.villages.length > 0
+        ? `<div class="campaign-outcome-box" style="border-color:rgba(56,189,248,0.38);"><strong>AS 6 ALDEIAS &amp; REGRA DE FOSTER:</strong> ${c.villages.map(v => this.escapeHtml(v.name.split('(')[0].trim())).join(' • ')}</div>`
+        : '';
+
+      const curfewMount = c.id === 'camp_labirinto_2014'
+        ? `<div class="skjoldr-curfew-mount" data-curfew-mount></div>`
+        : '';
 
       return `
         <div class="campaign-card ${statusClass}">
@@ -1744,34 +2157,42 @@ ${char.summary || 'Sem registro adicional.'}
             ${this.escapeHtml(c.synopsis || c.description || '')}
           </div>
 
+          ${villagesBadge}
+          ${curfewMount}
+
           ${c.outcome ? `
             <div class="campaign-outcome-box">
-              <strong>DESFECHO HISTÓRICO:</strong><br>
+              <strong>DESFECHO / ESTADO:</strong><br>
               ${this.escapeHtml(c.outcome)}
             </div>
           ` : ''}
 
           ${participantsHtml ? `
             <div class="campaign-participants-row">
-              <span style="font-family: monospace; font-size: 0.72rem; color: #8da4be;">AGENTES ENVOLVIDOS:</span>
+              <span style="font-family: monospace; font-size: 0.72rem; color: #8da4be;">FICHAS &amp; ELENCO (${participantIds.length}):</span>
               ${participantsHtml}
             </div>
           ` : ''}
 
           <div class="campaign-card-actions">
             <button class="btn-campaign-story-open" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.uiController.openCampaignStory('${c.id}');">
-              📖 Dossiê Completo
+              📖 Dossiê &amp; Regras
+            </button>
+            <button class="btn-secondary" style="border-color: #38bdf8; color: #bae6fd; font-size: 0.78rem; padding: 6px 12px;" onclick="window.uiController.openSheetsForCampaign('${c.id}');">
+              👤 Fichas
             </button>
             <button class="btn-secondary" style="border-color: #ffd700; color: #ffd700; font-size: 0.78rem; padding: 6px 12px;" onclick="window.uiController.closeModal('modal-campaigns-hub'); if (window.museumController) window.museumController.switchTo3DView(); if (window.planetEngine) window.planetEngine.focusCampaign('${c.id}');">
-              🪐 Focar no Planeta 3D
+              🪐 Planeta 3D
             </button>
             <button class="btn-campaign-dive" onclick="window.uiController.closeModal('modal-campaigns-hub'); window.mergulhoNasNuvens('${c.id}');">
-              📍 Mapa Tático 2D
+              📍 Mapa 2D
             </button>
           </div>
         </div>
       `;
     }).join('');
+
+    this.mountCurfewClocks(grid);
   }
 
   /* ==========================================================================
@@ -1804,9 +2225,10 @@ ${char.summary || 'Sem registro adicional.'}
     const modalBody = document.getElementById('campaign-story-content');
     if (!modalBody) return;
 
-    const isFuture = (camp.status && camp.status.toLowerCase().includes('futur')) || camp.id !== 'camp_002';
-    const isCompleted = !isFuture && (camp.category === 'completed' || camp.status?.toLowerCase().includes('finalizada') || camp.status?.toLowerCase().includes('concluída'));
-    const statusBadge = isFuture ? '🔮 (FUTURA CAMPANHA)' : (isCompleted ? '📜 CONCLUÍDA / ARQUIVADA' : '🟢 EM ANDAMENTO / ATIVA');
+    const stLower = (camp.status || '').toLowerCase();
+    const isFuture = Boolean(camp.is_future || camp.category === 'future' || stLower.includes('futur'));
+    const isCompleted = !isFuture && (camp.category === 'completed' || stLower.includes('finalizada') || stLower.includes('concluída'));
+    const statusBadge = isFuture ? '🔮 (FUTURA CAMPANHA)' : (isCompleted ? '📜 CONCLUÍDA / ARQUIVADA' : '🛡️ NOVA CAMPANHA (2014)');
     const statusClass = isFuture ? 'future' : (isCompleted ? 'completed' : 'ongoing');
 
     // Personagens vinculados a esta campanha
@@ -2018,6 +2440,7 @@ ${char.summary || 'Sem registro adicional.'}
     const inferZoneLabel = (loc) => {
       if (loc.zone && loc.zone.trim()) return loc.zone;
       if (loc.region && loc.region.trim()) return loc.region;
+      if (loc.country_id === 'country_skjoldr_ey') return 'Atlântico Norte (Ilha de Skjoldr-Ey — 780 km²)';
       if (loc.country_id === 'country_mexico') return 'México (Aguascalientes / Serra Subterrânea)';
       if (loc.country_id === 'country_suica') return 'Genebra, Suíça';
       if (loc.country_id === 'country_brasil') return 'Arquipélago de Vera Cruz das Almas';
@@ -2536,6 +2959,7 @@ ${char.summary || 'Sem registro adicional.'}
     if (modal) {
       modal.classList.add('open', 'active');
     }
+    this.syncActivePillarFromState();
   }
 
   closeModal(modalId) {
@@ -2546,6 +2970,7 @@ ${char.summary || 'Sem registro adicional.'}
     if (modalId === 'modal-campaign-story') {
       window.museumController?.closeExhibitionModal?.();
     }
+    this.syncActivePillarFromState();
   }
 
   rollEscolhidoInline(btnEl) {

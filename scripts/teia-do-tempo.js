@@ -232,15 +232,17 @@ class TeiaDoTempoController {
     const raw = this.dataLoader.getTeiaDoTempo() || { eras: [], nodes: [], links: [] };
     const campaignToVertente = {
       camp_001: 'vertente_triangulo',
+      camp_labirinto_2014: 'vertente_skjoldr_2014',
       camp_002: 'vertente_vilar',
       camp_filantropo_oeht: 'vertente_oeht'
     };
     const defaultEraSummaries = {
-      era_primordial: 'Origem abissal da Verdadeira Magia e artefatos cambrianos anteriores à história escrita.',
-      era_mitica: 'Projeções míticas na Europa, surgimento do Campo de Rosas e fundação inquisitorial da Ordem da Cinza.',
+      era_primordial: 'Origem abissal da Verdadeira Magia, artefatos cambrianos e o Núcleo ancestral do Labirinto de Skjoldr-Ey.',
+      era_mitica: 'Projeções míticas na Europa, surgimento da Ordem da Cinza e isolamento viking na Ilha do Labirinto sob a Regra de Foster.',
       era_navegacoes: 'Despedaçamento da membrana em Vera Cruz das Almas (1500) e consolidação da Ilha Canibal & Cidadela de Nácar.',
       era_moderna: 'Arquivos visuais grau-zero (#01/#02) e transição da Ordem da Cinza para a rede global A.E.G.I.S.',
       vertente_triangulo: 'Incursão dos 5.000 no Triângulo das Bermudas, ilhas de Vera Cruz e sacrifício do Guia Temporário.',
+      vertente_skjoldr_2014: 'Operação Skjoldr-Ey (2014): incursão Classe B através da névoa de 2 km, 6 Aldeias sob a Regra de Foster, General Hálfdan e Feras das 19h00.',
       vertente_vilar: 'Sumiço de Lucas Vilar (2021), Projeto LIMIAR com portais ZZZZT e resgate final nas minas mexicanas.',
       vertente_oeht: 'Leilão ilícito da Gala Belvedere (22h–00h), redoma púrpura, loops de 10s e despertar d’O Anárquico.',
       vertente_colapso: 'Convergência das feridas atlânticas e ameaça da Segunda Queda do Véu sobre toda a Terra.'
@@ -258,6 +260,7 @@ class TeiaDoTempoController {
       summary: e.summary || defaultEraSummaries[e.id] || '',
       status_label: e.status_label || (
         e.id === 'vertente_vilar' ? 'CONCLUÍDA' :
+        e.id === 'vertente_skjoldr_2014' ? 'CAMPANHA 2014' :
         (e.id === 'vertente_triangulo' || e.id === 'vertente_oeht') ? 'FUTURA CAMPANHA' : ''
       )
     }));
@@ -435,6 +438,36 @@ class TeiaDoTempoController {
     window.addEventListener('mouseup', () => this.onMouseUp());
     this.canvas.addEventListener('wheel', (e) => this.onWheel(e));
     this.canvas.addEventListener('click', (e) => this.onClick(e));
+
+    // Suporte tátil (Mobile): arrastar mapa cósmico e tocar em nós
+    let touchMoved = false;
+    this.canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      touchMoved = false;
+      const t = e.touches[0];
+      this.onMouseDown({ clientX: t.clientX, clientY: t.clientY });
+    }, { passive: true });
+    this.canvas.addEventListener('touchmove', (e) => {
+      if (e.touches.length !== 1) return;
+      touchMoved = true;
+      const t = e.touches[0];
+      this.onMouseMove({ clientX: t.clientX, clientY: t.clientY });
+    }, { passive: true });
+    this.canvas.addEventListener('touchend', (e) => {
+      this.onMouseUp();
+      if (!touchMoved && e.changedTouches.length === 1) {
+        const t = e.changedTouches[0];
+        const rect = this.canvas.getBoundingClientRect();
+        const mx = (t.clientX - rect.left - this.pan.x) / this.zoom;
+        const my = (t.clientY - rect.top - this.pan.y) / this.zoom;
+        for (const [id, pos] of this.nodePositions.entries()) {
+          if (Math.hypot(mx - pos.x, my - pos.y) <= pos.radius + 12) {
+            this.inspectNode(id);
+            break;
+          }
+        }
+      }
+    });
   }
 
   resizeCanvas() {
@@ -476,6 +509,7 @@ class TeiaDoTempoController {
       era_navegacoes: { x: -350, y: 150 },
       era_moderna: { x: -100, y: 0 },
       vertente_triangulo: { x: 180, y: -220 },
+      vertente_skjoldr_2014: { x: 180, y: 200 },
       vertente_vilar: { x: 180, y: 20 },
       vertente_oeht: { x: 180, y: 240 },
       vertente_colapso: { x: 500, y: 20 }
@@ -850,7 +884,7 @@ class TeiaDoTempoController {
           <div class="teia-dossier-section-title">👾 Ameaças e Bestiário</div>
           <div class="teia-pill-list">
             ${node.bestiary.map(mobId => {
-              const mob = this.dataLoader.getCreatureById(mobId);
+              const mob = this.dataLoader.getCreatureById(mobId) || this.dataLoader.getTomo4EntityById(mobId);
               const name = mob ? mob.name : mobId;
               return `<span class="teia-action-pill" style="border-color: #ef4444; color: #fca5a5; cursor: default;">💀 ${this.escapeHtml(name)}</span>`;
             }).join('')}
@@ -948,7 +982,12 @@ class TeiaDoTempoController {
   openCharacterSheet(charId) {
     this.closeModal();
     if (window.uiController) {
-      window.uiController.openCharacterSheet(charId);
+      if (typeof window.uiController.openCharacterSheet === 'function') {
+        window.uiController.openCharacterSheet(charId);
+      } else {
+        window.uiController.selectCharacter(charId);
+        window.uiController.openDrawer('characters');
+      }
     }
   }
 }
